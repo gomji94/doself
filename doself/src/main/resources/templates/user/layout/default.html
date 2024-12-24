@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="utf-8" />
+        <title>Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="doSelf" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+       
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" th:href="@{/manage/assets/imgs/theme/favicon.svg}" />
+        <!-- Template CSS -->
+        <link th:href="@{/manage/assets/css/admin.css?v=1.1}" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <div class="screen-overlay"></div>
+        <!-- aside start -->
+        <!--/* th:replace="~{"상대경로" :: 조각의 이름}" */-->
+        <aside th:replace="~{admin/fragments/aside :: asideFragment2}"></aside>
+        <!-- aside end -->
+        <main class="main-wrap">
+            <!-- header start -->
+	        <!--/* th:replace="~{"상대경로" :: 조각의 이름}" */-->
+	        <header th:replace="~{admin/fragments/header :: headerFragment2}"></header>
+	        <!-- header end -->
+            
+            <section class="content-main">
+            
+            	<!--/* content-header */-->
+            	<th:block layout:fragment="content-header"></th:block>
+            	
+            	<!--/* content-body */-->                         
+                <th:block layout:fragment="content-body"></th:block>               
+            </section>
+            <!-- content-main end// -->
+            
+        <!-- footer start -->
+        <!--/* th:replace="~{"상대경로" :: 조각의 이름}" */-->
+        <footer th:replace="~{admin/fragments/footer :: footerFragment}"></footer>
+        <!-- footer end -->
+        </main>
+        <script th:src="@{/manage/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/select2.min.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/perfect-scrollbar.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/jquery.fullscreen.min.js}"></script>    
+        <!-- Main Script -->
+        <script th:src="@{/manage/assets/js/main.js?v=1.1}" type="text/javascript"></script>
+        
+        <!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource"></th:block>
+         	<script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script> 
+        	<!-- 검색기능 -->
+       	 	<script th:src="@{/manage/assets/js/admin/admin-challenge-member-score-stat.js}"></script>  
+       
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs"></th:block> 
+        
+            
+    </body>
+</html>

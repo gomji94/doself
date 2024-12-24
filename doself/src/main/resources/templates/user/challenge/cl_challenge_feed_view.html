@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>챌린지 검색</title>
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/cl_challenge_feed_view.css">
+    <link rel="stylesheet" href="css/cf_mdl_modal.css">
+    <link rel="stylesheet" href="css/cl_create_modal.css">
+    <link rel="stylesheet" href="css/cl_create.css">
+    <link rel="stylesheet" href="css/cf_create_modal.css">
+    <link rel="stylesheet" href="css/cf-modify-modal.css">
+    <link rel="stylesheet" href="css/cf_comment_modal.css">
+    <link rel="stylesheet" href="css/cf_mbr_warning_modal.css">
+</head>
+<body>
+    <!-- header : 상단 고정 포지션 픽스 -->
+    <header class="header">
+        <a href="#" class="logo">
+            <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
+        </a> <!-- 로고 클릭 시 링크 이동 -->
+        <nav class="nav-links">
+            <a href="#">피드</a>
+            <a href="#">음식</a>
+            <a href="#">영양제</a>
+            <a href="#">챌린지</a>
+            <a href="#">티켓</a>
+            <a href="#">마켓</a>
+            <a href="#">커뮤니티</a>
+        </nav>
+        <div class="profile">
+            <a href="#"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
+        </div> <!-- 프로필 사진 (원형) -->
+    </header>
+    <!-- container -->
+    <div class="feed-container">
+        <div class="sidebar-container">
+            <!-- left sidebar -->
+            <aside class="sidebar">
+                <!-- <ul>
+                    <li><img src="https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png"	alt="검색 아이콘"/></li>
+                    <li><a href="#">검색</a></li>
+                </ul> -->
+                <ul id="cl-create">
+                    <li><img src="https://velog.velcdn.com/images/mekite/post/f10ed4e5-90f3-4720-8acd-604bc37438bb/image.png"	alt="검색 아이콘"/></li>
+                    <li><a href="#">챌린지 생성</a></li>
+                </ul>
+                <ul id="cf-create">
+                    <li><img src="https://velog.velcdn.com/images/mekite/post/8e8cac00-6315-421c-bfb1-70675937147c/image.png"	alt="검색 아이콘"/></li>
+                    <li><a href="#">챌린지 피드 만들기</a></li>
+                </ul>
+                <ul id="cf_mbr_search-panel">
+                    <li><img src="https://velog.velcdn.com/images/mekite/post/b5bc9a31-0da4-4e17-825d-0e2a15d7d554/image.png"	alt="검색 아이콘"/></li>
+                    <li><a href="#">챌린지 멤버 조회</a></li>
+                </ul>
+                <!-- <ul>
+                    <li><img src="https://velog.velcdn.com/images/mekite/post/c520c4f7-0247-4e54-9e6d-1980fc3cf4af/image.png"	alt="검색 아이콘"/></li>
+                    <li><a href="#">챌린지 관리</a></li>
+                </ul> -->
+            </aside>
+            <!-- 검색 버튼 누르면 검색 사이드바 확장 -->
+            <!-- <div class="search-panel">
+                <div class="filters">
+                    <input class="text" type="text" id="search-input" placeholder="검색어를 입력하세요" />
+                    <button class="search"></button>
+                </div>
+                <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="검색구분" class="research-section">
+                <span>최근 검색 항목</span>
+                <ul id="search-results">
+                     <li>test</li>
+                     <li>test</li>
+                     <li>test</li>
+                </ul>
+            </div> -->
+            <!-- 챌린지 멤버 조회 버튼 누르면 조회 사이드바 확장 -->
+            <div class="search-panel">
+                <div class="mbr-search-panel">
+                    <span>챌린지 참여 멤버</span>
+                    <!-- <div class="mbr-manage-option">
+                        <button class="mbr-manage-option-button">
+                            <img id="mbr-manage-option-img" src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+                        </button>
+                    </div> -->
+                    <img id="section-bar" src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="구분선" class="research-section">
+                    <div class="challenge-mbr-list">
+                        <div class="mbr-id">
+                            <img src="https://buly.kr/3u1xv4g" alt="프로필">
+                            <p class="user-icon">아이디</p>
+                            <span class="mbr-warning">경고</span>
+                            <button>강퇴</button>
+                        </div>
+                        <div class="mbr-id">
+                            <img src="https://buly.kr/3u1xv4g" alt="프로필">
+                            <p class="user-icon">아이디</p>
+                            <span class="mbr-warning">경고</span>
+                            <button>강퇴</button>
+                        </div>
+                        <div class="mbr-id">
+                            <img src="https://buly.kr/3u1xv4g" alt="프로필">
+                            <p class="user-icon">아이디</p>
+                            <span class="mbr-warning">경고</span>
+                            <button>강퇴</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 여기서부터 경고 모달 -->
+            <div class="mbr-warning-popup-wrap" style="display: none;">
+                <div class="mbr-warning-popup">
+                    <div class="mbr-warning-popup-body">
+                        <div class="mbr-warning-body-content">
+                            <div class="mbr-warning-body-titlebox">
+                                <ul>
+                                    <li class="mbr-warning-pop">참여율 저조</li>
+                                    <li class="mbr-warning-pop">친목(파벌 형성)</li>
+                                    <li class="mbr-warning-pop">비매너</li>
+                                    <li class="mbr-warning-pop">멤버간 분쟁</li>
+                                    <li class="mbr-warning-pop">정치/종교적 발언</li>
+                                    <li class="mbr-warning-pop">개인 멤버 접근 시도</li>
+                                    <li class="mbr-warning-pop">타 챌린지 언급 금지</li>
+                                    <!-- 위 내용 그냥 복붙하면 자동으로 증가 -->
+                                    <li class="mbr-warning-pop close">취소</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 여기까지 경고 모달 -->
+        </div>
+        <!-- main content -->
+        <main class="main">
+            <div class="container">
+                 <!-- 여기서부터 옵션 모달 -->
+                <div class="popup-wrap" style="display: none;">
+                    <div class="popup">
+                        <div class="popup-body">
+                            <div class="body-content">
+                                <div class="body-titlebox">
+                                    <ul>
+                                        <li class="pop" id="cl-modify-modal">챌린지 피드 수정</li>
+                                        <li class="pop" id="cl-delete-modal">챌린지 피드 삭제</li>
+                                        <li class="pop" id="cl-link-copy">챌린지 피드 링크 복사</li>
+                                        <!-- 위 내용 그냥 복붙하면 자동으로 증가 -->
+                                        <li class="pop close">취소</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 여기까지 옵션 모달 -->
+                
+                <!-- 여기서부터 챌린지 생성 모달 -->
+                <div class="modal-overlay" id="modalOverlay">
+                    <div class="modal-container">
+                        <div class="modal-header">
+                            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+                            <h2>챌린지 생성</h2>
+                            <!-- <button id="modalCloseBtn">&times;</button> -->
+                            <img id="modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+                        </div>
+                        <hr>
+                        <div class="modal-body">
+                            <!-- 이미지 업로드 영역 -->
+                            <div class="upload-section">
+                                <div class="upload-box">
+                                    <img id="cl-create-preview-image" src="https://velog.velcdn.com/images/mekite/post/da056d49-1aaa-4f12-9913-b1ddd137e7d5/image.png" alt="사진입력">
+                                    <p>사진을 끌어서 이곳에 넣어주세요</p>
+                                    <button class="upload-btn" id="cl-create-upload-btn">파일 불러오기</button>
+                                    <!-- 파일 input 태그 -->
+                                    <input type="file" id="cl-create-file-input" accept="image/*" style="display: none;">
+                                </div>
+                                <div class="preview-box" id="cl-create-preview-container" style="display: none;">
+                                    <img src="" alt="업로드된 이미지 미리보기" id="cl-create-preview-image">
+                                </div>
+                            </div>
+                
+                            <!-- 정보 입력 영역 -->
+                            <div class="feed-info">
+                                <div class="challenge-create-info">
+                                    <div class="input-block">
+                                        <span>챌린지 이름</span>
+                                        <input type="text" placeholder="이름을 입력해주세요">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+                                    </div>
+                                    <div class="input-block">
+                                        <span>챌린지 주제</span>
+                                        <select id="select-subject">
+                                            <option value="diet">다이어트</option>
+                                            <option value="glutenFree">글루텐프리</option>
+                                            <option value="highProtein">고단백질</option>
+                                            <option value="vegan">비건</option>
+                                            <option value="vegetarian">채식</option>
+                                            <option value="healthyMeal">건강식단</option>
+                                            <option value="lowCarbohydrate">저탄고지</option>
+                                        </select>
+                                        <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+                                    </div>
+                                    <div class="input-block">
+                                        <span>난이도</span>
+                                        <select id="select-level">
+                                            <option value="easy">쉬움</option>
+                                            <option value="normal">보통</option>
+                                            <option value="hard">어려움</option>
+                                        </select>
+                                        <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+                                    </div>
+                                    <div class="input-block">
+                                        <span>시작일</span>
+                                        <input type="text">
+                                        <input class="date" type="date">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+                                    </div>
+                                    <div class="input-block">
+                                        <span>참여인원</span>
+                                        <select id="select-subject" placeholder="참여인원을 선택해주세요">
+                                            <option value="5">5인(최소인원)</option>
+                                            <option value="6">6인</option>
+                                            <option value="7">7인</option>
+                                            <option value="8">8인</option>
+                                            <option value="9">9인</option>
+                                            <option value="10">10인</option>
+                                            <option value="11">11인</option>
+                                            <option value="12">12인</option>
+                                            <option value="13">13인</option>
+                                            <option value="14">14인</option>
+                                            <option value="15">15인</option>
+                                            <option value="16">16인</option>
+                                            <option value="17">17인</option>
+                                            <option value="18">18인</option>
+                                            <option value="19">19인</option>
+                                            <option value="20">20인</option>
+                                        </select>
+                                        <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+                                    </div>
+                                </div>
+                                <textarea placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
+                                <div class="text-box-under">
+                                    <button type="button" id="emoji-btn">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+                                    </button>
+                                    <div class="text-counter">
+                                        <span id="text-count">0</span>
+                                        <span>/500</span>
+                                    </div>
+                                </div>
+                                <button type="submit" class="submit-btn"><p>생성</p></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 여기까지 챌린지 생성 모달 -->
+
+                <!-- 여기서부터 챌린지 피드 생성 모달 -->
+                <div class="cf-modal-overlay" id="cf-modalOverlay">
+                    <div class="cf-modal-container">
+                        <div class=".cf-modal-header">
+                            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+                            <h2>새 피드 만들기</h2>
+                            <img id="cf-modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+                        </div>
+                        <hr>
+                        <div class="cf-modal-body">
+                            <!-- 이미지 업로드 영역 -->
+                            <div class="cf-image-upload">
+                                <div class="cf-upload-box">
+                                    <img id="plate" src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="빈 접시">
+                                    <p>사진을 이곳에 넣어</p>
+                                    <p>빈 그릇을 채워주세요!</p>
+                                    <button class="cf-upload-btn">파일 불러오기</button>
+                                </div>
+                                <div class="cf-preview-box">
+                                    <img src="" alt="업로드된 이미지 미리보기" id="cf-image-preview">
+                                </div>
+                            </div>
+                
+                            <!-- 정보 입력 영역 -->
+                            <div class="cf-feed-info">
+                                <div class="cf-user-block">
+                                    <img src="https://buly.kr/EdsBkqu" alt="프로필">
+                                    <a href="#" class="user-link">아이디</a>
+                                </div>
+                                <textarea placeholder="내용을 입력해주세요" maxlength="2000" id="cf-content"></textarea>
+                                <div class="cf-text-box-under">
+                                    <button type="button" id="emoji-btn">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+                                    </button>
+                                    <div class="cf-text-counter">
+                                        <span id="cf-text-count">0</span>
+                                        <span>/2000</span>
+                                    </div>
+                                </div>
+                
+                                <div class="input-group">
+                                    <label for="serving">섭취 인분</label>
+                                    <select id="serving">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                
+                                <div class="input-group">
+                                    <label for="meal-type">식사 분류</label>
+                                    <select id="meal-type">
+                                        <option value="breakfast">아침</option>
+                                        <option value="lunch">점심</option>
+                                        <option value="dinner">저녁</option>
+                                        <option value="snack">간식</option>
+                                    </select>
+                                    <button type="submit" class="cf-submit-btn">생성</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 여기까지 챌린지 피드 생성 모달 -->
+
+                <!-- 여기서부터 챌린지 피드 수정 모달 -->
+                <div class="cf-modify-modal-overlay" id="cf-modify-modalOverlay" style="display: none;">
+                    <div class="cf-modify-modal-container">
+                        <div class="cf-modify-modal-header">
+                            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+                            <h2>피드 수정</h2>
+                            <img id="cf-modify-modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+                        </div>
+                        <hr>
+                        <div class="cf-modify-modal-body">
+                            <!-- 이미지 업로드 영역 -->
+                            <div class="cf-modify-image-upload">
+                                <div class="cf-modify-preview-box" id="cf-modify-preview-container">
+                                    <input type="file" id="cf-modify-file-input" accept="image/*" style="display: none;">
+                                    <!-- 업로드된 이미지가 표시될 컨테이너 -->
+                                    <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+                                </div>
+                                <div class="cf-modify-upload-box">
+                                    <!-- 기본 메시지(사진 삽입 전) -->
+                                    <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="빈 접시">
+                                    <p>사진을 이곳에 넣어</p>
+                                    <p>빈 그릇을 채워주세요!</p>
+                                    <button id="cf-modify-upload-btn">파일 불러오기</button>
+                                </div>
+                            </div>
+                
+                            <!-- 정보 입력 영역 -->
+                            <div class="cf-modify-feed-info">
+                                <div class="cf-modify-user-block">
+                                    <img src="https://buly.kr/EdsBkqu" alt="프로필">
+                                    <a href="#" class="cf-modify-user-link">아이디</a>
+                                </div>
+                                <textarea id="cf-modify-content" placeholder="내용을 입력해주세요" maxlength="2000"></textarea>
+                                <div class="cf-modify-text-box-under">
+                                    <button type="button" id="emoji-btn">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+                                    </button>
+                                    <div class="cf-modify-text-counter">
+                                        <span id="cf-modify-text-count">0</span>
+                                        <span>/2000</span>
+                                    </div>
+                                </div>
+                
+                                <div class="input-group">
+                                    <label for="serving">섭취 인분</label>
+                                    <select id="serving">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                
+                                <div class="input-group">
+                                    <label for="meal-type">식사 분류</label>
+                                    <select id="meal-type">
+                                        <option value="breakfast">아침</option>
+                                        <option value="lunch">점심</option>
+                                        <option value="dinner">저녁</option>
+                                        <option value="snack">간식</option>
+                                    </select>
+                                    <button type="submit" class="cf-modify-submit-btn">수정</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 여기까지 챌린지 피드 수정 모달 -->
+                
+                <!-- 여기서부터 챌린지 피드 댓글 모달 -->
+                <!-- <div class="cf-comment-modal-overlay" id="cf-comment-modalOverlay" style="display: none;">
+                    <div class="cf-comment-modal-container">
+                        <div class="cf-comment-modal-header">
+                            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+                            <h2>피드 댓글</h2>
+                            <img id="cf-comment-modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+                        </div>
+                        <hr>
+                        <div class="cf-comment-modal-body">
+                            이미지 업로드 영역
+                            <div class="cf-comment-modal-image-upload">
+                                <img src="https://velog.velcdn.com/images/mekite/post/3fb90300-352c-4764-bd26-8aed93be3a9a/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+                            </div>
+                
+                            정보 입력 영역
+                            <div class="cf-comment-feed-info">
+                                <div class="cf-comment-user-block">
+                                    <img src="https://buly.kr/EdsBkqu" alt="프로필">
+                                    <a href="#" class="cf-comment-user-link">아이디</a>
+                                    <span class="comment-day-count"></span>
+                                </div>
+                                <div class="cf-comment-feed-comment">
+                                    <span>맛있겠네요</span>
+                                </div>
+                                <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" class="comment-section">
+                                <div class="cf-comment-user-block">
+                                    <img src="https://img.daily.co.kr/@files/www.daily.co.kr/content/food/2020/20200730/f1f553b68a93b5b3262518e9424690db.jpg" alt="프로필">
+                                    <a href="#" class="cf-comment-user-link">아이디</a>
+                                    <span class="comment-day-count"></span>
+                                </div>
+                                <div class="cf-comment-feed-comment">
+                                    <span>시럽은 시럽... 푸킼</span>
+                                </div>
+                                <div class="action-icons">
+                                    <button class="action-btn">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요">
+                                    </button>
+                                    <button class="action-btn">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+                                    </button>
+                                    <span>좋아요 3</span>
+                                </div>
+                                <img src="https://velog.velcdn.com/images/mekite/post/4a261e59-b94d-47ae-b8f3-6a39b7d34f42/image.png" alt="입력창 구분선" id="input-section">
+                                <div class="cf-comment-under-input">
+                                    <button type="button" id="emoji-btn">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+                                    </button>
+                                    <input type="text" placeholder="댓글 달기...">
+                                    <button type="button" class="cf-comment-comment-btn">게시</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- 여기까지 챌린지 피드 댓글 모달 -->
+            </div>
+            <!-- first feed -->
+            <div class="feed">
+                <div class="feed-header">
+                    <a href="#">
+                        <img src="https://velog.velcdn.com/images/mekite/post/75c1dd08-757f-4da0-814d-b19a7a01293b/image.jpg" alt="작성자 프로필">
+                    </a>
+                    <div class="user-name">
+                        <a href="#">아이디</a>
+                    </div>
+                    <div class="feed-option">
+                        <button class="option-button">
+                            <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+                        </button>
+                    </div>
+                </div>
+                <div class="feed-main-img">                    
+                    <img src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?fm=jpg&q=60&w=3000" alt="게시글 이미지">
+                </div>
+                <div class="feed-action">
+                    <div class="action-icons">
+                        <button class="action-btn likeBtn">
+                            <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
+                        </button>
+                        <button class="action-btn commentBtn">
+                            <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+                        </button>
+                        <!-- 여기서부터 챌린지 피드 댓글 모달 -->
+                        <div class="cf-comment-modal-overlay" id="cf-comment-modalOverlay" style="display: none;">
+                            <div class="cf-comment-modal-container">
+                                <div class="cf-comment-modal-header">
+                                    <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+                                    <h2>피드 댓글</h2>
+                                    <img class="cf-comment-modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+                                </div>
+                                <hr>
+                                <div class="cf-comment-modal-body">
+                                    <!-- 이미지 업로드 영역 -->
+                                    <div class="cf-comment-modal-image-upload">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/3fb90300-352c-4764-bd26-8aed93be3a9a/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+                                    </div>
+                        
+                                    <!-- 정보 입력 영역 -->
+                                    <div class="cf-comment-feed-info">
+                                        <div class="cf-user-comment-container">
+                                            <div class="cf-comment-user-block">
+                                                <img class="comment-profile" src="https://buly.kr/EdsBkqu" alt="프로필">
+                                                <a href="#" class="cf-comment-user-link">아이디</a>
+                                                <span class="comment-day-count"></span>
+                                                <div class="cf-comment-feed-comment">
+                                                    <span>맛있겠네요</span>
+                                                </div>
+                                            </div>
+                                            <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" class="comment-section">
+                                            <div class="cf-comment-user-block">
+                                                <img class="comment-profile" src="https://img.daily.co.kr/@files/www.daily.co.kr/content/food/2020/20200730/f1f553b68a93b5b3262518e9424690db.jpg" alt="프로필">
+                                                <a href="#" class="cf-comment-user-link">아이디</a>
+                                                <span class="comment-day-count"></span>
+                                                <div class="cf-comment-feed-comment">
+                                                    <span>시럽은 시럽... 푸킼</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cf-comment-feed-info-under">
+                                            <div class="action-icons">
+                                                <button class="action-btn likeBtn">
+                                                    <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
+                                                </button>
+                                                <button class="action-btn">
+                                                    <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+                                                </button>
+                                                <span>좋아요 3</span>
+                                            </div>
+                                            <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" class="comment-section-under">
+                                            <div class="cf-comment-under-input">
+                                                <button type="button" class="emoji-btn">
+                                                    <img class="emoji-btn-img" src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+                                                </button>
+                                                <input type="text" placeholder="댓글 달기...">
+                                                <button type="button" class="cf-comment-comment-btn">게시</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 여기까지 챌린지 피드 댓글 모달 -->
+                        <!-- <button class="action-btn">
+                            <img src="https://velog.velcdn.com/images/mekite/post/24a2715e-32ac-4feb-b515-14f53dfaf197/image.png" alt="북마크">
+                        </button> -->
+                    </div>
+                    <p class="feed-time">2일 전</p>
+                </div>
+                <div class="feed-description">
+                    <p id="feed-likes">좋아요 100개</p>
+                    <p>내용</p>
+                    <p class="comments-link">댓글</p>
+                </div>
+                <hr>
+                <div class="add-comment">
+                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+                    <input type="text" placeholder="댓글 달기...">
+                    <button class="comment-submit">게시</button>
+                </div>
+            </div>
+            <!-- second feed -->
+            <div class="feed">
+                <div class="feed-header">
+                    <a href="#">
+                        <img src="https://velog.velcdn.com/images/mekite/post/75c1dd08-757f-4da0-814d-b19a7a01293b/image.jpg" alt="작성자 프로필">
+                    </a>
+                    <div class="user-name">
+                        <a href="#">아이디</a>
+                    </div>
+                    <div class="feed-option">
+                        <button class="option-button">
+                            <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+                        </button>
+                    </div>
+                </div>
+                <div class="feed-main-img">                    
+                    <img src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?fm=jpg&q=60&w=3000" alt="게시글 이미지">
+                </div>
+                <div class="feed-action">
+                    <div class="action-icons">
+                        <button class="action-btn likeBtn">
+                            <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
+                        </button>
+                        <button class="action-btn commentBtn">
+                            <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+                        </button>
+                        <!-- <button class="action-btn">
+                            <img src="https://velog.velcdn.com/images/mekite/post/24a2715e-32ac-4feb-b515-14f53dfaf197/image.png" alt="북마크">
+                        </button> -->
+                    </div>
+                    <p class="feed-time">2일 전</p>
+                </div>
+                <div class="feed-description">
+                    <p id="feed-likes">좋아요 100개</p>
+                    <p>내용</p>
+                    <p class="comments-link">댓글</p>
+                </div>
+                <hr>
+                <div class="add-comment">
+                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+                    <input type="text" placeholder="댓글 달기...">
+                    <button class="comment-submit">게시</button>
+                </div>
+            </div>
+        </main>
+        
+        <!-- right sidebar -->
+        <div class="progress-container">
+            <div class="challenge">
+                <a href="#">
+                    <h3>가보자고</h3>
+                    <h5>진행중</h5>
+                    <img src="https://velog.velcdn.com/images/mekite/post/dabb0bea-be57-4f91-93ff-265cf61836f0/image.png" alt="챌린지명/진행도">
+                </a>
+            </div>
+            <div class="challenge-info">
+                <div class="talk">
+                    <p>이제 시작이야</p>
+                    <img src="https://velog.velcdn.com/images/mekite/post/d2fb0bd3-82eb-4b73-843a-5f2a7a28f8da/image.png" alt="말풍선">
+                </div>
+                <div class="progress-chart">
+                    <svg class="progress-circle" width="80" height="80">
+                        <circle cx="40" cy="40" r="35" class="background-circle"></circle>
+                        <circle cx="40" cy="40" r="35" class="foreground-circle"></circle>
+                    </svg>
+                    <div class="progress-text">
+                        <span id="progress-percent-txt">0%</span>
+                    </div>
+                </div>
+                <div class="img-progress-container">
+                    <div class="progress-background">
+                        <img src="https://velog.velcdn.com/images/mekite/post/bb8be481-75fa-400d-9c60-18a53829fee5/image.png" id="green-img" alt="초록 그래프">
+                        <img src="https://velog.velcdn.com/images/mekite/post/fd80f53c-75c3-4c01-b18f-e18962603130/image.png" id="background-img" alt="배경 그래프">
+                    </div>
+                    <img src="https://velog.velcdn.com/images/mekite/post/75389a0f-6009-44ab-b2c0-74bc95a9c658/image.png" id="flag" alt="깃발">
+                    <img src="https://velog.velcdn.com/images/mekite/post/20788b98-49ca-4994-a3e2-d5d1c292b6af/image.png" id="hiker" alt="챌린지 아이콘">
+                    <p class="progress-text">0%</p>
+                </div>
+                <div class="participants">
+                    <div class="participants-box">
+                        <a href="#">
+                            <h3>참여율</h3>
+                            <img src="https://velog.velcdn.com/images/mekite/post/651e5110-48f2-4d5a-a740-7439393c2877/image.png" alt="참여율 더보기">
+                        </a>
+                    </div>
+                    <div class="participants-list">
+                        <ul>
+                            <li>
+                                <img src="https://buly.kr/EdsBkqu" alt="프로필">
+                                <p>아이디</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%;"></div>
+                                </div>
+                                <span>85%</span>
+                            </li>
+                            <li>
+                                <img src="https://buly.kr/7mAdV2e" alt="프로필">
+                                <p>아이디</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 52%;"></div>
+                                </div>
+                                <span>52%</span>
+                            </li>
+                            <li>
+                                <img src="https://buly.kr/3u1xv4g" alt="프로필">
+                                <p>아이디</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 32%;"></div>
+                                </div>
+                                <span>32%</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-item">
+                        <img src="https://velog.velcdn.com/images/mekite/post/9fc6ee2f-f3f5-4938-9ece-c4bad184eb3f/image.png" alt="캘린더 아이콘">
+                        <p class="info-text">투데이</p>
+                        <p>D+7</p>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="info-item">
+                        <img src="https://velog.velcdn.com/images/mekite/post/dea50ae1-2c1a-4822-9ed3-4ae8554a54f4/image.png" alt="사용자 아이콘">
+                        <p class="info-text">멤버수</p>
+                        <p>7/6</p>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="info-item">
+                        <img src="https://velog.velcdn.com/images/mekite/post/e9899d52-8346-4717-99bb-31731ef2e55c/image.png" alt="타이머 아이콘">
+                        <p class="info-text">남은기간</p>
+                        <p>D-7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- footer : 하단 고정 포지션 스테틱 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="https://velog.velcdn.com/images/mekite/post/552ea3de-e88e-42f5-969e-d7c8051cd272/image.png" alt="footer_logo">
+            </div>
+            <div class="company-info">
+                <span>전주시 덕진구 기린대로 499</span>
+                <span>|</span>
+                <span>홍길동</span>
+                <span>|</span>
+                <span>사업자등록번호 418-82-10120</span>
+            </div>
+            <div class="license-info">
+                <span>© 2024 DoSelf, Inc. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+    <!-- 반드시 jquery 기능이 있는 라이브러리 파일을 연결해야 함 -->
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <script src="js/cl_challenge_feed_view.js"></script>
+    <script src="js/cl_challenge_feed_view_progress.js"></script>
+    <script src="js/cl_challenge_feed_view_imgprogress.js"></script>
+    <script src="js/cf_mdl_modal.js"></script>
+    <script src="js/cl_create_modal.js"></script>
+    <script src="js/cl_create.js"></script>
+    <script src="js/cf_create.js"></script>
+    <script src="js/cf_create_modal.js"></script>
+    <script src="js/cf_modify.js"></script>
+    <script src="js/cf_modify_modal.js"></script>
+    <script src="js/cf_like.js"></script>
+    <script src="js/cf_comment.js"></script>
+    <script src="js/cf_mbr_warning_modal.js"></script>
+    <!-- <script src="js/cf_mbr_rearch_panel.js"></script> -->
+</body>
+</html>
