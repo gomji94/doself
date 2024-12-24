@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>account-center</title>
+    <link rel="stylesheet" href="../../common.css"> <!-- 외부 CSS 링크 -->
+    <link rel="stylesheet" href="myinfo.css"> <!-- 외부 CSS 링크 -->
+    <script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script> 
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo"><img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo"></a> <!-- 로고 클릭 시 링크 이동 -->
+        <nav class="nav-links">
+            <a href="#">피드</a>
+            <a href="#">음식</a>
+            <a href="#">영양제</a>
+            <a href="#">챌린지</a>
+            <a href="#">티켓</a>
+            <a href="#">마켓</a>
+            <a href="#">커뮤니티</a>
+        </nav>
+        <div class="profile">
+            <a href="#"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
+        </div> <!-- 프로필 사진 (원형) -->
+    </header>
+    
+    <div class="container">
+        <!-- 왼쪽 사이드바 -->
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a href="#" class="menu-item">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <div>my 정보 수정</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item">
+                        <i class="fa-solid fa-ticket"></i>
+                        <div>티켓 조회</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item">
+                        <i class="fa-brands fa-bitcoin"></i>
+                        <div>포인트 조회</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item">
+                        <i class="fa-solid fa-capsules"></i>
+                        <div>영양제 알림 체크</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <div>my 게시물</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <main id="main-content">
+            <div class="main-container-title">
+                    <div id="main-container-title__eng">Account</div>
+                    <div id="main-container-title__kor">계정센터</div>
+            </div>
+
+            <div id="main-user-info">
+                <div id = "profile-image">
+                    <a href="#">
+                        <img src="https://www.fitpetmall.com/wp-content/uploads/2023/09/shutterstock_2205178589-1-1.png" alt="프로필 이미지" class="profile-image">
+                    </a>
+                </div>    
+                <div id="profile-info">
+                    <div id="profile-edit">
+                        <a href="#"><div>프로필 변경</div></a>
+                    </div>
+                    <div id="profile-userId">id002</div>
+                </div>
+            </div>
+
+            <form class="account-form">
+                <div class="form-group">
+                    <label for="name">이름</label><!-- 241224 사용자 입력막기(이름변경x) -->
+                    <input class="width-fit" type="text" id="name" value="고영희">
+                </div>
+                <div class="form-group">
+                    <label for="current-password">현재 비밀번호</label>
+                    <input class="width-fit" type="password" id="current-password" value="************">
+                </div>
+                <div class="form-group">
+                    <label for="new-password">새 비밀번호</label>
+                    <input class="width-fit" type="password" id="new-password" value="************">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">비밀번호 다시입력</label>
+                    <input class="width-fit" type="password" id="confirm-password" value="************">
+                    <!-- 241224 비밀번호변경 제거 -->
+                    <!-- <button type="button" class="btn-password-change">비밀번호 변경</button> --> 
+                </div>
+                <div class="form-group">
+                    <label for="phone-number">핸드폰 번호</label>
+                    <div class="phone-input">
+                        <input type="text" id="phone-number-part1" value="010"> -
+                        <input type="text" id="phone-number-part2" value="9999"> -
+                        <input type="text" id="phone-number-part3" value="9999">
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <div class="email-input">
+                            <input type="text" id="email" value="qwerasdf">
+                            <select>
+                                <option value="gmail.com">@gmail.com</option>
+                                <option value="naver.com">@naver.com</option>
+                                <option value="daum.net">@daum.net</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="birth-date">생년월일</label>
+                        <input type="date" id="birth-date" value="1999-12-31">
+                    </div>
+                    <button type="submit" class="btn-submit">수정</button>
+                    <div id="withdrawa"><button>회원탈퇴</button></div>
+                </form>
+            </main>
+        </div>
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-logo">
+                    <img src="https://velog.velcdn.com/images/mekite/post/552ea3de-e88e-42f5-969e-d7c8051cd272/image.png" alt="footer_logo">
+                </div>
+                <div class="company-info">
+                    <span>전주시 덕진구 기린대로 499</span>
+                    <span>|</span>
+                    <span>홍길동</span>
+                    <span>|</span>
+                    <span>사업자등록번호 418-82-10120</span>
+                </div>
+                <div class="license-info">
+                    <span>© 2024 DoSelf, Inc. All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
+        
+        <script src="accountcenter.js"></script>
+    
+</body>
+</html>
