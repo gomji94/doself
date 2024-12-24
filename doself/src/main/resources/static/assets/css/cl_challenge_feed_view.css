@@ -1,0 +1,840 @@
+/* 스타일 초기화 */
+* {
+    margin: 0;
+    box-sizing: border-box;
+    }
+    
+    /* 전체 화면 높이 설정 */
+    html, body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* 전체 페이지 스타일 */
+    /* body {
+        display: flex;
+        flex-direction: column;
+        font-family: 'Arial', sans-serif;
+        line-height: 1.5;
+        background-color: #ffff;
+        color: #333;
+    } */
+    
+    /* feed-container */
+    .feed-container {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 310px 469px 314px;
+        height: 100%;
+        gap: 45px;
+        max-width: 1280px;
+        width: 100%;
+        margin: 80px auto;
+        margin-top: 70px;
+        margin-bottom: 0px;
+        height: calc(100vh - 80px);
+        overflow: hidden;
+    }
+    
+    /* Sidebar */
+    .sidebar-container {
+        height: 100%;
+        display: flex;
+    }
+
+    .sidebar {
+        background-color: #fff;
+        padding: 20px 0px;
+        box-shadow: 3px 0 4px rgba(51, 24, 24, 0.1);
+        width: 230px;
+        transition: width 0.5s ease, opacity 0.5s ease;
+    }
+    
+    .sidebar img {
+        /* display: block; */
+        /* margin: 0 auto;
+        margin-top: 17px;
+        width: 20px; */
+        width: 22px;
+        opacity: 0.9;
+    }
+    
+    .sidebar ul {
+        list-style: none;
+        display: flex;
+        padding: 11px 30px;
+        opacity: 0.9;
+    }
+    
+    .sidebar ul:hover {
+        background-color: #f4f4f4;
+    }
+    
+    .sidebar ul li {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .sidebar ul li a {
+        display: flex;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        padding-left: 0;
+        margin-left: 15px;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+    
+    .sidebar ul li a:hover {
+        background-color: transparent;
+    }
+
+    .sidebar.shrink {
+        width: 80px;
+        opacity: 0.8;
+        display: inline-block;
+        margin-right: -145px;
+    }
+
+    .sidebar.shrink ul li a {
+        opacity: 0; /* 글자 숨기기 */
+        pointer-events: none; /* 클릭 방지 */
+    }
+    
+    /* 검색 패널 스타일 */
+    .search-panel {
+        display: none;
+        position: absolute;
+        left: 80px; /* 사이드바 오른쪽에 위치 */
+        top: 80px;
+        width: 300px;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        transform: translateX(-30px);
+    }
+    
+    .search-panel.active {
+        display: flex;
+        position: initial;
+        opacity: 1;
+        transform: translateX(0);
+        padding: 33px 40px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-panel.active img {
+        width: 98%;
+        height: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        opacity: 0.9;
+    }
+
+    .search-panel.active .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        height: 32px;
+    }
+
+    .search-panel.active input.text {
+        font-size: 13px;
+        color: #515151;
+        background-color: #fff;
+        padding: 6px 24px;
+        margin: 0;
+        border: 1px solid #aaa;
+        border-radius: 18px;
+        width: 250px;
+    }
+
+    .search-panel.active .filters button {
+        border: 0;
+        background-color: transparent;
+        opacity: 0.5;
+        margin-left: -50px;
+        position: relative;
+        margin-top: 4px;
+    }
+
+    .search-panel.active .filters .search {
+        background-image: url(https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 25px;
+        height: 25px;
+        padding-right: 30px;
+        right: 5px;
+    }
+
+    .search-panel.active span {
+        font-size: 14px;
+        color: #515151;
+        padding: 0px 10px;
+        margin-bottom: 10px;
+    }
+
+    .search-panel.active #search-results {
+        list-style: none;
+        font-size: 14px;
+        color: #aaa;
+        padding: 0px 10px;
+    }
+
+    .search-panel.active #search-results li {
+        padding: 7px 0px;
+    }
+
+    /* 여기부터 멤버조회 */
+    .mbr-search-panel {
+        display: none;
+        position: absolute;
+        left: 80px; /* 사이드바 오른쪽에 위치 */
+        top: 80px;
+        width: 300px;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        transform: translateX(-30px);
+    }
+
+    .mbr-search-panel.active {
+        display: flex;
+        position: initial;
+        opacity: 1;
+        transform: translateX(0);
+        padding: 33px 40px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mbr-search-panel.active #section-bar {
+        width: 224px;
+        height: auto;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        opacity: 0.9;
+    }
+
+    .mbr-search-panel.active span {
+        font-size: 14px;
+        color: #515151;
+        margin-bottom: 6px;
+    }
+
+    .mbr-search-panel.active button {
+        border-style: none;
+        background-color: #fff;
+        font-size: 12px;
+        opacity: 0.2;
+        width: 42px;
+        height: 25px;
+        border-radius: 7px;
+        margin-top: 3px;
+    }
+
+    .mbr-search-panel.active .mbr-warning {
+        font-size: 12px;
+        color: #515151;
+        opacity: 0.7;
+        align-self: center;
+        margin-top: 5px;
+    }
+
+    /* .mbr-search-panel.active .mbr-manage-option {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .mbr-search-panel.active .mbr-manage-option .mbr-manage-option-button {
+        border: none;
+        background-color: #fff;
+    }
+    
+    .mbr-search-panel.active .mbr-manage-option #mbr-manage-option-img {
+        width: 14px;
+        height: auto;
+        opacity: 0.7;
+    } */
+
+    .mbr-search-panel.active .challenge-mbr-list {
+        padding-top: 18px;
+    }
+    
+    .mbr-search-panel.active .challenge-mbr-list img {
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    }
+    
+    .mbr-search-panel.active .challenge-mbr-list p {
+        font-size: 13px;
+        color: #515151;
+        margin-top: 7px;
+        margin-left: 6px;
+        flex: auto;
+    }
+    
+    .mbr-search-panel.active .challenge-mbr-list .mbr-id {
+        display: flex;
+        margin-bottom: 14px;
+        justify-content: space-between;
+    }
+
+    /* 메인 콘텐츠 이동 */
+    .main {
+        transition: margin-left 0.5s ease;
+    }
+    
+    .main.move {
+        margin-left: 270px; /* 검색 패널 너비 + 여백 */
+        width: 100%;
+        margin-left: 430px;
+    }
+    
+    /* progress-container 숨김 효과 */
+    .progress-container {
+        transition: opacity 0.5s ease;
+    }
+    
+    .progress-container.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .img-progress-container {
+        position: relative;
+        width: 397px; /* 그래프 크기에 맞게 조정 */
+        height: 100px; /* 그래프 크기에 맞게 조정 */
+        margin: 12px auto;
+        top: 8px;
+    }
+    
+    .img-progress-container #green-img {
+        position: absolute;
+        width: 0%;
+        height: auto;
+        top: 105px;
+        left: 0;
+        overflow: hidden;
+        transition: width 1s linear;
+    }
+    
+    .img-progress-container #background-img {
+        position: absolute;
+        width: 70%;
+        height: auto;
+        top: 105px;
+        left: 0;
+    }
+    
+    /* .img-progress-container #green-img {
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path 1s linear;
+        z-index: 5;
+        width: 0%;
+
+    } */
+
+    .img-progress-container img#flag {
+        width: 20px;
+        position: absolute;
+        right: 100px;
+        top: 141.5px;
+    }
+
+    .img-progress-container #progress-percent-txt {
+        opacity: 0;
+    }
+
+    .img-progress-container #hiker {
+        position: absolute;
+        width: 29px;
+        opacity: 0.3;
+        top: 140px;
+    }
+    
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 16px;
+        font-weight: bold;
+        color: #6f7945;
+        overflow: hidden;
+    }
+
+    p.progress-text {
+        opacity: 0;
+    }
+    
+
+    .sidebar {
+        width: 272px;
+        transition: width 0.5s ease, opacity 0.5s ease;
+    }
+
+    .sidebar.shrink {
+        width: 70px;
+        opacity: 0.8;
+    }
+
+    .main,
+    .progress-container {
+        transition: transform 0.5s ease;
+    }
+
+    .main.move,
+    .progress-container.move {
+        transform: translateX(-200px);
+    }
+    
+    /* Main Content */
+    .main {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+        max-height: calc(100vh - 100px);
+        padding: 32px 20px;
+        justify-content: flex-start;
+    }
+    
+    /* 스크롤바 숨기기 */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .container {
+        margin: 0;
+        margin-top: -21px;
+        display: flex;
+        flex: 1;
+        width: 1280px;
+        max-width: 100%;
+        box-sizing: border-box;
+        flex-wrap: nowrap;
+    }
+    
+    .feed {
+        background: #ffffff;
+        width: 100%;
+        max-width: 430px;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(51, 24, 24, 0.1);
+        border-style: solid;
+        border-width: 0.5px;
+        border-color: #f2f2f2;
+    }
+    
+    .feed a {
+        text-decoration: none;
+        color: #515151;
+    }
+    
+    .feed img {
+        width: 100%;
+    }
+    
+    .feed-header {
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .feed-header img {
+        width: auto;
+        height: 40px;
+        border-radius: 100px;
+        margin-top: 5px;
+    }
+    
+    .feed-header .user-name {
+        font-weight: bold;
+        font-size: 15px;
+        padding: 0px 17px;
+        position: relative;
+        margin-right: auto;
+    }
+    
+    .feed-header .feed-option {
+        position: relative;
+        float: right;
+        display: block;
+        width: 19px;
+        height: 20px;
+    }
+
+    .feed-header .feed-option .option-button {
+        border: none;
+        background-color: #fff;
+    }
+    
+    .feed-header .feed-option img {
+        width: 19px;
+        height: auto;
+        opacity: 0.7;
+        padding-right: 5px;
+    }
+    
+    .feed .feed-main-img {
+        width: 100%;
+        height: auto;
+    }
+    
+    .feed .feed-action {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px 7px 18px;
+    }
+    
+    .feed .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    
+    .feed .action-btn img {
+        width: auto;
+        height: 25px;
+        margin-top: 4px;
+    }
+    
+    .feed .action-icons {
+        display: flex;
+        gap: 11px;
+    }
+    
+    .feed .feed-time {
+        color: #777;
+        font-size: 12px;
+        padding-bottom: 16px;
+        display: flex;
+        margin-right: 2px;
+        float: inline-end;
+    }
+    
+    .feed .feed-description {
+        margin-left: 11px;
+        margin-bottom: 12px;
+    }
+    
+    .feed .feed-description #feed-likes {
+        font-size: 13px;
+    }
+    
+    .feed-description p {
+        padding: 6.5px 7px;
+        font-size: 15px;
+    }
+    
+    .feed hr {
+        opacity: 0.2;
+    }
+    
+    .feed .add-comment {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: 18px;
+        margin-top: 20px;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+    
+    .feed .comments-link {
+        color: #aaa; /* 댓글 링크 색상 */
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .feed .add-comment img {
+        width: 20px;
+        opacity: 0.7;
+    }
+    
+    .feed .add-comment input {
+        flex: 1;
+        padding: 11px 10px 4px 6px;
+        font-size: 14px;
+        border-style: none;
+        outline: none;
+    }
+    
+    .feed .comment-submit {
+        background: none;
+        border: none;
+        color: #9EB92A;
+        font-size: 15px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .feed .input[type="text"] {
+        border: none;
+        width: 73%;
+    }
+    
+    /* Right Sidebar */
+    .progress-container {
+        background-color: #fff;
+        border-radius: 10px;
+        /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+        width: 320px;
+        margin-top: 32px;
+    }
+    
+    .progress-container .challenge img {
+        width: 100%;
+    }
+    
+    .progress-container .challenge h3 {
+        position: absolute;
+        margin-left: 86px;
+        margin-top: 9.5px;
+        color: #515151;
+        font-size: 16px;
+    }
+    
+    .progress-container .challenge h5 {
+        position: absolute;
+        font-size: 13px;
+        margin-left: 258px;
+        margin-top: 12px;
+        color: #515151;
+    }
+    
+    .progress-container .challenge-info {
+        margin-top: 5px;
+        width: 100%;
+        height: 522px;
+        background: #F6F6F6;
+        border-radius: 10px;
+        padding-bottom: 18px;
+    }
+    
+    .challenge-info .talk {
+        position: absolute;
+        top: 209px;
+        width: 110px;
+    }
+    
+    .challenge-info .talk p {
+        font-size: 12px;
+        position: absolute;
+        padding-left: 32px;
+        margin-top: -2px;
+    }
+
+    .challenge-info .progress-chart {
+        position: relative;
+        float: right;
+        margin-right: 22px;
+        margin-top: 20px;
+        width: 80px;
+        height: 80px;
+        /* margin: 0 auto 20px; */
+    }
+    
+    .progress-circle {
+        transform: rotate(-90deg);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .background-circle {
+        fill: none;
+        stroke: #e6e6e6;
+        stroke-width: 6; /* 원형 애니메이션 그래프 사이즈 조정 */
+    }
+    
+    .foreground-circle {
+        fill: none;
+        stroke: #d1e480;
+        stroke-width: 6; /* 원형 애니메이션 그래프 사이즈 조정 */
+        stroke-dasharray: 251; /* 비율에 맞게 조정 (기존 값의 약 80%) */
+        stroke-dashoffset: 251;
+        transition: stroke-dashoffset 0.5s linear;
+    }
+    
+    .progress-container .challenge-info img {
+        width: 87%;
+        margin-left: 22px;
+        margin-top: -14px;
+    }
+    
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 13px;
+        color: #333;
+    }
+    
+    .participants {
+        margin: 14px 17px;
+    }
+    
+    .participants .participants-box {
+        position: relative;
+        margin-left: 12.5px;
+        top: 50px;
+    }
+    
+    .participants .participants-box h3 {
+        position: absolute;
+        font-size: 14px;
+        color: #6F7945;
+        display: inline-block;
+        top: 27px;
+        left: 24px;
+        z-index: 2;
+    }
+    
+    .participants .participants-box img {
+        position: relative;
+        width: 100px;
+        margin-left: 5px;
+        margin-top: 21px;
+        z-index: 1;
+    }
+
+    .participants .participants-list {
+        display: block;
+        margin-top: 7px;
+    }
+    
+    .participants .participants-list ul {
+        background-color: #ffff;
+        position: absolute;
+        list-style: none;
+        padding: 0;
+        width: 286px;
+        padding-left: 19px;
+        padding-top: 33px;
+        padding-bottom: 5px;
+        border-radius: 10px;
+        top: 360px;
+    }
+    
+    .participants .participants-list img {
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    }
+    
+    .participants li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 13px;
+        gap: 6px;
+    }
+    
+    .participants li span {
+        position: absolute;
+        font-size: 14px;
+        color: #515151;
+        margin-left: 205px;
+    }
+    
+    .participants p {
+        position: relative;
+        font-size: 14px;
+        color: #515151;
+        margin-top: 0px;
+    }
+    
+    /* .user-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #ddd;
+        margin-right: 10px;
+    } */
+    
+    .progress-bar {
+        flex: 1;
+        height: 22px;
+        background-color: #f0f0f0;
+        border-radius: 37px;
+        margin: 0px 22px 0px 0px;
+        position: relative;
+    }
+    
+    .progress-fill {
+        height: 22px;
+        background-color: #d1e480;
+        border-radius: 37px;
+    }
+    
+    .info-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 19px 29px;
+        background-color: #fff;
+        border-radius: 10px;
+        margin-top: 220px;
+        margin-left: 17px;
+        margin-right: 17px;
+    }
+    
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 5px;
+    }
+    
+    .challenge-info .info-item img {
+        width: 30px;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        opacity: 0.8;
+    }
+    
+    .challenge-info .info-item .info-text {
+        font-size: 12px;
+        color:#aaa;
+    }
+    
+    .challenge-info .info-item p {
+        font-size: 14px;
+        color: #515151;
+    }
+    
+    .separator {
+        width: 1px;
+        height: 50px;
+        background-color: #E0E0E0;
+    }
+    
+    .footer {
+        flex-shrink: 0;
+    }

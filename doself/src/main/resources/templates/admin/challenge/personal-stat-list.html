@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="content-header">
+              <div>
+              	<h2 class="content-title card-title">챌린지내 개인 기록</h2>
+              </div>             
+          </div>                                  
+		</th:block>
+		
+		<th:block layout:fragment="content-body">
+			<div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-6 col-6 col-md-3">
+                              <select class="form-select" id="searchType">
+                                <option value="cgName">챌린지 이름</option>
+                                <option value="mbrId">멤버 이름</option>
+                              </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6 me-auto">
+                              <input type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                            </div>
+                            <div class="col-lg-6 col-6 col-md-3">
+                              <div class="date-container">
+                                <p>날짜</p>
+                                <input type="date" class="date" id="startDate" /> ~
+                                <input type="date" class="date" id="endDate" />
+                              </div>
+                            </div>                            
+                                <input class="searchBtn" type="button" value="검색" onclick="filterData()">                            
+                          </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>챌린지 개인 통계 번호</th>
+                                        <th>챌린지 이름</th>
+                                        <th>멤버 이름</th>
+                                        <th>날짜</th>
+                                        <th>당일 업로드된 피드 개수</th>                                        
+                                        <th>일일 목표 달성여부</th>
+                                        <th>일일 달성률</th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="resultTable">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">
+        	<script th:src="@{/manage/assets/js/admin/admin-challenge-member-score-stat.js}"></script>
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>

@@ -1,137 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<aside class="navbar-aside" id="offcanvas_aside" th:fragment="asideFragment">
-	<div class="aside-top">
-		<a href="index.html" class="brand-wrap"> 
-			<img th:src="@{/manage/assets/imgs/theme/logo.svg}" class="logo" alt="Nest Dashboard" />
-		</a>
-		<div>
-			<button class="btn btn-icon btn-aside-minimize">
-				<i class="text-muted material-icons md-menu_open"></i>
-			</button>
-		</div>
-	</div>
-	<nav>
-		<ul class="menu-aside">
-			<li class="menu-item active">
-				<a class="menu-link" href="index.html"> 
-					<i class="icon material-icons md-home"></i> 
-					<span class="text">Dashboard</span>
-				</a>
-			</li>
-			<li class="menu-item has-submenu">
-				<a class="menu-link"href="page-products-list.html">
-					<i class="icon material-icons md-shopping_bag"></i> 
-					<span class="text">회원관리</span>
-				</a>
-				<div class="submenu">
-					<a th:href="@{/admin/member/memberList}">회원목록</a>
-					<a href="page-products-grid.html">Product grid</a> 
-					<a href="page-products-grid-2.html">Product grid 2</a>
-					<a href="page-categories.html">Categories</a>
-				</div>
-			</li>
-			<li class="menu-item has-submenu">
-				<a class="menu-link" href="page-orders-1.html"> 
-					<i class="icon material-icons md-shopping_cart"></i> 
-					<span class="text">Orders</span>
-				</a>
-				<div class="submenu">
-					<a href="page-orders-1.html">Order list 1</a> 
-					<a href="page-orders-2.html">Order list 2</a>
-					<a href="page-orders-detail.html">Order detail</a>
-				</div>
-			</li>
-			<li class="menu-item has-submenu">
-				<a class="menu-link" href="page-sellers-cards.html">
-					<i class="icon material-icons md-store"></i>
-					<span class="text">Sellers</span>
-				</a>
-				<div class="submenu">
-					<a href="page-sellers-cards.html">Sellers cards</a> 
-					<a href="page-sellers-list.html">Sellers list</a> 
-					<a href="page-seller-detail.html">Seller profile</a>
-				</div>
-			</li>
-			<li class="menu-item has-submenu">
-				<a class="menu-link" href="page-form-product-1.html"> 
-					<i class="icon material-icons md-add_box"></i>
-					<span class="text">Add product</span>
-				</a>
-				<div class="submenu">
-					<a href="page-form-product-1.html">Add product 1</a>
-					<a href="page-form-product-2.html">Add product 2</a> 
-					<a href="page-form-product-3.html">Add product 3</a>
-					<a href="page-form-product-4.html">Add product 4</a>
-				</div>
-			</li>
-			<li class="menu-item has-submenu">
-				<a class="menu-link" href="page-transactions-1.html"> 
-					<i class="icon material-icons md-monetization_on"></i> 
-					<span class="text">Transactions</span>
-				</a>
-				<div class="submenu">
-					<a href="page-transactions-1.html">Transaction 1</a>
-					<a href="page-transactions-2.html">Transaction 2</a>
-				</div>
-			</li>
-			<li class="menu-item has-submenu">
-				<a class="menu-link" href="#">
-					<i class="icon material-icons md-person"></i> 
-					<span class="text">Account</span>
-				</a>
-				<div class="submenu">
-					<a href="page-account-login.html">User login</a>
-					<a href="page-account-register.html">User registration</a>
-					<a href="page-error-404.html">Error 404</a>
-				</div>
-			</li>
-			<li class="menu-item">
-				<a class="menu-link" href="page-reviews.html">
-					<i class="icon material-icons md-comment"></i>
-					<span class="text">Reviews</span>
-				</a>
-			</li>
-			<li class="menu-item">
-				<a class="menu-link" href="page-brands.html">
-					<i class="icon material-icons md-stars"></i>
-					<span class="text">Brands</span>
-				</a>
-			</li>
-			<li class="menu-item">
-				<a class="menu-link" disabled href="#">
-					<i class="icon material-icons md-pie_chart"></i>
-					<span class="text">Statistics</span>
-				</a>
-			</li>
-		</ul>
-		<hr />
-		<ul class="menu-aside">
-			<li class="menu-item has-submenu">
-				<a class="menu-link" href="#">
-					<i class="icon material-icons md-settings"></i>
-					<span class="text">Settings</span>
-				</a>
-				<div class="submenu">
-					<a href="page-settings-1.html">Setting sample 1</a>
-					<a href="page-settings-2.html">Setting sample 2</a>
-				</div>
-			</li>
-			<li class="menu-item">
-				<a class="menu-link" href="page-blank.html"> 
-					<i class="icon material-icons md-local_offer"></i>
-					<span class="text">Starter page </span>
-				</a>
-			</li>
-		</ul>
-		<br /> <br />
-	</nav>
-</aside>
 
-
-<aside class="navbar-aside" id="offcanvas_aside"  th:fragment="asideFragment2">
+<aside class="navbar-aside" id="offcanvas_aside"  th:fragment="asideFragment">
             <div class="aside-top">
-                <a href="../../star_travel_bootstrap/star-3-1/Static HTML/mainpage.html" class="brand-wrap">
+                <a href="#" class="brand-wrap">
                     <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" class="logo" alt="Nest Dashboard" />
                 </a>
                 <div>
@@ -146,67 +18,68 @@
                             <span class="text">doSelf</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="admin-member.html">
+                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin' or currentURI == '/admin/member/list' or currentURI == '/admin/member/loglist' ? 'active' : ''}">
+                        <a class="menu-link" th:href="@{/admin}">
                             <i class="fa-solid fa-user-gear"></i>
                             <span class="text">회원관리</span>
                         </a>
                         <div class="submenu">
-                            <a href="admin-member.html">회원 관리</a>
-                            <a href="admin-member-login-log.html">로그 관리</a>                
+                            <a th:href="@{/admin/member/list}" th:classappend="${currentURI == '/admin' or currentURI == '/admin/member/list' ? 'active' : ''}">회원 관리</a>
+                            <a th:href="@{/admin/member/loglist}" th:classappend="${currentURI == '/admin/member/loglist' ? 'active' : ''}">로그 관리</a>                               
                         </div>
                     </li>
-                    <li class="menu-item has-submenu active">
-                        <a class="menu-link" href="admin-challenge-search.html">
+                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/challenge/list' or currentURI == '/admin/challenge/personalstatlist' or currentURI == '/admin/challenge/statlist' or currentURI == '/admin/challenge/personalscorelist' or currentURI == '/admin/challenge/scorelist' or currentURI == '/admin/challenge/warninglist' or currentURI == '/admin/challenge/rewardlist' ? 'active' : ''}" >
+                        <a class="menu-link" th:href="@{/admin/challenge/list}">
                             <i class="fa-solid fa-users-gear"></i>
                             <span class="text">챌린지 관리</span>
                         </a>
                         <div class="submenu">
-                            <a href="admin-challenge-search.html">챌린지 검색</a>
-                            <a href="admin-challenge-member-score-stat.html" class="active">챌린지내 개인</a>
-                            <a href="admin-challenge-today-participation-stat.html">챌린지 별 기록</a>
-                            <a href="admin-challenge-personal-score-list.html">챌린지 개인 점수</a>
-                            <a href="admin-monthly-challenge-score.html">챌린지 점수</a>
-                            <a href="admin-leader-challenge-mbr-warning-log.html">경고내역</a>
-                            <a href="admin-reward-payment-history.html">보상 지급 기록</a>
+                            <a th:href="@{/admin/challenge/list}" th:classappend="${currentURI == '/admin/challenge/list' ? 'active' : ''}">챌린지 관리</a>
+                            <a th:href="@{/admin/challenge/personalstatlist}" th:classappend="${currentURI == '/admin/challenge/personalstatlist' ? 'active' : ''}">챌린지내 개인</a>
+                            <a th:href="@{/admin/challenge/statlist}" th:classappend="${currentURI == '/admin/challenge/statlist' ? 'active' : ''}">챌린지 별 기록</a>
+                            <a th:href="@{/admin/challenge/personalscorelist}" th:classappend="${currentURI == '/admin/challenge/personalscorelist' ? 'active' : ''}">챌린지 개인 점수</a>
+                            <a th:href="@{/admin/challenge/scorelist}" th:classappend="${currentURI == '/admin/challenge/scorelist' ? 'active' : ''}">챌린지 점수</a>
+                            <a th:href="@{/admin/challenge/warninglist}" th:classappend="${currentURI == '/admin/challenge/warninglist' ? 'active' : ''}">경고내역</a>
+                            <a th:href="@{/admin/challenge/rewardlist}" th:classappend="${currentURI == '/admin/challenge/rewardlist' ? 'active' : ''}">보상 지급 기록</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="admin-nutrition_info_registration_request.html">
+                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/nutrition/list' ? 'active' : ''}">
+                        <a class="menu-link" th:href="@{/admin/nutrition/list}">
                             <i class="fa-solid fa-arrow-up-from-bracket"></i>
                             <span class="text">등록 요청 관리</span>
                         </a>
                         <div class="submenu">
-                            <a href="admin-nutrition_info_registration_request.html">등록 요청 관리</a>                        
+                            <a th:href="@{/admin/nutrition/list}" th:classappend="${currentURI == '/admin/nutrition/list' ? 'active' : ''}">등록 요청 관리</a>                        
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="admin-challenge-ticket-payment-history.html">
+                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/payment/list' or currentURI == '/admin/payment/refund/list' ? 'active' : ''}">
+                        <a class="menu-link" th:href="@{/admin/payment/list}">
                             <i class="fa-solid fa-file-invoice-dollar"></i>
                             <span class="text">결제 관리</span>
                         </a>
                         <div class="submenu">
-                            <a href="admin-challenge-ticket-payment-history.html">결제 내역</a>
-                            <a href="admin-payment-refund-log.html">환불 접수 내역</a>                            
+                            <a th:href="@{/admin/payment/list}" th:classappend="${currentURI == '/admin/payment/list' ? 'active' : ''}">결제 내역</a>
+                            <a th:href="@{/admin/payment/refund/list}" th:classappend="${currentURI == '/admin/payment/refund/list' ? 'active' : ''}">환불 접수 내역</a>                            
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="admin-point-exchange-product-list.html">
+                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/point/list' or currentURI == '/admin/point/userhistorylist' ? 'active' : ''}">
+                        <a class="menu-link" th:href="@{/admin/point/list}">
                             <i class="fa-solid fa-coins"></i>
                             <span class="text">포인트 관리</span>
                         </a>
                         <div class="submenu">
-                            <a href="admin-point-exchange-product-list.html">포인트 상품 관리</a>
-                            <a href="admin-point-use-management-history.html">회원별 사용 내역</a>
+                            <a th:href="@{/admin/point/list}" th:classappend="${currentURI == '/admin/point/list' ? 'active' : ''}">포인트 상품 관리</a>
+                            <a th:href="@{/admin/point/userhistorylist}" th:classappend="${currentURI == '/admin/point/userhistorylist' ? 'active' : ''}">회원별 사용 내역</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="admin-report_request.html">
+                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/declare/list' or currentURI == '/admin/declare/userlist' ? 'active' : ''}">
+                        <a class="menu-link" th:href="@{/admin/declare/list}">
                             <i class="fa-solid fa-handcuffs"></i>
                             <span class="text">신고관리</span>
                         </a>
                         <div class="submenu">
-                            <a href="admin-report_request.html">신고관리</a>                    
+                            <a th:href="@{/admin/declare/list}" th:classappend="${currentURI == '/admin/declare/list' ? 'active' : ''}">신고접수</a>                    
+                            <a th:href="@{/admin/declare/userlist}" th:classappend="${currentURI == '/admin/declare/userlist' ? 'active' : ''}">부정회원관리</a>                    
                         </div>
                     </li>                    
                 </ul>

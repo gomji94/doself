@@ -1,0 +1,157 @@
+/* 스타일 초기화 */
+* {
+margin: 0;
+/* box-sizing: border-box; */
+}
+
+/* 전체 화면 높이 설정 */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 1280px;
+    margin: 0 auto;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.sidebar {
+    padding: 18px 0px;
+    width: 230px;
+    background-color: #f4f4f4;
+    height: auto;
+    max-height: 100%;
+    box-sizing: border-box;
+    min-width: 210px;
+    overflow-y: auto;
+}
+
+.management-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 242px 992px;
+    height: 100%;
+    gap: 45px;
+    max-width: 1280px;
+    width: 100%;
+    margin: 80px auto;
+    margin-top: 70px;
+    margin-bottom: 0px;
+}
+
+/* 콘텐츠 */
+.content {
+    flex: 1;
+    padding-right: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 35px;
+    overflow: auto;
+}
+
+.content h1 {
+    margin-bottom: 23px;
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #515151;
+}
+
+/* 필터 */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filters select {
+    font-size: 1rem;
+    color: #515151;
+    background-color: #fff;
+    padding: 7px 10px;
+    margin: 0;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+}
+
+input.text {
+    font-size: 1rem;
+    color: #515151;
+    background-color: #fff;
+    padding: 7px 10px;
+    margin: 0;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    width: 250px;
+}
+
+.filters .date {
+    font-size: 1rem;
+    color: #515151;
+    background-color: #fff;
+    padding: 7px 10px;
+    margin: 0;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+}
+
+.filters button {
+    border: 0;
+    background-color: transparent;
+    opacity: 0.5;
+    margin-left: -46px;
+    position: relative;
+    margin-top: 5px;
+    /* font-size: 1rem;
+    color: #fff;
+    font-weight: bold;
+    background-color: #b9b9b9;
+    padding: 7px 10px;
+    margin: 0px;
+    border-width: 1px;
+    border-style: none;
+    border-radius: 10px; */
+}
+
+.filters .search {
+    background-image: url(https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 26px;
+    height: 26px;
+}
+
+/* .filters img {
+    width: 26px;
+    opacity: 0.5;
+    position: absolute;
+    margin-top: -13px;
+    margin-left: -51px;
+} */
+
+/* 테이블 */
+.warning-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.warning-table th, .warning-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.warning-table th {
+    background-color: #f1f1f1;
+}
+
+.footer {
+    flex-shrink: 0;
+}
