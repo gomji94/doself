@@ -3,7 +3,7 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <head>
         <meta charset="utf-8" />
-        <title>Nest Dashboard</title>
+        <title th:text="${title}"></title>
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <meta name="description" content="doSelf" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,12 +18,12 @@
         <div class="screen-overlay"></div>
         <!-- aside start -->
         <!--/* th:replace="~{"상대경로" :: 조각의 이름}" */-->
-        <aside th:replace="~{admin/fragments/aside :: asideFragment2}"></aside>
+        <aside th:replace="~{admin/fragments/aside :: asideFragment}"></aside>
         <!-- aside end -->
         <main class="main-wrap">
             <!-- header start -->
 	        <!--/* th:replace="~{"상대경로" :: 조각의 이름}" */-->
-	        <header th:replace="~{admin/fragments/header :: headerFragment2}"></header>
+	        <header th:replace="~{admin/fragments/header :: headerFragment}"></header>
 	        <!-- header end -->
             
             <section class="content-main">
@@ -56,7 +56,7 @@
        	 	<script th:src="@{/manage/assets/js/admin/admin-challenge-member-score-stat.js}"></script>  
        
         <!--/* 사용자 추가 js script */-->
-        <th:block layout:fragment="customJs"></th:block> 
+        <th:block layout:fragment="customJs"></th:block>
         
             
     </body>
