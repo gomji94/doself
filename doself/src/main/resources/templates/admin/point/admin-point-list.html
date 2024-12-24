@@ -8,6 +8,10 @@
           <div class="content-header">
               <div>
               	<h2 class="content-title card-title">포인트 상품</h2>
+              </div>
+              
+              <div>                       
+                  <a th:href="@{/admin/point/createPointList}" class="btn btn-primary btn-sm rounded">상품추가</a>
               </div>             
           </div>                                 
 		</th:block>
@@ -259,7 +263,7 @@
                                     <span>10000</span>
                                 </div>
                                 <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a href="admin-point-product-edit.html" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a th:href="@{/admin/point/createPointList}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
                                     <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
                                 </div>
                             </div>

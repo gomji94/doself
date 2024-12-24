@@ -21,13 +21,13 @@ function renderTable(data) {
     if (data.length > 0) {
         data.forEach(item => {
             const row = `<tr>
-                                <td><a href="#" class="userIdDetails">${item.mllNum}</a></td>
-                                <td>${item.mbrId}</td>
-                                <td>${item.mbrName}</td>
-                                <td>${item.mgCode}</td>
-                                <td>${item.mllIp}</td>
-                                <td>${item.mllDate}</td>                                 
-                            </tr>`;
+                            <td>${item.mllNum}</td>
+                            <td>${item.mbrId}</td>
+                            <td>${item.mbrName}</td>
+                            <td>${item.mgCode}</td>
+                            <td>${item.mllIp}</td>
+                            <td>${item.mllDate}</td>                                 
+                        </tr>`;
             resultTable.innerHTML += row;
         });
     } else {
