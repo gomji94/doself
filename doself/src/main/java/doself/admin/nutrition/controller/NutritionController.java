@@ -1,4 +1,4 @@
-package doself.admin.common.controller;
+package doself.admin.nutrition.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/admin")
-public class HomeController {
+@RequestMapping("/admin/nutrition")
+public class NutritionController {
 	
-	@GetMapping(value={"","/"})
-	public String adminHome(HttpServletRequest request, Model model) {
+	// 영양정보등록 요청
+	@GetMapping("/list")
+	public String challengeList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
-		System.out.println(request.getRequestURI());
-		return "admin/index";
+		model.addAttribute("title", "등록 요청 관리");
+		return "admin/nutrition/admin-nutrition-list";
 	}
 }
