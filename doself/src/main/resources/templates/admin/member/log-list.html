@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="content-header">
+              <div>
+              	<h2 class="content-title card-title">로그관리</h2>
+              </div>             
+          </div>                       
+		</th:block>
+		
+		<th:block layout:fragment="content-body">
+			<div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <!-- 검색 조건 선택 -->
+                            <div class="col-lg-6 col-6 col-md-3">
+                                <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
+                                    <option value="mbrId">아이디</option>
+                                    <option value="mbrName">이름</option>
+                                    <option value="mgCode">회원 등급</option>                                    
+                                </select>
+                            </div>
+
+                            <!-- 검색어 입력 -->
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                                <datalist id="searchSuggestions"></datalist>
+                            </div>
+
+                            <!-- 날짜 선택 -->
+                            <div class="col-lg-6 col-6 col-md-3">
+                                <div class="date-container">
+                                    <p>날짜</p>
+                                    <input type="date" class="date" id="startDate" /> ~
+                                    <input type="date" class="date" id="endDate" />
+                                </div>
+                            </div>
+                            <input class="searchBtn" type="button" value="검색" onclick="filterData()" />
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">로그인로그번호</th>
+                                        <th scope="col">아이디</th>
+                                        <th scope="col">이름</th>
+                                        <th scope="col">회원등급</th>                                        
+                                        <th scope="col">로그인 IP</th>                                        
+                                        <th scope="col">로그인 일자</th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="resultTable">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">
+        	<script th:src="@{/manage/assets/js/admin/admin-member-login-log.js}"></script>
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>
