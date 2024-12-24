@@ -21,7 +21,7 @@ function renderTable(data) {
     if (data.length > 0) {
         data.forEach(item => {
             const row = `<tr>
-                            <td><a href="#" class="userIdDetails">${item.ctpsNum}</a></td>
+                            <td>${item.ctpsNum}</td>
                             <td>${item.cgName}</td>
                             <td>${item.ctpsDate}</td>
                             <td>${item.ctpsParticipation}</td>
