@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="content-header">
+              <div>
+              	<h2 class="content-title card-title">부정회원관리</h2>
+              </div>             
+          </div>                               	
+		</th:block>
+
+<th:block layout:fragment="content-body">
+
+	<div class="card mb-4">
+		<header class="card-header">
+			<div class="row gx-3">
+				<!-- 검색 조건 선택 -->
+				<div class="col-lg-6 col-6 col-md-3">
+					<select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
+						<option value="mbrId">제재회원</option>
+						<option value="rcCode">신고 유형</option>
+					</select>
+				</div>
+
+				<!-- 검색어 입력 -->
+				<div class="col-lg-4 col-md-6 me-auto">
+					<input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+					<datalist id="searchSuggestions"></datalist>
+				</div>
+
+				<!-- 날짜 선택 -->
+				<div class="col-lg-6 col-6 col-md-3">
+					<div class="date-container">
+						<p>날짜</p>
+						<input type="date" class="date" id="startDate" /> ~ <input type="date" class="date" id="endDate" />
+					</div>
+				</div>
+				<input class="searchBtn" type="button" value="검색" onclick="filterData()" />
+			</div>
+		</header>
+		<!-- card-header end// -->
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">부정회원번호</th>
+							<th scope="col">신고접수번호</th>
+							<th scope="col">제재회원</th>
+							<th scope="col">신고유형코드</th>
+							<th scope="col">최종처리일</th>
+							<th scope="col">제재기간</th>
+							<th scope="col">제재만료일</th>
+							<th scope="col">처리관리자</th>
+						</tr>
+					</thead>
+					<tbody id="resultTable"></tbody>
+				</table>
+			</div>
+		</div>
+		<!-- card-body end// -->
+	</div>
+</th:block>
+
+<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">
+        	<script th:src="@{/manage/assets/js/admin/admin-report-userlist.js}"></script>
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>
