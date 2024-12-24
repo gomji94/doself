@@ -25,6 +25,16 @@ public class PointController {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "회원별 사용 내역");
-		return "admin/point/user-list";
+		return "admin/point/user-history-list";
 	}
+	
+	@GetMapping("createPointList")
+	public String createPointList(HttpServletRequest request, Model model) {
+		
+		model.addAttribute("currentURI", request.getRequestURI());
+		model.addAttribute("title", "상품 추가");
+		return "admin/point/create-point-list";
+	}
+	
+	
 }
