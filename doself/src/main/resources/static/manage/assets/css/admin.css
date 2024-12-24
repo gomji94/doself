@@ -1729,11 +1729,11 @@ textarea.form-control {
   margin-right: 2% !important;
 }
 .searchBtn {
-  position: absolute;
+  position: relative;
     width: 61px;
     height: 29px;
-    left: 88%;
-    top: 27px;
+    left: 16%;
+    top: 6px;
     background-color: white;
 }
 .date {
