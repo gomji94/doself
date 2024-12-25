@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
+<aside class="aside" th:fragment="asideFragment">
+	<div class="sidebar-container">
+		<!-- left sidebar -->
+		<div class="sidebar">
+		    <ul id="cl-create">
+		        <li><img src="https://velog.velcdn.com/images/mekite/post/f10ed4e5-90f3-4720-8acd-604bc37438bb/image.png"	alt="검색 아이콘"/></li>
+		        <li><a href="#">챌린지 생성</a></li>
+		    </ul>
+		    <ul id="cf-create">
+		        <li><img src="https://velog.velcdn.com/images/mekite/post/8e8cac00-6315-421c-bfb1-70675937147c/image.png"	alt="검색 아이콘"/></li>
+		        <li><a href="#">챌린지 피드 만들기</a></li>
+		    </ul>
+		    <ul id="cf_mbr_search-panel">
+		        <li><img src="https://velog.velcdn.com/images/mekite/post/b5bc9a31-0da4-4e17-825d-0e2a15d7d554/image.png"	alt="검색 아이콘"/></li>
+		        <li><a href="#">챌린지 멤버 조회</a></li>
+		    </ul>
+		</div>
+	</div>
+</aside>
 </html>

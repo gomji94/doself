@@ -55,6 +55,31 @@ input:focus::-moz-placeholder {
   transition: .4s;
 }
 
+/* HTML과 Body에 전체 높이 설정 */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;   콘텐츠 중앙 정렬 */
+    min-height: 100vh;  /*화면 높이를 기준으로 전체를 차지 */
+}
+
+/* 메인 컨테이너 설정 */
+body > .content-main {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
 /* 상단 바 스타일 */
 .header {
     width: 1280px; /* 최소 너비 설정 */
@@ -102,7 +127,7 @@ input:focus::-moz-placeholder {
     border-radius: 4px;
 }
 .nav-links a:hover {
-    color: #9ACD32;
+    color: #D1E480;
 }
 .profile {
     display: flex;
@@ -113,6 +138,20 @@ input:focus::-moz-placeholder {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+}
+
+/* main-container 스타일 */
+
+.content-main {
+	display: flex;
+    flex: 1; /* 사이드바와 메인 콘텐츠가 화면 남은 공간을 차지 */
+    width: 1280px; /* header와 동일한 최소 너비 */
+    max-width: 100%; /* 화면 최대 너비 */
+    margin: 70px auto 0; /* 상단바 높이만큼 아래로, 중앙 정렬 */
+    margin-top: 70px; /* 상단바 높이만큼 아래로 */
+    display: flex;
+    box-sizing: border-box;
+    flex-wrap: nowrap; /* 컨테이너 안 요소 줄바꿈 방지 */
 }
 
 /* Footer 스타일 */
@@ -132,6 +171,7 @@ input:focus::-moz-placeholder {
     max-width: 100%; /* 반응형 지원 */
     box-sizing: border-box; /* 패딩 포함 계산 */
     padding: 0; /* 내부 여백 제거 */
+    flex-shrink: 0 !important;
 }
 
 .footer .footer-container {
