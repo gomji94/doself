@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @Controller
-@RequestMapping("/user")
-public class ChallengeController {
+@RequestMapping("/user/list")
+public class UserChallengeController {
 	@GetMapping(value={"","/"})
 	public String defaultTest() {
-		return "user/index";
+		return "user/challenge-feed-index";
 	}
 	
 }

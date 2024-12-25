@@ -20,11 +20,14 @@
     
     
     <!-- main-body start -->
-	<section class="content-main">            
-    	<!--/* content-header */-->
-    	<th:block layout:fragment="content-header"></th:block>
+   	<section class="content-main">            
+	    <!-- main-aside start -->
+	    <aside th:replace="~{user/fragments/aside :: asideFragment}"></aside>
+	    <!-- main-aside end -->
+       	<!--/* content-header */-->
+       	<th:block layout:fragment="content-header"></th:block>
 
-    	<!--/* content-body */-->                         
+       	<!--/* content-body */-->                         
         <th:block layout:fragment="content-body"></th:block>               
     </section>
     <!-- main-body end -->
