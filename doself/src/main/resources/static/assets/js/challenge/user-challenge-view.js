@@ -248,17 +248,30 @@ $(document).ready(function () {
 
 
 // --- feed like button event ---
-$(document).on('click', '.likeBtn', function() {
-    const likeImg = $(this).find('.likeImg');
-    const likedSrc = 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png';
-    const defaultSrc = 'https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png';
-    const currentSrc = likeImg.attr('src');
+$(document).ready(function () {
+    $(document).on('click', '.likeBtn', function (event) {
+        event.preventDefault(); // 기본 동작 방지
 
-    if (currentSrc === defaultSrc) {
-        likeImg.attr('src', likedSrc).css({ 'width': '24.5px', 'height': 'auto' });
-    } else if (currentSrc === likedSrc) {
-        likeImg.attr('src', defaultSrc).css({ 'width': '', 'height': '' });
-    }
+        const likeImg = $(this).find('.likeImg'); // 버튼 내부의 likeImg 요소 선택
+        const likedSrc = 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png'; // "좋아요" 이미지 경로
+        const defaultSrc = 'https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png'; // 기본 이미지 경로
+
+        // 현재 상태 확인 및 업데이트
+        const isLiked = $(this).attr('data-liked') === 'true';
+
+        if (!isLiked) {
+            likeImg.attr('src', likedSrc)
+					.css({ 'width': '24.5px', 'height': 'auto' }); // "좋아요" 이미지로 변경
+            $(this).attr('data-liked', 'true'); // 상태 업데이트
+        } else {
+            likeImg.attr('src', defaultSrc); // 기본 이미지로 복원
+            $(this).attr('data-liked', 'false'); // 상태 복원
+        }
+
+        // 디버깅용 로그 출력
+        console.log(`현재 상태: ${$(this).attr('data-liked')}`);
+        console.log(`현재 이미지 경로: ${likeImg.attr('src')}`);
+    });
 });
 
 
