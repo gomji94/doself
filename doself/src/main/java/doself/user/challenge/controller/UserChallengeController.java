@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class UserChallengeController {
 	@GetMapping(value={"","/"})
 	public String defaultTest() {
-		return "user/challenge-feed-index";
+		return "user/challenge/user-challenge-list";
 	}
 	
 }
