@@ -1,0 +1,167 @@
+@charset "UTF-8";
+
+/* 왼쪽 사이드바 스타일 */
+.sidebar {
+    width: 230px;
+    background-color: #f4f4f4;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: calc(100vh - 70px);  /*화면 높이에서 상단바 높이 제외 */
+    height: auto; /* 자동 높이 조정 */
+    max-height: 100%;
+    box-sizing: border-box;
+    box-shadow: 2px 0 5px rgba(51, 24, 24, 0.1);
+    min-width: 210px; /* 최소 너비 유지 */
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+}
+.sidebar ul li {
+    position: relative;
+    white-space: nowrap; /* 줄바꿈 방지 */
+}
+.sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    padding: 8px 10px; /* 상위 메뉴 왼쪽 여백 */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: left;
+    padding-left: 20%;
+    padding-right: 30px;
+    height: 25px;
+}
+.sidebar ul li a:hover {
+    background-color: #ddd;
+}
+.sidebar ul li a::before {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1; /* 다른 요소보다 위에 표시 */
+    pointer-events: none; /* 클릭 이벤트 차단 */
+}
+.sidebar ul .sub-menu {
+    display: none;
+    margin : 0px 32px;
+    background-color: #fff;
+    position: relative;
+    padding: 0;
+    border-radius: 8px;
+}
+.sidebar ul .sub-menu a {
+    font-size: 12px;
+    padding: 5px 0px 5px 40px ;
+    color: #999; /* 하위 메뉴 기본 글자색: 회색 */
+    border-radius: 0; /* 둥근 모서리 제거 */
+
+}
+.sidebar ul .sub-menu a:hover {
+    color: #000; /* 하위 메뉴 마우스 오버 시 글자색: 검은색 */
+    background-color: transparent;
+}
+.sidebar ul .sub-menu a:before {
+    content: none; /* 하위 메뉴는 원형 모양 제거 */
+}
+
+.toggle-icon {
+    margin-left: auto; /* 남은 공간을 사용해 오른쪽으로 밀어냄 */
+    display: inline-block; /* 인라인 블록으로 설정 */
+    text-align: right; /* 텍스트 오른쪽 정렬 */
+}
+
+#main-content {
+    width: calc(100% - 230px);
+    margin: 0;
+}
+
+/* 메인컨테이너 */
+.container {
+    min-height: 1155px;
+}
+
+.sidebar ul {
+    gap: 0;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 8px 10px;
+    padding-left: 20%;
+    gap: 10px;
+    height: 25px;
+}
+
+#main-content {
+    width: calc(100% - 230px);
+}
+
+#main-container-contents {
+    width: calc(100% - 244px);
+}
+
+#main-container-title {
+    font-size: 30px;
+    color: #606060;
+    margin: 11px 0px 24px 50px;
+}
+
+#main-container__purchase {
+    font-size: 14px;
+    border-collapse: collapse;
+    width: calc(100% - 110px);
+    margin-left: 50px;
+    text-align: center;
+}
+
+#main-container__purchase th {
+    font-weight: normal;
+}
+
+#main-container__purchase th,
+#main-container__purchase td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.mcp__tr td {
+    padding: 10px;
+}
+
+#main-container__purchase tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#pagination {
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+#pagination button {
+    margin: 0 5px;
+    padding: 5px 5px;
+    border: none; /* 테두리 제거 */
+    background-color: transparent; /* 배경색 제거 */
+    color: #333; /* 텍스트 색상 설정 */
+    cursor: pointer;
+    font-size: 14px; /* 텍스트 크기 */
+}
+
+#pagination button.active {
+    font-weight: bold; /* 활성화된 버튼 텍스트 굵게 */
+    text-decoration: underline; /* 활성화된 버튼에 밑줄 */
+}
+
+#pagination button:hover {
+    color: #000; /* 호버 시 텍스트 색상 변경 */
+}
