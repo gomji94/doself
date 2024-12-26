@@ -16,7 +16,7 @@ function renderTable(data) {
     if (data.length > 0) {
         data.forEach(item => {
             const row = `<tr>
-                            <td><a href="#" class="userIdDetails">${item.nirrNum}</a></td>
+                            <td><a href="/admin/nutrition/modifyrequest" class="userIdDetails">${item.nirrNum}</a></td>
                             <td>${item.mbrId}</td>
                             <td>${item.nirrContent}</td>
                             <td>${item.nirrDate}</td>

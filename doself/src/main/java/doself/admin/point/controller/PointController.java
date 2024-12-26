@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class PointController {
 
 	@GetMapping("list")
-	public String pointList(HttpServletRequest request, Model model) {
+	public String getPointList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "포인트 상품");
@@ -21,14 +21,14 @@ public class PointController {
 	}
 	
 	@GetMapping("userhistorylist")
-	public String userHistoryList(HttpServletRequest request, Model model) {
+	public String getUserHistoryList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "회원별 사용 내역");
 		return "admin/point/user-history-list";
 	}
 	
-	@GetMapping("createPointList")
+	@GetMapping("create")
 	public String createPointList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
@@ -36,5 +36,12 @@ public class PointController {
 		return "admin/point/create-point-list";
 	}
 	
+	@GetMapping("modify")
+	public String modifyPointList(HttpServletRequest request, Model model) {
+		
+		model.addAttribute("currentURI", request.getRequestURI());
+		model.addAttribute("title", "상품 수정");
+		return "admin/point/modify-point-list";
+	}
 	
 }
