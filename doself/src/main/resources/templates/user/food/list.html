@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+<head>
+    <link th:href="@{/assets/css/food/list.css}" rel="stylesheet" type="text/css" />
+    <title>meal info</title>
+</head>
+		
+	<th:block layout:fragment="content-body">
+<div class="view-container">
+        <section class="tag">
+            <div class="filters">
+                <input class="text" type="text" placeholder="음식 이름을 입력해주세요">
+                <button class="search"></button>
+            </div>
+            <div class="create-button">
+                <button>등록 요청</button>
+            </div>
+        </section>
+        <!-- 카드 목록 -->
+        <section class="card-grid">
+            <!-- 카드 1 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://semie.cooking/image/contents/recipe/mt/ae/zjqchnyq/121626266dzvl.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>쿠키</span>
+                        <p>총 칼로리 : 461.7kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 2 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://ojsfile.ohmynews.com/STD_IMG_FILE/2016/1214/IE002069160_STD.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>짜장면</span>
+                        <p>총 칼로리 : 658.185kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 3 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://www.modndak.com/wp_data_file/1585555311_1.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>닭가슴살</span>
+                        <p>총 칼로리 : 272.02kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 4 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://cdn.news.hidoc.co.kr/news/photo/202409/33344_79518_0828.png" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>샐러드</span>
+                        <p>총 칼로리 : 95.84kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 5 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://cafe24.poxo.com/ec01/jangmonim22/zU/6ShiICoqYKFmVL5KuPkWwJ5vg96YhnO+QJaaKGyyBLSmxx7qPtYRNZdKHfky4OBgRX3/Cmo/SWWFEGGhGWg==/_/web/product/medium/202202/8b240c844a1eed4732f9dbb1bc47edc9.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>후라이드치킨</span>
+                        <p>총 칼로리 : 1148.448kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 6 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://img.glyde.co.kr/productsinfo/51/img/img01.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>치즈피자</span>
+                        <p>총 칼로리 : 695.76kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 7 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://cdn.dominos.co.kr/admin/upload/goods/20200508_gH22my39.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>불고기피자</span>
+                        <p>총 칼로리 : 649.8kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 8 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://img.choroc.com/newshop/goods/009179/009179_1.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>라면</span>
+                        <p>총 칼로리 : 451kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 9 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://i.namu.wiki/i/7Zu0RCSIGqsUkoz_zGMQQqHskoVeWmMt3Lj7whQ1oTmUeFzcHbX7r-Ig6E3W7PTTMhqAa255j-XY1YW0TjeQrA.webp" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>우동</span>
+                        <p>총 칼로리 : 439.4208kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 10 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://i.namu.wiki/i/I63sEiy-8vUXVhV-I0IZiS9ntT0INuKXgBYAE3QqUvOlToSoEqSgpvEbUmxsFTXtoBRN4WJolyAFEAlDdeZFhQ.webp" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>족발</span>
+                        <p>총 칼로리 : 554.025kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 11 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://i.namu.wiki/i/oFHlYDjoEh8f-cc3lNK9jAemRkbXxNGwUg7XiW5LGS6DF1P2x8GCeNQxbQhVIwtUS1u53YPw-uoyqpmLtrGNJA.webp" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>삼겹살_구이</span>
+                        <p>총 칼로리 : 933.7kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 12 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://recipe1.ezmember.co.kr/cache/recipe/2019/03/03/fca1b1c8f05592f409b6fbe702e2112a1.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>토마토파스타</span>
+                        <p>총 칼로리 : 606.0096kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 13 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://i.namu.wiki/i/A5AIHovo1xwuEjs7V8-aKpZCSWY2gN3mZEPR9fymaez_J7ufmI9B7YyDBu6kZy9TC9VWJatXVJZbDjcYLO2S8Q.webp" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>떡볶이</span>
+                        <p>총 칼로리 : 291.816kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 14 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://www.ddanzi.com/files/attach/images/977701/225/633/713/5c453527e2b835d49770f37c1d5c19a8.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>돈까스</span>
+                        <p>총 칼로리 : 710kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 15 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://thumbnail.10x10.co.kr/webimage/image/basic600/569/B005694692.png?cmd=thumb&w=400&h=400&fit=true&ws=false" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>까르보나라파스타</span>
+                        <p>총 칼로리 : 895.85kcal</p>
+                    </div>
+                </div>
+            </a>
+            <!-- 카드 16 -->
+            <a th:href="@{/food/view}" class="info-link" target="_blank">
+                <div class="card">
+                    <img src="https://img.siksinhot.com/place/1486427703638619.jpg" alt="카드 이미지">
+                    <div class="card-content">
+                        <span>닭갈비</span>
+                        <p>총 칼로리 : 596kcal</p>
+                    </div>
+                </div>
+            </a>
+        </section>
+    </div>
+	</th:block> 
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource">
+	    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+	    <script>
+	        $(document).ready(function() {
+	            // 버튼 클릭 이벤트 핸들러
+	            $(".info-link").on("click", function(event) {
+	
+	                event.preventDefault();
+	                
+	                var targetPage = $(this).data("target"); // data-target 속성에서 페이지 경로 가져오기
+	                
+	                if (targetPage) {
+	                    window.open(targetPage, "_blank", 'width=600, height=600, left=500, top=200');
+	                    // window.location.href = targetPage; // 현재 창(_self)에서 페이지 열기
+	                } else {
+	                    alert("페이지 경로가 설정되지 않았습니다.");
+	                }
+	            });
+	
+	        });
+	
+	    </script>
+    </th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:src="@{/assets/js/layout.js}"></script>
+    </th:block> 
+</html>

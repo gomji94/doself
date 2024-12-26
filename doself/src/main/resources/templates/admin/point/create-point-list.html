@@ -10,8 +10,7 @@
                     <div class="content-header">
                         <h2 class="content-title">상품추가</h2>
                         <div>
-                            <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="#">추가하기</a>
-                            <a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/point/list}">취소</a>
+                            
                         </div>
                     </div>
                 </div>
@@ -51,6 +50,13 @@
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- .row end// -->
+                            
+                            <div class="row">                                
+                                <div class="col-md-9 addBtn">
+                                    <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="@{#}">추가하기</a>
+                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/point/list}">취소</a>
+                                </div> <!-- col.// -->
+                            </div> 
                         </div>
                     </div>
                 </div>

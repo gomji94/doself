@@ -13,7 +13,7 @@ public class MemberController {
 	
 	// 회원관리
 	@GetMapping("/list")
-	public String memberListView(HttpServletRequest request, Model model) {
+	public String getMemberList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "회원목록");
@@ -21,7 +21,7 @@ public class MemberController {
 	}
 	// 로그관리
 	@GetMapping("/loglist")
-	public String memberLog(HttpServletRequest request, Model model) {
+	public String getMemberLog(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "회원로그목록");
