@@ -8,7 +8,7 @@
           <div class="row">
                 <div class="col-6">
                     <div class="content-header">
-                        <h2 class="content-title">등록 요청 처리</h2>                        
+                        <h2 class="content-title">회원 정보 수정</h2>                        
                     </div>
                 </div>
             </div>    
@@ -23,11 +23,11 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">1. 처리 상태 코드</label>
+                                        <label class="form-label">1. 회원등급</label>
                                         <select name="scCode" id="scCode" class="form-select">
-                                        	<option value="sc_001">접수</option>
-                                        	<option value="sc_002">승인</option>
-                                        	<option value="sc_003">반려</option>
+                                        	<option value="mg_001">관리자</option>
+                                        	<option value="mg_002">회원</option>
+                                        	<option value="mg_003">부정회원</option>
                                         </select>
                                     </div>                
                                 </div> <!-- col.// -->
@@ -37,16 +37,36 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">2. 반려 사유 내용</label>
+                                        <label class="form-label">2. 이메일</label>
                                         <input type="text" class="form-control">
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->                            
                             
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">3. 생년월일</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// --> 
+                                                       
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">4. 연락처</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->                                                         
+                            
                             <div class="row">                                
                                 <div class="col-md-9 addBtn">
                                     <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="@{#}">수정하기</a>
-                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/nutrition/list}">취소</a>
+                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/member/list}">취소</a>
                                 </div> <!-- col.// -->
                             </div>
                         </div>
