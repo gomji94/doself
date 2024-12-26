@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영양정보 페이지</title>
-    <link rel="stylesheet" th:href="@{/assets/css/user-feed-common.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/user-feed-nutritioninfo_view.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-common.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/nutritioninfo/user-nutritioninfo-view.css}">
 </head>
 <body>
     <!-- header : 상단 고정 포지션 픽스 -->
@@ -99,21 +99,21 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="nutrition-details">
-                <p class="nutrition-details-p">하루 권장량 비교 (남은양)</p>
-                <ul class="nutrition-list-group">
-                    <li class="list-group-item">남은 열량: <span id="calories">0</span> kcal</li>
-                    <li class="list-group-item">남은 탄수화물: <span id="protein">0</span> kcal</li>
-                    <li class="list-group-item">남은 단백질: <span id="fat">0</span> kcal</li>
-                    <li class="list-group-item">남은 지방: <span id="fat">0</span> kcal</li>
-                    <button class="list-group-button">...</button>
-                </ul>
-                <div class="nutrition-button">
-                    <button class="prev-button">&lt;</button>
-                    <button class="next-button">&gt;</button>
-                </div>
-            </div>
+	            <div class="nutrition-details">
+	                <p class="nutrition-details-p">하루 권장량 비교 (남은양)</p>
+	                <ul class="nutrition-list-group">
+	                    <li class="list-group-item">남은 열량: <span id="calories">0</span> kcal</li>
+	                    <li class="list-group-item">남은 탄수화물: <span id="protein">0</span> kcal</li>
+	                    <li class="list-group-item">남은 단백질: <span id="fat">0</span> kcal</li>
+	                    <li class="list-group-item">남은 지방: <span id="fat">0</span> kcal</li>
+	                    <button class="list-group-button">...</button>
+	                </ul>
+	                <div class="nutrition-button">
+	                    <button class="prev-button">&lt;</button>
+	                    <button class="next-button">&gt;</button>
+	                </div>
+	            </div>
+	    	</div>
         </main>
     </div>
     <!-- footer : 하단 고정 포지션 스테틱 -->
