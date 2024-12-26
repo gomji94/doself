@@ -186,10 +186,27 @@
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
-    	<script>
-    	
-    	</script>
-    	
+	    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+	    <script>
+	        $(document).ready(function() {
+	            // 버튼 클릭 이벤트 핸들러
+	            $(".info-link").on("click", function(event) {
+	
+	                event.preventDefault();
+	                
+	                var targetPage = $(this).data("target"); // data-target 속성에서 페이지 경로 가져오기
+	                
+	                if (targetPage) {
+	                    window.open(targetPage, "_blank", 'width=600, height=600, left=500, top=200');
+	                    // window.location.href = targetPage; // 현재 창(_self)에서 페이지 열기
+	                } else {
+	                    alert("페이지 경로가 설정되지 않았습니다.");
+	                }
+	            });
+	
+	        });
+	
+	    </script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->
