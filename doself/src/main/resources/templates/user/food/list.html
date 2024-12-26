@@ -4,6 +4,8 @@
       layout:decorate="~{user/layout/default}">
 <head>
     <link th:href="@{/assets/css/food/list.css}" rel="stylesheet" type="text/css" />
+   	<link th:href="@{/assets/css/medicine/request-modal.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/css/medicine/confirm-modal.css}" rel="stylesheet" type="text/css" />
     <title>meal info</title>
 </head>
 		
@@ -15,7 +17,7 @@
                 <button class="search"></button>
             </div>
             <div class="create-button">
-                <button>등록 요청</button>
+                <button id="test-btn">등록 요청</button>
             </div>
         </section>
         <!-- 카드 목록 -->
@@ -182,35 +184,68 @@
             </a>
         </section>
     </div>
+
+        <!-- 모달창 여기부터 복사 -->
+    <div class="modal-container">
+        <div class="popup-wrap" style="display: none;">
+            <div class="popup">
+                <div class="popup-body">
+                    <div class="body-content">
+                        <div class="body-titlebox">
+                            <div id="modal-request-title">등록 요청</div>
+                            <form id="modal-request-form">
+                                <div>
+                                    <span>분류</span>
+                                    <div id="request-cate-container">
+                                        <input type='radio' name='request-cate' value='food' />음식
+                                        <input type='radio' name='request-cate' value='nutritionalSupplements' />영양제
+                                    </div>
+                                </div>
+                                <div>
+                                    <span>이름</span>
+                                    <input id="modal-request-form__input" type="text" />
+                                </div>
+                            </form>
+                            <div id="modal-request-form__buttons">
+                                <button type="submit" id="modal-request-form__submitButton" data-target="confirm-message.html">요청</button>
+                                <button type="button" id="modal-request-form__cancelButton">취소</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 모달창 여기까지 복사 -->
+
+        <!-- 모달창 여기부터 복사 -->
+        <div class="modal-confirm-container">
+            <div class="confirm-popup-wrap" style="display: none;">
+                <div class="confirm-popup">
+                    <div class="confirm-popup-body">
+                        <div class="confirm-body-content">
+                            <div class="confirm-body-titlebox">
+                                <div id="modal-request-title">DoSelf</div>
+                                <div id="confirm-message">
+                                    성공적으로 제출 되었습니다.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 모달창 여기까지 복사 -->
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource">
-	    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
-	    <script>
-	        $(document).ready(function() {
-	            // 버튼 클릭 이벤트 핸들러
-	            $(".info-link").on("click", function(event) {
-	
-	                event.preventDefault();
-	                
-	                var targetPage = $(this).data("target"); // data-target 속성에서 페이지 경로 가져오기
-	                
-	                if (targetPage) {
-	                    window.open(targetPage, "_blank", 'width=600, height=600, left=500, top=200');
-	                    // window.location.href = targetPage; // 현재 창(_self)에서 페이지 열기
-	                } else {
-	                    alert("페이지 경로가 설정되지 않았습니다.");
-	                }
-	            });
-	
-	        });
-	
-	    </script>
-    </th:block>
+    <th:block layout:fragment="customJsResource"></th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    	<script th:src="@{/assets/js/layout.js}"></script>
+    <script th:src="@{/assets/js/layout.js}"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script th:src="@{/assets/js/medicine/modal.js}"></script>
+    <script th:src="@{/assets/js/medicine/list.js}"></script>
     </th:block> 
 </html>
