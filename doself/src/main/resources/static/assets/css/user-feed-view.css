@@ -1,0 +1,489 @@
+/* 스타일 초기화 */
+* {
+    margin: 0;
+    box-sizing: border-box;
+    }
+    
+    /* 전체 화면 높이 설정 */
+    html, body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* feed-container */
+    .feed-container {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 272px 469px 314px;
+        height: 100%;
+        gap: 45px;
+        max-width: 1280px;
+        width: 100%;
+        margin: 80px auto;
+        margin-top: 70px;
+        margin-bottom: 0px;
+        height: calc(100vh - 80px);
+        overflow: hidden;
+    }
+    
+    /* Sidebar */
+    .sidebar-container {
+        height: 100%;
+        display: flex;
+    }
+
+    .sidebar {
+        background-color: #fff;
+        padding: 20px 0px;
+        box-shadow: 3px 0 4px rgba(51, 24, 24, 0.1);
+        width: 230px;
+        transition: width 0.5s ease, opacity 0.5s ease;
+    }
+    
+    .sidebar img {
+        /* display: block; */
+        /* margin: 0 auto;
+        margin-top: 17px;
+        width: 20px; */
+        width: 22px;
+        opacity: 0.9;
+    }
+    
+    .sidebar ul {
+        list-style: none;
+        display: flex;
+        padding: 11px 30px;
+        opacity: 0.9;
+    }
+    
+    .sidebar ul:hover {
+        background-color: #f4f4f4;
+    }
+    
+    .sidebar ul li {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .sidebar ul li a {
+        display: flex;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        padding-left: 0;
+        margin-left: 15px;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+    
+    .sidebar ul li a:hover {
+        background-color: transparent;
+    }
+
+    .sidebar.shrink {
+        width: 80px;
+        opacity: 0.8;
+        display: inline-block;
+        margin-right: -145px;
+    }
+
+    .sidebar.shrink ul li a {
+        opacity: 0; /* 글자 숨기기 */
+        pointer-events: none; /* 클릭 방지 */
+    }
+    
+    /* 검색 패널 스타일 */
+    .search-panel {
+        display: none;
+        position: absolute;
+        left: 80px; /* 사이드바 오른쪽에 위치 */
+        top: 80px;
+        width: 300px;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        opacity: 0;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        transform: translateX(-30px);
+    }
+    
+    .search-panel.active {
+        display: flex;
+        position: initial;
+        opacity: 1;
+        transform: translateX(0);
+        padding: 33px 40px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-panel.active img {
+        width: 98%;
+        height: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        opacity: 0.9;
+    }
+
+    .search-panel.active .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        height: 32px;
+    }
+
+    .search-panel.active input.text {
+        font-size: 13px;
+        color: #515151;
+        background-color: #fff;
+        padding: 6px 24px;
+        margin: 0;
+        border: 1px solid #aaa;
+        border-radius: 18px;
+        width: 250px;
+    }
+
+    .search-panel.active .filters button {
+        border: 0;
+        background-color: transparent;
+        opacity: 0.5;
+        margin-left: -50px;
+        position: relative;
+        margin-top: 4px;
+    }
+
+    .search-panel.active .filters .search {
+        background-image: url(https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 25px;
+        height: 25px;
+        padding-right: 30px;
+        right: 5px;
+    }
+
+    .search-panel.active span {
+        font-size: 14px;
+        color: #515151;
+        padding: 0px 10px;
+        margin-bottom: 10px;
+    }
+
+    .search-panel.active #search-results {
+        list-style: none;
+        font-size: 14px;
+        color: #aaa;
+        padding: 0px 10px;
+    }
+
+    .search-panel.active #search-results li {
+        padding: 7px 0px;
+    }
+    
+    /* 메인 콘텐츠 이동 */
+    .main {
+        transition: margin-left 0.5s ease;
+    }
+    
+    .main.move {
+        margin-left: 270px; /* 검색 패널 너비 + 여백 */
+        width: 100%;
+        margin-left: 430px;
+    }
+    
+    /* progress-container 숨김 효과 */
+    .progress-container {
+        transition: opacity 0.5s ease;
+    }
+    
+    .progress-container.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .sidebar {
+        width: 272px;
+        transition: width 0.5s ease, opacity 0.5s ease;
+    }
+
+    .sidebar.shrink {
+        width: 70px;
+        opacity: 0.8;
+    }
+
+    .main,
+    .progress-container {
+        transition: transform 0.5s ease;
+    }
+
+    .main.move,
+    .progress-container.move {
+        transform: translateX(-200px);
+    }
+    
+    /* Main Content */
+    .main {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+        max-height: calc(100vh - 100px);
+        padding: 20px;
+        margin-top: 12px;
+    }
+    
+    /* 스크롤바 숨기기 */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .feed {
+        background: #ffffff;
+        width: 100%;
+        max-width: 430px;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(51, 24, 24, 0.1);
+    }
+    
+    .feed a {
+        text-decoration: none;
+        color: #515151;
+    }
+    
+    .feed img {
+        width: 100%;
+    }
+    
+    .feed-header {
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .feed-header img {
+        width: auto;
+        height: 40px;
+        border-radius: 100px;
+        margin-top: 5px;
+    }
+    
+    .feed-header .user-name {
+        font-weight: bold;
+        font-size: 15px;
+        padding: 0px 17px;
+        position: relative;
+        margin-right: auto;
+    }
+    
+    .feed-header .feed-option {
+        position: relative;
+        float: right;
+        color: #EAEAEA;
+    }
+
+    .feed-option .option-button {
+        border: none; /* 테두리 제거 */
+        background: none; /* 배경 제거 */
+        box-shadow: none; /* 그림자 제거 */
+        outline: none; /* 클릭 시 생기는 외곽선 제거 */
+        cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+        padding: 0; /* 필요하면 내부 여백 제거 */
+    }
+    
+    .feed-header .feed-option img {
+        width: 19px;
+        height: auto;
+        opacity: 0.7;
+        padding-right: 5px;
+    }
+    
+    .feed .feed-main-img {
+        width: 100%;
+        height: auto;
+    }
+    
+    .feed .feed-action {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px 7px 18px;
+    }
+    
+    .feed .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    
+    .feed .action-btn img {
+        width: auto;
+        height: 25px;
+        margin-top: 4px;
+    }
+    
+    .feed .action-icons {
+        display: flex;
+        gap: 13px;
+    }
+
+    .like-img {
+        width: 24px; /* 아이콘 크기 조정 */
+        height: 24px;
+        transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    }
+    
+    /* 좋아요 상태 - 빨간 하트 */
+    .like-img.red-heart {
+        content: url('https://velog.velcdn.com/images/wlsgus4296/post/edd2187b-66f0-4548-b5dc-c72de17c030d/image.png'); /* 빨간색 하트 이미지 링크 */
+    }
+    
+    .feed .feed-time {
+        color: #777;
+        font-size: 12px;
+        padding-bottom: 16px;
+        display: flex;
+        margin-right: 2px;
+        float: inline-end;
+    }
+    
+    .feed .feed-description {
+        margin-left: 11px;
+        margin-bottom: 12px;
+    }
+    
+    .feed .feed-description #feed-likes {
+        font-size: 13px;
+    }
+    
+    .feed-description p {
+        padding: 6.5px 7px;
+        font-size: 15px;
+    }
+    
+    .feed hr {
+        opacity: 0.2;
+    }
+    
+    .feed .add-comment {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: 18px;
+        margin-top: 20px;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+    
+    .feed .comments-link {
+        color: #aaa; /* 댓글 링크 색상 */
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .feed .add-comment img {
+        width: 20px;
+        opacity: 0.7;
+    }
+    
+    .feed .add-comment input {
+        flex: 1;
+        padding: 11px 10px 4px 6px;
+        font-size: 14px;
+        border-style: none;
+        outline: none;
+    }
+    
+    .feed .comment-submit {
+        background: none;
+        border: none;
+        color: #9EB92A;
+        font-size: 15px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .feed .input[type="text"] {
+        border: none;
+        width: 73%;
+    }
+    
+    /* Right Sidebar */
+    .progress-container {
+        background-color: #fff;
+        border-radius: 10px;
+        width: 320px;
+        height: 500px;
+        margin-top: 32px;
+        max-width: 270px;
+        position: sticky;
+        top: 10px;
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        margin-left: -25px;
+        box-shadow: 0 4px 10px rgba(51, 24, 24, 0.1);
+    }
+    
+    .analysis-table .analysis-title {
+        font-weight: bold;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 5px 10px;
+        position: relative;
+        margin-right: auto;
+        border-radius: 12px;
+        background-color: #ddd;
+    }
+
+    .analysis-table a {
+        text-decoration-line: none;
+    }
+    
+    .analysis-table .food-name {
+        font-weight: bold;
+        font-size: 15px;
+        padding: 5px 10px;
+        position: relative;
+        margin-right: auto;
+    }
+    
+    .analysis-table .img {
+        width: 100%;
+        padding: 5px 5px;
+        border-radius: 5px;
+    }
+    
+    .progress-container .analysis-info {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .info-table,
+    .info-table table th,
+    .info-table table td {
+        font-size: 13px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+    }
+    
+    .info-table {
+        width: 100%;
+        height: 150px;
+    }
+    
+    .analysis-caution {
+        margin-top: 10px;
+        color: #777;
+        font-size: 11px;
+    }
+    
+    .footer {
+        flex-shrink: 0;
+    }

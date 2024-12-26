@@ -1,0 +1,368 @@
+/* 스타일 초기화 */
+* {
+    margin: 0;
+    box-sizing: border-box;
+    }
+    
+    /* 전체 화면 높이 설정 */
+    html, body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* 전체 페이지 스타일 */
+    /* body {
+        display: flex;
+        flex-direction: column;
+        font-family: 'Arial', sans-serif;
+        line-height: 1.5;
+        background-color: #ffff;
+        color: #333;
+    } */
+    
+    /* feed-container */
+    .feed-container {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 272px 800px;
+        height: 100%;
+        max-width: 1280px;
+        width: 100%;
+        margin: 80px auto;
+        margin-top: 70px;
+        margin-bottom: 0px;
+        height: calc(100vh - 80px);
+        overflow: hidden;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+        background-color: #fff;
+        padding: 20px 0px;
+        box-shadow: 3px 0 4px rgba(51, 24, 24, 0.1);
+    }
+    
+    .sidebar img {
+        /* display: block; */
+        /* margin: 0 auto;
+        margin-top: 17px;
+        width: 20px; */
+        width: 22px;
+        opacity: 0.9;
+    }
+    
+    .sidebar ul {
+        list-style: none;
+        display: flex;
+        padding: 11px 30px;
+        opacity: 0.9;
+    }
+    
+    .sidebar ul:hover {
+        background-color: #f4f4f4;
+    }
+    
+    .sidebar ul li {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .sidebar ul li a {
+        display: flex;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        padding-left: 0;
+        margin-left: 15px;
+    }
+    
+    .sidebar ul li a:hover {
+        background-color: transparent;
+    }
+    
+    /* Main Content */
+    .main {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+        max-height: calc(100vh - 100px);
+        padding: 20px;
+        margin-top: 12px;
+    }
+    
+    /* 스크롤바 숨기기 */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .feed {
+        background: #ffffff;
+        width: 100%;
+        max-width: 740px;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(51, 24, 24, 0.1);
+    }
+    
+    .feed a {
+        text-decoration: none;
+        color: #515151;
+    }
+       
+    .feed img {
+        width: 450px;
+        height: 425px;
+    }
+
+    .feed-header {
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .feed-header img {
+        width: auto;
+        height: 40px;
+        border-radius: 100px;
+        margin-top: 5px;
+    }
+    
+    .feed-header .user-name {
+        font-weight: bold;
+        font-size: 15px;
+        padding: 0px 17px;
+        position: relative;
+        margin-right: auto;
+    }
+    
+    .feed-header .feed-option {
+        position: relative;
+        float: right;
+        color: #EAEAEA;
+    }
+    
+    .feed-header .feed-option img {
+        width: 19px;
+        height: auto;
+        opacity: 0.7;
+        padding-left: 5px;
+    }
+    
+    .feed .feed-main {
+        display: flex;
+        gap: 20px;
+    }
+
+    .feed .feed-main-img {
+        width: 450px;
+        height: auto;
+        margin-right: 20px;
+    }
+      
+    .feed .feed-img-chart {
+        display: flex;
+    }
+
+    .feed .feed-img-chart .feed-chart {
+        display: grid;
+    }
+      
+    .feed .feed-action {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px 7px 18px;
+    }
+    
+    .feed .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    
+    .feed .action-btn img {
+        width: auto;
+        height: 25px;
+        margin-top: 4px;
+    }
+
+    .feed .action-icons {
+        display: flex;
+        gap: 13px;
+    }
+    
+    .feed .feed-time {
+        color: #777;
+        font-size: 12px;
+        padding-bottom: 16px;
+        display: flex;
+        margin-right: 2px;
+        float: inline-end;
+    }
+    
+    .feed .feed-description {
+        margin-left: 11px;
+        margin-bottom: 12px;
+    }
+    
+    .feed .feed-description #feed-likes {
+        font-size: 13px;
+    }
+    
+    .feed-description p {
+        padding: 6.5px 7px;
+        font-size: 15px;
+    }
+    
+    .feed hr {
+        opacity: 0.2;
+    }
+    
+    .feed .add-comment {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: 18px;
+        margin-top: 20px;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+    
+    .feed .comments-link {
+        color: #aaa; /* 댓글 링크 색상 */
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .feed .add-comment img {
+        width: 20px;
+        height: 20px;
+        opacity: 0.7;
+    }
+    
+    .feed .add-comment input {
+        flex: 1;
+        padding: 11px 10px 4px 6px;
+        font-size: 14px;
+        border-style: none;
+        outline: none;
+    }
+    
+    .feed .comment-submit {
+        background: none;
+        border: none;
+        color: #9EB92A;
+        font-size: 15px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .feed .input[type="text"] {
+        border: none;
+        width: 73%;
+    }
+
+    .nutrition-info {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        margin-right: 20px;
+        margin-bottom: 2%;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    .nutrition-info .p {
+        margin-bottom: 10%;
+
+    }
+
+    .nutrition-info .list-group {
+        margin-top: 20px;
+        width: 70%;
+        transform: scale(1.05);
+        list-style-type: none;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        padding: 10px 25px;
+    }
+    
+    /* Right Sidebar */
+    .progress-container {
+        background-color: #fff;
+        border-radius: 10px;
+        /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+        width: 320px;
+        height: 500px; 
+        margin-top: 32px;
+    }
+    
+    .progress-container {
+        flex: 1; 
+        max-width: 300px;
+        position: sticky; 
+        top: 10px; 
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border: 1px solid #ddd;
+        text-align: center;
+    } 
+    
+    .analysis-table .analysis-title {
+        font-weight: bold;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 5px 10px;
+        position: relative;
+        margin-right: auto;
+        border-radius: 15px;
+        background-color: #ddd;
+    }
+    
+    .analysis-table .food-name {
+        font-weight: bold;
+        font-size: 16px;
+        padding: 5px 10px;
+        position: relative;
+        margin-right: auto;
+        margin-top: 0 10px;
+    }
+    
+    .analysis-table .img {
+        width: 220px;
+        padding: 1px 0px;
+    }
+    
+    .progress-container .analysis-info {
+        width: 100%;
+        border-collapse: collapse;
+        padding: 0px 25px;
+    }
+    
+    .info-table,
+    .info-table table th,
+    .info-table table td {
+        font-size: 12px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+    }
+    
+    .info-table {
+        width: 100%;
+        height: 150px;
+    }
+    
+    .analysis-caution {
+        margin-top: 10px;
+        color: #777;
+        font-size: 10px;
+    }
