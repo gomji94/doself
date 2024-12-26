@@ -4,6 +4,7 @@
       layout:decorate="~{user/layout/default}">
 <head>
 	<link th:href="@{/assets/css/challenge/user-challenge-list.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/css/challenge/user-challenge-view.css}" rel="stylesheet" type="text/css" />
 </head>
 	<th:block layout:fragment="content-body" class="main-container">
 		<!-- challenge-list-view modal -->
@@ -11,6 +12,12 @@
 		
 		<!-- container -->
 	    <div class="view-container">
+		    <!-- 챌린지 생성 모달 -->
+            <div th:replace="~{user/challenge/create-challenge :: create-challenge}"></div>
+
+		    <!-- 챌린지 상세 정보 모달 -->
+            <div th:replace="~{user/challenge/challenge-list-view :: challenge-list-view}"></div>
+	        
 	        <section class="tag">
 	            <div class="tag-buttons">
 	                <button>#다이어트</button>
