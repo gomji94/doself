@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class PaymentController {
 	
 	@GetMapping("list")
-	public String paymentList(HttpServletRequest request, Model model) {
+	public String getPaymentList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title","결제 내역");
@@ -21,7 +21,7 @@ public class PaymentController {
 	}
 	
 	@GetMapping("refund/list")
-	public String refundList(HttpServletRequest request, Model model) {
+	public String getRefundList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title","환불 접수 내역");

@@ -1,0 +1,176 @@
+/* 왼쪽 사이드바 스타일 */
+.sidebar {
+    width: 230px;
+    background-color: #f4f4f4;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: calc(100vh - 70px);  /*화면 높이에서 상단바 높이 제외 */
+    height: auto; /* 자동 높이 조정 */
+    max-height: 100%;
+    box-sizing: border-box;
+    box-shadow: 2px 0 5px rgba(51, 24, 24, 0.1);
+    min-width: 210px; /* 최소 너비 유지 */
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+}
+.sidebar ul li {
+    position: relative;
+    white-space: nowrap; /* 줄바꿈 방지 */
+}
+.sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    padding: 8px 10px; /* 상위 메뉴 왼쪽 여백 */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: left;
+    padding-left: 20%;
+    padding-right: 30px;
+    height: 25px;
+}
+.sidebar ul li a:hover {
+    background-color: #ddd;
+}
+.sidebar ul li a::before {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1; /* 다른 요소보다 위에 표시 */
+    pointer-events: none; /* 클릭 이벤트 차단 */
+}
+.sidebar ul .sub-menu {
+    display: none;
+    margin : 0px 32px;
+    background-color: #fff;
+    position: relative;
+    padding: 0;
+    border-radius: 8px;
+}
+.sidebar ul .sub-menu a {
+    font-size: 12px;
+    padding: 5px 0px 5px 40px ;
+    color: #999; /* 하위 메뉴 기본 글자색: 회색 */
+    border-radius: 0; /* 둥근 모서리 제거 */
+
+}
+.sidebar ul .sub-menu a:hover {
+    color: #000; /* 하위 메뉴 마우스 오버 시 글자색: 검은색 */
+    background-color: transparent;
+}
+.sidebar ul .sub-menu a:before {
+    content: none; /* 하위 메뉴는 원형 모양 제거 */
+}
+
+.toggle-icon {
+    margin-left: auto; /* 남은 공간을 사용해 오른쪽으로 밀어냄 */
+    display: inline-block; /* 인라인 블록으로 설정 */
+    text-align: right; /* 텍스트 오른쪽 정렬 */
+}
+
+#main-content {
+    width: calc(100% - 230px);
+    margin: 0;
+}
+
+.sidebar ul {
+    gap: 0;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 8px 10px;
+    padding-left: 20%;
+    gap: 10px;
+    height: 25px;
+}
+
+/* 메인 콘텐츠 스타일 */
+main {
+    flex-grow: 1; /* 나머지 공간 차지 */
+    margin-left: 20px; /* 사이드바와의 간격 */
+    overflow: auto;
+    box-sizing: border-box;
+    min-width: 0; /* flex-grow로 인해 필요 */
+    display: flex;
+    justify-content: space-between;
+    min-height: 1155px;
+}
+
+#main-container-contents {
+    width: calc(100% - 200px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#main-container-title {
+    font-size: 30px;
+    color: #606060;
+    margin: 11px 0px 15px 27px;
+}
+
+.main-container-itemList__items {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 190px)); /* 최소 150px, 최대 200px */
+    gap: 20px;
+    padding: 0;
+    margin: 0 20px;
+    list-style: none;
+    box-sizing: border-box; /* padding이 요소 크기 계산에 포함되도록 설정 */
+}
+
+.main-container-itemList__item {
+    height: 190px;
+    width: 160px;
+    box-sizing: border-box;
+    color: white;
+    text-align: center;
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+}
+
+.main-container-itemList__item a {
+    color: black;
+    text-decoration: none;
+}
+
+.mcii__image {
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.mcii__name {
+    margin: 4px 0;
+}
+
+.mcii__name, .mcii__price {
+    font-size: 12px;
+}
+
+#main-container-advertise {
+    width: fit-content;
+}
+
+#main-container-advertise__adBlock {
+    height: 600px;
+    width: 180px;
+    margin-top: 55px;
+    position: relative;
+}
+
+#mcaa__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+

@@ -13,5 +13,4 @@ public class CommunityController {
 	public String getMethodName() {
 		return "index";
 	}
-	
 }
