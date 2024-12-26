@@ -17,7 +17,7 @@ function renderTable(data) {
     if (data.length > 0) {
         data.forEach(item => {
             const row = `<tr>
-                            <td><a href="#" class="userIdDetails">${item.prlNum}</a></td>
+                            <td>${item.prlNum}</td>
                             <td>${item.prrNum}</td>
                             <td>${item.mbrName}</td>
                             <td>${item.prlDate}</td>
@@ -28,7 +28,7 @@ function renderTable(data) {
             resultTable.innerHTML += row;
         });
     } else {
-        resultTable.innerHTML = `<tr><td colspan="13">검색 결과가 없습니다.</td></tr>`;
+        resultTable.innerHTML = `<tr><td colspan="7">검색 결과가 없습니다.</td></tr>`;
     }
 }
 

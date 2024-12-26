@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/assets/css/food/view.css}" rel="stylesheet" type="text/css" />
+    <title>food details</title>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="main-title">영양제 상세 정보</div>
+        <div id="main-content">
+            <div class="main-item-header">
+                <div id="item-title">
+                    <img class="miit__image" src="https://img.danawa.com/prod_img/500000/057/954/img/17954057_1.jpg?_v=20221007125357" alt="">
+                    <span>루테인 지아잔틴 아스타잔틴</span>
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    영양제 명
+                </div>
+                <div id="item-name">
+                    닭갈비
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                   영양제 브랜드
+                </div>
+                <div id="item-price">
+                    고려은단
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                   영양제 효능
+                </div>
+                <div id="item-price">
+                    시력 및 눈 피로감 케어
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                   일일 권장 섭취량
+                </div>
+                <div id="item-price">
+                    1회 1포(흑갈색 1캡슐 + 적갈색 1캡슐)을 충분한 물과 함께 섭취 하세요.
+                </div>
+            </div>
+        </div>
+        <div class="market-item-button-container">
+            <a href="#">
+                <button id="item-close__button">닫기</button>
+            </a>
+        </div>
+    </div>
+
+    <th:block layout:fragment="customJsResource">
+	    <script>
+
+	         $("#item-close__button").on("click", function() {
+	             window.close();
+	         });
+	
+	    </script>
+    </th:block>
+
+</body>
+</html>

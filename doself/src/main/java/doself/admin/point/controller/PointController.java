@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/admin/point")
 public class PointController {
 
+	// 포인트 상품 조회
 	@GetMapping("list")
 	public String getPointList(HttpServletRequest request, Model model) {
 		
@@ -20,6 +21,7 @@ public class PointController {
 		return "admin/point/admin-point-list";
 	}
 	
+	// 회원별 포인트 사용 내역 조회
 	@GetMapping("userhistorylist")
 	public String getUserHistoryList(HttpServletRequest request, Model model) {
 		
@@ -28,6 +30,7 @@ public class PointController {
 		return "admin/point/user-history-list";
 	}
 	
+	// 포인트 상품 생성
 	@GetMapping("create")
 	public String createPointList(HttpServletRequest request, Model model) {
 		
@@ -36,6 +39,7 @@ public class PointController {
 		return "admin/point/create-point-list";
 	}
 	
+	// 포인트 상품 수정
 	@GetMapping("modify")
 	public String modifyPointList(HttpServletRequest request, Model model) {
 		
