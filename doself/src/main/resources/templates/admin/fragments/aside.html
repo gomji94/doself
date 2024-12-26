@@ -43,13 +43,14 @@
                             <a th:href="@{/admin/challenge/rewardlist}" th:classappend="${currentURI == '/admin/challenge/rewardlist' ? 'active' : ''}">보상 지급 기록</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/nutrition/list' ? 'active' : ''}">
+                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/nutrition/list' or currentURI == '/admin/nutrition/createList' ? 'active' : ''}">
                         <a class="menu-link" th:href="@{/admin/nutrition/list}">
                             <i class="fa-solid fa-arrow-up-from-bracket"></i>
                             <span class="text">등록 요청 관리</span>
                         </a>
                         <div class="submenu">
                             <a th:href="@{/admin/nutrition/list}" th:classappend="${currentURI == '/admin/nutrition/list' ? 'active' : ''}">등록 요청 관리</a>                        
+                            <a th:href="@{/admin/nutrition/createList}" th:classappend="${currentURI == '/admin/nutrition/createList' ? 'active' : ''}">영양 정보 등록</a>                        
                         </div>
                     </li>
                     <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/payment/list' or currentURI == '/admin/payment/refund/list' ? 'active' : ''}">

@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class DeclareController {
 
 	@GetMapping("list")
-	public String declareList(HttpServletRequest request, Model model) {
+	public String getDeclareList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "신고접수");
@@ -20,7 +20,7 @@ public class DeclareController {
 	}
 	
 	@GetMapping("userlist")
-	public String userHistoryList(HttpServletRequest request, Model model) {
+	public String getUserHistoryList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "부정회원관리");
