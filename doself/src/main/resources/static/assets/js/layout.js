@@ -1,7 +1,6 @@
 
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', (e) => {
-            e.preventDefault(); // 기본 링크 클릭 동작 막기
             const parent = item.parentElement;
             const subMenu = parent.querySelector('.sub-menu');
             const toggleIcon = parent.querySelector('.toggle-icon');
