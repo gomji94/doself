@@ -19,7 +19,7 @@ function renderTable(data) {
     data.forEach(item => {
         const row = `
                         <tr>
-                            <td><a href="#" class="userIdDetails">${item.mbrId}</a></td>
+                            <td><a href="/admin/member/modifymember" class="userIdDetails">${item.mbrId}</a></td>
                             <td>${item.mbrName}</td>
                             <td>${item.mgCode}</td>
                             <td>${item.mbrEmail}</td>
