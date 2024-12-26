@@ -6,12 +6,12 @@
     </a>
     <nav class="nav-links">
         <a href="#">피드</a>
-        <a href="#">음식</a>
-        <a href="#">영양제</a>
-        <a href="#">챌린지</a>
+        <a th:href="@{/food/list}">음식</a>
+        <a th:href="@{/medicine/list}">영양제</a>
+        <a th:href="@{/challenge/list}">챌린지</a>
         <a th:href="@{/ticket/itemlist}">티켓</a>
         <a th:href="@{/market/itemlist}">마켓</a>
-        <a href="#">커뮤니티</a>
+        <a th:href="@{/community/list}">커뮤니티</a>
     </nav>
     <div class="profile">
         <a th:href="@{/mypage/member/info}"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>

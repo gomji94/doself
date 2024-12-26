@@ -60,7 +60,7 @@
                         </a>
                         <div class="submenu">
                             <a th:href="@{/admin/payment/list}" th:classappend="${currentURI == '/admin/payment/list' ? 'active' : ''}">결제 내역</a>
-                            <a th:href="@{/admin/payment/refund/list}" th:classappend="${currentURI == '/admin/payment/refund/list' ? 'active' : ''}">환불 접수 내역</a>                            
+                            <a th:href="@{/admin/payment/refund/list}" th:classappend="${currentURI == '/admin/payment/refund/list' ? 'active' : ''}">환불 내역</a>                            
                         </div>
                     </li>
                     <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/point/list' or currentURI == '/admin/point/userhistorylist' ? 'active' : ''}">
