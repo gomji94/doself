@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영양정보 페이지</title>
+    <link rel="stylesheet" th:href="@{/assets/css/user-feed-common.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/user-feed-nutritioninfo_view.css}">
+</head>
+<body>
+    <!-- header : 상단 고정 포지션 픽스 -->
+    <header class="header">
+        <a href="#" class="logo">
+            <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
+        </a> <!-- 로고 클릭 시 링크 이동 -->
+        <nav class="nav-links">
+            <a href="#">피드</a>
+            <a href="#">음식</a>
+            <a href="#">영양제</a>
+            <a href="#">챌린지</a>
+            <a href="#">티켓</a>
+            <a href="#">마켓</a>
+            <a href="#">커뮤니티</a>
+        </nav>
+        <div class="profile">
+            <a href="#"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
+        </div> <!-- 프로필 사진 (원형) -->
+    </header>
+    <!-- container -->
+    <div class="feed-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul>
+                <li><img src="https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png"	alt="검색 아이콘"/></li>
+                <li><a href="#">검색</a></li>
+            </ul>
+            <ul>
+                <li><img src="https://velog.velcdn.com/images/wlsgus4296/post/b686331f-57cd-4151-a977-5dccac86ba5f/image.png"	alt="피드 추가 아이콘"/></li>
+                <li><a href="#">피드 추가</a></li>
+            </ul>
+            <ul>
+                <li><img src="https://velog.velcdn.com/images/wlsgus4296/post/0d897721-5e3f-47b5-a165-615365e79782/image.png"	alt="알림 아이콘"/></li>
+                <li><a href="#">알림</a></li>
+            </ul>
+            <ul>
+                <li><img src="https://velog.velcdn.com/images/wlsgus4296/post/55cd2fc1-6375-4982-a9b3-5887ca9e14cb/image.png"	alt="영양 정보 아이콘"/></li>
+                <li><a href="#">영양 정보</a></li>
+            </ul>
+            <ul>
+                <li><img src="https://velog.velcdn.com/images/wlsgus4296/post/9ef02b36-7df8-481e-a7fa-321dfea55682/image.png"	alt="영양제 아이콘"/></li>
+                <li><a href="#">영양제</a></li>
+            </ul>
+            <ul>
+                <li><img src="https://velog.velcdn.com/images/wlsgus4296/post/4b04a727-5f43-4c14-abeb-4d54b77d5473/image.png"	alt="음식 아이콘"/></li>
+                <li><a href="#">음식</a></li>
+            </ul>
+            <ul>
+                <li><img src="https://velog.velcdn.com/images/wlsgus4296/post/6796c6f7-cca3-45ab-bda3-5fb850420929/image.png"	alt="챌린지 아이콘"/></li>
+                <li><a href="#">챌린지</a></li>
+            </ul>
+        </aside>
+        <!-- Main Content -->
+        <main class="main">
+            <div class="food-calendar">
+                <div class="calendar-container">
+                    <p class="p">영양정보 캘린더</p>
+                    <div class="calendar">
+                        <div class="cal-button">
+                            <button class="prev-month">&lt;</button>
+                            <span class="current-month"> 8월 2024년</span>
+                            <button class="next-month">&gt;</button>
+                        </div>
+                        <table class="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>일</th>
+                                    <th>월</th>
+                                    <th>화</th>
+                                    <th>수</th>
+                                    <th>목</th>
+                                    <th>금</th>
+                                    <th>토</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                                <!-- Dates will be dynamically inserted -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="nutrition-summary">
+                <p class="nutrition-summary-p">종합 영양 정보</p>
+                <div class="nutrition-info-chart">
+                    <div class="feed-img-chart">
+                        <div>
+                            <canvas id="pieChart" width="150" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nutrition-details">
+                <p class="nutrition-details-p">하루 권장량 비교 (남은양)</p>
+                <ul class="nutrition-list-group">
+                    <li class="list-group-item">남은 열량: <span id="calories">0</span> kcal</li>
+                    <li class="list-group-item">남은 탄수화물: <span id="protein">0</span> kcal</li>
+                    <li class="list-group-item">남은 단백질: <span id="fat">0</span> kcal</li>
+                    <li class="list-group-item">남은 지방: <span id="fat">0</span> kcal</li>
+                    <button class="list-group-button">...</button>
+                </ul>
+                <div class="nutrition-button">
+                    <button class="prev-button">&lt;</button>
+                    <button class="next-button">&gt;</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- footer : 하단 고정 포지션 스테틱 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="https://velog.velcdn.com/images/mekite/post/552ea3de-e88e-42f5-969e-d7c8051cd272/image.png" alt="footer_logo">
+            </div>
+            <div class="company-info">
+                <span>전주시 덕진구 기린대로 499</span>
+                <span>|</span>
+                <span>홍길동</span>
+                <span>|</span>
+                <span>사업자등록번호 418-82-10120</span>
+            </div>
+            <div class="license-info">
+                <span>© 2024 DoSelf, Inc. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+</body>
+
+<!--/* 사용자 추가 js file */-->
+<th:block layout:fragment="customJsResource">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</th:block>
+
+<!--/* 사용자 추가 js script */-->
+<th:block layout:fragment="customJs">
+	<script>
+	document.addEventListener("DOMContentLoaded", () => {
+	    const calendarBody = document.getElementById("calendar-body");
+	    const currentMonthElement = document.querySelector(".current-month");
+	    const prevMonthButton = document.querySelector(".prev-month");
+	    const nextMonthButton = document.querySelector(".next-month");
+
+	    let currentDate = new Date();
+
+	    function renderCalendar(date) {
+	        const year = date.getFullYear();
+	        const month = date.getMonth();
+	        const today = new Date();
+
+	        // 현재 월의 이름 설정
+	        currentMonthElement.textContent = date.toLocaleDateString("ko-KR", {
+	            month: "long",
+	            year: "numeric",
+	        });
+
+	        // 이전 달력 지우기
+	        calendarBody.innerHTML = "";
+
+	        // 현재 달의 첫째 날과 일수를 구하기
+	        const firstDay = new Date(year, month, 1).getDay();
+	        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+	        // 날짜 입력
+	        let row = document.createElement("tr");
+	        for (let i = 0; i < firstDay; i++) {
+	            row.appendChild(document.createElement("td"));
+	        }
+
+	        for (let day = 1; day <= daysInMonth; day++) {
+	            const cell = document.createElement("td");
+	            cell.textContent = day;
+
+	            // 오늘 날짜 표기
+	            if (
+	                day === today.getDate() &&
+	                month === today.getMonth() &&
+	                year === today.getFullYear()
+	            ) {
+	                cell.classList.add("today");
+	            }
+
+	            cell.addEventListener("click", () => {
+	                alert(`You selected: ${year}-${month + 1}-${day}`);
+	            });
+
+	            row.appendChild(cell);
+
+	            // 토요일 이후에 새로운 행을 시작
+	            if ((firstDay + day) % 7 === 0) {
+	                calendarBody.appendChild(row);
+	                row = document.createElement("tr");
+	            }
+	        }
+
+	        if (row.children.length > 0) {
+	            calendarBody.appendChild(row);
+	        }
+	    }
+
+	    // 순회하기 위한 이벤트 리스너
+	    prevMonthButton.addEventListener("click", () => {
+	        currentDate.setMonth(currentDate.getMonth() - 1);
+	        renderCalendar(currentDate);
+	    });
+
+	    nextMonthButton.addEventListener("click", () => {
+	        currentDate.setMonth(currentDate.getMonth() + 1);
+	        renderCalendar(currentDate);
+	    });
+
+	    // 초기값
+	    renderCalendar(currentDate);
+	});
+
+	    // 영양 정보 업데이트 함수
+	    function updateNutritionInfo(date) {
+	        // 샘플 데이터: 실제 데이터는 서버에서 가져와야 함
+	        const nutritionData = {
+	            "2024-08-17": { energy: 2145.97, carb: 1220, protein: 89, fat: 547.85 },
+	            // 다른 날짜 데이터 추가
+	        };
+
+	        const data = nutritionData[date] || { energy: 0, carb: 0, protein: 0, fat: 0 };
+	        document.getElementById("energy").textContent = data.energy;
+	        document.getElementById("carb").textContent = data.carb;
+	        document.getElementById("protein").textContent = data.protein;
+	        document.getElementById("fat").textContent = data.fat;
+
+	        // 차트 업데이트
+	        updateChart(data);
+	    }
+
+	    // 차트 업데이트 함수
+	    function updateChart(data) {
+	        const ctx = document.getElementById("progressChart").getContext("2d");
+	        new Chart(ctx, {
+	            type: "doughnut",
+	            data: {
+	                labels: ["Carb", "Protein", "Fat"],
+	                datasets: [
+	                    {
+	                        data: [data.carb, data.protein, data.fat],
+	                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+	                    },
+	                ],
+	            },
+	            options: {
+	                responsive: true,
+	                maintainAspectRatio: false,
+	            },
+	        });
+	    }
+	    // 원형 그래프 데이터와 설정
+	    const pieCtx = document.getElementById('pieChart').getContext('2d');
+	    const pieChart = new Chart(pieCtx, {
+	        type: 'doughnut',
+	        data: {
+	            // labels: ['칼로리', '탄수화물', '단백질', '지방'],
+	            datasets: [{
+	            data: [554.025, 0, 289.1, 262.125], // 각각의 비율
+	            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+	            borderWidth : 0
+	            }]
+	        },
+	        options: {
+	            responsive: true,
+	            cutout: '70%', // 도넛 가운데 비율 (70% 비워짐)
+	            plugins: {
+	                legend: {
+	                    display: false // 범례 숨기기
+	                },
+	                tooltip: {
+	                    enabled: false // 툴팁 비활성화
+	                }
+	            }
+	        },
+	    plugins: [
+	        {
+	            // 텍스트를 가운데에 표시하는 커스텀 플러그인
+	            id: 'centerText',
+	            beforeDraw: function(chart) {
+	                const ctx = chart.ctx;
+	                const width = chart.width;
+	                const height = chart.height;
+	                const text = '72%'; // 가운데 표시할 텍스트
+	                ctx.restore();
+	                ctx.font = 'bold 24px Arial';
+	                ctx.textBaseline = 'middle';
+	                ctx.textAlign = 'center';
+	                ctx.fillStyle = '#000'; // 텍스트 색상
+	                ctx.fillText(text, width / 2, height / 2);
+	                ctx.save();
+	            }
+	        }
+	    ]
+	});
+	</script>
+</th:block>
+</html>
