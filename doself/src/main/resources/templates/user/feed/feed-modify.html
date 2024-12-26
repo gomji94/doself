@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>피드 생성</title>
-    <link rel="stylesheet" th:href="@{/assets/css/user-feed-create.css}">
+    <title>피드 수정</title>
+    <link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-modify.css}">
     <!-- <link rel="stylesheet" href="cl_challenge_feed_view.css">
     <link rel="stylesheet" href="layout.css"> -->
 </head>
 <body>
     <!-- 배경 콘텐츠 (iframe으로 기존 HTML 불러오기) -->
-    <iframe th:src="@{/user/feed/feed-view.html}" class="background-content"></iframe>
+    <iframe th:src="@{/feed/view}" class="background-content"></iframe>
 
     <!-- 오버레이 -->
     <div class="overlay"></div>
@@ -20,21 +20,24 @@
     <div class="popup-container">
         <div class="popup-header">
             <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
-            <h2>새 피드 만들기</h2>
+            <h2>피드 수정</h2>
             <img src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
         </div>
         <hr>
         <div class="popup-body">
             <!-- 이미지 업로드 영역 -->
             <div class="image-upload">
+                <div class="preview-box" id="preview-container" style="display: none;">
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <!-- 업로드된 이미지가 표시될 컨테이너 -->
+                    <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+                </div>
                 <div class="upload-box">
+                    <!-- 기본 메시지(사진 삽입 전) -->
                     <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="빈 접시">
                     <p>사진을 이곳에 넣어</p>
                     <p>빈 그릇을 채워주세요!</p>
-                    <button class="upload-btn">파일 불러오기</button>
-                </div>
-                <div class="preview-box">
-                    <img src="" alt="업로드된 이미지 미리보기" id="image-preview">
+                    <button class="upload-btn" id="upload-btn">파일 불러오기</button>
                 </div>
             </div>
 
@@ -79,11 +82,23 @@
                         <input type="radio" name="visibility" value="private">
                         <span>비공개</span>
                     </label>
-                    <button type="submit" class="submit-btn">생성</button>
+                    <button type="submit" class="submit-btn">수정</button>
                 </div>
             </div>
         </div>
     </div>
-    <script th:src="@{/assets/js/feed/feed-create.js}"></script>
+    <script src="feed_modify.js"></script>
 </body>
+
+<!--/* 사용자 추가 js file */-->
+<th:block layout:fragment="customJsResource">
+	<script src="@{/assets/js/feed/feed-modify.js}"></script>
+</th:block>
+
+<!--/* 사용자 추가 js script */-->
+<th:block layout:fragment="customJs">
+	<script>
+		
+	</script>
+</th:block>
 </html>
