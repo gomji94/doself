@@ -19,6 +19,16 @@ public class MemberController {
 		model.addAttribute("title", "회원목록");
 		return "admin/index";
 	}
+	
+	// 회원 정보 수정
+	@GetMapping("/modifymember")
+	public String modifyMember(HttpServletRequest request, Model model) {
+		
+		model.addAttribute("currentURI", request.getRequestURI());
+		model.addAttribute("title", "회원 정보 수정");
+		return "admin/member/modify-member";
+	}
+	
 	// 로그관리 조회
 	@GetMapping("/loglist")
 	public String getMemberLog(HttpServletRequest request, Model model) {
