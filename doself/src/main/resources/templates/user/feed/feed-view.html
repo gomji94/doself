@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>피드</title>
+<link rel="stylesheet" th:href="@{/assets/css/user-feed-layout.css}">
+<link rel="stylesheet" th:href="@{/assets/css/user-feed-view.css}">
+<link rel="stylesheet" th:href="@{/assets/css/user-feed-modal.css}">
+</head>
+<body>
+	<!-- header : 상단 고정 포지션 픽스 -->
+	<header class="header">
+		<a href="#" class="logo">
+		<img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
+		</a>
+		<!-- 로고 클릭 시 링크 이동 -->
+		<nav class="nav-links">
+			<a href="#">피드</a>
+			<a href="#">음식</a>
+			<a href="#">영양제</a>
+			<a href="#">챌린지</a>
+			<a href="#">티켓</a>
+			<a href="#">마켓</a>
+			<a href="#">커뮤니티</a>
+		</nav>
+		<div class="profile">
+			<a href="#">
+			<img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
+		</div>
+		<!-- 프로필 사진 (원형) -->
+	</header>
+	<!-- container -->
+	<div class="feed-container">
+		<div class="sidebar-container">
+			<!-- Sidebar -->
+			<aside class="sidebar">
+				<ul>
+					<li>
+						<img src="https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png" alt="검색 아이콘" /></li>
+					<li>
+					<a href="#">검색</a></li>
+				</ul>
+				<ul>
+					<li>
+						<img src="https://velog.velcdn.com/images/wlsgus4296/post/b686331f-57cd-4151-a977-5dccac86ba5f/image.png" alt="피드 추가 아이콘" /></li>
+					<li>
+					<a th:href="@{/user/feed/createfeed}">피드 추가</a></li>
+				</ul>
+				<ul>
+					<li>
+						<img src="https://velog.velcdn.com/images/wlsgus4296/post/55cd2fc1-6375-4982-a9b3-5887ca9e14cb/image.png" alt="영양 정보 아이콘" /></li>
+					<li><a href="nutritioninfo_view.html">영양 정보</a></li>
+				</ul>
+				<ul>
+					<li>
+						<img src="https://velog.velcdn.com/images/wlsgus4296/post/6796c6f7-cca3-45ab-bda3-5fb850420929/image.png" alt="챌린지 아이콘" /></li>
+					<li><a href="#">챌린지</a></li>
+				</ul>
+			</aside>
+			<div class="search-panel">
+				<div class="filters">
+					<input class="text" type="text" id="search-input" placeholder="검색어를 입력하세요" />
+					<button class="search"></button>
+				</div>
+				<img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="검색구분" class="research-section">
+				<span>최근 검색 항목</span>
+				<ul id="search-results">
+					<!-- 검색 결과 리스트 -->
+					<li>test</li>
+					<li>test</li>
+					<li>test</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Main Content -->
+		<main class="main">
+			<!-- 백그라운드 오버레이 -->
+			<div class="feed-modal-overlay"></div>
+
+			<!-- 옵션 모달 -->
+			<div class="feed-option-modal">
+				<div class="popup-wrap">
+					<div class="popup">
+						<div class="popup-body">
+							<ul>
+								<li class="move-pop"><a href="detailsfeed_view.html">피드로 이동</a></li>
+								<li class="share-pop"><a href="#">피드 공유</a></li>
+								<li class="copylink-pop"><a href="#">피드 링크 복사</a></li>
+								<li class="feed-declaration-pop" style="color: red;">신고</li>
+								<li class="close">취소</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 신고 모달 -->
+			<div id="declaration-modal">
+				<div class="popup-wrap">
+					<div class="popup">
+						<div class="popup-body">
+							<ul>
+								<li class="pop" style="background-color: rgb(66, 66, 66); color: white;">신고 유형</li>
+								<li class="pop">불법 콘텐츠</li>
+								<li class="pop">폭력적 및 유해 콘텐츠</li>
+								<li class="pop">욕설 및 비방</li>
+								<li class="pop">스팸 및 광고</li>
+								<li class="pop">허위 사실 유포</li>
+								<li class="close">취소</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="feed" data-id="1" data-calories="554.025" data-carb="0" data-protein="289.1" data-fat="262.125">
+				<div class="feed-header">
+					<a href="#">
+					<img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="작성자 프로필">
+					</a>
+					<div class="user-name">
+						<a href="#">id001</a>
+					</div>
+					<div class="feed-option">
+						<button class="option-button">
+							<img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+						</button>
+					</div>
+				</div>
+				<div class="feed-main-img">
+					<a th:href="@{/user/feed/detailsview}">
+						<img src="https://www.fsnews.co.kr/news/photo/202206/45847_38385_3220.png" alt="게시글 이미지">
+					</a>
+				</div>
+				<div class="feed-action">
+					<div class="action-icons">
+						<button class="action-btn">
+							<img src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요" class="like-img">
+						</button>
+						<button class="action-btn">
+							<img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+						</button>
+					</div>
+					<p class="feed-time">2일 전</p>
+				</div>
+				<div class="feed-description">
+					<p id="feed-likes">좋아요 0개</p>
+					<p>오늘 운동후 식단</p>
+					<p class="comments-link">댓글</p>
+				</div>
+				<hr>
+				<div class="add-comment">
+					<img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+					<input type="text" placeholder="댓글 달기...">
+					<button class="comment-submit">게시</button>
+				</div>
+			</div>
+			<!-- 두번째 피드 -->
+			<div class="feed" data-id="2" data-calories="432.5" data-carb="50" data-protein="20.5" data-fat="10.25">
+				<div class="feed-header">
+					<a href="#">
+					<img src="https://velog.velcdn.com/images/mekite/post/75c1dd08-757f-4da0-814d-b19a7a01293b/image.jpg" alt="작성자 프로필">
+					</a>
+					<div class="user-name">
+						<a href="#">id003</a>
+					</div>
+					<div class="feed-option">
+						<button class="option-button">
+							<img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+						</button>
+					</div>
+				</div>
+				<div class="feed-main-img">
+					<img src="https://d12zq4w4guyljn.cloudfront.net/20240608120149_photo1_2ffaa5add5d6.jpg" alt="게시글 이미지">
+				</div>
+				<div class="feed-action">
+					<div class="action-icons">
+						<button class="action-btn">
+							<img src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요" class="like-img">
+						</button>
+						<button class="action-btn">
+							<img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+						</button>
+					</div>
+					<p class="feed-time">2일 전</p>
+				</div>
+				<div class="feed-description">
+					<p id="feed-likes">좋아요 0개</p>
+					<p>가볍게 우동 한그릇</p>
+					<p class="comments-link">댓글</p>
+				</div>
+				<hr>
+				<div class="add-comment">
+					<img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+					<input type="text" placeholder="댓글 달기...">
+					<button class="comment-submit">게시</button>
+				</div>
+			</div>
+		</main>
+		<!-- Right Sidebar -->
+		<div class="progress-container">
+			<div class="analysis-table">
+				<p class="analysis-title">식단 영양 정보 분석표</p>
+				<div id="analysis-img">
+					<img class="img" src="https://www.fsnews.co.kr/news/photo/202206/45847_38385_3220.png" alt="분석 이미지">
+				</div>
+			</div>
+			<div class="analysis-info">
+				<table class="info-table">
+					<tr>
+						<th>구분</th>
+						<th>값</th>
+					</tr>
+					<tr>
+						<td>열량</td>
+						<td id="calories">554.025kcal</td>
+					</tr>
+					<tr>
+						<td>탄수화물</td>
+						<td id="carb">0g</td>
+					</tr>
+					<tr>
+						<td>단백질</td>
+						<td id="protein">289.1g</td>
+					</tr>
+					<tr>
+						<td>지방</td>
+						<td id="fat">262.125g</td>
+					</tr>
+				</table>
+			</div>
+			<div class="analysis-caution">
+				<p>※ 표시된 영양성분은 산출근거에 따른 표준 값으로 실제 제품과 차이가 있을 수 있습니다.</p>
+			</div>
+		</div>
+	</div>
+	<!-- footer : 하단 고정 포지션 스테틱 -->
+	<footer class="footer">
+		<div class="footer-container">
+			<div class="footer-logo">
+				<img src="https://velog.velcdn.com/images/mekite/post/552ea3de-e88e-42f5-969e-d7c8051cd272/image.png" alt="footer_logo">
+			</div>
+			<div class="company-info">
+				<span>전주시 덕진구 기린대로 499</span>
+				<span>|</span>
+				<span>홍길동</span>
+				<span>|</span>
+				<span>사업자등록번호 418-82-10120</span>
+			</div>
+			<div class="license-info">
+				<span>© 2024 DoSelf, Inc. All rights reserved.</span>
+			</div>
+		</div>
+	</footer>
+	
+</body>
+
+
+<!--/* 사용자 추가 js file */-->
+<th:block layout:fragment="customJsResource">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/assets/js/feed/feed-view.js}"></script>
+	<script th:src="@{/assets/js/feed/feed-modal.js}"></script>
+	<script th:src="@{/assets/js/feed/feed-like.js}"></script>
+</th:block>
+
+<!--/* 사용자 추가 js script */-->
+<th:block layout:fragment="customJs">
+	<script>
+		/* document.addEventListener("DOMContentLoaded", () => {
+		const feeds = document.querySelectorAll(".feed");
+		const nutritionImage = document.getElementById("nutrition-image").querySelector("img");
+		const caloriesElement = document.getElementById("calories");
+		const carbElement = document.getElementById("carb");
+		const proteinElement = document.getElementById("protein");
+		const fatElement = document.getElementById("fat");
+
+		// 화면에 가장 가까운 피드 탐지
+		function updateNutritionInfo() {
+		    let closestFeed = null;
+		    let closestDistance = Number.MAX_SAFE_INTEGER;
+
+		    feeds.forEach(feed => {
+		        const rect = feed.getBoundingClientRect();
+		        const distanceFromViewport = Math.abs(rect.top); // 화면 상단과의 거리 계산
+
+		        if (distanceFromViewport < closestDistance) {
+		            closestDistance = distanceFromViewport;
+		            closestFeed = feed;
+		        }
+		    });
+
+		    if (closestFeed) {
+		        // 피드의 데이터를 오른쪽 영양 정보로 업데이트
+		        nutritionImage.src = closestFeed.querySelector("img").src;
+		        caloriesElement.textContent = `${closestFeed.dataset.calories}kcal`;
+		        carbElement.textContent = `${closestFeed.dataset.carb}g`;
+		        proteinElement.textContent = `${closestFeed.dataset.protein}g`;
+		        fatElement.textContent = `${closestFeed.dataset.fat}g`;
+		    }
+		}
+
+		// 스크롤 이벤트 리스너 추가
+		document.querySelector(".feed-container").addEventListener("scroll", () => {
+		    updateNutritionInfo();
+		});
+
+		// 초기화 (페이지 로드 시 첫 번째 피드 데이터를 표시)
+		updateNutritionInfo();
+		}); */
+	</script>
+</th:block>
+</html>

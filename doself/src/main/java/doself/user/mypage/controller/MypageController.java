@@ -13,61 +13,61 @@ public class MypageController {
 	@GetMapping("/member/info")
 	public String getMemberInfo() {
 		
-		return "";
+		return "user/mypage/info";
 	}
 	
 	// 회원정보수정
 	@PostMapping("/member/modify" )
 	public String modifyUser() {
 			
-		return "";
+		return "user/mypage/";
 	}
 	
 	// 회원탈퇴
 	@PostMapping("/member/delete" )
 	public String deleteMember() {
 			
-		return "";
+		return "user/mypage/";
 	}	
 	
 	// 회원티켓내역조회
-	@GetMapping("/member/tickethistory" )
+	@GetMapping("/tickethistory" )
 	public String getTicketHistory() {
 			
-		return "";
+		return "user/mypage/ticket-hisory";
 	}
 	
 	// 회원티켓내역검색
-	@GetMapping("/member/tickethistory/search" )
+	@GetMapping("/tickethistory/search" )
 	public String getTicketHistoryByDate() {
 			
-		return "";
+		return "user/mypage/";
 	}
 	// 회원포인트내역조회
-	@GetMapping("/member/pointhistory" )
+	@GetMapping("/pointhistory" )
 	public String getPointHistory() {
 		
-		return "";
+		return "user/mypage/point-hisory";
 	}
 	
 	// 회원포인트내역검색
-	@GetMapping("/member/pointhistory/search" )
+	@GetMapping("/pointhistory/search" )
 	public String getPointHistoryByDate() {
 		
-		return "";
+		return "user/mypage/";
 	}
 	
 	// 회원피드내역조회
-	@GetMapping("/member/feedList" )
+	@GetMapping("/feedlist" )
 	public String getFeedList() {
 		
-		return "";
+		return "user/mypage/feed-list";
 	}
 
 	// 회원 특정피드조회
-	@GetMapping("/member/feedList/view" )
+	@GetMapping("/feedList/view" )
 	public String getFeedDetail() {
 		
-		return "";
+		return "user/mypage/";
 	}
 }
