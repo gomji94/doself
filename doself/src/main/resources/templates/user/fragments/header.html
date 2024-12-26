@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <header class="header" th:fragment="headerFragment">
-    <a href="#" class="logo">
+    <a href="/" class="logo">
         <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
     </a>
     <nav class="nav-links">
@@ -10,7 +10,7 @@
         <a href="#">영양제</a>
         <a href="#">챌린지</a>
         <a href="#">티켓</a>
-        <a href="#">마켓</a>
+        <a th:href="@{/market/itemlist}">마켓</a>
         <a href="#">커뮤니티</a>
     </nav>
     <div class="profile">
