@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/admin/payment")
 public class PaymentController {
 	
+	// 결제 내역 조회
 	@GetMapping("list")
 	public String getPaymentList(HttpServletRequest request, Model model) {
 		
@@ -20,6 +21,7 @@ public class PaymentController {
 		return "admin/payment/admin-payment-list";
 	}
 	
+	// 환불 접수 내역 조회
 	@GetMapping("refund/list")
 	public String getRefundList(HttpServletRequest request, Model model) {
 		

@@ -34,7 +34,7 @@ function renderTable(data) {
             resultTable.innerHTML += row;
         });
     } else {
-        resultTable.innerHTML = `<tr><td colspan="13">검색 결과가 없습니다.</td></tr>`;
+        resultTable.innerHTML = `<tr><td colspan="12">검색 결과가 없습니다.</td></tr>`;
     }
 }
 

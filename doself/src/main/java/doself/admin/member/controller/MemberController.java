@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/admin/member")
 public class MemberController {
 	
-	// 회원관리
+	// 회원관리 조회
 	@GetMapping("/list")
 	public String getMemberList(HttpServletRequest request, Model model) {
 		
@@ -19,7 +19,7 @@ public class MemberController {
 		model.addAttribute("title", "회원목록");
 		return "admin/index";
 	}
-	// 로그관리
+	// 로그관리 조회
 	@GetMapping("/loglist")
 	public String getMemberLog(HttpServletRequest request, Model model) {
 		
