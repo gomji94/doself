@@ -1,0 +1,148 @@
+@charset "UTF-8";
+
+    /* 스타일 초기화 */
+    * {
+    margin: 0;
+    }
+    
+    /* 전체 화면 높이 설정 */
+    html, body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    section.content-main {
+  	   min-height: 1000px;
+    }
+
+    /* 메인 컨테이너 */
+    .view-container {
+        flex: 1;
+        width: 1260px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    section.tag {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    
+    /* 필터 */
+    .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        height: 32px;
+    }
+
+    input.text {
+        font-size: 13px;
+        color: #515151;
+        background-color: #fff;
+        padding: 6px 24px;
+        margin: 0;
+        border: 1px solid #aaa;
+        border-radius: 18px;
+        width: 250px;
+    }
+
+    .filters button {
+        border: 0;
+        background-color: transparent;
+        opacity: 0.5;
+        margin-left: -50px;
+        position: relative;
+        margin-top: 4px;
+    }
+
+    .filters .search {
+        background-image: url(https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 25px;
+        height: 25px;
+    }
+    
+    .create-button button {
+        background-color: #618141;
+        color: #D7E790;
+        border-radius: 65px;
+        width: 105px;
+        height: 32px;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    
+    .create-button button:hover {
+        background-color: #4C6B33;
+    }
+    
+        .info-link {
+        text-decoration: none;
+    }
+    
+    
+    /* 카드 그리드 */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        padding-bottom: 30px;
+    }
+    
+    /* 카드 스타일 */
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .card-content {
+        padding: 13px;
+    }
+    
+    .card-content a {
+        text-decoration: none;
+    }
+    
+    .card-content span {
+        font-size: 15px;
+        color: #515151;
+        margin-left: 5px;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .card-content p {
+        font-size: 13px;
+        color: #747474;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 7px;
+    }
+    
+    .footer {
+        flex-shrink: 0;
+    }
