@@ -11,6 +11,6 @@ public class CommunityController {
 	
 	@GetMapping("/list")
 	public String getCommunityList() {
-		return "index";
+		return "user/community/community-list";
 	}
 }
