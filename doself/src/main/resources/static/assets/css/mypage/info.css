@@ -1,0 +1,438 @@
+@charset "UTF-8";
+    .container {
+        min-height: 1155px;
+    }
+
+
+    /* 메인 컨테이너 스타일 */
+    .main-container-title {
+        display: flex;
+        text-align: center;
+        gap: 10px;
+        margin-top: 40px;
+        margin-left: 70px;
+    }
+    
+    .main-container-title > div {
+        margin-top: auto;
+    }
+    
+    #main-container-title__eng {
+        font-size: 40px;
+        color: #d1e480;
+    }
+    
+    #main-container-title__kor {
+        font-size: 20px;
+    }
+
+    #main-user-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 5px;
+        margin-top: 17px;
+        padding-bottom: 42px;
+        border-bottom: 1px solid #d3d3d3;
+    }
+
+    #profile-image {
+        display: flex;
+        justify-content: center; /* 가로 중앙 정렬 */
+        align-items: center;    /* 세로 중앙 정렬 */
+        /* border: 2px solid #ddd; */ 
+    }
+
+    #profile-image a img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+    }
+
+    #profile-info {
+        display : flex;
+        flex-direction: column;
+        gap : 15px;
+    }
+    
+    #profile-edit {
+        margin-top: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        
+    }
+    #profile-edit a{
+        color: #9ACD32;
+        font-weight: bold;
+        text-decoration: none; /* 밑줄 제거 */
+        font-size: 12px;
+        gap : 3px;
+    }
+
+    #profile-edit a:hover {
+        color: #86b031; /* 마우스를 올렸을 때 색상 변경 */
+        text-decoration: none; /* 밑줄 제거 */
+    }
+
+    #profile-userId {
+        font-size: 20px;
+    }
+    
+    .account-form {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    form.account-form {
+        margin-top: 25px;
+    }
+    
+    .form-group {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        width: 160px;
+    }
+
+    .form-group .width-fit {
+        width: 188px;
+    }
+    
+    input[type="text"], input[type="password"], input[type="date"], select {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .phone-input {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .email-input {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .btn-password-change {
+        padding: 5px 10px;
+        font-size: 12px;
+        color: white;
+        background-color: #9ACD32;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .btn-password-change:hover {
+        background-color: #86b031;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        color: white;
+        background-color: #9ACD32;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .btn-submit:hover {
+        background-color: #86b031;
+    }
+
+    #withdrawa {
+        margin-top: 10px;
+        text-align: right;
+    }
+
+    #withdrawa button{
+        background: none; 
+        border: none; 
+        padding: 0;
+        margin: 0; 
+        cursor: pointer; 
+        color : #999;
+    }
+    
+            /* 전체 페이지 스타일 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            /*align-items: center;   콘텐츠 중앙 정렬 */
+            min-height: 100vh;  /*화면 높이를 기준으로 전체를 차지 */
+        }
+
+        .container {
+            display: flex;
+            flex: 1; /* 사이드바와 메인 콘텐츠가 화면 남은 공간을 차지 */
+            width: 1280px; /* header와 동일한 최소 너비 */
+            max-width: 100%; /* 화면 최대 너비 */
+            margin: 70px auto 0; /* 상단바 높이만큼 아래로, 중앙 정렬 */
+            margin-top: 70px; /* 상단바 높이만큼 아래로 */
+            display: flex;
+            box-sizing: border-box;
+            flex-wrap: nowrap; /* 컨테이너 안 요소 줄바꿈 방지 */
+        }
+
+        /* 상단 바 스타일 */
+        .header {
+            width: 1280px; /* 최소 너비 설정 */
+            min-width: 1000px; /* 최소 너비 설정 */
+            max-width: 100%; /* 화면 최대 너비 */
+            height: 70px;
+            background-color: #fff;
+            display: flex;
+            align-items: center; /* 세로 중앙 정렬 */
+            justify-content: space-between; /* 로고와 프로필 사진 양쪽 정렬 */
+            position: fixed; /* 스크롤에도 고정된 위치 유지 */
+            top: 0; /* 화면 맨 위 */
+            left: 50%; /* 화면 중앙 기준으로 정렬 */
+            transform: translateX(-50%); /* 중앙 정렬 */
+            z-index: 1000; /* 다른 요소보다 위에 표시 */
+            border-bottom: 1px solid #ddd;
+            padding: 0 15px; /* 좌우 패딩 */
+            box-sizing: border-box; /* 패딩 포함 계산 */
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            margin: 0 auto; /* 자동으로 가운데 배치 */
+        }
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: #9ACD32;
+            text-decoration: none;
+            flex: 0 0 auto; /* 크기 고정 */
+        }
+        .header .logo img {
+            width: 120px;
+            height: auto;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            flex: 1; /* 남은 공간을 차지 */
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            padding-left: 227px; /* 추가 여백 */
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        .nav-links a:hover {
+            background-color: #f4f4f4;
+        }
+        .profile {
+            display: flex;
+            align-items: center; /* 세로 중앙 정렬 */
+        }
+        
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* 왼쪽 사이드바 스타일 */
+        .sidebar {
+            width: 230px;
+            background-color: #f4f4f4;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: calc(100vh - 70px);  /*화면 높이에서 상단바 높이 제외 */
+            height: auto; /* 자동 높이 조정 */
+            max-height: 100%;
+            box-sizing: border-box;
+            box-shadow: 2px 0 5px rgba(51, 24, 24, 0.1);
+            min-width: 210px; /* 최소 너비 유지 */
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            padding-top : 20px;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            padding: 8px 10px; /* 상위 메뉴 왼쪽 여백 */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: left;
+            padding-left: 20%;
+            padding-right: 30px;
+            height: 25px;
+        }
+        .sidebar ul li a:hover {
+            background-color: #ddd;
+        }
+        .sidebar ul li a::before {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1; /* 다른 요소보다 위에 표시 */
+            pointer-events: none; /* 클릭 이벤트 차단 */
+        }
+        .sidebar ul .sub-menu {
+            display: none;
+            margin : 0px 32px;
+            background-color: #fff;
+            position: relative;
+            padding: 0;
+            border-radius: 8px;
+        }
+        .sidebar ul .sub-menu a {
+            font-size: 12px;
+            padding: 5px 0px 5px 40px ;
+            color: #999; /* 하위 메뉴 기본 글자색: 회색 */
+            border-radius: 0; /* 둥근 모서리 제거 */
+
+        }
+        .sidebar ul .sub-menu a:hover {
+            color: #000; /* 하위 메뉴 마우스 오버 시 글자색: 검은색 */
+            background-color: transparent;
+        }
+        .sidebar ul .sub-menu a:before {
+            content: none; /* 하위 메뉴는 원형 모양 제거 */
+        }
+
+        .toggle-icon {
+            margin-left: auto; /* 남은 공간을 사용해 오른쪽으로 밀어냄 */
+            display: inline-block; /* 인라인 블록으로 설정 */
+            text-align: right; /* 텍스트 오른쪽 정렬 */
+        }
+        
+        .sub-menu {
+            display: none; /* 기본적으로 하위 메뉴는 숨김 */
+            padding-left: 20px; /* 하위 메뉴 들여쓰기 */
+            list-style: none;
+        }
+
+        #main-content {
+             width: calc(100% - 230px);
+             margin : 0;
+        }
+
+        /* Footer 스타일 */
+        .footer {
+            position: relative; /* 기본적으로 문서 흐름 내 배치 */
+            width: 100%; /* Header와 Footer의 고정 너비 */
+            background-color: #9B9B9B; /* 배경색 */
+            color: #fff; /* 텍스트 색상 */
+            text-align: center; 
+            height: 65px; /* 고정 높이 */
+            display: flex;
+            align-items: center; /* Flexbox로 세로 중앙 정렬 */
+            justify-content: center; /* Flexbox로 가로 중앙 정렬 */
+            padding: 0 15px; /* 좌우 패딩 */
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            margin-top: auto; /* 항상 하단에 고정 */
+            max-width: 100%; /* 반응형 지원 */
+            box-sizing: border-box; /* 패딩 포함 계산 */
+            padding: 0; /* 내부 여백 제거 */
+        }
+        
+        .footer .footer-container {
+            max-width: 1280px; /* 컨텐츠를 가운데 정렬하며 고정 너비 유지 */
+            width: 100%; /* 컨테이너 가로폭 */
+            display: flex; /* Flexbox 활성화 */
+            align-items: center; /* 세로 중앙 정렬 */
+            justify-content: space-between; /* 요소 간격 균등 분배 */
+            margin: 0 auto; /* 자동 중앙 정렬 */
+            flex-wrap: nowrap; /* 텍스트 줄바꿈 방지 */
+            overflow: hidden; /* 넘치는 요소 숨기기 */
+            padding: 0 8px; /* 좌우 여백 추가 */
+            box-sizing: border-box; /* 패딩 포함 계산 */
+
+        }
+        .footer .footer-logo {
+            flex: 0 0 auto; /* 크기 고정 */
+            margin-right: 160px; /* 로고와 텍스트 간 간격 */
+            padding-left: 4;
+        }
+
+        .footer-logo img {
+            width: 70px;
+            padding-left: 5px; 
+            margin-right: 10px; /* 로고와 텍스트 간격 추가 */
+            margin-left: 10px;
+        }
+        
+        .footer .company-info {
+            flex: 1; /* 남은 공간 차지 */
+            text-align: center; /* 텍스트 왼쪽 정렬 */
+            color: #D3D3D3;
+            font-size: 1rem;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            align-content: center; /* 세로 정렬 */
+            overflow: visible; /* 넘치는 텍스트도 보이도록 설정 */
+            order: 1; /* Flexbox 내에서 우선순위 지정 */
+            max-width: 70%; /* 고정 너비 설정 */
+            padding-right: 170px;
+        }
+
+        .footer .license-info {
+            flex: 0 0 auto; /* 크기 고정 */
+            text-align: right; /* 텍스트 오른쪽 정렬 */
+            color: #D3D3D3; /* 텍스트 색상 */
+            font-size: 1rem; /* 텍스트 크기 */
+            white-space: nowrap; /* 줄바꿈 방지 */
+            overflow: hidden; /* 넘치는 텍스트 숨기기 */
+            order: 2; /* Flexbox 내에서 우선순위 지정 */
+            max-width: 30%; /* 고정 너비 설정 */
+            padding-right: 0px;
+        }
+        
+        .footer span {
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            margin: 0 5px;
+            font-size: 0.8rem;
+        }
+
+
+        @media (max-width: 1000px) {
+            .header {
+                left: 0; /* 화면 기준 왼쪽 정렬 */
+                transform: none; /* 가운데 정렬 해제 */
+                padding: 0 20px; /* 양쪽에 여백 추가 */
+            }
+            .logo {
+                font-size: 24px; /* 로고 크기 축소 */
+            }
+            .nav-links {
+                gap: 20px; /* 링크 간격 조정 */
+            }
+            .nav-links a {
+                padding: 5px 8px; /* 패딩 조정 */
+            }
+
+        }
+/* 수정 */
+
+section.content-main { /* 메인콘텐츠 영역늘림 */
+    min-height: 1000px;
+}
+        
