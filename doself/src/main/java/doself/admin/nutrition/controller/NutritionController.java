@@ -13,10 +13,28 @@ public class NutritionController {
 	
 	// 영양정보등록 요청
 	@GetMapping("/list")
-	public String challengeList(HttpServletRequest request, Model model) {
+	public String getNutritionList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "등록 요청 관리");
 		return "admin/nutrition/admin-nutrition-list";
+	}
+	
+	// 영양정보등록
+	@GetMapping("/createList")
+	public String createNutritionList(HttpServletRequest request, Model model) {
+		
+		model.addAttribute("currentURI", request.getRequestURI());
+		model.addAttribute("title", "영양 정보 등록");
+		return "admin/nutrition/create-nutrition-list";
+	}
+	
+	// 영양정보등록
+	@GetMapping("/modifyrequest")
+	public String modifyNutritionList(HttpServletRequest request, Model model) {
+		
+		model.addAttribute("currentURI", request.getRequestURI());
+		model.addAttribute("title", "영양 정보 처리");
+		return "admin/nutrition/modify-nutrition-list";
 	}
 }

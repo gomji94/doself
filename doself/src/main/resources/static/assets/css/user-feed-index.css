@@ -1,0 +1,307 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    width: 1280px;
+    min-width: 1000px;
+    max-width: 100%;
+    height: 70px;
+    background-color: #fff;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    border-bottom: 1px solid #ddd;
+    padding: 0 15px;
+    box-sizing: border-box;
+    white-space: nowrap
+    margin: 0 auto;
+}
+
+.logo .logo-img {
+    width: 120px;
+    height: auto;
+}
+
+.nav .nav-links {
+    display: flex;
+    gap: 30px;
+    flex: 1; 
+    justify-content: flex-start;
+    padding-left: 227px; 
+}
+
+.nav .nav-links li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.nav-links a:hover {
+    background-color: #f4f4f4;
+}
+
+.profile .profile-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 230px;
+    background-color: #f4f4f4;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: auto; 
+    max-height: 100%;
+    box-sizing: border-box;
+    box-shadow: 2px 0 5px rgba(51, 24, 24, 0.1);
+    min-width: 210px;
+}
+
+.sidebar .sidebar-menu {
+    list-style: none;
+}
+
+.sidebar .sidebar-menu li {
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+.sidebar .sidebar-menu li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #fff;
+    flex-direction: row; 
+}
+
+.main-content .peed-list {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    margin-left: 100px;
+    margin-bottom: 150px;
+}
+
+.peed-list .feed-title {
+    display: flex;
+    align-items: center;
+    padding: 10px 10px;
+}
+
+.feed-title .writtenBy-img {
+    flex:1;
+}
+
+.feed-title .user-img{
+    width:45px;
+    height:45px;
+}
+
+.feed-title .writtenBy-id {
+    flex: 18;
+    margin-left: 10px;
+}
+
+.feed-title .view-details {
+    padding: 10px 10px;
+    text-align: right;
+}
+
+.peed-list .feed_imgs {
+    width: 100%;
+    border-radius: 0;
+}
+
+.feed_imgs .feed-img {
+    
+}
+
+.feed_imgs .interactions {
+    height: 50px;
+    padding: 0 10px;
+}
+
+.interactions .like {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 5px 5px;
+}
+
+.like .like-coment-emg {
+    display: flex;
+    align-items: center;
+    padding: 10px
+}
+
+.like-coment-emg .lick-img {
+    width: 15px;
+    height: 15px;
+}
+
+.like-coment-emg .coment-img {
+    width: 15px;
+    height: 15px;
+}
+
+.feed-imgs .feed-txt {
+    white-space: nowrap;
+}
+
+.feed-txt .text-like {
+    padding: 5px 5px;
+}
+
+.feed-txt .like-num {
+    margin-left: 7px;
+    align-items: center;
+}
+
+.feed-txt .feed-txt-span {
+    padding: 0 10px;
+}
+
+.feed-txt .more {
+    color: #999;
+}
+
+/*comments*/
+.comments{
+    padding: 10px 20px;
+}
+
+.post_comment{
+    display: flex;
+    align-content: center;
+    padding: 20px 0 10px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.post_comment textarea{
+    flex: 9;
+    height: 30px;
+    border: none;
+    resize: none;
+}
+
+.post_comment textarea::-webkit-scrollbar{
+    width: 0;
+}
+
+.post_comment button{
+    flex: 1;
+    color: #D1E480;
+}
+
+.main-content .nutritional-analysis {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    margin-bottom: 300px;
+    margin-left: 30px;
+}
+
+.nutritional-analysis .nutritional-analysis-table {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 5px;
+}
+
+/* Footer */
+.footer {
+    position: relative; /* 기본적으로 문서 흐름 내 배치 */
+    width: 100%; /* Header와 Footer의 고정 너비 */
+    background-color: #9B9B9B; /* 배경색 */
+    color: #fff; /* 텍스트 색상 */
+    text-align: center; 
+    height: 65px; /* 고정 높이 */
+    display: flex;
+    align-items: center; /* Flexbox로 세로 중앙 정렬 */
+    justify-content: center; /* Flexbox로 가로 중앙 정렬 */
+    padding: 0 15px; /* 좌우 패딩 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    margin-top: auto; /* 항상 하단에 고정 */
+    max-width: 100%; /* 반응형 지원 */
+    box-sizing: border-box; /* 패딩 포함 계산 */
+    padding: 0; /* 내부 여백 제거 */
+}
+
+.footer .footer-container {
+    max-width: 1280px; /* 컨텐츠를 가운데 정렬하며 고정 너비 유지 */
+    width: 100%; /* 컨테이너 가로폭 */
+    display: flex; /* Flexbox 활성화 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: space-between; /* 요소 간격 균등 분배 */
+    margin: 0 auto; /* 자동 중앙 정렬 */
+    flex-wrap: nowrap; /* 텍스트 줄바꿈 방지 */
+    overflow: hidden; /* 넘치는 요소 숨기기 */
+    padding: 0 8px; /* 좌우 여백 추가 */
+    box-sizing: border-box; /* 패딩 포함 계산 */
+
+}
+.footer .footer-logo {
+    flex: 0 0 auto; /* 크기 고정 */
+    margin-right: 160px; /* 로고와 텍스트 간 간격 */
+    padding-left: 4;
+}
+
+.footer-logo img {
+    width: 70px;
+    padding-left: 5px; 
+    margin-right: 10px; /* 로고와 텍스트 간격 추가 */
+    margin-left: 10px;
+}
+
+.footer .company-info {
+    flex: 1; /* 남은 공간 차지 */
+    text-align: center; /* 텍스트 왼쪽 정렬 */
+    color: #D3D3D3;
+    font-size: 1rem;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    align-content: center; /* 세로 정렬 */
+    overflow: visible; /* 넘치는 텍스트도 보이도록 설정 */
+    order: 1; /* Flexbox 내에서 우선순위 지정 */
+    max-width: 70%; /* 고정 너비 설정 */
+    padding-right: 170px;
+}
+
+.footer .license-info {
+    flex: 0 0 auto; /* 크기 고정 */
+    text-align: right; /* 텍스트 오른쪽 정렬 */
+    color: #D3D3D3; /* 텍스트 색상 */
+    font-size: 1rem; /* 텍스트 크기 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    overflow: hidden; /* 넘치는 텍스트 숨기기 */
+    order: 2; /* Flexbox 내에서 우선순위 지정 */
+    max-width: 30%; /* 고정 너비 설정 */
+    padding-right: 0px;
+}
+
+.footer span {
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    margin: 0 5px;
+    font-size: 0.8rem;
+}

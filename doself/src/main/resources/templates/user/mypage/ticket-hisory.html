@@ -1,48 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>account-point-about</title>
-    <link rel="stylesheet" href="../../common.css"> <!-- 외부 CSS 링크 -->
-    <link rel="stylesheet" href="myticket-list.css"> <!-- 외부 CSS 링크 -->
-    <script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script> 
-</head>
-<body>
-    <header class="header">
-        <a href="#" class="logo"><img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo"></a> <!-- 로고 클릭 시 링크 이동 -->
-        <nav class="nav-links">
-            <a href="#">피드</a>
-            <a href="#">음식</a>
-            <a href="#">영양제</a>
-            <a href="#">챌린지</a>
-            <a href="#">티켓</a>
-            <a href="#">마켓</a>
-            <a href="#">커뮤니티</a>
-        </nav>
-        <div class="profile">
-            <a href="#"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
-        </div> <!-- 프로필 사진 (원형) -->
-    </header>
-    
-    <div class="container">
+	<link th:href="@{/assets/css/mypage/ticket-hisory.css}" rel="stylesheet" type="text/css" />
+</head>			
+		
+	
+	<th:block layout:fragment="content-body">
         <!-- 왼쪽 사이드바 -->
         <div class="sidebar">
             <ul>
                 <li>
-                    <a href="#" class="menu-item">
+                    <a th:href="@{/mypage/member/info}" class="menu-item">
                         <i class="fa-solid fa-user-gear"></i>
                         <div>my 정보 수정</div>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item">
+                    <a th:href="@{/mypage/tickethistory}" class="menu-item">
                         <i class="fa-solid fa-ticket"></i>
                         <div>티켓 조회</div>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item">
+                    <a th:href="@{/mypage/pointhistory}" class="menu-item">
                         <i class="fa-brands fa-bitcoin"></i>
                         <div>포인트 조회</div>
                     </a>
@@ -54,7 +36,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item">
+                    <a th:href="@{/mypage/feedlist}" class="menu-item">
                         <i class="fa-regular fa-file-lines"></i>
                         <div>my 게시물</div>
                     </a>
@@ -128,26 +110,13 @@
                     </div>
                  </div>
         </main>
-    </div>
-        <footer class="footer">
-            <div class="footer-container">
-                <div class="footer-logo">
-                    <img src="https://velog.velcdn.com/images/mekite/post/552ea3de-e88e-42f5-969e-d7c8051cd272/image.png" alt="footer_logo">
-                </div>
-                <div class="company-info">
-                    <span>전주시 덕진구 기린대로 499</span>
-                    <span>|</span>
-                    <span>홍길동</span>
-                    <span>|</span>
-                    <span>사업자등록번호 418-82-10120</span>
-                </div>
-                <div class="license-info">
-                    <span>© 2024 DoSelf, Inc. All rights reserved.</span>
-                </div>
-            </div>
-        </footer>
-        
-        <script src="ticketabout.js"></script>
+	</th:block> 
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
     
-</body>
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    <script th:src="@{/assets/js/layout.js}"></script>
+    </th:block> 
 </html>
