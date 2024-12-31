@@ -12,10 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 public class HomeController {
 	
 	@GetMapping(value={"","/"})
-	public String adminHome(HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
-		System.out.println(request.getRequestURI());
-		return "admin/index";
+	public String adminHome(Model model) {
+
+		return "admin/member/admin-member-list";
 	}
 }
