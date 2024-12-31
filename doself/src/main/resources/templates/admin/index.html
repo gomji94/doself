@@ -64,7 +64,34 @@
                                         <th>포인트</th>
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable"></tbody>
+                                <tbody>
+                                	<th:block th:if="${memberList != null}">
+										<tr th:each="l : ${memberList}" class="text-center">
+											<td th:text="${l.mbrId}"></td>								
+											<td th:text="${l.mgCode}"></td>
+											<td th:text="${l.mbrEmail}"></td>
+											<td th:text="${l.mbrBirthDate}"></td>
+											<td th:text="${l.mbrPhoneNum}"></td>
+											<td th:text="${l.mbrGender}"></td>
+											<td th:text="${l.acNum}"></td>
+											<td th:text="${l.openingTicketCount}"></td>
+											<td th:text="${l.participationTicketCount}"></td>
+											<td th:text="${l.mbrPoint}"></td>
+											<td >
+												<a th:href="@{/admin/member/modify(memberId=${l.memberId})}" class="btn btn-sm btn-outline-warning font-sm">수정</a>
+											</td>
+											<td >
+												<a th:href="@{/admin/member/remove(memberId=${l.memberId})}" class="btn btn-sm btn-outline-danger font-sm">탈퇴</a>
+											</td>
+										</tr>							
+									</th:block>
+									<th:block th:unless="${memberList != null}">
+										<tr>
+											<td colspan="10">등록된 회원의 정보가 없습니다.</td>
+										</tr>
+									</th:block>
+                                
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -73,7 +100,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-member.js}"></script>
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-member.js}"></script> -->
         </th:block>
          
         <!--/* 사용자 추가 js script */-->

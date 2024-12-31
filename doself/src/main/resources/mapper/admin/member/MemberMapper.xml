@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.admin.member.mapper.MemberMapper">
+    	
+  		<!-- 특정회원 조회 -->
+  		<!-- <select id="getMemberInfoById" parameterType="String" resultMap="memberResultMap">
+  		SELECT 
+				mbr_id,
+				mbr_pw,
+				mbr_name, 
+				mbr_grd,
+				SUBSTRING_INDEX(mbr_grd, 'mbr_grd_',-1) AS mbr_grd_num,
+				mbr_addr,
+				mbr_daddr, 
+				mbr_zip, 
+				mbr_telno,
+				mbr_email,
+				mbr_reg_date
+		FROM members
+		WHERE
+			mbr_id = #{memberId};
+  		</select> -->
+  		
+  		<!-- 회원목록 조회 -->
+		<select id="getMemberList" resultType="MemberDTO">
+			/* 회원목록 조회 */
+			SELECT 
+				mbr_id 						AS mbrId,
+				mbr_pw 						AS mbrPw,
+				mbr_name 					AS mbrName, 
+				mg_code 					AS mgCode,
+				mbr_email 					AS mbrEmail,
+				mbr_birth_date 				AS mbrBirthDate, 
+				mbr_phone_num 				AS mbrPhoneNum, 
+				mbr_gender 					AS mbrGender,
+				ac_num 						AS acNum,
+				opening_ticket_count 		AS openingTicketCount,
+				participation_ticket_count 	AS participationTicketCount,
+				mbr_point 					AS mbrPoint				
+			FROM member				
+		</select>
+
+  </mapper>
