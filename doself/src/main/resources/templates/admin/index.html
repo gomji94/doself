@@ -67,7 +67,8 @@
                                 <tbody>
                                 	<th:block th:if="${memberList != null}">
 										<tr th:each="l : ${memberList}" class="text-center">
-											<td th:text="${l.mbrId}"></td>								
+											<td th:text="${l.mbrId}"></td>	
+											<td th:text="${l.mbrName}"></td>																			
 											<td th:text="${l.mgCode}"></td>
 											<td th:text="${l.mbrEmail}"></td>
 											<td th:text="${l.mbrBirthDate}"></td>
@@ -77,12 +78,7 @@
 											<td th:text="${l.openingTicketCount}"></td>
 											<td th:text="${l.participationTicketCount}"></td>
 											<td th:text="${l.mbrPoint}"></td>
-											<td >
-												<a th:href="@{/admin/member/modify(memberId=${l.memberId})}" class="btn btn-sm btn-outline-warning font-sm">수정</a>
-											</td>
-											<td >
-												<a th:href="@{/admin/member/remove(memberId=${l.memberId})}" class="btn btn-sm btn-outline-danger font-sm">탈퇴</a>
-											</td>
+											
 										</tr>							
 									</th:block>
 									<th:block th:unless="${memberList != null}">
