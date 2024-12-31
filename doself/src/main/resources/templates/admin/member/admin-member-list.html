@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="content-header">
+              <div>
+              	<h2 class="content-title card-title">회원관리</h2>
+              </div>             
+          </div> 
+                            
+		</th:block>
+		
+		<th:block layout:fragment="content-body">
+			<div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <!-- 검색 조건 선택 -->
+                            <div class="col-lg-6 col-6 col-md-3">
+                                <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
+                                    <option value="mbrId">아이디</option>
+                                    <option value="mbrName">이름</option>
+                                    <option value="mgCode">회원 등급</option>
+                                    <option value="acNum">연령대</option>
+                                </select>
+                            </div>
+
+                            <!-- 검색어 입력 -->
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                                <datalist id="searchSuggestions"></datalist>
+                            </div>
+
+                            <!-- 날짜 선택 -->
+                            <div class="col-lg-6 col-6 col-md-3">
+                                <div class="date-container">
+                                    <p>날짜</p>
+                                    <input type="date" class="date" id="startDate" /> ~
+                                    <input type="date" class="date" id="endDate" />
+                                </div>
+                            </div>
+                            <input class="searchBtn" type="button" value="검색" onclick="filterData()" />
+                        </div>
+                    </header>
+
+                    <!-- 결과 테이블 -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>아이디</th>
+                                        <th>이름</th>
+                                        <th>회원등급</th>
+                                        <th>이메일</th>
+                                        <th>생년월일</th>
+                                        <th>연락처</th>
+                                        <th>성별</th>
+                                        <th>연령대</th>
+                                        <th>챌린지 개설 티켓</th>
+                                        <th>챌린지 참여 티켓</th>
+                                        <th>포인트</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	<th:block th:if="${memberList != null}">
+										<tr th:each="l : ${memberList}" class="text-center">
+											<td th:text="${l.mbrId}"></td>	
+											<td th:text="${l.mbrName}"></td>																			
+											<td th:text="${l.mgCode}"></td>
+											<td th:text="${l.mbrEmail}"></td>
+											<td th:text="${l.mbrBirthDate}"></td>
+											<td th:text="${l.mbrPhoneNum}"></td>
+											<td th:text="${l.mbrGender}"></td>
+											<td th:text="${l.acNum}"></td>
+											<td th:text="${l.openingTicketCount}"></td>
+											<td th:text="${l.participationTicketCount}"></td>
+											<td th:text="${l.mbrPoint}"></td>
+											
+										</tr>							
+									</th:block>
+									<th:block th:unless="${memberList != null}">
+										<tr>
+											<td colspan="10">등록된 회원의 정보가 없습니다.</td>
+										</tr>
+									</th:block>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>                          
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-member.js}"></script> -->
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>
