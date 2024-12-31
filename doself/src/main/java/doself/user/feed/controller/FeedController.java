@@ -9,27 +9,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
-@RequestMapping("/user/feed")
+@RequestMapping("/feed")
 public class FeedController {
 	
-	@GetMapping("/view")
+	// 메인 피드 조회
+	@GetMapping("/list")
 	public String getFeed(Model model) {
 		model.addAttribute("title", "피드");
 		
 		return "user/feed/feed-view";
 	}
 	
-	@GetMapping("/detailsview")
+	// 특정 피드 상세 조회
+	@GetMapping("/view")
 	public String getDetailsFeed(Model model) {
 		model.addAttribute("title", "상세 피드");
 		
-		return "user/feed/detailsfeed_view";
+		return "user/feed/detailsfeed-view";
 	}
 	
-	@GetMapping("/createfeed")
-	public String getcreatefeed(Model model) {
+	// 피드 만들기
+	@GetMapping("/create")
+	public String getCreateFeed(Model model) {
 		model.addAttribute("title", "피드 만들기");
 		
-		return "user/feed/feed_create";
+		return "user/feed/feed-create";
 	}
+	
+	// 피드 댓글 조회
+	@GetMapping("/comments")
+    public String getFeedComments(Model model) {
+        model.addAttribute("title", "피드 댓글");
+        
+        return "user/feed/feed-comment";
+    }
 }

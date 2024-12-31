@@ -5,9 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>피드</title>
-<link rel="stylesheet" th:href="@{/assets/css/user-feed-layout.css}">
-<link rel="stylesheet" th:href="@{/assets/css/user-feed-view.css}">
-<link rel="stylesheet" th:href="@{/assets/css/user-feed-modal.css}">
+<link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-layout.css}">
+<link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-view.css}">
+<link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-modal.css}">
 </head>
 <body>
 	<!-- header : 상단 고정 포지션 픽스 -->
@@ -46,12 +46,12 @@
 					<li>
 						<img src="https://velog.velcdn.com/images/wlsgus4296/post/b686331f-57cd-4151-a977-5dccac86ba5f/image.png" alt="피드 추가 아이콘" /></li>
 					<li>
-					<a th:href="@{/user/feed/createfeed}">피드 추가</a></li>
+					<a th:href="@{/feed/create}">피드 추가</a></li>
 				</ul>
 				<ul>
 					<li>
 						<img src="https://velog.velcdn.com/images/wlsgus4296/post/55cd2fc1-6375-4982-a9b3-5887ca9e14cb/image.png" alt="영양 정보 아이콘" /></li>
-					<li><a href="nutritioninfo_view.html">영양 정보</a></li>
+					<li><a th:href="@{/user/nutritioninfo/view}">영양 정보</a></li>
 				</ul>
 				<ul>
 					<li>
@@ -129,7 +129,7 @@
 					</div>
 				</div>
 				<div class="feed-main-img">
-					<a th:href="@{/user/feed/detailsview}">
+					<a th:href="@{/feed/view}">
 						<img src="https://www.fsnews.co.kr/news/photo/202206/45847_38385_3220.png" alt="게시글 이미지">
 					</a>
 				</div>
@@ -139,7 +139,7 @@
 							<img src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요" class="like-img">
 						</button>
 						<button class="action-btn">
-							<img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+							<img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글" class="comment-img">
 						</button>
 					</div>
 					<p class="feed-time">2일 전</p>
@@ -179,9 +179,9 @@
 						<button class="action-btn">
 							<img src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요" class="like-img">
 						</button>
-						<button class="action-btn">
-							<img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
-						</button>
+							<button class="action-btn">
+								<img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+							</button>
 					</div>
 					<p class="feed-time">2일 전</p>
 				</div>
@@ -263,52 +263,13 @@
 	<script th:src="@{/assets/js/feed/feed-view.js}"></script>
 	<script th:src="@{/assets/js/feed/feed-modal.js}"></script>
 	<script th:src="@{/assets/js/feed/feed-like.js}"></script>
+	<script th:src="@{/assets/js/feed/feed-comment.js}"></script>
 </th:block>
 
 <!--/* 사용자 추가 js script */-->
 <th:block layout:fragment="customJs">
 	<script>
-		/* document.addEventListener("DOMContentLoaded", () => {
-		const feeds = document.querySelectorAll(".feed");
-		const nutritionImage = document.getElementById("nutrition-image").querySelector("img");
-		const caloriesElement = document.getElementById("calories");
-		const carbElement = document.getElementById("carb");
-		const proteinElement = document.getElementById("protein");
-		const fatElement = document.getElementById("fat");
-
-		// 화면에 가장 가까운 피드 탐지
-		function updateNutritionInfo() {
-		    let closestFeed = null;
-		    let closestDistance = Number.MAX_SAFE_INTEGER;
-
-		    feeds.forEach(feed => {
-		        const rect = feed.getBoundingClientRect();
-		        const distanceFromViewport = Math.abs(rect.top); // 화면 상단과의 거리 계산
-
-		        if (distanceFromViewport < closestDistance) {
-		            closestDistance = distanceFromViewport;
-		            closestFeed = feed;
-		        }
-		    });
-
-		    if (closestFeed) {
-		        // 피드의 데이터를 오른쪽 영양 정보로 업데이트
-		        nutritionImage.src = closestFeed.querySelector("img").src;
-		        caloriesElement.textContent = `${closestFeed.dataset.calories}kcal`;
-		        carbElement.textContent = `${closestFeed.dataset.carb}g`;
-		        proteinElement.textContent = `${closestFeed.dataset.protein}g`;
-		        fatElement.textContent = `${closestFeed.dataset.fat}g`;
-		    }
-		}
-
-		// 스크롤 이벤트 리스너 추가
-		document.querySelector(".feed-container").addEventListener("scroll", () => {
-		    updateNutritionInfo();
-		});
-
-		// 초기화 (페이지 로드 시 첫 번째 피드 데이터를 표시)
-		updateNutritionInfo();
-		}); */
+		
 	</script>
 </th:block>
 </html>
