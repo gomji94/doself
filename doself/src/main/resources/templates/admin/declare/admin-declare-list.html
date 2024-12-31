@@ -48,10 +48,13 @@
                                         <th scope="col">신고번호</th>
                                         <th scope="col">신고유형</th>
                                         <th scope="col">신고자</th>
+                                        <th scope="col">신고 당한글/댓글번호</th>
+                                        <th scope="col">신고내용</th>
                                         <th scope="col">상태</th>
                                         <th scope="col">접수일</th>
                                         <th scope="col">처리일</th>                                        
                                         <th scope="col">처리자</th>
+                                        <th scope="col">반려사유</th>
                                     </tr>
                                 </thead>
                                 <tbody id="resultTable">
@@ -67,7 +70,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-report-request.js}"></script>
+        	<script th:src="@{/manage/assets/js/admin/admin-declare-list.js}"></script>
         </th:block>
          
         <!--/* 사용자 추가 js script */-->

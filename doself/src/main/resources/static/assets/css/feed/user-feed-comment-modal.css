@@ -1,0 +1,65 @@
+.popup-wrap {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex; /* Flexbox 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 1000;
+}
+
+.popup {
+    width: 90%;
+    max-width: 250px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.body-content {
+    width: 260px;
+}
+
+.popup-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 245px;
+}
+
+.popup-body ul a {
+    text-decoration-line: none;
+}
+
+.popup-body li {
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 0.5px solid #e9e9e9;
+    font-size: 14px;
+    color: #515151;
+}
+
+.popup-body li:last-child {
+    border-bottom: none;
+    /* margin-bottom: 7px; */
+}
+
+.popup-body li:hover {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.close:hover {
+    cursor: pointer;
+    color: red;
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+<head>
+	<link th:href="@{/assets/css/mypage/feed-list.css}" rel="stylesheet" type="text/css" />
+</head>	
+	
+	<th:block layout:fragment="content-body">
+
+    <!-- 왼쪽 사이드바 -->
+    <div class="sidebar">
+        <ul>
+            <li>
+                <a th:href="@{/mypage/member/info}" class="menu-item">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <div>my 정보 수정</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/mypage/tickethistory}" class="menu-item">
+                    <i class="fa-solid fa-ticket"></i>
+                    <div>티켓 조회</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/mypage/pointhistory}" class="menu-item">
+                    <i class="fa-brands fa-bitcoin"></i>
+                    <div>포인트 조회</div>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-capsules"></i>
+                    <div>영양제 알림 체크</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/mypage/feedlist}"  class="menu-item">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <div>my 게시물</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <main id="main-content">
+        <div class="main-container-title">
+            <div id="main-container-title__eng">My feed</div>
+            <div id="main-container-title__kor">내 피드</div>
+        </div>
+
+        <div id="main-user-info">
+            <div id="main-user-profile">
+                <a href="#">
+                    <img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필">
+                </a>
+            </div>
+            <div id="main-userId">id002</div>
+            <div id="main-user-feed-info">
+                <div id="feed">
+                    <span>피드</span>
+                    <span>5</span>
+                </div>
+             </div>    
+        </div>
+        <div id="main-content-feedList">
+            <ul class="main-container-feedList__items">
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+                <li class="main-container-feedList__item">
+                    <a href="#">
+                        <img class="mcfi__image" src="https://pbs.twimg.com/media/Ew_Rn0IWEAEs7O7.jpg" alt="">
+                    </a>
+                </li>
+        </div>
+        
+    </main>
+
+	</th:block> 
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    <script th:src="@{/assets/js/layout.js}"></script>
+    </th:block> 
+</html>

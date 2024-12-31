@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>피드 댓글</title>
+    <link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-comment.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-comment-modal.css}">
+</head>
+<body>
+    <!-- 배경 콘텐츠 (iframe으로 기존 HTML 불러오기) -->
+    <iframe th:src="@{/feed/list}" class="background-content"></iframe>
+
+    <!-- 백그라운드 오버레이 -->
+    <!-- <div class="overlay"></div>
+    <div class="comment-modal-overlay"></div> -->
+
+    <!-- 팝업 창 -->
+    <div class="popup-container">
+        <!-- 더보기 옵션 모달 -->
+        <div class="comment-option-modal">
+            <div class="popup-wrap">
+                <div class="popup">
+                    <div class="popup-body">
+                        <ul>
+                            <li class="pop">댓글 달기</li>
+                            <li class="pop">댓글 복사</li>
+                            <li class="comment-declaration-pop" style="color:red;">신고</li>
+                            <!-- 위 내용 그냥 복붙하면 자동으로 증가 -->
+                            <li class="close">취소</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 신고 모달 -->
+        <div id="declaration-modal">
+            <div class="popup-wrap">
+                <div class="popup">
+                    <div class="popup-body">
+                        <ul>
+                            <li class="pop" style="background-color: rgb(66, 66, 66); color: white;">신고 유형</li>
+                            <li class="pop">불법 콘텐츠</li>
+                            <li class="pop">폭력적 및 유해 콘텐츠</li>
+                            <li class="pop">욕설 및 비방</li>
+                            <li class="pop">스팸 및 광고</li>
+                            <li class="pop">허위 사실 유포</li>
+                            <li class="close">취소</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-header">
+            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션" class="option-img">
+            <h2>피드 댓글</h2>
+            <img src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기" class="close-option-img">
+        </div>
+        <hr>
+        <div class="popup-body">
+            <!-- 이미지 업로드 영역 -->
+            <div class="image-upload">
+                <img src="https://www.fsnews.co.kr/news/photo/202206/45847_38385_3220.png" alt="업로드된 이미지 미리보기" id="image-preview">
+            </div>
+
+            <!-- 정보 입력 영역 -->
+            <div class="feed-info">
+                <div class="user-block">
+                    <img src="https://buly.kr/EdsBkqu" alt="프로필">
+                    <a href="#" class="user-link">아이디</a>
+                    <span class="comment-day-count"></span>
+                </div>
+                <div class="feed-comment">
+                    <span>맛있겠네요</span>
+                </div>
+                <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" class="comment-section">
+                <div class="user-block">
+                    <img src="https://img.daily.co.kr/@files/www.daily.co.kr/content/food/2020/20200730/f1f553b68a93b5b3262518e9424690db.jpg" alt="프로필">
+                    <a href="#" class="user-link">아이디</a>
+                    <span class="comment-day-count"></span>
+                </div>
+                <div class="feed-comment">
+                    <span>족발은 못참겠다...</span>
+                </div>
+                <div class="action-icons">
+                    <button class="action-btn">
+                        <img src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요">
+                    </button>
+                    <button class="action-btn">
+                        <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+                    </button>
+                    <span>좋아요 3</span>
+                </div>
+                <img src="https://velog.velcdn.com/images/mekite/post/4a261e59-b94d-47ae-b8f3-6a39b7d34f42/image.png" alt="입력창 구분선" id="input-section">
+                <div class="under-input">
+                    <button type="button" id="emoji-btn">
+                        <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+                    </button>
+                    <input type="text" placeholder="댓글 달기...">
+                    <button type="button" class="comment-btn">게시</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--/* 사용자 추가 js file */-->
+<th:block layout:fragment="customJsResource">
+	<script src="@{/assets/js/feed/feed-modal.js}"></script>
+</th:block>
+
+<!--/* 사용자 추가 js script */-->
+<th:block layout:fragment="customJs">
+	<script>
+		
+	</script>
+</th:block>
+</html>

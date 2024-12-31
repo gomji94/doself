@@ -12,16 +12,18 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/admin/payment")
 public class PaymentController {
 	
+	// 결제 내역 조회
 	@GetMapping("list")
-	public String paymentList(HttpServletRequest request, Model model) {
+	public String getPaymentList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title","결제 내역");
 		return "admin/payment/admin-payment-list";
 	}
 	
+	// 환불 접수 내역 조회
 	@GetMapping("refund/list")
-	public String refundList(HttpServletRequest request, Model model) {
+	public String getRefundList(HttpServletRequest request, Model model) {
 		
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title","환불 접수 내역");

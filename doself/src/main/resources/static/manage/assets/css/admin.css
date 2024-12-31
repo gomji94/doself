@@ -510,6 +510,10 @@ button {
   cursor: pointer;
 }
 
+.addBtn {
+    display: flex;
+	}
+
 b {
   font-weight: 500;
 }
@@ -1732,7 +1736,7 @@ textarea.form-control {
   position: relative;
     width: 61px;
     height: 29px;
-    left: 16%;
+    left: 24%;
     top: 6px;
     background-color: white;
 }
@@ -4397,8 +4401,7 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
   .btn.btn-xs {
     font-size: 10px;
     padding: 5px 4px;
-  }
-  
+  }    
 
   .table th, .table td {
     padding: 12px; /* 내부 여백 조정 */

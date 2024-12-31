@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/assets/css/food/view.css}" rel="stylesheet" type="text/css" />
+    <title>food details</title>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="main-title">음식 상세 정보</div>
+        <div id="main-content">
+            <div class="main-item-header">
+                <div id="item-title">
+                    <img class="miit__image" src="https://img.siksinhot.com/place/1486427703638619.jpg" alt="">
+                    <span>닭갈비</span>
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    음식명
+                </div>
+                <div id="item-name">
+                    닭갈비
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    1인분 중량(g)
+                </div>
+                <div id="item-price">
+                    210
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    총 열량(kcal)
+                </div>
+                <div id="user-point">
+                    348.6
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    탄수화물(kcal)
+                </div>
+                <div id="item-desc">
+                    30.45
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    단백질(g)
+                </div>
+                <div id="item-desc">
+                    29.25
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    지방(g)
+                </div>
+                <div id="item-desc">
+                    12.1
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    당류(g)
+                </div>
+                <div id="item-desc">
+                    9.66
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    콜레스트롤(mg)
+                </div>
+                <div id="item-desc">
+                    97.1
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    나트륨(mg)
+                </div>
+                <div id="item-desc">
+                    644.7
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    칼슘(mg)
+                </div>
+                <div id="item-desc">
+                    46.2
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    철분(mg)
+                </div>
+                <div id="item-desc">
+                    1.53
+                </div>
+            </div>
+        </div>
+        <div class="market-item-button-container">
+        	<button id="item-close__button">닫기</button>
+        </div>
+    </div>
+    
+    <th:block layout:fragment="customJsResource">
+	    <script>
+
+	         $("#item-close__button").on("click", function() {
+	             window.close();
+	         });
+	
+	    </script>
+    </th:block>
+
+</body>
+</html>
