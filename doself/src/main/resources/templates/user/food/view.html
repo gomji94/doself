@@ -11,41 +11,39 @@
     <div id="container">
         <div id="main-title">음식 상세 정보</div>
         <div id="main-content">
+        <th:block th:object="${foodInfo}">
             <div class="main-item-header">
                 <div id="item-title">
-                    <img class="miit__image" src="https://img.siksinhot.com/place/1486427703638619.jpg" alt="">
-                    <span>닭갈비</span>
+                    <img class="miit__image" th:src="${foodImg}" alt="">
+                    <span th:text="*{foodName}"></span>
                 </div>
             </div>
             <div class="main-items">
                 <div class="item-info">
                     음식명
                 </div>
-                <div id="item-name">
-                    닭갈비
+                <div id="item-name" th:text="*{foodName}">
                 </div>
             </div>
             <div class="main-items">
-                <div class="item-info">
+                <div class="item-info" >
                     1인분 중량(g)
                 </div>
-                <div id="item-price">
-                    210
+                <div id="item-price" th:text="*{foodWeight}">
                 </div>
             </div>
             <div class="main-items">
-                <div class="item-info">
+                <div class="item-info" >
                     총 열량(kcal)
                 </div>
-                <div id="user-point">
-                    348.6
+                <div id="user-point" th:text="*{foodKcal}">
                 </div>
             </div>
             <div class="main-items">
                 <div class="item-info">
                     탄수화물(kcal)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodCarbo}">
                     30.45
                 </div>
             </div>
@@ -53,7 +51,7 @@
                 <div class="item-info">
                     단백질(g)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodProtein}">
                     29.25
                 </div>
             </div>
@@ -61,7 +59,7 @@
                 <div class="item-info">
                     지방(g)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodFat}">
                     12.1
                 </div>
             </div>
@@ -69,7 +67,7 @@
                 <div class="item-info">
                     당류(g)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodSugar}">
                     9.66
                 </div>
             </div>
@@ -77,7 +75,7 @@
                 <div class="item-info">
                     콜레스트롤(mg)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodCholesterol}">
                     97.1
                 </div>
             </div>
@@ -85,7 +83,7 @@
                 <div class="item-info">
                     나트륨(mg)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodSodium}">
                     644.7
                 </div>
             </div>
@@ -93,7 +91,7 @@
                 <div class="item-info">
                     칼슘(mg)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodCalcium}">
                     46.2
                 </div>
             </div>
@@ -101,10 +99,11 @@
                 <div class="item-info">
                     철분(mg)
                 </div>
-                <div id="item-desc">
+                <div id="item-desc" th:text="*{foodIron}">
                     1.53
                 </div>
             </div>
+            </th:block>
         </div>
         <div class="market-item-button-container">
         	<button id="item-close__button">닫기</button>
