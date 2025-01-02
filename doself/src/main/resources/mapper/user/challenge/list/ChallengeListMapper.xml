@@ -5,51 +5,51 @@
 
   <mapper namespace="doself.user.challenge.list.mapper.ChallengeListMapper">
   
-  	<resultMap type="ChallengeList"	id="ChallengeListResultMap">
-		<id 	column="cg_num" 			   property="ChallengeCode"/>
-  		<result	column="mbr_id"	  			   property="memberId"/>
-		<result column="cg_name" 			   property="ChallengeName"/>
-		<result column="cg_picture" 		   property="ChallengePicture"/>
-		<result column="cg_content" 		   property="ChallengeContent"/>
-		<result column="cg_start_date"	       property="ChallengeStartDate"/>
-		<result column="cg_end_date" 		   property="ChallengeEndDate"/>
-		<result column="cg_current_mbr_count"  property="ChallengeCurrentMember"/>
-		<result column="cg_max_mbr_count" 	   property="ChallengeMaxMember"/>
-		<result column="ctl_level" 			   property="ChallengeTopicLevel"/>
-		<result column="ct_num" 			   property="ChallengeTopicCode"/>
-		<result column="ct_name" 			   property="ChallengeTopicName"/>
-		<result column="cs_status" 	 		   property="ChallengeStatus"/>
-  	</resultMap>
+  	<resultMap type="ChallengeList" id="ChallengeListResultMap">
+	    <id column="cg_num" property="challengeCode"/>
+	    <result column="mbr_id" property="memberId"/>
+	    <result column="cg_name" property="challengeName"/>
+	    <result column="cg_picture" property="challengePicture"/>
+	    <result column="cg_content" property="challengeContent"/>
+	    <result column="cg_start_date" property="challengeStartDate"/>
+	    <result column="cg_end_date" property="challengeEndDate"/>
+	    <result column="cg_current_mbr_count" property="challengeCurrentMember"/>
+	    <result column="cg_max_mbr_count" property="challengeMaxMember"/>
+	    <result column="ctl_level" property="challengeTopicLevel"/>
+	    <result column="ct_num" property="challengeTopicCode"/>
+	    <result column="ct_name" property="challengeTopicName"/>
+	    <result column="cs_status" property="challengeStatus"/>
+	</resultMap>
+
   	<!-- 특정 챌린지 리스트 조회 -->
   	<select id="getChallengeList" resultType="ChallengeList" resultMap="ChallengeListResultMap">
 	  	SELECT
-			cg_num,
-			mbr_id,
-			cg_name,
-			cg_picture,
-			cg_content,
-			cg_start_date,
-			cg_end_date,
-			cg_current_mbr_count,
-			cg_max_mbr_count,
-			ctl_level,
-			ct_num,
-			ct_name,
-			cs_status
+			cg.cg_num,
+			cg.mbr_id,
+			cg.cg_name,
+			cg.cg_picture,
+			cg.cg_content,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			cg.cg_current_mbr_count,
+			cg.cg_max_mbr_count,
+			stl.ctl_level,
+			ct.ct_num,
+			ct.ct_name,
+			cs.cs_status
 		FROM
-			`member` mbr
-			INNER JOIN challenge_group cg USING(mbr_id)
-			INNER JOIN challenge_topic_level stl USING(ctl_num)
-			INNER JOIN challenge_status cs USING(cs_num)
-			INNER JOIN challenge_topic ct USING(ct_num)
-		WHERE
-			cg_num = #{ChallengeCode};
+			challenge_group cg
+		    INNER JOIN challenge_topic_level stl USING(ctl_num)
+		    INNER JOIN challenge_status cs USING(cs_num)
+		    INNER JOIN challenge_topic ct USING(ct_num)
+	 <!--    WHERE
+			cg.cg_num = #{ChallengeCode}; -->
   	</select>
   	
   	<!-- 챌린지 생성(등록) -->
   	<insert id="addChallenge" parameterType="ChallengeList">
   		INSERT INTO challenge_group(
-			cg_num 					AS ChallengeCode,
+			cg_num 					AS challengeCode,
 			ctl_num 				AS challengeTopicLevelCode,
 			cg_leader_name 			AS challengeLeaderName,
 			cg_name 				AS challengeName,

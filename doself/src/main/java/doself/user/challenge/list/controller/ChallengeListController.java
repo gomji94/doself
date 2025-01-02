@@ -29,11 +29,16 @@ public class ChallengeListController {
 	// 진행중인 챌린지 리스트 조회
 	@GetMapping("/list")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
-	public String getChallengeList(HttpServletRequest request, Model model) {
+	public String getChallengeList(Model model) {
 		List<ChallengeList> challengeList = challengeListService.getChallengeList();
 		
-		model.addAttribute("currentURI", request.getRequestURI());
-//		model.addAttribute("title", "챌린지 목록");
+		if (challengeList == null || challengeList.isEmpty()) {
+	        log.warn("No data fetched for challenge list.");
+	    } else {
+	        log.info("Fetched Challenge List: {}", challengeList);
+	    }
+		
+		log.info("Fetched Challenge List: {}", challengeList);
 		model.addAttribute("challengeList", challengeList);
 		return "user/challenge/challenge-list";
 	}
@@ -41,11 +46,9 @@ public class ChallengeListController {
 	// 진행중인 챌린지 상세 정보 조회
 	@GetMapping("/list/view")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
-	public String getChallengeListView(@RequestParam(name="ChallengeCode") String ChallengeCode,
-									   HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
-//		model.addAttribute("title", "챌린지 상세 정보");
+	public String getChallengeListView(@RequestParam(name="ChallengeCode") String challengeCode, Model model) {
+		ChallengeList challengeDetails = challengeListService.getChallengeListView(challengeCode);
+		model.addAttribute("challengeDetails", challengeDetails);
 		return "user/challenge/challenge-list-view";
 	}
 	
@@ -53,14 +56,14 @@ public class ChallengeListController {
 	public String addChallenge(ChallengeList challengeList) {
 		log.info("challengeList : {}", challengeList);
 		challengeListService.addChallenge(challengeList);
-		return "redirect:/user/challenge/challenge-list";
+		return "redirect:/challenge/list";
 	}
 	
 	@PostMapping("list/view/participation")
 	public String challengeParticipation(ChallengeList challengeList) {
 		
 		
-		return "redirect:/user/challenge/challenge-list";
+		return "redirect:/challenge/list";
 	}
 	
 }
