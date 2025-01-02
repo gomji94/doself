@@ -22,9 +22,9 @@
 		        </section>
 		        <!-- 카드 목록 -->
 		        <th:block th:if="${foodList !=null}">
-		        	<section class="card-grid" th:each="l : ${foodList}">
+		        	<section class="card-grid" >
 			            <!-- 카드 1 -->
-			            <a th:href="@{/food/view(foodKeyNum=${l.foodKeyNum})}" class="info-link" target="_blank">
+			            <a th:each="l : ${foodList}" th:href="@{/food/view(foodKeyNum=${l.foodKeyNum})}" class="info-link" target="_blank">
 			                <div class="card">
 			                    <img th:src="${l.foodImg}" alt="카드 이미지">
 			                    <div class="card-content">

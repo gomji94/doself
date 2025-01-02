@@ -14,7 +14,7 @@
         <th:block th:object="${foodInfo}">
             <div class="main-item-header">
                 <div id="item-title">
-                    <img class="miit__image" th:src="${foodImg}" alt="">
+                    <img class="miit__image" th:src="*{foodImg}" alt="">
                     <span th:text="*{foodName}"></span>
                 </div>
             </div>
