@@ -19,7 +19,7 @@
             <div th:replace="~{user/challenge/challenge-list-view :: challenge-list-view}"></div>
 	        
 	        <section class="tag">
-	            <div class="tag-buttons">
+	            <div class="tag-buttons" th:each="l : ${ChallengeList}">
 	                <button>#다이어트</button>
 	                <button>#클린푸드</button>
 	                <button>#고단백질</button>
