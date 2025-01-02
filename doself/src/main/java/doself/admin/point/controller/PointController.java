@@ -14,36 +14,32 @@ public class PointController {
 
 	// 포인트 상품 조회
 	@GetMapping("list")
-	public String getPointList(HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
+	public String getPointList(Model model) {
+
 		model.addAttribute("title", "포인트 상품");
 		return "admin/point/admin-point-list";
 	}
 	
 	// 회원별 포인트 사용 내역 조회
 	@GetMapping("userhistorylist")
-	public String getUserHistoryList(HttpServletRequest request, Model model) {
+	public String getUserHistoryList(Model model) {
 		
-		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "회원별 사용 내역");
 		return "admin/point/user-history-list";
 	}
 	
 	// 포인트 상품 생성
 	@GetMapping("create")
-	public String createPointList(HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
+	public String createPointList(Model model) {
+
 		model.addAttribute("title", "상품 추가");
 		return "admin/point/create-point-list";
 	}
 	
 	// 포인트 상품 수정
 	@GetMapping("modify")
-	public String modifyPointList(HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
+	public String modifyPointList(Model model) {
+
 		model.addAttribute("title", "상품 수정");
 		return "admin/point/modify-point-list";
 	}

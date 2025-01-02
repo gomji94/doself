@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">>
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>피드 댓글</title>
-    <link rel="stylesheet" th:href="@{/assets/css/user-feed-comment.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/user-feed-comment-modal.css}">
-    <!-- <link rel="stylesheet" href="cl_challenge_feed_view.css">
-    <link rel="stylesheet" href="layout.css"> -->
+    <link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-comment.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-comment-modal.css}">
 </head>
 <body>
     <!-- 배경 콘텐츠 (iframe으로 기존 HTML 불러오기) -->
-    <iframe src="feed_view.html" class="background-content"></iframe>
+    <iframe th:src="@{/feed/list}" class="background-content"></iframe>
 
     <!-- 백그라운드 오버레이 -->
     <!-- <div class="overlay"></div>
@@ -110,7 +108,7 @@
 
 <!--/* 사용자 추가 js file */-->
 <th:block layout:fragment="customJsResource">
-	<script src="@{/assets/js/feed/feed-comment-modal.js}"></script>
+	<script src="@{/assets/js/feed/feed-modal.js}"></script>
 </th:block>
 
 <!--/* 사용자 추가 js script */-->

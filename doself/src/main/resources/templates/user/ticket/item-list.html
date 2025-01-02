@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+<head>
+	<link th:href="@{/assets/css/ticket/itemlist.css}" rel="stylesheet" type="text/css" />
+</head>		
+			
+	<th:block layout:fragment="content-body">
+        <!-- 왼쪽 사이드바 -->
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a th:href="@{/ticket/itemlist}" class="menu-item">
+                        <i class="fa-solid fa-ticket"></i>
+                        <div>티켓 결제</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/ticket/purchaselist}" class="menu-item">
+                        <i class="fa-regular fa-rectangle-list"></i>
+                        <div>티켓 상세내역 조회</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    
+    <main class="main-container">
+         <!-- 제목 섹션 -->
+         <div class="main-container-title">
+            <div id="main-container-title__eng">Payment</div>
+            <div id="main-container-title__kor">티켓 결제</div>
+        </div>
+        <!-- 메인 콘텐츠 -->
+        <div class="content-section">
+            <!-- 티켓 선택 섹션 -->
+            <div class="ticket-options">
+                <div class="ticketBox">
+                    <input type="radio" class="ticketCheck">
+                    <div class="ticketInfo">
+                        <div class="ticketName">
+                            챌린지 개설 티켓
+                        </div>
+                        <div class="ticketDesc">
+                            설명 : 챌린지 개설 가능 9,800원 (VAT 별도)
+                        </div>
+                    </div>
+                </div>
+                <div class="ticketBox">
+                    <input type="radio" class="ticketCheck">
+                    <div class="ticketInfo">
+                        <div class="ticketName">
+                            챌린지 참여 티켓
+                        </div>
+                        <div class="ticketDesc">
+                            설명 : 챌린지 참여 가능 3,800원 (VAT 별도)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 결제 내역 섹션 -->
+            <div id="payment-result">
+                <div class="payment-summary">
+                    <h2>결제 내역</h2>
+                    <div class="payment-info">
+                        <span>티켓 종류:</span> 
+                        <span>챌린지 개설 티켓</span>
+                    </div>
+                    <div class="payment-info">
+                        <span>가격:</span> 
+                        <span>9,800원</span>
+                    </div>
+                    <div class="payment-info">
+                        <span>부가세:</span>
+                        <span>980원</span> 
+                    </div>
+                    <hr>
+                    <div class="total payment-info"><span>합계:</span> 10,780원</div>
+                </div>
+
+                <!-- 결제 버튼 -->
+                <div class="button-container">
+                    <button class="pay-button"><a href="#">결제하기</a></button>
+                </div>
+            </div>
+        </div>
+        <!-- 결제규정내역-->
+        <div class = "regulation-box">
+            <ul>
+                <li>
+                    구매하신 티켓은 7일 이후 환불이 불가하며, 구매 후 변경이 불가능합니다.
+                </li>
+                <li>
+                    챌린지티켓으로 생성한 모임은 최소 인원이 모이지 않을 경우 자동 취소됩니다.
+                </li>
+                <li>
+                    참여 중도 포기 시, 티켓 재사용이 불가합니다.
+                </li>
+                <li>
+                    문의 사항이 있으시면 고객센터 (doself88@gmail.com) 으로 연락주세요.
+                </li>
+            </ul>
+        </div>
+    </main>
+	
+	</th:block> 
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    <script th:src="@{/assets/js/layout.js}"></script>
+    </th:block> 
+</html>
