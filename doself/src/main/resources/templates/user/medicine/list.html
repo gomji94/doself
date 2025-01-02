@@ -21,69 +21,21 @@
             </div>
         </section>
         <!-- 카드 목록 -->
-        <section class="card-grid">
-            <!-- 카드 1 -->
-            <a th:href="@{/medicine/view}" class="info-link" >
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/057/954/img/17954057_1.jpg?_v=20221007125357" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>루테인 지아잔틴 아스타잔틴</span>
-                        <p>고려은단</p>
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 2 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/439/814/img/4814439_1.jpg?_v=20221213133841" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>락토핏 생유산균 골드</span>
-                        <p>종근당건강</p>
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 3 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/574/219/img/4219574_1.jpg?_v=20230609105131" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>NOW Food 오메가3</span>
-                        <p>나우푸드</p>
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 4 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/557/762/img/12762557_2.jpg?_v=20230705164932" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>혈행건강 프로메가 알티지 오메가3 듀얼</span>
-                        <p>종근당건강</p>          
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 5 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/606/985/img/5985606_1.jpg" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>칼슘앤마그네슘비타민D아연</span>
-                        <p>종근당건강</p>                                 
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 6 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://thumbnail9.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/6657/53e36085d559466740676d52921e39f03d116616dcea889288ff281c09a4.jpg" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>글루코사민 콘드로이틴 MSM with OptiMSM</span>
-                        <p>닥터스베스트</p>                        
-                    </div>
-                </div>
-            </a>
-
-        </section>
+        <th:block th:if="${medicineList !=null}">
+	        <section class="card-grid" th:each="l : ${medicineList}">
+	            <!-- 카드 1 -->
+	            <a th:href="@{/medicine/view(medicineKeyNum=${l.medicineKeyNum})}" class="info-link" >
+	                <div class="card">
+	                    <img th:src="${l.medicineImg}" alt="카드 이미지">
+	                    <div class="card-content">
+	                        <span th:text="${l.medicineName}"></span>
+	                        <p th:text="${l.medicineBrand}"></p>
+	                    </div>
+	                </div>
+	            </a>
+	
+	        </section>
+        </th:block>
     </div>
     
         <!-- 모달창 여기부터 복사 -->
