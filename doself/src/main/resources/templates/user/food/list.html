@@ -50,10 +50,7 @@
                                     <span>분류</span>
                                     <div id="request-cate-container">
                                     	<label>
-	                                        <input type='radio' name='request-cate' value='food' />음식
-                                    	</label>
-                                 	    <label>
-                                        	<input type='radio' name='request-cate' value='nutritionalSupplements' />영양제
+	                                        <input type='radio' id="requestCategory" name='requestCategory' value='food' checked="checked"/>음식
                                     	</label>
                                     </div>
                                 </div>
@@ -63,7 +60,7 @@
                                 </div>
                             </form>
                             <div id="modal-request-form__buttons">
-                                <button type="submit" id="modal-request-form__submitButton" data-target="confirm-message.html">요청</button>
+                                <button type="button" id="modal-request-form__submitButton" data-target="confirm-message.html">요청</button>
                                 <button type="button" id="modal-request-form__cancelButton">취소</button>
                             </div>
                         </div>
@@ -98,20 +95,12 @@
     <th:block layout:fragment="customJsResource">
 	    <script th:src="@{/assets/js/layout.js}"></script>
 	    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	    <script th:src="@{/assets/js/medicine/modal.js}"></script>
+	    <script th:src="@{/assets/js/food/modal.js}"></script>
 	    <script th:src="@{/assets/js/medicine/list.js}"></script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    	<script>
-    		$('#modal-request-form__submitButton').click(event => {
-   				let isSubmit = true;
-   				$('#request-cate input')
-    			
-    			
-    		})
-    	</script>
     
     </th:block> 
 </html>

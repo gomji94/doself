@@ -21,16 +21,18 @@
   		<result column="mni_calcium" 		property="foodCalcium"/>
   		<result column="mni_iron" 			property="foodIron"/>
   	</resultMap>
-  
+  	
   	<!-- 음식 목록 리스트 조회 -->
   	<select id="getFoodList" resultMap="foodResultMap" >
 		SELECT mni_num, mni_name, mni_picture, mni_kcal
 		FROM meal_nutrition_info;
   	</select>
   	
+ 	<!-- 음식 상세 조회 -->
   	<select id="getFoodDetail" resultMap="foodResultMap" resultType="Food" parameterType="String">
   		SELECT *
 		FROM meal_nutrition_info
 		WHERE mni_num = #{foodKeyNum};
   	</select>
+  	
 </mapper>
