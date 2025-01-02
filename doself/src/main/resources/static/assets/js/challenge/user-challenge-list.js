@@ -64,6 +64,48 @@ $(document).ready(function () {
 
 // --- challenge detail info modal ---
 $(document).ready(function () {
+    // 카드 클릭 이벤트 핸들러
+    $('.card').on('click', function () {
+        const challengeId = $(this).attr('id').split('-')[1]; // 카드 ID에서 숫자 추출
+        fetchChallengeDetails(challengeId);
+    });
+
+    // 모달 닫기 버튼 클릭 시
+    $('#card-modal-close, #card-modal-overlay').on('click', function () {
+        $('#card-modal-overlay').fadeOut(); // 오버레이 숨김
+        $('#card-modal').fadeOut(); // 모달 숨김
+    });
+
+    // 서버에서 상세 데이터 가져오기
+    function fetchChallengeDetails(challengeId) {
+        $.ajax({
+            url: `/challenge/list/view`, // 백엔드 URL
+            type: 'GET',
+            data: { ChallengeCode: challengeId },
+            success: function (data) {
+                // 데이터를 기반으로 모달 업데이트
+                $('#card-modal h2').text(data.challengeName); // 예: 챌린지 이름
+                //$('#image-preview').attr('src', data.challengePicture); // 예: 이미지 URL
+                //$('#challenge-tag').text(data.challengeLeaderName); // 리더 이름
+                $('#info-content-detail').html(`
+                    <p>📌 챌린지 소개 📌</p>
+                    <p>🗓 챌린지 일정: ${data.challengeStartDate} ~ ${data.challengeEndDate}</p>
+                    <p>🎯 난이도: ${data.challengeTopicLevel}</p>
+                    <p>📝 진행 내용: ${data.challengeContent}</p>
+                    <p>🤗‍ 참여 인원: ${data.challengeCurrentMember} / ${data.challengeMaxMember}</p>
+                `);
+                $('#card-modal-overlay').fadeIn(); // 모달 오버레이 표시
+                $('#card-modal').fadeIn(); // 모달 표시
+            },
+            error: function () {
+                alert('챌린지 정보를 가져오는 데 실패했습니다.');
+            },
+        });
+    }
+});
+
+/**
+$(document).ready(function () {
     // card-1 클릭 시 모달 열기
     $('#card-1').on('click', function () {
         $('#card-modal-overlay').fadeIn(); // 오버레이 표시
@@ -82,3 +124,4 @@ $(document).ready(function () {
         $('#card-modal').fadeOut(); // 모달 숨김
     });
 });
+*/
