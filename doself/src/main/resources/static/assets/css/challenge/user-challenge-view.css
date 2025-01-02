@@ -1013,6 +1013,7 @@ button.cf-comment-comment-btn {
     outline: none;
     color: #515151;
     opacity: 0.6;
+    background-color: inherit;
 }
 
 .feed-info .challenge-create-info .input-block .date {
@@ -1027,6 +1028,7 @@ button.cf-comment-comment-btn {
     margin: 0;
     opacity: 0.6;
     border-radius: 10px;
+    background-color: inherit;
 }
 
 .feed-info #emoji-btn {

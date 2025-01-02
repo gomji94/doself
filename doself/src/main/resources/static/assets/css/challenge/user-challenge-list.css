@@ -162,6 +162,7 @@ section.content-main {
     margin-bottom: 5px;
     width: 250px;
     padding: 0 13px;
+    place-self: center;
 }
 
 .card-content .card-info img {
@@ -189,19 +190,95 @@ section.content-main {
     margin-left: 5px;
 }
 
+#create-challenge-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: none;
+}
+
+/* 모달 배경 오버레이 */
+#card-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* 어두운 배경 */
+    z-index: 1005; /* 모달보다 뒤에 표시 */
+    display: none; /* 기본적으로 숨김 */
+}
+
+/* 모달 본체 */
+#card-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 화면 중앙에 정렬 */
+
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    z-index: 1006; /* 오버레이보다 위에 표시 */
+    display: none; /* 기본적으로 숨김 */
+    padding: 20px;
+}
+
+/* 모달 닫기 버튼 */
+/* #card-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+} */
+
+/* 모달 내부 콘텐츠 */
+/* #card-modal .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+} */
+
+/* #card-modal .popup-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+} */
+
+
 /* 오버레이 스타일 */
-.overlay {
+/* .overlay {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
-    z-index: 1000; /* 모달 위에 표시 */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
-/* 모달 컨테이너 스타일 */
+
 .popup-container {
     display: none;
     position: fixed;
@@ -215,8 +292,8 @@ section.content-main {
     overflow-y: auto;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1001; /* 오버레이 위에 표시 */
-}
+    z-index: 1001;
+} */
 
 /* 기존 cl_challenge_feed_view.css가 영향을 받지 않도록 스타일 네임스페이스 관리 */
 .popup-container .popup-header {
@@ -272,14 +349,14 @@ section.content-main {
     border-radius: 0px 0px 0px 10px;
 }
 
-.upload-box img {
+/* .upload-box img {
     max-width: 63px;
     width: 100%;
     height: 100%;
     opacity: 0.7;
     margin-left: -2px;
     margin-bottom: 11px;
-}
+} */
 
 .preview-box img {
     width: 100%;
@@ -331,7 +408,7 @@ section.content-main {
 .feed-info img {
     width: 35px;
     height: 35px;
-    border-radius: 100px;
+    /* border-radius: 100px; */
     margin-top: 5px;
 }
 
@@ -395,6 +472,9 @@ section.content-main {
     font-weight: 700;
     margin-right: -4px;
     align-self: self-end;
+    white-space: nowrap;
+    padding: 0px;
+    margin-bottom: 1px;
 }
 
 .submit-btn:hover {
