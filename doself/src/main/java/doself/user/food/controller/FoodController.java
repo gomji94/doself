@@ -12,6 +12,9 @@ import doself.user.food.domain.Food;
 import doself.user.food.service.FoodService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -41,5 +44,13 @@ public class FoodController {
 		
 		return "user/food/view";
 	}
+	
+	@PostMapping("/createrequest")
+	public String postMethodName(@RequestBody String entity) {
+		//TODO: process POST request
+		
+		return entity;
+	}
+	
 	
 }
