@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import doself.user.food.domain.Food;
+import doself.user.food.domain.NutritionRequestInfo;
 
 @Mapper
 public interface FoodMapper {
@@ -14,5 +15,9 @@ public interface FoodMapper {
 	
 	// 음식 상세 조회
 	Food getFoodDetail(String foodKeyNum);
+	
+	// 요청 접수
+	
+	void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
 
 }

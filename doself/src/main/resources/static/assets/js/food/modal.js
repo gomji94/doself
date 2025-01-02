@@ -24,13 +24,6 @@ $(document).ready(function () {
 		
 		let isSubmit = true;
 
-		const $cateValue = $('input[type=radio]:checked').val();
-		if(!$cateValue) {
-			alert('분류를 정해주세요');
-			isSubmit = false;
-			return false;
-		}
-
 		const $requestItemName = $('#modal-request-form__input').val();
 		if(!$requestItemName) {
 			alert('요청하실 제품명을 입력해주세요');
@@ -38,15 +31,18 @@ $(document).ready(function () {
 			return false;
 		}
 
-		if(isSubmit) $('#modal-request-form__submitButton').submit();
-		
-        $('.confirm-popup-wrap').fadeIn(); // 모달창 활성화
-        $('.popup-wrap').fadeOut();
-        // 2초 후에 새 창을 닫고 다른 페이지로 이동
-        setTimeout(() => {
-            $('.confirm-popup-wrap').fadeOut();
+		if(isSubmit) {
 			
-        }, 1000);
+			$('#modal-request-form').submit();
+	        $('.confirm-popup-wrap').fadeIn(); // 모달창 활성화
+	        $('.popup-wrap').fadeOut();
+	        // 2초 후에 새 창을 닫고 다른 페이지로 이동
+	        setTimeout(() => {
+	            $('.confirm-popup-wrap').fadeOut();
+				
+	        }, 1000);
+			
+		}
     });
 
     // 닫기 버튼 클릭 시 모달창 닫기

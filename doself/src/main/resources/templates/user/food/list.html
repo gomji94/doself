@@ -22,9 +22,9 @@
 		        </section>
 		        <!-- 카드 목록 -->
 		        <th:block th:if="${foodList !=null}">
-		        	<section class="card-grid" th:each="l : ${foodList}">
+		        	<section class="card-grid" >
 			            <!-- 카드 1 -->
-			            <a th:href="@{/food/view(foodKeyNum=${l.foodKeyNum})}" class="info-link" target="_blank">
+			            <a th:each="l : ${foodList}" th:href="@{/food/view(foodKeyNum=${l.foodKeyNum})}" class="info-link" target="_blank">
 			                <div class="card">
 			                    <img th:src="${l.foodImg}" alt="카드 이미지">
 			                    <div class="card-content">
@@ -45,21 +45,22 @@
                     <div class="body-content">
                         <div class="body-titlebox">
                             <div id="modal-request-title">등록 요청</div>
-                            <form id="modal-request-form">
+                            <form id="modal-request-form" th:action="@{/food/createrequest}" method="post">
                                 <div>
                                     <span>분류</span>
                                     <div id="request-cate-container">
-                                        <input type='radio' name='request-cate' value='food' />음식
-                                        <input type='radio' name='request-cate' value='nutritionalSupplements' />영양제
+                                    	<label>
+	                                        <input type='radio' id="requestCategory" name='requestCategory' value='food' checked="checked"/>음식
+                                    	</label>
                                     </div>
                                 </div>
                                 <div>
                                     <span>이름</span>
-                                    <input id="modal-request-form__input" type="text" />
+                                    <input id="modal-request-form__input" type="text" name="requestItemName"/>
                                 </div>
                             </form>
                             <div id="modal-request-form__buttons">
-                                <button type="submit" id="modal-request-form__submitButton" data-target="confirm-message.html">요청</button>
+                                <button type="button" id="modal-request-form__submitButton" data-target="confirm-message.html">요청</button>
                                 <button type="button" id="modal-request-form__cancelButton">취소</button>
                             </div>
                         </div>
@@ -91,13 +92,15 @@
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+	    <script th:src="@{/assets/js/layout.js}"></script>
+	    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	    <script th:src="@{/assets/js/food/modal.js}"></script>
+	    <script th:src="@{/assets/js/medicine/list.js}"></script>
+    </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"></script>
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script th:src="@{/assets/js/medicine/modal.js}"></script>
-    <script th:src="@{/assets/js/medicine/list.js}"></script>
+    
     </th:block> 
 </html>
