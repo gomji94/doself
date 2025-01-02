@@ -14,18 +14,16 @@ public class PaymentController {
 	
 	// 결제 내역 조회
 	@GetMapping("list")
-	public String getPaymentList(HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
+	public String getPaymentList(Model model) {
+
 		model.addAttribute("title","결제 내역");
 		return "admin/payment/admin-payment-list";
 	}
 	
 	// 환불 접수 내역 조회
 	@GetMapping("refund/list")
-	public String getRefundList(HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
+	public String getRefundList(Model model) {
+
 		model.addAttribute("title","환불 접수 내역");
 		return "admin/payment/admin-refund-list";
 	}

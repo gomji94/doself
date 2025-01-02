@@ -11,16 +11,6 @@
         flex-direction: column;
     }
     
-    /* 전체 페이지 스타일 */
-    /* body {
-        display: flex;
-        flex-direction: column;
-        font-family: 'Arial', sans-serif;
-        line-height: 1.5;
-        background-color: #ffff;
-        color: #333;
-    } */
-    
     /* feed-container */
     .feed-container {
         flex: 1;
