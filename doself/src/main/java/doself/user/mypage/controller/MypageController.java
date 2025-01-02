@@ -12,14 +12,15 @@ public class MypageController {
 	// 회원정보
 	@GetMapping("/member/info")
 	public String getMemberInfo() {
-		
+			
 		return "user/mypage/info";
 	}
 	
 	// 회원정보수정
 	@PostMapping("/member/modify" )
 	public String modifyUser() {
-			
+		
+		
 		return "user/mypage/";
 	}
 	
