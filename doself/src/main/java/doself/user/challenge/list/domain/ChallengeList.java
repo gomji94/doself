@@ -10,18 +10,25 @@ import lombok.Data;
 @Data
 public class ChallengeList {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String  ChallengeCode;
+	private String  challengeCode;
+	private String	challengeTopicLevelCode;
+	private String  challengeLeaderName;
 	private String  memberId;
-	private String	ChallengeName;
-	private String  ChallengePicture;
-	private Date	ChallengeStartDate;
-	private Date 	ChallengeEndDate;
+	private String	challengeName;
+	private String  challengePicture;
+	private String  challengeContent;
+	private Date	challengeCreationDate;
+	private Date	challengeStartDate;
+	private Date 	challengeEndDate;
 	// Integer : 참조형 null과 비교 가능하고 boolean가능
 	// 타입 변경 여부 확인
-	private int 	ChallengeCurrentMember;
-	private int 	ChallengeMaxMember;
-	private String  ChallengeTopicLevel;
-	private String  ChallengeTopicCode;
-	private String  ChallengeTopicName;
-	private String  ChallengeStatus;
+	private int		challengeGroupLike;
+	private int 	challengeCurrentMember;
+	private int 	challengeMaxMember;
+	private String  challengeTopicLevel;
+	private String  challengeTopicCode;
+	private String  challengeTopicName;
+	private String  challengeStatusCode;
+	private String  challengeStatus;
+	private String  challengeRewardCheck;
 }

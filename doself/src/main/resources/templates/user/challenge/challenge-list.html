@@ -19,42 +19,41 @@
             <div th:replace="~{user/challenge/challenge-list-view :: challenge-list-view}"></div>
 	        
 	        <section class="tag">
-	            <div class="tag-buttons" th:each="l : ${ChallengeList}">
-	                <button>#다이어트</button>
-	                <button>#클린푸드</button>
-	                <button>#고단백질</button>
-	                <button>#비건</button>
-	                <button>#채식</button>
-	                <button>#건강식단</button>
-	                <button>#저탄고지</button>
+	            <div class="tag-buttons">
+	                <button type="button">#다이어트</button>
+	                <button type="button">#클린푸드</button>
+	                <button type="button">#고단백질</button>
+	                <button type="button">#비건</button>
+	                <button type="button">#채식</button>
+	                <button type="button">#건강식단</button>
+	                <button type="button">#저탄고지</button>
 	            </div>
 	            <div class="create-button">
-	                <button id="create-challenge-open-btn">생성</button>
+	                <button type="button" id="create-challenge-open-btn">생성</button>
 	            </div>
 	        </section>
 	        <!-- 카드 목록 -->
-	        <section class="card-grid">
+	        <section class="card-grid" th:if="${ChallengeList}">
 	            <!-- 카드 1 -->
-	            <div class="card" id="card-1">
+	            <div class="card" id="card-1" th:each="cl : ${ChallengeList}">
 	                <img src="https://velog.velcdn.com/images/mekite/post/1e0caa09-c47c-417b-b8ed-c9f5f0a97d25/image.jpg" alt="카드 이미지">
 	                <div class="card-content">
-	                    <!-- todo : 태그랑 챌린지 링크 -->
 	                    <div class="tag-container">
-	                        <a href="#"><h3 class="challenge-tag">#다이어트</h3></a>
-	                        <a href="#"><h3 class="challenge-name">가보자고</h3></a>
+	                        <a href="#"><h3 th:text="|# ${cl.ChallengeTopicName}|" class="challenge-tag"></h3></a>
+	                        <a href="#"><h3 th:text="${cl.ChallengeName}" class="challenge-name"></h3></a>
 	                    </div>
 	                    <div class="card-info">
 	                        <div class="challenge-level">
 	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>쉬움</p>
+	                            <p th:text="$ChallengeTopicLevel"></p>
 	                        </div>
 	                        <div class="challenge-start-date">
 	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/19(일)</p>
+	                            <p th:text="${cl.ChallengeStartDate}"></p>
 	                        </div>
 	                        <div class="challenge-people">
 	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>5/15</p>
+	                            <p th:text="|${cl.ChallengeCurrentMember}/${ChallengeMaxMember}|"></p>
 	                        </div>
 	                    </div>
 	                </div>
@@ -127,198 +126,6 @@
 	                        <div class="challenge-people">
 	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
 	                            <p>5/15</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <!-- 카드 2 -->
-	            <div class="card">
-	                <img src="https://velog.velcdn.com/images/mekite/post/405597d0-9617-448c-b0a8-f396ee40e1a9/image.jpg" alt="카드 이미지">
-	                <div class="card-content">
-	                    <div class="tag-container">
-	                        <h3 class="challenge-tag">#클린푸드</h3>
-	                        <h3 class="challenge-name">간식먹자</h3>
-	                    </div>
-	                    <div class="card-info">
-	                        <div class="challenge-level">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/4c3632f1-a9ae-4227-a422-3a963d878ee9/image.png" alt="level">
-	                            <p>보통</p>
-	                        </div>
-	                        <div class="challenge-start-date">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/d851fb08-8cfe-42f0-9337-8e7cfc36799e/image.png" alt="start-date">
-	                            <p>11/18(토)</p>
-	                        </div>
-	                        <div class="challenge-people">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/e5a5b298-fcfd-41a6-860e-da51fb10e9bc/image.png" alt="people">
-	                            <p>11/20</p>
 	                        </div>
 	                    </div>
 	                </div>
