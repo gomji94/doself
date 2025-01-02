@@ -32,5 +32,19 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		});
 		return challengeList;
 	}
+
+	// 특정 챌린지 카드 조회
+	@Override
+	public ChallengeList getChallengeListView(String ChallengeCode) {
+			
+		return challengeListMapper.getChallengeListView(ChallengeCode);
+	}
+
+	// 챌린지 생성(등록)
+	@Override
+	public void addChallenge(ChallengeList challengeList) {
+		int addChallengeResult = challengeListMapper.addChallenge(challengeList);
+		
+	}
 	
 }
