@@ -43,8 +43,8 @@ $(document).ready(function() {
 
 // --- create challenge modal ---
 $(document).ready(function () {
-    // 모달 열기
-    $(".create-button button").on("click", function () {
+    // 생성 버튼 클릭 시 모달 열기
+    $('#create-challenge-open-btn').on('click', function () {
         $("#cl-create-modal-overlay").fadeIn(300); // 부드럽게 표시
     });
 
