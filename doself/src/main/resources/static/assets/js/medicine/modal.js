@@ -26,7 +26,8 @@ $(document).ready(function () {
         // 2초 후에 새 창을 닫고 다른 페이지로 이동
         setTimeout(() => {
             $('.confirm-popup-wrap').fadeOut();
-            window.open("mnl_dietary_supplement_info_all_view.html", "_self");
+			
+            window.open("/medicine/list", "_self");
         }, 1000);
     });
 

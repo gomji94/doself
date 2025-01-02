@@ -13,5 +13,10 @@ public class MedicineController {
 		return "user/medicine/list";
 	}
 	
+	@GetMapping("/view")
+	public String getMedicineDetail() {
+		return "user/medicine/view";
+	}
+	
 
 }
