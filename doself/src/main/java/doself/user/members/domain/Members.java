@@ -1,21 +1,17 @@
-package doself.user.member.dto;
-
-import java.sql.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
+package doself.user.members.domain;
 
 import lombok.Data;
 
 @Data
-public class Member {
+public class Members {
 	
 	private String memberId;
 	private String memberPw;
-	private String memberName;
-	private String memberGrdCode;
 	private String memberEmail;
+	private String memberName;
 	private String memberBrith;
 	private String memberPhoneNum;
+	private String memberGrdCode;
 	private String memberGender;
 	private String memberAgeRange;
 	private Integer openTicketCnt;
