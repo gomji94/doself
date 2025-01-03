@@ -1,13 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { pumhNum: "pumh_001", peplNum: "배민 상품권 1000", mbrId: "김해숙", pumhDate: "2024-09-17" },
-    { pumhNum: "pumh_002", peplNum: "배민 상품권 5000", mbrId: "조여준", pumhDate: "2024-10-06" },
-    { pumhNum: "pumh_003", peplNum: "배민 상품권 1000", mbrId: "박서준", pumhDate: "2024-10-08" },
-    { pumhNum: "pumh_004", peplNum: "네이버페이 포인트쿠폰 5000", mbrId: "김나연", pumhDate: "2024-10-15" },
-    { pumhNum: "pumh_005", peplNum: "네이버페이 포인트쿠폰 1000", mbrId: "고민시", pumhDate: "2024-10-20" }
-
-];
+const challengeData = [];
 
 // 결과를 테이블에 출력하는 함수
 function renderTable(data) {

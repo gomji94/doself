@@ -57,7 +57,20 @@
 							<th scope="col">처리관리자</th>
 						</tr>
 					</thead>
-					<tbody id="resultTable"></tbody>
+					<tbody>
+						<th:block th:if="${declareUserList != null}">
+							<tr th:each="l : ${declareUserList}" class="text-center">
+								<td th:text="${l.rmmNum}"></td>
+								<td th:text="${l.rrNum}"></td>
+								<td th:text="${l.mbrId}"></td>
+								<td th:text="${l.rcCode}"></td>
+								<td th:text="${l.rmmSanctionStartDate}"></td>
+								<td th:text="${l.rmmSanctionPeriod}"></td>
+								<td th:text="${l.rmmSanctionEndDate}"></td>
+								<td th:text="${l.rmmAdmin}"></td>							
+							</tr>						
+						</th:block>
+					</tbody>
 				</table>
 			</div>
 		</div>

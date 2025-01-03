@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+      
+<head>
+	<link th:href="@{/assets/css/community/view.css}" rel="stylesheet" type="text/css" />
+</head>
+	
+	<th:block layout:fragment="content-body">
+  
+  	<div class="container">
+
+        <main id="main-content">
+  		<th:block th:object="${articleDetail}">
+  		
+            <div id="main-container-contents">
+                <div id="main-container-title">community</div>
+                <!-- 게시글 전체 영역 -->
+                <div id="post">
+                    <!-- 게시글 상단 정보 (작성자, 작성일, 제목 등) -->
+                    <div id="header-title">
+                        <div id="article-category" th:text="*{articleCategory}"></div>
+                        <span id="article-title" th:text="*{articleTitle}"></span>
+                    </div>
+                    <div id="header-author">
+                        <span id="author-name">name</span>
+                        <span id="author-userId" th:text="*{articleAuthorId}"></span>
+                    </div>
+                    <div id="header-info">
+                        <span id="write-date">date</span>
+                        <span  th:text="*{articleCreationDate}"></span>
+                        <span id="post-like">like</span>
+                        <span id="likeCnt"  th:text="*{articleLike}"></span>
+                    </div>
+                    
+					<th:block th:with="imgSrc=*{articleAttachmentFile}" th:if="${!#strings.isEmpty(imgSrc)}">
+					    <img alt="" th:src="*{articleAttachmentFile}" width="300" height="300">
+					</th:block>
+
+                    <!-- 게시글 본문 내용 -->
+                    <div id="post-content" th:text="*{articleContent}">
+                    </div>
+
+                    <!-- 글 버튼 -->
+                    <div class="article-button-container">
+                        <a href="#">
+                            <button id="article-like__button">like</button>
+                        </a>
+                        <a href="#">
+                            <button id="article-modify__button">modify</button>
+                        </a>
+                        <a href="#">
+                            <button id="article-delete__button">delete</button>
+                        </a>
+                        <a href="#">
+                            <button id="article-list__button">list</button>
+                        </a>
+                    </div>
+
+                    <!-- 댓글 영역 -->
+                    <div id="comments-container">
+                        <!-- 댓글 목록 -->
+                        <ul id="comment-list">
+                            <li class="comment">
+                                <div class="comment-info__left">
+                                    <p class="comment-author">id001</p>
+                                    <p class="comment-content">이 글에 대한 댓글 내용입니다.</p>
+                                </div>
+                                <div class="comment-info__right">
+                                    <p class="comment-date">2024.11.18 09:32</p>
+                                    <button class="comment-button">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li class="comment">
+                                <div class="comment-info__left">
+                                    <p class="comment-author">id001</p>
+                                    <p class="comment-content">이 글에 대한 댓글 내용입니다.</p>
+                                </div>
+                                <div class="comment-info__right">
+                                    <p class="comment-date">2024.11.18 09:32</p>
+                                    <button class="comment-button">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <!-- 댓글 작성 폼 -->
+                        <form id="comment-form">
+                            <div id="comment-userId">id015</div>
+                            <textarea id="comment-text" placeholder="댓글을 남겨보세요"></textarea>
+                            <button type="submit" id="comment-submit">등록</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            </th:block>
+        </main>
+        <div id="main-container-advertise">
+            <div id="main-container-advertise__adBlock">
+                <a th:href="@{https://www.tesla.com/ko_kr/cybertruck}" target="_blank">
+                    <img id="mcaa__img" src="https://i.pinimg.com/1200x/de/35/56/de355692714024d48880cb98db8f9d4b.jpg" alt="">
+                </a>
+            </div>
+        </div>
+    </div>
+	</th:block> 
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource">
+    </th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:src="@{/assets/js/layout.js}"></script>
+    	
+    </th:block> 
+</html>

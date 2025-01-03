@@ -42,8 +42,15 @@
                                         <th scope="col">사용날짜</th>                                                                              
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
+                                <tbody>
+                                    <th:block th:if="${pointUserHistoryList != null}">
+                                    	<tr th:each="l : ${pointUserHistoryList}" class="text-center">
+                                    		<td th:text="${l.pumhNum}"></td>
+                                    		<td th:text="${l.peplNum}"></td>
+                                    		<td th:text="${l.memberInfo.mbrName}"></td>
+                                    		<td th:text="${l.pumhDate}"></td>
+                                    	</tr>                       
+                                    </th:block>
                                 </tbody>
                             </table>
                         </div>

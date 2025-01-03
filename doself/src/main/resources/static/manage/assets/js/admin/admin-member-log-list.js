@@ -1,12 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { mllNum: "mll_001", mbrId: "id001", mbrName: "문지훈", mgCode: "관리자", mllIp: "127.0.1", mllDate: "2024-09-26 08:50:10" },
-    { mllNum: "mll_002", mbrId: "id002", mbrName: "김나연", mgCode: "회원", mllIp: "127.0.2", mllDate: "2024-09-27 02:55:10" },
-    { mllNum: "mll_003", mbrId: "id001", mbrName: "문지훈", mgCode: "관리자", mllIp: "127.0.1", mllDate: "2024-09-27 04:30:14" },
-    { mllNum: "mll_004", mbrId: "id002", mbrName: "김나연", mgCode: "회원", mllIp: "127.0.2", mllDate: "2024-09-27 04:30:14" }
-
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {

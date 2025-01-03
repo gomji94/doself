@@ -17,259 +17,39 @@
 		</th:block>
 		
 		<th:block layout:fragment="content-body">
-			<div class="card mb-4">
-                    <header class="card-header cardHeader">
-                        <div class="row align-items-center">
-                          <div class="col d-flex align-items-center">
-                            <div class="form-check d-flex align-items-center me-3">
-                              <p class="mb-0">포인트 상품 번호</p>
-                            </div>
-                            <div class="col-md-3 col-12 d-flex align-items-center">
-                              <p class="mb-0">상품명</p>
-                            </div>
-                          </div>
-                          <div class="col-md-2 col-6">
-                            <p class="mb-0">상품가격</p>
-                          </div>
-                          <div class="col-md-2 col-6">
-                            <p class="mb-0">비고</p>
-                          </div>
-                        </div>
-                      </header>
+			<div class="card mb-4">                                      
                     <!-- card-header end// -->
                     <div class="card-body">
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_001</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">개설 티켓</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>9800</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_002</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">참여 티켓</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>3000</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_003</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">배민 상품권 1000</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>1000</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_004</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">배민 상품권 5000</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>5000</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_005</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">배민 상품권 10000</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>10000</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_006</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">네이버페이 포인트쿠폰 1000</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>1000</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_007</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">네이버페이 포인트쿠폰 5000</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>3000</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
-                        <article class="itemlist">
-                            <div class="row align-items-center">
-                                <div class="col col-check flex-grow-0">
-                                    <div class="form-check">
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-                                    <a class="itemside" href="#">
-                                        <div class="left">
-                                            <p>pepl_008</p>
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="mb-0">네이버페이 포인트쿠폰 10000</h6>
-                                        </div>
-                                    </a>
-                                </div>
-                            
-                                <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                    <span>10000</span>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                    <a th:href="@{/admin/point/modify.html}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </div>
-                            </div>
-                            <!-- row .// -->
-                        </article>
-                        <!-- itemlist  .// -->
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">포인트 상품 번호</th>
+                                        <th scope="col">상품명</th>                                        
+                                        <th scope="col">상품가격</th>                                        
+                                        <!-- <th scope="col">이미지</th>  -->                                                                  
+                                        <th scope="col">상품설명</th>                                                                   
+                                        <th scope="col">비고</th>                                                                   
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	<th:block th:if="${pointList != null}">
+                                		<tr th:each="l : ${pointList}" class="text-center">
+                                			<td th:text="${l.peplNum}"></td>
+                                			<td th:text="${l.peplName}"></td>
+                                			<td th:text="${l.peplPrice}"></td>
+                                			<!-- <td th:text="${l.peplImg}"></td>    -->                             			
+                                			<td th:text="${l.peplExpl}"></td>  
+                                			<td>
+	                                			<a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+		                                    	<a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                			</td>                              			
+                                		</tr>                                
+                                	</th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
                     </div>
                     <!-- card-body end// -->
                 </div>

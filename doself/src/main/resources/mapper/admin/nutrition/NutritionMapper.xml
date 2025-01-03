@@ -3,22 +3,49 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-  <mapper namespace="doself.admin.nutrition.mapper.NutritionMapper">
-    	
-  		<!-- 영양정보 등록요청 조회 -->
-		<select id="getNutritionList" resultType="Nutrition">
-			/* 영양정보 등록요청 조회 */
-					
+  <mapper namespace="doself.admin.nutrition.mapper.NutritionMapper">    
+  		
+  		<resultMap type="Nutrition" id="NutritionResultMap">
+  			<id column="nirr_num" property="nirrNum" />
+  			<result column="mbr_id" property="mbrId" />  		
+  			<result column="nirr_content" property="nirrContent" />
+  			<result column="nirr_date" property="nirrDate" />
+  			<result column="nirr_category" property="nirrCategory" />
+  			<result column="sc_code" property="scCode" />
+  			<result column="prr_admin" property="prrAdmin" />
+  			<result column="nirr_processing_date" property="nirrProcessingDate" />
+  			<result column="nirr_reason_content" property="nirrReasonContent" />
+  			
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association> 	
+	  		  			 	
+  			<!-- 처리상태카테고리 관계 -->
+	  		<association property="statusCategoryInfo" javaType="StatusCategory">
+	  			<id 	column="sc_code" property="scCode" />	  			
+	  			<result column="sc_status" property="scStatus" />	  				  				  			  			  			
+	  		</association> 	  			 	
+  		</resultMap>
+  		
+  		<!-- 영양정보 등록 요청 조회 -->
+		<select id="getNutritionList" resultMap="NutritionResultMap">
+			/* 영양정보 등록 요청 조회 */
+			
 			SELECT
-				nirr_num 				AS nirrNum,
-				mbr_id 					AS mbrId,
-				nirr_content 			AS nirrContent,
-				nirr_date 				AS nirrDate,
-				nirr_category 			AS nirrCategory,
-				sc_code 				AS scCode,
-				prr_admin 				AS prrAdmin,
-				nirr_processing_date 	AS nirrProcessingDate,
-				nirr_reason_content 	AS nirrReasonContent
-			FROM nutrition_info_registration_request	
+				nirr_num,
+				m.mbr_name,
+				nirr_content,
+				nirr_date,
+				nirr_category,
+				sc_status,
+				prr_admin,
+				nirr_processing_date,
+				nirr_reason_content
+			FROM nutrition_info_registration_request nirr INNER JOIN `member` m
+			ON nirr.mbr_id = m.mbr_id
+			INNER JOIN status_category sc
+			ON nirr.sc_code = sc.sc_code
 		</select>
   </mapper>

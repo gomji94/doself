@@ -1,22 +1,33 @@
 package doself.admin.point.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jakarta.servlet.http.HttpServletRequest;
+import doself.admin.point.domain.Point;
+import doself.admin.point.domain.PointUserHistory;
+import doself.admin.point.service.PointService;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
 @RequestMapping("/admin/point")
+@RequiredArgsConstructor
 public class PointController {
 
+	private final PointService pointService;
+	
 	// 포인트 상품 조회
 	@GetMapping("list")
 	public String getPointList(Model model) {
-
+		
+		List<Point> pointList = pointService.getPointList();
+		
 		model.addAttribute("title", "포인트 상품");
+		model.addAttribute("pointList", pointList);
 		return "admin/point/admin-point-list";
 	}
 	
@@ -24,7 +35,9 @@ public class PointController {
 	@GetMapping("userhistorylist")
 	public String getUserHistoryList(Model model) {
 		
+		List<PointUserHistory> pointUserHistoryList = pointService.getPointUserHistoryList();
 		model.addAttribute("title", "회원별 사용 내역");
+		model.addAttribute("pointUserHistoryList", pointUserHistoryList);
 		return "admin/point/user-history-list";
 	}
 	

@@ -1,9 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { mcslNum: "mcsl_001", mcslYear: "2024", mcslMonthly: "9", cgName: "가보자고", mcslCumulativePerformanceRate: "79.1%", mcslCumulativeParticipationRate: "93.1%", mcslLevelScore: 30, mcslCumulativePerformanceScore: 10, mcslCumulativeParticipationScore: 15, mcslLikeScore: 0, mcslTotalScore: 55, mcslRank: 1 },
-    { mcslNum: "mcsl_002", mcslYear: "2024", mcslMonthly: "9", cgName: "간식먹자", mcslCumulativePerformanceRate: "61.14%", mcslCumulativeParticipationRate: "78.74%", mcslLevelScore: 20, mcslCumulativePerformanceScore: 5, mcslCumulativeParticipationScore: 10, mcslLikeScore: 0, mcslTotalScore: 35, mcslRank: 2 }
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {

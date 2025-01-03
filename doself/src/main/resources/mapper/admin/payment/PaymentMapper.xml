@@ -5,31 +5,74 @@
 
   <mapper namespace="doself.admin.payment.mapper.PaymentMapper">
     	
+    	<resultMap type="Payment" id="PaymentResultMap">
+  			<id column="ctph_num" property="ctphNum" />
+  			<result column="mbr_id" property="mbrId" />  		
+  			<result column="tpm_num" property="tpmNum" />
+  			<result column="ctph_date" property="ctphDate" />
+  			<result column="ctp_code" property="ctpCode" />
+  			<result column="ctph_status" property="ctphStatus" />
+  			<result column="ctph_return_status" property="ctphReturnStatus" />
+  			
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association>
+	  		
+  		 	<!-- 티켓가격 관계 -->
+	  		<association property="ticketPriceInfo" javaType="TicketPrice">
+	  			<id 	column="ctp_code" property="ctpCode" />	  			
+	  			<result column="ctp_price" property="ctpPrice" />	  				  				  			  			  				  				  				  				  			  			  			
+	  		</association>	  		  			 	   		
+  		</resultMap>    	
+    	
   		<!-- 결제내역 조회 -->
-		<select id="getPaymentList" resultType="Payment">
+		<select id="getPaymentList" resultMap="PaymentResultMap">
 			/* 결제내역 조회 */
 					
 			SELECT
-				ctph_num 				AS ctphNum,
-				mbr_id 					AS mbrId,
-				tpm_num 				AS tpmNum,
-				ctph_date 				AS ctphDate,
-				ctp_code 				AS ctpCode,
-				ctph_status 			AS ctphStatus,
-				ctph_return_status 		AS ctphReturnStatus
-			FROM challenge_ticket_payment_history
+				ctph_num,
+				m.mbr_name,
+				ctph.tpm_num,
+				ctph_date,
+				ctp.ctp_price,
+				ctph_status,
+				ctph_return_status
+			FROM challenge_ticket_payment_history ctph INNER JOIN `member` m
+				ON ctph.mbr_id = m.mbr_id
+				INNER JOIN challenge_ticket_price ctp
+				ON ctph.ctp_code = ctp.ctp_code
 		</select>
 		
+		
+		
+		
+		<resultMap type="PaymentRefund" id="PaymentRefundResultMap">
+  			<id column="prl_num" property="prlNum" />
+  			<result column="prr_num" property="prrNum" />  		
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="prl_date" property="prlDate" />
+  			<result column="prl_amount" property="prlAmount" />
+  			
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association>	  		  		  			 	   		
+  		</resultMap> 
+		
   		<!-- 결제 환불내역 조회 -->
-		<select id="getRefundList" resultType="PaymentRefund">
+		<select id="getRefundList" resultMap="PaymentRefundResultMap">
 			/* 결제 환불내역 조회 */
 					
 			SELECT
-				prl_num 	AS prlNum,
-				prr_num 	AS prrNum,
-				mbr_id 		AS mbrId,
-				prl_date 	AS prlDate,
-				prl_amount 	AS prlAmount
-			FROM payment_refund_log
+				prl_num,
+				prr_num,
+				m.mbr_name,
+				prl_date,
+				prl_amount
+			FROM payment_refund_log prl INNER JOIN `member` m
+			ON prl.mbr_id = m.mbr_id
 		</select>
   </mapper>

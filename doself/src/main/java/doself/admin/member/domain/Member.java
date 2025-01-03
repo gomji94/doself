@@ -16,4 +16,6 @@ public class Member {
 	private int openingTicketCount;
 	private int participationTicketCount;
 	private int mbrPoint;
+	
+	private Age ageInfo;
 }
