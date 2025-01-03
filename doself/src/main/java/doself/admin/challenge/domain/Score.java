@@ -17,4 +17,6 @@ public class Score {
 	private int mcslLikeScore;
 	private int mcslTotalScore;
 	private int mcslRank;
+	
+	private Challenge challengeInfo;
 }

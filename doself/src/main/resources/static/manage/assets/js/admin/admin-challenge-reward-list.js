@@ -1,13 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { rphNum: "rph_001", cgName: "가보자고", mbrId: "조여준", rhNum: "멤버 챌린지별 2위", rphRewardSelectedDate: "2024-09-09", rphAdmin: "문지훈", rphRewardPaymentDate: "2024-09-09" },
-    { rphNum: "rph_002", cgName: "가보자고", mbrId: "문진현", rhNum: "멤버 챌린지별 3위", rphRewardSelectedDate: "2024-09-09", rphAdmin: "문지훈", rphRewardPaymentDate: "2024-09-09" },
-    { rphNum: "rph_003", cgName: "가보자고", mbrId: "김나연", rhNum: "멤버 챌린지별 1위", rphRewardSelectedDate: "2024-09-09", rphAdmin: "문지훈", rphRewardPaymentDate: "2024-09-09" },
-    { rphNum: "rph_004", cgName: "간식먹자", mbrId: "김해숙", rhNum: "멤버 챌린지별 1위", rphRewardSelectedDate: "2024-09-17", rphAdmin: "문지훈", rphRewardPaymentDate: "2024-09-17" },
-    { rphNum: "rph_005", cgName: "간식먹자", mbrId: "박서준", rhNum: "멤버 챌린지별 2위", rphRewardSelectedDate: "2024-09-17", rphAdmin: "문지훈", rphRewardPaymentDate: "2024-09-17" },
-    { rphNum: "rph_006", cgName: "간식먹자", mbrId: "서혜원", rhNum: "멤버 챌린지별 3위", rphRewardSelectedDate: "2024-09-17", rphAdmin: "문지훈", rphRewardPaymentDate: "2024-09-17" }
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {

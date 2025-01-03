@@ -1,12 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { cgNum: "cg_001", ctlName: "1일 3개 다이어트 식단 업로드 어려움", cgLeaderName: "김나연", cgName: "가보자고", cgCreationDate: "2024-08-22 12:00:00", cgCurrentMbrCount: 10, cgMaxMbrCount: 12, cgStartDate: "2024-08-27 12:00:00", cgEndDate: "2024-09-09 12:00:00", cgLike: 0, csName: "완료", mbrId: "id002", csRewardCheck: "지급" },
-    { cgNum: "cg_002", ctlName: "1일 2개 다이어트 식단 업로드 보통", cgLeaderName: "박준형", cgName: "간식먹자", cgCreationDate: "2024-09-01 12:00:00", cgCurrentMbrCount: 7, cgMaxMbrCount: 10, cgStartDate: "2024-09-04 12:00:00", cgEndDate: "2024-09-17 12:00:00", cgLike: 0, csName: "완료", mbrId: "id017", csRewardCheck: "지급" },
-    { cgNum: "cg_003", ctlName: "1일 3개 다이어트 식단 업로드 어려움", cgLeaderName: "박준형", cgName: "야채먹자", cgCreationDate: "2024-10-01 12:00:00", cgCurrentMbrCount: 4, cgMaxMbrCount: 15, cgStartDate: "0000-00-00 00:00:00", cgEndDate: "0000-00-00 00:00:00", cgLike: 0, csName: "챌린지 최소인원 미달 종료", mbrId: "id017", csRewardCheck: "" },
-    { cgNum: "cg_004", ctlName: "1일 1개 no 밀가루 식단 업로드 쉬움", cgLeaderName: "조여준", cgName: "운동하자", cgCreationDate: "2024-10-06 12:00:00", cgCurrentMbrCount: 5, cgMaxMbrCount: 10, cgStartDate: "0000-00-00 00:00:00", cgEndDate: "0000-00-00 00:00:00", cgLike: 0, csName: "진행중(리더 양도)", mbrId: "id008", csRewardCheck: "" }
-
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {

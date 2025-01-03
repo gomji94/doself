@@ -46,19 +46,34 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">신고번호</th>
+                                        <th scope="col">아이디</th>
+                                        <th scope="col">발생위치코드</th>
+                                        <th scope="col">신고당한글/댓글번호</th>
                                         <th scope="col">신고유형</th>
-                                        <th scope="col">신고자</th>
-                                        <th scope="col">신고 당한글/댓글번호</th>
                                         <th scope="col">신고내용</th>
-                                        <th scope="col">상태</th>
-                                        <th scope="col">접수일</th>
-                                        <th scope="col">처리일</th>                                        
-                                        <th scope="col">처리자</th>
+                                        <th scope="col">신고날짜</th>
+                                        <th scope="col">처리상태</th>
+                                        <th scope="col">처리관리자</th>                                        
+                                        <th scope="col">처리기간</th>
                                         <th scope="col">반려사유</th>
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
+                                <tbody>
+                                	<th:block th:if="${declareList} != null">
+                                		<tr th:each="l : ${declareList}" class="text-center">
+                                			<td th:text="${l.rrNum}"></td>
+                                			<td th:text="${l.mbrId}"></td>
+                                			<td th:text="${l.olcCode}"></td>
+                                			<td th:text="${l.rrBcNum}"></td>
+                                			<td th:text="${l.rcCode}"></td>
+                                			<td th:text="${l.rrContent}"></td>
+                                			<td th:text="${l.rrDate}"></td>
+                                			<td th:text="${l.scCode}"></td>
+                                			<td th:text="${l.rrAdmin}"></td>
+                                			<td th:text="${l.rrProcessingPeriod}"></td>
+                                			<td th:text="${l.rrReasonContent}"></td>
+                                		</tr>                                	
+                                	</th:block>
                                 </tbody>
                             </table>
                         </div>

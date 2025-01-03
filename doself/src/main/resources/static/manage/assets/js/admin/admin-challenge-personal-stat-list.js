@@ -1,12 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { cmssNum: "cmss_001", cgNum: "가보자고", mbrId: "김나연", cmssDate: "2024-08-27", cmssUploadFeedCount: 3, cmssParticipationCheck: 0, cmssTodayAchievementRate: "100%" },
-    { cmssNum: "cmss_002", cgNum: "가보자고", mbrId: "문진현", cmssDate: "2024-08-27", cmssUploadFeedCount: 3, cmssParticipationCheck: 0, cmssTodayAchievementRate: "100%" },
-    { cmssNum: "cmss_003", cgNum: "가보자고", mbrId: "윤여정", cmssDate: "2024-08-27", cmssUploadFeedCount: 2, cmssParticipationCheck: 1, cmssTodayAchievementRate: "66.67%" },
-    { cmssNum: "cmss_004", cgNum: "가보자고", mbrId: "조여준", cmssDate: "2024-08-27", cmssUploadFeedCount: 3, cmssParticipationCheck: 0, cmssTodayAchievementRate: "100%" }
-
-];
+const challengeData = [];
 
 // 결과를 테이블에 출력하는 함수
 function renderTable(data) {

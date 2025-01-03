@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.admin.point.mapper.PointMapper">
+    	   	
+  		<!-- 포인트 상품내역 조회 -->
+		<select id="getPointList" resultType="Point">
+			/* 포인트 상품내역 조회 */
+					
+			SELECT
+				pepl_num,
+				pepl_name,
+				pepl_price,
+				pepl_img,
+				pepl_expl
+			FROM point_exchange_product_list
+		</select>
+		
+		
+		
+		
+		<resultMap type="PointUserHistory" id="PointUserHistoryResultMap">
+  			<id column="pumh_num" property="pumhNum" />
+  			<result column="pepl_num" property="peplNum" />  		
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="pumh_date" property="pumhDate" />
+  			
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association>	  		  		  			 	   		
+  		</resultMap>
+  		<!-- 포인트 사용내역 조회 -->
+		<select id="getPointUserHistoryList" resultMap="PointUserHistoryResultMap">
+			/* 포인트 상품내역 조회 */
+					
+			SELECT
+				pumh_num,
+				pepl_num,
+				m.mbr_name,
+				pumh_date
+			FROM point_use_management_history pumh INNER JOIN `member` m
+				ON pumh.mbr_id = m.mbr_id
+		</select>
+  </mapper>

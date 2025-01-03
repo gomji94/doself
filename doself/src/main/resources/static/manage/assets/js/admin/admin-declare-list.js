@@ -1,11 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { rrNum: "rr_001", rcCode: "스팸 및 광고", mbrId: "김나연", rrBcNum: "fb_001", rrContent: "게시글에 광고 링크 공유", scCode: "접수", rrDate: "2024-08-02 05:30:27", rrProcessingPeriod: "2024-08-03 02:30:27", rrAdmin: "id001", rrReasonContent: ""},
-    { rrNum: "rr_002", rcCode: "폭력적 및 유해 콘텐츠", mbrId: "엄승남", rrBcNum: "fbc_003", rrContent: "노잼", scCode: "접수", rrDate: "2024-08-03 05:30:28", rrProcessingPeriod: "2024-08-03 07:30:27", rrAdmin: "id001", rrReasonContent: "신고규정위반아님"},
-    { rrNum: "rr_003", rcCode: "사기 및 사칭", mbrId: "김윤석", rrBcNum: "feed_004", rrContent: "기분나쁨", scCode: "접수", rrDate: "2024-10-02 12:32:40", rrProcessingPeriod: "2024-10-05 02:32:40", rrAdmin: "id001", rrReasonContent: "증거불충분"},
-    { rrNum: "rr_004", rcCode: "욕설 및 비방", mbrId: "류준열", rrBcNum: "fc_005", rrContent: "부러움", scCode: "접수", rrDate: "2024-10-04 11:32:41", rrProcessingPeriod: "2024-10-05 02:32:41", rrAdmin: "id001", rrReasonContent: "신고교정위반아님"}
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {

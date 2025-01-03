@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.admin.declare.mapper.DeclareMapper">
+    	
+  		<!-- 신고요청 접수 조회 -->
+		<select id="getDeclareList" resultType="Declare">
+			/* 신고요청 접수 조회 */
+			
+			SELECT
+				rr_num 					AS rrNum,
+				mbr_id 					AS mbrId,
+				olc_code 				AS olcCode,
+				rr_bc_num 				AS rrBcNum,
+				rc_code 				AS rcCode,
+				rr_content 				AS rrContent,
+				rr_date 				AS rrDate,
+				sc_code 				AS scCode,
+				rr_admin 				AS rrAdmin,
+				rr_processing_period 	AS rrProcessingPeriod,
+				rr_reason_content 		AS rrReasonContent
+			FROM report_request		
+		</select>
+		
+  		<!-- 부정회원 관리 조회 -->
+		<select id="getDeclareUserList" resultType="DeclareUser">
+			/* 신고요청 접수 조회 */
+			
+			SELECT
+				rmm_num 					AS rmmNum,
+				rr_num 						AS rrNum,
+				mbr_id 						AS mbrId,
+				rc_code 					AS rcCode,
+				rmm_sanction_start_date 	AS rmmSanctionStartDate,
+				rmm_sanction_period 		AS rmmSanctionPeriod,
+				rmm_sanction_end_date 		AS rmmSanctionEndDate,
+				rmm_admin 					AS rmmAdmin
+			FROM report_member_management	
+		</select>
+  </mapper>

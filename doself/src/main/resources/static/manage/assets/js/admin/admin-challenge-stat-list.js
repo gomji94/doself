@@ -1,12 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { ctpsNum: "ctps_001", cgName: "가보자고", ctpsDate: "2024-08-27", ctpsParticipation: "100.0%", ctpsAchievementRate: "80.0%" },
-    { ctpsNum: "ctps_002", cgName: "가보자고", ctpsDate: "2024-08-28", ctpsParticipation: "80.0%", ctpsAchievementRate: "60.0%" },
-    { ctpsNum: "ctps_003", cgName: "가보자고", ctpsDate: "2024-08-29", ctpsParticipation: "90.0%", ctpsAchievementRate: "76.67%" },
-    { ctpsNum: "ctps_004", cgName: "가보자고", ctpsDate: "2024-08-30", ctpsParticipation: "100.0%", ctpsAchievementRate: "83.33%" }
-
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {

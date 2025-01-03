@@ -46,7 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th>접수 번호</th>
-                                        <th>아이디</th>
+                                        <th>이름</th>
                                         <th>접수 내용</th>
                                         <th>접수 작성일</th>
                                         <th>접수 분류</th>                                        
@@ -60,11 +60,11 @@
                                 	<th:block th:if="${nutritionList != null}">
                                 		<tr th:each="l : ${nutritionList}" class="text-center">
                                 			<td th:text="${l.nirrNum}"></td>
-                                			<td th:text="${l.mbrId}"></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
                                 			<td th:text="${l.nirrContent}"></td>
                                 			<td th:text="${l.nirrDate}"></td>
                                 			<td th:text="${l.nirrCategory}"></td>
-                                			<td th:text="${l.scCode}"></td>
+                                			<td th:text="${l.statusCategoryInfo.scStatus}"></td>
                                 			<td th:text="${l.prrAdmin}"></td>
                                 			<td th:text="${l.nirrProcessingDate}"></td>
                                 			<td th:text="${l.nirrReasonContent}"></td>                                		

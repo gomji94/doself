@@ -1,12 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { cpslNum: "cpsl_001", cpslYear: "2024", cpslMonthly: "9", cgName: "가보자고", mbrId: "id002", cpslCumulativePerformanceRate: 100, cpslCumulativeParticipationRate: 100, cpslCumulativePerformanceScore: 50, cpslCumulativeParticipationScore: 30, cpslLikeScore: 0, cpslCommentsCount: 0, cpslTotalScore: 80, cpslRank: 1 },
-    { cpslNum: "cpsl_002", cpslYear: "2024", cpslMonthly: "9", cgName: "가보자고", mbrId: "id006", cpslCumulativePerformanceRate: 76, cpslCumulativeParticipationRate: 93, cpslCumulativePerformanceScore: 30, cpslCumulativeParticipationScore: 30, cpslLikeScore: 0, cpslCommentsCount: 0, cpslTotalScore: 60, cpslRank: 4 },
-    { cpslNum: "cpsl_003", cpslYear: "2024", cpslMonthly: "9", cgName: "가보자고", mbrId: "id012", cpslCumulativePerformanceRate: 80.95, cpslCumulativeParticipationRate: 85.71, cpslCumulativePerformanceScore: 40, cpslCumulativeParticipationScore: 20, cpslLikeScore: 0, cpslCommentsCount: 0, cpslTotalScore: 60, cpslRank: 5 },
-    { cpslNum: "cpsl_004", cpslYear: "2024", cpslMonthly: "9", cgName: "가보자고", mbrId: "id008", cpslCumulativePerformanceRate: 83, cpslCumulativeParticipationRate: 93, cpslCumulativePerformanceScore: 40, cpslCumulativeParticipationScore: 30, cpslLikeScore: 0, cpslCommentsCount: 0, cpslTotalScore: 70, cpslRank: 2 }
-
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {
