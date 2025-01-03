@@ -1,22 +1,33 @@
 package doself.user.feed.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
+import doself.user.feed.domain.Feed;
+import doself.user.feed.service.FeedService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Controller
 @RequestMapping("/feed")
+@RequiredArgsConstructor
+@Slf4j
 public class FeedController {
+	
+	private final FeedService feedService;
 	
 	// 메인 피드 조회
 	@GetMapping("/list")
-	public String getFeed(Model model) {
-		model.addAttribute("title", "피드");
-		
+	public String getFeedList(Model model) {
+		List<Feed> feedList = feedService.getFeedList();
+		System.out.println(feedList);
+		log.info("Fetched feed list: {}", feedList); // 로그 추가
+		model.addAttribute("FeedList", feedList);
 		return "user/feed/feed-list";
 	}
 	

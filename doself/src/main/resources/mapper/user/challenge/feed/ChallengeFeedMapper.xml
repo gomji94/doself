@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.user.challenge.feed.mapper.ChallengeFeedMapper">
+  	<resultMap type="ChallengeFeed" id="ChallengeFeedResultMap">
+	    <id 	column="cmf_num" property="challengeFeedCode" />
+	    <result column="cg_num" property="challengeCode" />
+	    <result column="mbr_id" property="challengeFeedAuthor" />
+	    <result column="cmf_content" property="challengeFeedContent" />
+	    <result column="cmf_picture" property="challengeFeedPicture" />
+	    <result column="cmf_date" property="challengeFeedDate" />
+	    <result column="cmf_like" property="challengeFeedLike" />
+	    <result column="cmf_warning_check" property="challengeFeedWarningCheck" />
+	    <result column="mbr_image" property="memberProfileImage" />
+	    <result column="cfc_num" property="challengeFeedCommentCode" />
+	    <result column="cfc_content" property="challengeFeedCommentContent" />
+	</resultMap>
+	<!-- 특정 챌린지 피드 조회 -->
+	<select id="getChallengeFeedList" resultType="ChallengeFeed" resultMap="ChallengeFeedResultMap">
+		SELECT
+			cmf.cmf_num,
+			cmf.cg_num,
+			cmf.mbr_id,
+			cmf.cmf_content,
+			cmf.cmf_picture,
+			cmf.cmf_date,
+			cmf.cmf_like,
+			cmf.cmf_warning_check,
+			m.mbr_image,
+			fc.fc_num,
+			fc.fc_content
+		FROM
+			challenge_member_feed cmf
+			INNER JOIN `member` m USING(mbr_id)
+			LEFT JOIN challenge_feed_comments cfc USING(cmf_num)
+		LIMIT #{offset}, #{pageSize}
+	</select>
+  </mapper>
+  

@@ -1,5 +1,11 @@
 package doself.admin.member.service;
 
-public interface MemberService {
+import java.util.List;
 
+import doself.admin.member.domain.Member;
+
+public interface MemberService {
+	
+	List<Member> getMemberList();
+	
 }

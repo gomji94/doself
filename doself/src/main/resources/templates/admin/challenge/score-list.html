@@ -59,7 +59,23 @@
                                         <th scope="col">순위</th>                                        
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
+                                <tbody>
+                                <th:block th:if="${scoreList != null}">
+                                	<tr th:each="l : ${scoreList}"  class="text-center">
+                                		<td th:text="${l.mcslNum}"></td>
+                                		<td th:text="${l.mcslYear}"></td>
+                                		<td th:text="${l.mcslMonthly}"></td>
+                                		<td th:text="${l.cgNum}"></td>
+                                		<td th:text="${l.mcslCumulativePerformanceRate}"></td>
+                                		<td th:text="${l.mcslCumulativeParticipationRate}"></td>
+                                		<td th:text="${l.mcslLevelScore}"></td>
+                                		<td th:text="${l.mcslCumulativePerformanceScore}"></td>
+                                		<td th:text="${l.mcslCumulativeParticipationScore}"></td>
+                                		<td th:text="${l.mcslLikeScore}"></td>
+                                		<td th:text="${l.mcslTotalScore}"></td>
+                                		<td th:text="${l.mcslRank}"></td>                                	
+                                	</tr>                               
+                                </th:block>
                                                                                      
                                 </tbody>
                             </table>

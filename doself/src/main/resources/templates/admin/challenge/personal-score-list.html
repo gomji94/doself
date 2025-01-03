@@ -59,8 +59,24 @@
                                         <th scope="col">순위</th>                                        
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                                                   
+                                <tbody>
+                                	<th:block th:if="${personalScorelist != null}">
+                                		<tr th:each="l : ${personalScorelist}" class="text-center">
+                                			<td th:text="${l.cpslNum}"></td>
+                                			<td th:text="${l.cpslYear}"></td>
+                                			<td th:text="${l.cpslMonthly}"></td>
+                                			<td th:text="${l.cgNum}"></td>
+                                			<td th:text="${l.mbrId}"></td>
+                                			<td th:text="${l.cpslCumulativePerformanceRate}"></td>
+                                			<td th:text="${l.cpslCumulativeParticipationRate}"></td>
+                                			<td th:text="${l.cpslCumulativePerformanceScore}"></td>
+                                			<td th:text="${l.cpslCumulativeParticipationScore}"></td>
+                                			<td th:text="${l.cpslLikeScore}"></td>
+                                			<td th:text="${l.cpslCommentsCount}"></td>
+                                			<td th:text="${l.cpslTotalScore}"></td>
+                                			<td th:text="${l.cpslRank}"></td>
+                                		</tr>                                  	                     
+                                	</th:block>                      
                                 </tbody>
                             </table>
                         </div>
@@ -72,7 +88,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-challenge-personal-score-list.js}"></script>
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-challenge-personal-score-list.js}"></script> -->
         </th:block>
          
         <!--/* 사용자 추가 js script */-->

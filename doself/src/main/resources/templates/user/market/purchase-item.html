@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/assets/css/market/purchase-item.css}" rel="stylesheet" type="text/css" />
+    <title>item purchase</title>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="main-title">마켓 상품 결제</div>
+        <div id="main-content" th:object="${itemInfo}">
+            <div class="main-item-header">
+                <div id="item-title">
+                    <img class="miit__image" th:src="*{pointItemImg}" alt="">
+                    <span th:text="*{pointItemName}"></span>
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    결제 상품명
+                </div>
+                <div id="item-name" th:text="*{pointItemName}">
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    결제 가격
+                </div>
+                <div id="item-price" th:text="*{pointItemPrice} + 'point'">
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    보유 포인트
+                </div>
+                <div id="user-point">
+                    보유포인트 보여지는 곳
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    사용 포인트
+                </div>
+                <div id="use-point">
+                    <input type="text" id="point-input">
+                    <span>&nbsp;point</span>
+                    <button id="use-point__button">전액 사용</button>
+                </div>
+            </div>
+        </div>
+        <div class="market-item-button-container">
+            <div id="pay-agreement">
+                <input type="checkbox" id="pay-agree-checkbox">
+                <label for="pay-agree-checkbox">[필수] 결제 서비스 이용 약관, 개인정보 처리 동의</label>
+            </div>
+            <a href="#">
+                <button id="item-purchase__button">결제하기</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
