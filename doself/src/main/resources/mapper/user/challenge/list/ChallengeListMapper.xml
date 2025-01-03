@@ -6,19 +6,19 @@
   <mapper namespace="doself.user.challenge.list.mapper.ChallengeListMapper">
   
   	<resultMap type="ChallengeList" id="ChallengeListResultMap">
-	    <id column="cg_num" property="challengeCode"/>
-	    <result column="mbr_id" property="memberId"/>
-	    <result column="cg_name" property="challengeName"/>
-	    <result column="cg_picture" property="challengePicture"/>
-	    <result column="cg_content" property="challengeContent"/>
-	    <result column="cg_start_date" property="challengeStartDate"/>
-	    <result column="cg_end_date" property="challengeEndDate"/>
+	    <id 	column="cg_num" 			  property="challengeCode"/>
+	    <result column="mbr_id"				  property="memberId"/>
+	    <result column="cg_name" 			  property="challengeName"/>
+	    <result column="cg_picture"			  property="challengePicture"/>
+	    <result column="cg_content"			  property="challengeContent"/>
+	    <result column="cg_start_date"		  property="challengeStartDate"/>
+	    <result column="cg_end_date" 		  property="challengeEndDate"/>
 	    <result column="cg_current_mbr_count" property="challengeCurrentMember"/>
-	    <result column="cg_max_mbr_count" property="challengeMaxMember"/>
-	    <result column="ctl_level" property="challengeTopicLevel"/>
-	    <result column="ct_num" property="challengeTopicCode"/>
-	    <result column="ct_name" property="challengeTopicName"/>
-	    <result column="cs_status" property="challengeStatus"/>
+	    <result column="cg_max_mbr_count"	  property="challengeMaxMember"/>
+	    <result column="ctl_level"			  property="challengeTopicLevel"/>
+	    <result column="ct_num"				  property="challengeTopicCode"/>
+	    <result column="ct_name" 			  property="challengeTopicName"/>
+	    <result column="cs_status"			  property="challengeStatus"/>
 	</resultMap>
 
   	<!-- 특정 챌린지 리스트 조회 -->

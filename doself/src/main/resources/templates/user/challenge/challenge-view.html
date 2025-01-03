@@ -50,95 +50,52 @@
 				<div th:replace="~{user/challenge/feed-comment :: feed-comment}"></div>
 
             </div>
+            <div th:if="${challengeFeedList == null || challengeFeedList.isEmpty()}">
+			    <p>피드가 없습니다.</p>
+			</div>
             <!-- first feed -->
-            <div class="feed">
-                <div class="feed-header">
-                    <a href="#">
-                        <img src="https://velog.velcdn.com/images/mekite/post/75c1dd08-757f-4da0-814d-b19a7a01293b/image.jpg" alt="작성자 프로필">
-                    </a>
-                    <div class="user-name">
-                        <a href="#">아이디</a>
-                    </div>
-                    <div class="feed-option">
-                        <button class="option-button">
-                            <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
-                        </button>
-                    </div>
-                </div>
-                <div class="feed-main-img">                    
-                    <img src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?fm=jpg&q=60&w=3000" alt="게시글 이미지">
-                </div>
-                <div class="feed-action">
-                    <div class="action-icons">
-                        <button class="action-btn likeBtn" data-liked="false">
-                            <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
-                        </button>
-                        <button class="action-btn commentBtn">
-                            <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
-                        </button>
-
-                        <!-- <button class="action-btn">
-                            <img src="https://velog.velcdn.com/images/mekite/post/24a2715e-32ac-4feb-b515-14f53dfaf197/image.png" alt="북마크">
-                        </button> -->
-                    </div>
-                    <p class="feed-time">2일 전</p>
-                </div>
-                <div class="feed-description">
-                    <p id="feed-likes">좋아요 100개</p>
-                    <p>내용</p>
-                    <p class="comments-link">댓글</p>
-                </div>
-                <hr>
-                <div class="add-comment">
-                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-                    <input type="text" placeholder="댓글 달기...">
-                    <button class="comment-submit">게시</button>
-                </div>
-            </div>
-            <!-- second feed -->
-            <div class="feed">
-                <div class="feed-header">
-                    <a href="#">
-                        <img src="https://velog.velcdn.com/images/mekite/post/75c1dd08-757f-4da0-814d-b19a7a01293b/image.jpg" alt="작성자 프로필">
-                    </a>
-                    <div class="user-name">
-                        <a href="#">아이디</a>
-                    </div>
-                    <div class="feed-option">
-                        <button class="option-button">
-                            <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
-                        </button>
-                    </div>
-                </div>
-                <div class="feed-main-img">                    
-                    <img src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?fm=jpg&q=60&w=3000" alt="게시글 이미지">
-                </div>
-                <div class="feed-action">
-                    <div class="action-icons">
-                        <button class="action-btn likeBtn" data-liked="false">
-                            <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
-                        </button>
-                        <button class="action-btn commentBtn">
-                            <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
-                        </button>
-                        <!-- <button class="action-btn">
-                            <img src="https://velog.velcdn.com/images/mekite/post/24a2715e-32ac-4feb-b515-14f53dfaf197/image.png" alt="북마크">
-                        </button> -->
-                    </div>
-                    <p class="feed-time">2일 전</p>
-                </div>
-                <div class="feed-description">
-                    <p id="feed-likes">좋아요 100개</p>
-                    <p>내용</p>
-                    <p class="comments-link">댓글</p>
-                </div>
-                <hr>
-                <div class="add-comment">
-                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-                    <input type="text" placeholder="댓글 달기...">
-                    <button class="comment-submit">게시</button>
-                </div>
-            </div>
+            <section th:if="${challengeFeedList != null && !challengeFeedList.isEmpty()}">
+	            <div class="feed" th:each="cf, iterStat : ${challengeFeedList}" th:id="'feed-' + ${iterStat.index}" >
+	                <div class="feed-header">
+	                    <a href="#">
+	                        <img th:src="${cf.memberProfileImage}" alt="작성자 프로필"  onerror="this.src='/images/default-profile.png'">
+	                    </a>
+	                    <div class="user-name">
+	                        <a href="#"><p th:text="${cf.challengeFeedAuthor}"></p></a>
+	                    </div>
+	                    <div class="feed-option">
+	                        <button class="option-button">
+	                            <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+	                        </button>
+	                    </div>
+	                </div>
+	                <div class="feed-main-img">                    
+	                    <img th:src="${cf.challengeFeedPicture}" alt="게시글 이미지">
+	                </div>
+	                <div class="feed-action">
+	                    <div class="action-icons">
+	                        <button type="button" class="action-btn likeBtn" data-liked="false">
+	                            <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
+	                        </button>
+	                        <button type="button" class="action-btn commentBtn">
+	                            <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+	                        </button>
+	                    </div>
+	                    <p class="feed-upload-date" th:text="${cf.challengeFeedDate != null ? #dates.format(cf.challengeFeedDate, 'yyyy/MM/dd') : '날짜 없음'}"></p>
+	                </div>
+	                <div class="feed-description">
+	                    <p id="feed-likes" th:text="|좋아요 ${cf.challengeFeedLike}개|"></p>
+	                    <p th:text="${cf.challengeFeedContent}"></p>
+	                    <p class="comments-link" th:text="${cf.challengeFeedCommentContent}"></p>
+	                </div>
+	                <hr>
+	                <div class="add-comment">
+	                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+	                    <input type="text" placeholder="댓글 달기...">
+	                    <button class="comment-submit">게시</button>
+	                </div>
+	            </div>,
+            </section>
         </main>
         
         <!-- right sidebar -->

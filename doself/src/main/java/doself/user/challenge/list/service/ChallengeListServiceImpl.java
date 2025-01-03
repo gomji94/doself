@@ -27,7 +27,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	public List<ChallengeList> getChallengeList() {
 		List<ChallengeList> challengeList = challengeListMapper.getChallengeList();
 		if (challengeList == null || challengeList.isEmpty()) {
-	        log.warn("No challenges retrieved from database.");
+	        log.warn("챌린지 리스트 정보가 없습니다.");
 	        return challengeList;
 	    }
 		
