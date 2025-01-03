@@ -20,6 +20,11 @@
     width: calc(100% - 200px);
 }
 
+#articleTitleLink {
+	text-decoration: none;
+	color: black;
+}
+
 #main-container-contents {
     width: 100%;
     flex: 1;
@@ -41,7 +46,7 @@
 
 .category-button {
     border: none;
-    background-color: #d1e480;
+    background-color: #d3d3d3;
     width: 60px;
     height: 25px;
     border-radius: 65px;

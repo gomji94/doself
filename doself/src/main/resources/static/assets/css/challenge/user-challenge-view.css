@@ -336,6 +336,7 @@ p.progress-text {
     border-style: solid;
     border-width: 0.5px;
     border-color: #f2f2f2;
+    margin-bottom: 20px;
 }
 
 .feed a {
@@ -448,6 +449,11 @@ p.progress-text {
 .feed-description p {
     padding: 6.5px 7px;
     font-size: 15px;
+}
+
+.feed-upload-date {
+    font-size: 13px;
+    opacity: 0.3;
 }
 
 .feed hr {
