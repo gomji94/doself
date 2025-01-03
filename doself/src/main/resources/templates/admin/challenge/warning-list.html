@@ -50,7 +50,18 @@
                                         <th scope="col">경고일</th>                                       
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
+                                <tbody>
+                                	<th:block th:if="${warningList != null}">
+                                		<tr th:each="l : ${warningList}" class="text-center">
+                                			<td th:text="${l.lcmwlNum}"></td>
+                                			<td th:text="${l.cgNum}"></td>
+                                			<td th:text="${l.cgmNum}"></td>
+                                			<td th:text="${l.cmwcNum}"></td>
+                                			<td th:text="${l.olcCode}"></td>
+                                			<td th:text="${l.lcmwlBcNum}"></td>
+                                			<td th:text="${l.lcmwlDate}"></td>                                	
+                                		</tr>
+                                	</th:block>
                                     
                                 </tbody>
                             </table>
@@ -63,7 +74,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-challenge-warning-list.js}"></script>
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-challenge-warning-list.js}"></script> -->
         </th:block>
          
         <!--/* 사용자 추가 js script */-->

@@ -46,11 +46,24 @@
                                         <th>멤버 이름</th>
                                         <th>날짜</th>
                                         <th>당일 업로드된 피드 개수</th>                                        
+                                        <th>일일 참여율</th>                                        
                                         <th>일일 목표 달성여부</th>
                                         <th>일일 달성률</th>                                        
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
+                                <tbody>
+                                	<th:block th:if="${personalStatlist != null}">
+                                		<tr th:each="l : ${personalStatlist}" class="text-center">
+                                			<td th:text="${l.cmssNum}">
+                                			<td th:text="${l.cgNum}">
+                                			<td th:text="${l.mbrId}">
+                                			<td th:text="${l.cmssDate}">
+                                			<td th:text="${l.cmssUploadFeedCount}">
+                                			<td th:text="${l.cmssTodayParticipationRate} == 100 ? 'Y' : 'N'">
+                                			<td th:text="${l.cmssParticipationCheck} == 0 ? '달성' : '실패'">
+                                			<td th:text="${l.cmssTodayAchievementRate}">
+                                		</tr>
+                                	</th:block>
                                     
                                 </tbody>
                             </table>
@@ -63,7 +76,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-challenge-personal-stat-list.js}"></script>
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-challenge-personal-stat-list.js}"></script> -->
         </th:block>
          
         <!--/* 사용자 추가 js script */-->

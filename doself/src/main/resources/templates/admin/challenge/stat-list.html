@@ -46,12 +46,21 @@
                                     <tr>
                                         <th>챌린지별 통계 번호</th>
                                         <th>챌린지 이름</th>
-                                        <th scope="col">날짜</th>                                                                              
-                                        <th scope="col">일일 참여율</th>                                                                                
-                                        <th scope="col">일일 달성률</th>                                        
+                                        <th>날짜</th>                                                                              
+                                        <th>일일 참여율</th>                                                                                
+                                        <th>일일 달성률</th>                                        
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
+                                <tbody>
+                                <th:block th:if="${statlist != null}">
+                                	<tr th:each="l : ${statlist}"  class="text-center">
+                                		<td th:text="${l.ctpsNum}"></td>
+                                		<td th:text="${l.cgNum}"></td>
+                                		<td th:text="${l.ctpsDate}"></td>
+                                		<td th:text="${l.ctpsParticipation}"></td>
+                                		<td th:text="${l.ctpsAchievementRate}"></td>
+                                	</tr>
+                                </th:block>
                                     
                                 </tbody>
                             </table>
@@ -64,7 +73,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-challenge-stat-list.js}"></script>
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-challenge-stat-list.js}"></script> -->
         </th:block>
          
         <!--/* 사용자 추가 js script */-->
