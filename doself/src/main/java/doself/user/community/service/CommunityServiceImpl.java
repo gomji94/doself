@@ -35,4 +35,10 @@ public class CommunityServiceImpl implements CommunityService {
 		return communityMapper.getArticleListByCategory(categoryCode);
 	}
 
+	@Override
+	public Article getArticleDetail(String articleKeyNum) {
+		// TODO Auto-generated method stub
+		return communityMapper.getArticleDetail(articleKeyNum);
+	}
+
 }

@@ -13,5 +13,6 @@ public class Article {
 	private String articleCreationDate;
 	private String articleAttachmentFile;
 	private int articleViewCnt;
+	private int articleLike;
 
 }
