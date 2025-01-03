@@ -54,10 +54,10 @@
                                 	<th:block th:if="${warningList != null}">
                                 		<tr th:each="l : ${warningList}" class="text-center">
                                 			<td th:text="${l.lcmwlNum}"></td>
-                                			<td th:text="${l.cgNum}"></td>
-                                			<td th:text="${l.cgmNum}"></td>
-                                			<td th:text="${l.cmwcNum}"></td>
-                                			<td th:text="${l.olcCode}"></td>
+                                			<td th:text="${l.challengeInfo.cgName}"></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
+                                			<td th:text="${l.warningCategoryInfo.cmwcCategory}"></td>
+                                			<td th:text="${l.occuranceLocationInfo.olcName}"></td>
                                 			<td th:text="${l.lcmwlBcNum}"></td>
                                 			<td th:text="${l.lcmwlDate}"></td>                                	
                                 		</tr>

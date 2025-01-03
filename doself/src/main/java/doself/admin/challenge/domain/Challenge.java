@@ -20,4 +20,7 @@ public class Challenge {
 	private String csNum;
 	private String mbrId;
 	private String csRewardCheck;
+	
+	private TopicLevel topicLevelInfo;
+	private Status statusInfo;
 }

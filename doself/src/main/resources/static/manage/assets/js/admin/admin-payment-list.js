@@ -1,12 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { ctphNum: "ctph_001", mbrId: "id002", mbrName: "김나연", ctphDate: "2024-08-21 11:45:00", ctpCode: "개설 티켓", ctpPrice: "9800", pmcName: "카드", ctphStatus: "결제완료" },
-    { ctphNum: "ctph_002", mbrId: "id006", mbrName: "윤여정", ctphDate: "2024-08-23 12:53:00", ctpCode: "참여 티켓", ctpPrice: "3800", pmcName: "카카오페이", ctphStatus: "결제완료" },
-    { ctphNum: "ctph_003", mbrId: "id012", mbrName: "고민시", ctphDate: "2024-08-23 03:02:00", ctpCode: "참여 티켓", ctpPrice: "3800", pmcName: "네이버페이", ctphStatus: "결제완료" },
-    { ctphNum: "ctph_004", mbrId: "id008", mbrName: "조여준", ctphDate: "2024-08-23 07:25:00", ctpCode: "참여 티켓", ctpPrice: "3800", pmcName: "토스페이", ctphStatus: "결제완료" }
-
-];
+const challengeData = [];
 
 // 결과를 테이블에 출력하는 함수
 function renderTable(data) {

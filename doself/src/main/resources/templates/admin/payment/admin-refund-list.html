@@ -47,7 +47,7 @@
                                     <tr>
                                         <th scope="col">환불번호</th>
                                         <th scope="col">환불접수번호</th>
-                                        <th scope="col">아이디</th>
+                                        <th scope="col">이름</th>
                                         <!-- <th scope="col">주문자 이름</th> -->
                                         <th scope="col">환불일자</th>                                                                             
                                         <th scope="col">환불금액</th>
@@ -60,7 +60,7 @@
                                 		<tr th:each="l : ${refundList}" class="text-center">
                                 			<td th:text="${l.prlNum}"></td>
                                 			<td th:text="${l.prrNum}"></td>
-                                			<td th:text="${l.mbrId}"></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
                                 			<td th:text="${l.prlDate}"></td>
                                 			<td th:text="${l.prlAmount}"></td>
                                 		</tr>                        

@@ -1,5 +1,6 @@
 package doself.admin.challenge.domain;
 
+import doself.admin.member.domain.Member;
 import lombok.Data;
 
 @Data
@@ -13,4 +14,7 @@ public class PersonalStat {
 	private double cmssTodayParticipationRate;
 	private Integer cmssParticipationCheck;
 	private double cmssTodayAchievementRate;
+	
+	private Challenge challengeInfo;
+	private Member memberInfo;
 }

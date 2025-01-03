@@ -24,23 +24,49 @@
 			mbr_id = #{memberId};
   		</select> -->
   		
+  		<resultMap type="Member" id="memberResultMap">
+  			<id column="" property="" />
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="mbr_pw" property="mbrPw" />
+  			<result column="mbr_name" property="mbrName" />
+  			<result column="mg_code" property="mgCode" />
+  			<result column="mbr_email" property="mbrEmail" />
+  			<result column="mbr_birth_date" property="mbrBirthDate" />
+  			<result column="mbr_phone_num" property="mbrPhoneNum" />
+  			<result column="mbr_gender" property="mbrGender" />
+  			<result column="ac_num" property="acNum" />
+  			<result column="opening_ticket_count" property="openingTicketCount" />
+  			<result column="participation_ticket_count" property="participationTicketCount" />
+  			<result column="mbr_point" property="mbrPoint" />
+
+	  		<!-- 연령대 카테고리 관계 -->
+	  		<association property="ageInfo" javaType="Age">
+	  			<id 	column="ac_num" property="acNum" />
+	  			<result column="ac_name" property="acName" />
+	  		</association>
+  		</resultMap>
+  		
+  		
   		<!-- 회원목록 조회 -->
-		<select id="getMemberList" resultType="Member">
+		<select id="getMemberList" resultMap="memberResultMap">
 			/* 회원목록 조회 */
 			SELECT 
-				mbr_id 						AS mbrId,
-				mbr_pw 						AS mbrPw,
-				mbr_name 					AS mbrName, 
-				mg_code 					AS mgCode,
-				mbr_email 					AS mbrEmail,
-				mbr_birth_date 				AS mbrBirthDate, 
-				mbr_phone_num 				AS mbrPhoneNum, 
-				mbr_gender 					AS mbrGender,
-				ac_num 						AS acNum,
-				opening_ticket_count 		AS openingTicketCount,
-				participation_ticket_count 	AS participationTicketCount,
-				mbr_point 					AS mbrPoint				
-			FROM member				
+				m.mbr_id,
+				m.mbr_pw,
+				m.mbr_name, 
+				m.mg_code,
+				m.mbr_email,
+				m.mbr_birth_date, 
+				m.mbr_phone_num, 
+				m.mbr_gender,
+				ac.ac_name,
+				m.opening_ticket_count,
+				m.participation_ticket_count,
+				m.mbr_point			
+			FROM member m INNER JOIN age_category ac
+				USING(ac_num)
+			ORDER BY
+				m.mbr_id
 		</select>
 
   </mapper>
