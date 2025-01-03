@@ -1,5 +1,6 @@
 package doself.admin.nutrition.domain;
 
+import doself.admin.member.domain.Member;
 import lombok.Data;
 
 @Data
@@ -14,4 +15,7 @@ public class Nutrition {
 	private String prrAdmin;
 	private String nirrProcessingDate;
 	private String nirrReasonContent;
+	
+	private Member memberInfo;
+	private StatusCategory statusCategoryInfo;
 }

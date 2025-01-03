@@ -10,5 +10,5 @@ public class Stat {
 	private String ctpsDate;
 	private double ctpsParticipation;
 	private double ctpsAchievementRate;
-	
+	private Challenge challengeInfo;
 }

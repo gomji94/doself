@@ -55,7 +55,7 @@
                                 <th:block th:if="${statlist != null}">
                                 	<tr th:each="l : ${statlist}"  class="text-center">
                                 		<td th:text="${l.ctpsNum}"></td>
-                                		<td th:text="${l.cgNum}"></td>
+                                		<td th:text="${l.challengeInfo.cgName}"></td>
                                 		<td th:text="${l.ctpsDate}"></td>
                                 		<td th:text="${l.ctpsParticipation}"></td>
                                 		<td th:text="${l.ctpsAchievementRate}"></td>

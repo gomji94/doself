@@ -1,8 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { rmmNum: "rmm_001", rrNum: "rr_001", mbrId: "id005", rcCode: "rc005", rmmSanctionStartDate: "2024-08-03 02:30:27", rmmSanctionPeriod: 7, rmmSanctionEndDate: "2024-08-10 02:30:27", rmmAdmin: "id001" }    
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {

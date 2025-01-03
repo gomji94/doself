@@ -65,8 +65,10 @@
                                 <tbody>
                                     <th:block th:if="${challengeList != null}">
 										<tr th:each="l : ${challengeList}" class="text-center">
-											<td th:text="${l.cgNum}"></td>	
-											<td th:text="${l.ctlNum}"></td>																			
+											<td th:text="${l.cgNum}"></td>
+											<th:block th:object="${l.topicLevelInfo}">
+												<td th:text="*{ctlContent}"></td>																			
+											</th:block>	
 											<td th:text="${l.cgLeaderName}"></td>
 											<td th:text="${l.cgName}"></td>
 											<td th:text="${l.cgPicture}"></td>
@@ -76,8 +78,8 @@
 											<td th:text="${l.cgMaxMbrCount}"></td>
 											<td th:text="${l.cgStartDate}"></td>
 											<td th:text="${l.cgEndDate}"></td>										
-											<td th:text="${l.cgLike}"></td>										
-											<td th:text="${l.csNum}"></td>										
+											<td th:text="${l.cgLike}"></td>	
+											<td th:text="${l.statusInfo.csStatus}"></td>																													
 											<td th:text="${l.mbrId}"></td>										
 											<td th:text="${l.csRewardCheck}"></td>										
 										</tr>											

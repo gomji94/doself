@@ -1,12 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { nirrNum: "nirr_001", mbrId: "id002", nirrContent: "루테인", nirrDate: "2024-09-27 02:55:10", nirrCategory: "영양제", scCode: "승인", prrAdmin: "id001", nirrProcessingDate: "2024-09-27 03:21:05", nirrReasonContent: "" },
-    { nirrNum: "nirr_002", mbrId: "id003", nirrContent: "음식", nirrDate: "2024-09-27 04:55:10", nirrCategory: "영양제", scCode: "접수", prrAdmin: "id001", nirrProcessingDate: "2024-09-27 07:55:02", nirrReasonContent: "" },
-    { nirrNum: "nirr_003", mbrId: "id004", nirrContent: "비타민D", nirrDate: "2024-09-27 04:55:30", nirrCategory: "영양제", scCode: "반려", prrAdmin: "id001", nirrProcessingDate: "2024-09-27 07:58:6", nirrReasonContent: "이미 등록된 영양제 정보" },
-    { nirrNum: "nirr_004", mbrId: "id015", nirrContent: "마약김밥", nirrDate: "2024-09-28 09:37:58", nirrCategory: "음식", scCode: "반려", prrAdmin: "id001", nirrProcessingDate: "2024-09-29 06:26:29", nirrReasonContent: "출처없는 정보" }
-
-];
+const challengeData = [];
 
 // 결과를 테이블에 출력하는 함수
 function renderTable(data) {

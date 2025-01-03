@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
+import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.service.ChallengeFeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +36,14 @@ public class ChallengeFeedController {
 	
 	// 챌린지 멤버 리스트 조회
 	@GetMapping("/memberlist")
-	public String getMemberList(HttpServletRequest request, Model model) {
-		
-		model.addAttribute("currentURI", request.getRequestURI());
-		model.addAttribute("title", "멤버 리스트");
+	public String getMemberList(@RequestParam(value="challengeCode") String challengeCode, Model model) {
+		List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
+		log.info("memberList", memberList);
+		model.addAttribute("memberList", memberList);
 		return "user/challenge/member-list";
 	}
 	
-	// 챌린지 멤버 경고 내역 조회
+	// 챌린지 멤버 경고 사유 선택 조회(지금은 스킵하고 나중에 작업)
 	@GetMapping("/warning")
 	public String getMemberWarnig(HttpServletRequest request, Model model) {
 		
@@ -53,9 +54,8 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 댓글 조회
 	@GetMapping("/feedcomment")
-	public String getFeedComment(HttpServletRequest request, Model model) {
+	public String getFeedComment(Model model) {
 		
-		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "챌린지 피드 댓글");
 		return "user/challenge/feed-comment";
 	}

@@ -1,10 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { lcmwlNum: "lcmwl_001", cgName: "가보자고", cgmNum: "한소희", cmwcNum: "참여율 저조", olcCode: "challenge_member_feed", lcmwlBcNum: "cmf_028", lcmwlDate: "2024-08-28 10:31:22" },
-    { lcmwlNum: "lcmwl_002", cgName: "가보자고", cgmNum: "한소희", cmwcNum: "참여율 저조", olcCode: "challenge_member_feed", lcmwlBcNum: "cmf_047", lcmwlDate: "2024-08-29 10:34:22" },
-    { lcmwlNum: "lcmwl_003", cgName: "가보자고", cgmNum: "한소희", cmwcNum: "참여율 저조", olcCode: "challenge_member_feed", lcmwlBcNum: "cmf_070", lcmwlDate: "2024-08-30 10:42:22" }
-];
+const challengeData = [];
 
 // 결과를 테이블에 출력하는 함수
 function renderTable(data) {

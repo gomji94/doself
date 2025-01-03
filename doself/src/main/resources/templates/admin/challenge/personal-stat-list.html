@@ -55,8 +55,8 @@
                                 	<th:block th:if="${personalStatlist != null}">
                                 		<tr th:each="l : ${personalStatlist}" class="text-center">
                                 			<td th:text="${l.cmssNum}">
-                                			<td th:text="${l.cgNum}">
-                                			<td th:text="${l.mbrId}">
+                                			<td th:text="${l.challengeInfo.cgName}">
+                                			<td th:text="${l.memberInfo.mbrName}">
                                 			<td th:text="${l.cmssDate}">
                                 			<td th:text="${l.cmssUploadFeedCount}">
                                 			<td th:text="${l.cmssTodayParticipationRate} == 100 ? 'Y' : 'N'">

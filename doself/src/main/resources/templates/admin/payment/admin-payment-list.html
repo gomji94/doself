@@ -55,10 +55,10 @@
                                 	<th:block th:if="${paymentList != null}">
                                 		<tr th:each="l : ${paymentList}" class="text-center">
                                 			<td th:text="${l.ctphNum}"></td>
-                                			<td th:text="${l.mbrId}"></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
                                 			<td th:text="${l.tpmNum}"></td>
                                 			<td th:text="${l.ctphDate}"></td>
-                                			<td th:text="${l.ctpCode}"></td>
+                                			<td th:text="${l.ticketPriceInfo.ctpPrice}"></td>
                                 			<td th:text="${l.ctphStatus}"></td>
                                 			<td th:text="${l.ctphReturnStatus}"></td>
                                 		</tr>                                

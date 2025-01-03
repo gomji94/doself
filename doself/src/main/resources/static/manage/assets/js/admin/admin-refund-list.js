@@ -1,8 +1,6 @@
 
 // 예시 데이터
-const challengeData = [
-    { prlNum: "prl_001", prrNum: "prr_001", mbrName: "조여준", prlDate: "2024-10-07 12:06:00", prlAmount: 3800, tpmDetailInfo: "토스페이", prrStatus: "처리완료" }
-];
+const challengeData = [];
 
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {
