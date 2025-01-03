@@ -45,17 +45,26 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th scope="col">주문번호</th>
+                                        <th scope="col">환불번호</th>
+                                        <th scope="col">환불접수번호</th>
                                         <th scope="col">아이디</th>
-                                        <th scope="col">주문자 이름</th>
-                                        <th scope="col">환불 접수일</th>                                                                             
-                                        <th scope="col">가격</th>
-                                        <th scope="col">결제방법</th>                                        
-                                        <th scope="col">처리상태</th>                                        
+                                        <!-- <th scope="col">주문자 이름</th> -->
+                                        <th scope="col">환불일자</th>                                                                             
+                                        <th scope="col">환불금액</th>
+                                        <!-- <th scope="col">결제방법</th> -->                                        
+                                        <!-- <th scope="col">처리상태</th>  -->                                       
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
+                                <tbody>
+                                	<th:block th:if="${refundList != null}">
+                                		<tr th:each="l : ${refundList}" class="text-center">
+                                			<td th:text="${l.prlNum}"></td>
+                                			<td th:text="${l.prrNum}"></td>
+                                			<td th:text="${l.mbrId}"></td>
+                                			<td th:text="${l.prlDate}"></td>
+                                			<td th:text="${l.prlAmount}"></td>
+                                		</tr>                        
+                                	</th:block>                                    
                                 </tbody>
                             </table>
                         </div>

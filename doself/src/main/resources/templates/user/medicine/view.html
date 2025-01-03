@@ -10,43 +10,39 @@
 <body>
     <div id="container">
         <div id="main-title">영양제 상세 정보</div>
-        <div id="main-content">
+        <div id="main-content" th:object="${medicineInfo}">
             <div class="main-item-header">
                 <div id="item-title">
-                    <img class="miit__image" src="https://img.danawa.com/prod_img/500000/057/954/img/17954057_1.jpg?_v=20221007125357" alt="">
-                    <span>루테인 지아잔틴 아스타잔틴</span>
+                    <img class="miit__image" th:src="*{medicineImg}" alt="">
+                    <span th:text="*{medicineName}"></span>
                 </div>
             </div>
             <div class="main-items">
                 <div class="item-info">
                     영양제 명
                 </div>
-                <div id="item-name">
-                    닭갈비
+                <div id="item-name" th:text="*{medicineName}">
                 </div>
             </div>
             <div class="main-items">
                 <div class="item-info">
                    영양제 브랜드
                 </div>
-                <div id="item-price">
-                    고려은단
+                <div id="item-price" th:text="*{medicineBrand}">
                 </div>
             </div>
             <div class="main-items">
                 <div class="item-info">
                    영양제 효능
                 </div>
-                <div id="item-price">
-                    시력 및 눈 피로감 케어
+                <div id="item-price" th:text="*{medicineEfficacy}">
                 </div>
             </div>
             <div class="main-items">
                 <div class="item-info">
                    일일 권장 섭취량
                 </div>
-                <div id="item-price">
-                    1회 1포(흑갈색 1캡슐 + 적갈색 1캡슐)을 충분한 물과 함께 섭취 하세요.
+                <div id="item-price" th:text="*{medicineRecommendIntake}">
                 </div>
             </div>
         </div>

@@ -45,10 +45,12 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>챌린지 번호</th>
+                                        <th scope="col">챌린지 번호</th>
                                         <th scope="col">챌린지 주제별 난이도</th>
                                         <th scope="col">챌린지 리더 이름</th>
                                         <th scope="col">챌린지 이름</th>
+                                        <th scope="col">챌린지 사진</th>
+                                        <th scope="col">챌린지 내용</th>
                                         <th scope="col">챌린지 생성일(날짜/시간)</th>
                                         <th scope="col">챌린지 현재 멤버수</th>
                                         <th scope="col">챌린지 설정 최대 멤버수</th>
@@ -60,8 +62,26 @@
                                         <th scope="col">보상 지급 여부</th>                                       
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
+                                <tbody>
+                                    <th:block th:if="${challengeList != null}">
+										<tr th:each="l : ${challengeList}" class="text-center">
+											<td th:text="${l.cgNum}"></td>	
+											<td th:text="${l.ctlNum}"></td>																			
+											<td th:text="${l.cgLeaderName}"></td>
+											<td th:text="${l.cgName}"></td>
+											<td th:text="${l.cgPicture}"></td>
+											<td th:text="${l.cgContent}"></td>
+											<td th:text="${l.cgCreationDate}"></td>
+											<td th:text="${l.cgCurrentMbrCount}"></td>
+											<td th:text="${l.cgMaxMbrCount}"></td>
+											<td th:text="${l.cgStartDate}"></td>
+											<td th:text="${l.cgEndDate}"></td>										
+											<td th:text="${l.cgLike}"></td>										
+											<td th:text="${l.csNum}"></td>										
+											<td th:text="${l.mbrId}"></td>										
+											<td th:text="${l.csRewardCheck}"></td>										
+										</tr>											
+									</th:block>
                                 </tbody>
                             </table>
                         </div>
@@ -73,7 +93,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-challenge-list.js}"></script>
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-challenge-list.js}"></script> -->
         </th:block>
          
         <!--/* 사용자 추가 js script */-->

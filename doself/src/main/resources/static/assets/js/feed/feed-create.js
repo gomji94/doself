@@ -5,14 +5,15 @@ const imagePreview = document.getElementById('image-preview');
 uploadBtn.addEventListener('click', () => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/*';
+    input.accept = 'image';
     input.onchange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
                 imagePreview.src = reader.result;
-                imagePreview.style.display = 'block';
+				imagePreview.style.display = "block";
+				uploadPlaceholder.style.display = "none"; // Placeholder 숨기기
             };
             reader.readAsDataURL(file);
         }

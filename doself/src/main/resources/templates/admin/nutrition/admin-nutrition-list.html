@@ -56,9 +56,20 @@
                                         <th>반려 사유내용</th>                                        
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
-                                    
+                                <tbody>
+                                	<th:block th:if="${nutritionList != null}">
+                                		<tr th:each="l : ${nutritionList}" class="text-center">
+                                			<td th:text="${l.nirrNum}"></td>
+                                			<td th:text="${l.mbrId}"></td>
+                                			<td th:text="${l.nirrContent}"></td>
+                                			<td th:text="${l.nirrDate}"></td>
+                                			<td th:text="${l.nirrCategory}"></td>
+                                			<td th:text="${l.scCode}"></td>
+                                			<td th:text="${l.prrAdmin}"></td>
+                                			<td th:text="${l.nirrProcessingDate}"></td>
+                                			<td th:text="${l.nirrReasonContent}"></td>                                		
+                                		</tr>
+                                	</th:block>                                                                    
                                 </tbody>
                             </table>
                         </div>

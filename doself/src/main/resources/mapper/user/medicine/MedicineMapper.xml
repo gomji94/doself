@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.user.medicine.mapper.MedicineMapper">
+  
+  	<resultMap type="Medicine" id="MedicineResultMap">
+  		<id 	column="dsi_num" 			property="medicineKeyNum"/>
+  		<result column="dsi_name" 			property="medicineName"/>
+  		<result column="dsi_efficacy"		property="medicineEfficacy"/>
+  		<result column="dsi_picture" 		property="medicineImg"/>
+  		<result column="dsi_daily_recommended_intake" 			property="medicineRecommendIntake"/>
+  		<result column="dsb_name" 			property="medicineBrand"/>
+  	</resultMap>
+  
+  	<!-- 영양제 목록 리스트 조회 -->
+  	<select id="getMedicineList" resultMap="MedicineResultMap" >
+		SELECT 
+			dsi.dsi_num, 
+			dsi.dsi_name, 
+			dsi.dsi_picture, 
+			dsb.dsb_name
+		FROM dietary_supplement_info dsi INNER JOIN dietary_supplement_brand dsb
+		USING(dsb_num);
+  	</select>
+  	
+  	<select id="getMedicineDetail" resultMap="MedicineResultMap" resultType="Medicine" parameterType="String">
+		SELECT 
+			dsi.dsi_num, 
+			dsi.dsi_name, 
+			dsi.dsi_efficacy, 
+			dsi.dsi_picture, 
+			dsi.dsi_daily_recommended_intake, 
+			dsb.dsb_name
+		FROM dietary_supplement_info dsi INNER JOIN dietary_supplement_brand dsb
+		USING(dsb_num)
+		WHERE dsi.dsi_num = #{medicineKeyNum};
+  	</select>
+  	
+  	  	<!-- 영양제 검색 -->
+  	<select id="searchMedicineByMedicineName" resultMap="MedicineResultMap" parameterType="String">
+		SELECT 
+			dsi.dsi_num, 
+			dsi.dsi_name, 
+			dsi.dsi_picture, 
+			dsb.dsb_name
+		FROM dietary_supplement_info dsi INNER JOIN dietary_supplement_brand dsb
+		USING(dsb_num)
+		WHERE dsi.dsi_name LIKE CONCAT('%', #{medicineName}, '%');
+  	</select>
+  	
+</mapper>

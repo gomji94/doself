@@ -1,12 +1,3 @@
-
-// 예시 데이터
-const challengeData = [
-    { mbrId: "id001", mbrName: "문지훈", mgCode: "관리자", mbrEmail: "mjh6958@gmail.com", mbrBirthDate: "1994-12-17", mbrPhoneNum: "010-6352-0461", mbrGender: "남", acNum: "청년(19~34)", openingTicketCount: 0, participationTicketCount: 0, mbrPoint: 0 },
-    { mbrId: "id002", mbrName: "김나연", mgCode: "회원", mbrEmail: "rlaskdus66@gmail.com", mbrBirthDate: "1991-05-19", mbrPhoneNum: "010-3830-7751", mbrGender: "여", acNum: "청년(19~34)", openingTicketCount: 0, participationTicketCount: 0, mbrPoint: 1000 },
-    { mbrId: "id003", mbrName: "문진현", mgCode: "회원", mbrEmail: "wlsgus4296@gmail.com", mbrBirthDate: "1992-08-15", mbrPhoneNum: "010-9655-2721", mbrGender: "남", acNum: "청년(19~34)", openingTicketCount: 0, participationTicketCount: 0, mbrPoint: 1000 },
-    { mbrId: "id004", mbrName: "서혜원", mgCode: "회원", mbrEmail: "ims1228802@gamil.com", mbrBirthDate: "1993-12-31", mbrPhoneNum: "010-9999-9999", mbrGender: "여", acNum: "청년(19~34)", openingTicketCount: 0, participationTicketCount: 0, mbrPoint: 3000 }
-];
-
 // 데이터 초기 렌더링
 document.addEventListener("DOMContentLoaded", () => {
     renderTable(challengeData);

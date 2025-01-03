@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.user.market.mapper.MarketMapper">
+  
+  	<resultMap type="MarketItem" id="marketItemResultMap">
+  		<id 	column="pepl_num" 			property="pointItemKeyNum"/>
+  		<result column="pepl_name" 			property="pointItemName"/>
+  		<result column="pepl_price"			property="pointItemPrice"/>
+  		<result column="pepl_img" 			property="pointItemImg"/>
+  		<result column="pepl_expl" 			property="pointExplanation"/>
+  	</resultMap>
+  	
+  	<!-- 마켓 아이템 리스트 조회 -->
+  	<select id="getMarketItemList" resultMap="marketItemResultMap" >
+		SELECT *
+		FROM point_exchange_product_list;
+  	</select>
+  	
+  	<!-- 마켓 아이템 상세 조회 -->
+	<select id="getItemDetail" resultMap="marketItemResultMap" resultType="MarketItem">
+		SELECT *
+		FROM point_exchange_product_list
+		WHERE pepl_num = #{pointItemKeyNum};
+  	</select>
+  	
+</mapper>

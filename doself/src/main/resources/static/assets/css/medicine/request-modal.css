@@ -54,6 +54,10 @@
     width: 70%;
 }
 
+#requestCategory {
+    margin-right: 7px;
+}
+
 #modal-request-form__buttons {
     border-top: solid 1px #d3d3d3;
     padding-top: 17px;

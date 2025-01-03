@@ -5,10 +5,7 @@
 <head>
 	<link th:href="@{/assets/css/mypage/info.css}" rel="stylesheet" type="text/css" />
 </head>		
-		
-	
 	<th:block layout:fragment="content-body">
-
         <!-- 왼쪽 사이드바 -->
         <div class="sidebar">
             <ul>
@@ -60,43 +57,47 @@
                 </div>    
                 <div id="profile-info">
                     <div id="profile-edit">
-                        <a href="#"><div>프로필 변경</div></a>
+                        <a id="btnChangeProfile" onclick="changeClick()"><div>프로필 변경</div></a>
                     </div>
-                    <div id="profile-userId">id002</div>
+                    <div id="profile-userId" th:text="${memberId}"></div>
                 </div>
             </div>
 
-            <form class="account-form">
+            <form class="account-form" id="modifyMemberForm" th:action="@{/user/member/mypage/info}" method="post" th:object="${memberInfo}">
                 <div class="form-group">
                     <label for="name">이름</label><!-- 241224 사용자 입력막기(이름변경x) -->
-                    <input class="width-fit" type="text" id="name" value="고영희">
+                    <input class="width-fit" type="text" id="name" th:value="${memberName}" disabled="disabled">
+                </div>
+                <div class="form-group">
+                    <label for="birth-date">생년월일</label>
+                    <input type="date" id="birth-date" th:value="${memberBrith}" disabled="disabled">
                 </div>
                 <div class="form-group">
                     <label for="current-password">현재 비밀번호</label>
-                    <input class="width-fit" type="password" id="current-password" value="************">
+                    <input class="width-fit" type="password" id="current-password" th:value="${memberPw}">
                 </div>
                 <div class="form-group">
                     <label for="new-password">새 비밀번호</label>
-                    <input class="width-fit" type="password" id="new-password" value="************">
+                    <input class="width-fit" type="password" id="new-password" value="">
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">비밀번호 다시입력</label>
-                    <input class="width-fit" type="password" id="confirm-password" value="************">
+                    <input class="width-fit" type="password" id="confirm-password" value="">
                     <!-- 241224 비밀번호변경 제거 -->
                     <!-- <button type="button" class="btn-password-change">비밀번호 변경</button> --> 
                 </div>
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
                     <div class="phone-input">
-                        <input type="text" id="phone-number-part1" value="010"> -
-                        <input type="text" id="phone-number-part2" value="9999"> -
-                        <input type="text" id="phone-number-part3" value="9999">
+                        <input type="text" id="phone-number-part1" th:value="${memberTel[0]}"> -
+                        <input type="text" id="phone-number-part2" th:value="${memberTel[1]}"> -
+                        <input type="text" id="phone-number-part3" th:value="${memberTel[2]}">
                     </div>
                 </div>
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <div class="email-input">
-                            <input type="text" id="email" value="qwerasdf">
+                            <input type="text" id="email" value="">
                             <select>
                                 <option value="gmail.com">@gmail.com</option>
                                 <option value="naver.com">@naver.com</option>
@@ -104,12 +105,10 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="birth-date">생년월일</label>
-                        <input type="date" id="birth-date" value="1999-12-31">
+                    <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
+                    <div id="withdrawa">
+                    <button type="button" id="removeBtn">회원탈퇴</button>
                     </div>
-                    <button type="submit" class="btn-submit">수정</button>
-                    <div id="withdrawa"><button>회원탈퇴</button></div>
                 </form>
             </main>
 
@@ -121,5 +120,18 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     <script th:src="@{/assets/js/layout.js}"></script>
+    <script type="text/javascript">
+    	
+/*     
+    	$('#modifyMemberBtn').click(function(){
+    		
+    	});
+	    
+		$('#removeBtn').click(function(){
+			
+		});
+		
+		 */
+	</script>
     </th:block> 
 </html>
