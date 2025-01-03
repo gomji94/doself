@@ -14,5 +14,8 @@ public interface MedicineMapper {
 	
 	// 영양제 상세 정보 조회
 	Medicine getMedicineDetail(String medicineKeyNum);
+	
+	// 영양제 검색
+	List<Medicine> searchMedicineByMedicineName(String medicineName);
 
 }

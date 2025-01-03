@@ -16,8 +16,10 @@ public interface FoodMapper {
 	// 음식 상세 조회
 	Food getFoodDetail(String foodKeyNum);
 	
-	// 요청 접수
+	// 음식 검색
+	List<Food> searchFoodByFoodName(String foodName);
 	
+	// 요청 접수
 	void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
 
 }

@@ -49,11 +49,21 @@ public class FoodController {
 	@PostMapping("/createrequest")
 	public String createNutritionRequest(NutritionRequestInfo nutritionRequestInfo) {
 		//TODO: process POST request
-		
+		// 세션 아이디 값 필요
 		System.out.println(nutritionRequestInfo);
 		
 		return null;
 	}
+	
+	@GetMapping("/search")
+	public String searchFoodByFoodName(@RequestParam(name = "foodName", required = false) String foodName, Model model) {
+		if (foodName != null && foodName.trim().length() > 0) {
+			model.addAttribute("foodList", foodService.searchFoodByFoodName(foodName));
+		} 		
+		
+		return "user/food/list";
+	}
+	
 	
 	
 }
