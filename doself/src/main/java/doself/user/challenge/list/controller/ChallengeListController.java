@@ -32,12 +32,6 @@ public class ChallengeListController {
 	public String getChallengeList(Model model) {
 		List<ChallengeList> challengeList = challengeListService.getChallengeList();
 		
-		if (challengeList == null || challengeList.isEmpty()) {
-	        log.warn("No data fetched for challenge list.");
-	    } else {
-	        log.info("Fetched Challenge List: {}", challengeList);
-	    }
-		
 		log.info("Fetched Challenge List: {}", challengeList);
 		model.addAttribute("challengeList", challengeList);
 		return "user/challenge/challenge-list";
