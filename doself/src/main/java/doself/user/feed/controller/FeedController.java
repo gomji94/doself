@@ -17,7 +17,7 @@ public class FeedController {
 	public String getFeed(Model model) {
 		model.addAttribute("title", "피드");
 		
-		return "user/feed/feed-view";
+		return "user/feed/feed-list";
 	}
 	
 	// 특정 피드 상세 조회
@@ -25,7 +25,7 @@ public class FeedController {
 	public String getDetailsFeed(Model model) {
 		model.addAttribute("title", "상세 피드");
 		
-		return "user/feed/detailsfeed-view";
+		return "user/feed/feed-view";
 	}
 	
 	// 피드 만들기
