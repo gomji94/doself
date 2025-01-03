@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
+import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	private final ChallengeFeedMapper challengeFeedMapper;
 	
+	// 챌린지 피드 조회(로직 검토 필요)
 	@Override
 	public List<ChallengeFeed> getChallengeFeedList(int page, int pageSize) {
 		List<ChallengeFeed> challengeFeed = challengeFeedMapper.getChallengeFeedList(page, pageSize);
@@ -39,4 +41,11 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    return challengeFeedMapper.getChallengeFeedList(offset, pageSize);
 	}
 
+	// 챌린지 멤버 조회(참여자 번호, 챌린지 번호, 챌린지 참여 및 퇴장 일시 기록 → 추후, 유효성 검사 로직 추가)
+	@Override
+	public List<ChallengeMemberList> getMemberList(String challengeCode) {
+		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
+		log.info("memberList test", memberList);
+		return memberList;
+	}	
 }
