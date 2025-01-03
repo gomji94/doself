@@ -35,11 +35,19 @@ public class MarketController {
 		return "user/market/view";
 	}
 	
-	
+	@GetMapping("/purchase")
+	public String createPurchaseItem(@RequestParam(name = "pointItemKeyNum") String pointItemKeyNum, Model model) {
+		
+		model.addAttribute("itemInfo", marketService.getItemDetail(pointItemKeyNum));
+		
+		return "user/market/purchase-item";
+	}
 	
 	@GetMapping("/purchaselist")
 	public String getPurchaseList() {
 		return "user/market/purchase-list";
 	}
+	
+	
 	
 }

@@ -11,5 +11,8 @@ public interface FoodService {
 	
 	// 음식 상세 조회
 	Food getFoodDetail(String foodKeyNum);
+	
+	// 음식 검색
+	List<Food> searchFoodByFoodName(String foodName);
 
 }

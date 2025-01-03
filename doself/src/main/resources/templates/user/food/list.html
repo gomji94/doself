@@ -12,10 +12,12 @@
 	<th:block layout:fragment="content-body" >
 		<div class="view-container">
 		        <section class="tag">
+		        <form th:action="@{/food/search}" method="get" id="searchForm">
 		            <div class="filters">
-		                <input class="text" type="text" placeholder="음식 이름을 입력해주세요">
-		                <button class="search"></button>
+		                <input class="text" type="text" placeholder="음식 이름을 입력해주세요" id="inputFoodName" name="foodName">
+		                <button type="submit" class="search"></button>
 		            </div>
+		        </form>
 		            <div class="create-button">
 		                <button id="test-btn">등록 요청</button>
 		            </div>

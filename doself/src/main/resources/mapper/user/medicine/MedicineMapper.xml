@@ -38,4 +38,17 @@
 		USING(dsb_num)
 		WHERE dsi.dsi_num = #{medicineKeyNum};
   	</select>
+  	
+  	  	<!-- 영양제 검색 -->
+  	<select id="searchMedicineByMedicineName" resultMap="MedicineResultMap" parameterType="String">
+		SELECT 
+			dsi.dsi_num, 
+			dsi.dsi_name, 
+			dsi.dsi_picture, 
+			dsb.dsb_name
+		FROM dietary_supplement_info dsi INNER JOIN dietary_supplement_brand dsb
+		USING(dsb_num)
+		WHERE dsi.dsi_name LIKE CONCAT('%', #{medicineName}, '%');
+  	</select>
+  	
 </mapper>

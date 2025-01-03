@@ -28,4 +28,10 @@ public class MedicineServiceImpl implements MedicineService {
 		return medicineMapper.getMedicineDetail(medicineKeyNum);
 	}
 
+	@Override
+	public List<Medicine> searchMedicineByMedicineName(String medicineName) {
+		// TODO Auto-generated method stub
+		return medicineMapper.searchMedicineByMedicineName(medicineName);
+	}
+
 }

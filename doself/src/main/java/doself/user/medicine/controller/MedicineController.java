@@ -34,5 +34,14 @@ public class MedicineController {
 		return "user/medicine/view";
 	}
 	
+	@GetMapping("/search")
+	public String searchMedicineByMedicineName(@RequestParam(name = "medicineName", required = false) String medicineName, Model model) {
+		if (medicineName != null && medicineName.trim().length() > 0) {
+			model.addAttribute("medicineList", medicineService.searchMedicineByMedicineName(medicineName));
+		} 		
+		
+		return "user/medicine/list";
+	}
+	
 
 }
