@@ -6,7 +6,7 @@
   <mapper namespace="doself.user.members.mapper.MembersMapper">
     <resultMap type="Members" id="membersResultMap">
 		<id 	column="mbr_id" 			         property="memberId"/>
-		<result column="mbr_pw" 			         property="memberPw" />
+		<result column="mbr_pw" 			         property="oldMemberPw" />
 		<result column="mbr_name" 			         property="memberName" />
 		<result column="mg_code" 			         property="memberGrdCode" />
 		<result column="mbr_email"			         property="memberEmail" />
@@ -20,12 +20,12 @@
 		<result column="mbr_image" 	                 property="memberImage" />
 	</resultMap>
   		
-        
-    <!-- <select id="getMemberInfoById" parameterType="String" resultMap="membersResultMap"> -->
+  	<!-- 회원정보 -->	
     <select id="getMemberInfoById" parameterType="String" resultMap="membersResultMap">
         SELECT 
             mbr_id, 
-            mbr_pw, 
+            mbr_pw,
+            mbr_name,
             mbr_email, 
             mbr_birth_date, 
             mbr_phone_num
@@ -35,5 +35,34 @@
             mbr_id = #{memberId};
     </select>
   	
-  		
+  	<!-- 회원수정 -->
+	<update id="modifyMember" parameterType="Members">
+		UPDATE member <!-- prefix : 생성된 SQL 문 앞에 SET을 추가 ex) UPDATE members SET
+							suffixOverrides : 동적생성시 마지막 콤마 제거	 -->
+		<trim prefix="SET" suffixOverrides=",">	<!-- trim 대신 set 을 써도 결과는 같다 -->
+			<if test="oldMemberPw != null and oldMemberPw !='' and newMemberPw != null and newMemberPw">
+				mbr_pw=#{newMemberPw},
+			</if>
+			<if test="memberPhoneNum != null and memberPhoneNum != ''">
+				mbr_phone_num=#{memberPhoneNum},
+			</if>	
+			<if test="memberEmail != null and memberEmail != ''">
+				mbr_email=#{memberEmail}
+			</if>	
+		</trim>
+			WHERE 
+				mbr_id=#{memberId};
+			
+	</update>
+	
+	<!-- 회원 비밀번호 검증 -->
+	<select id="passwordChk" parameterType="Members">
+		SELECT 
+			COUNT(*)
+		FROM member
+		WHERE
+			mbr_id = #{memberId} AND mbr_pw = #{oldMemberPw};
+	</select>
+	
+		
   </mapper>
