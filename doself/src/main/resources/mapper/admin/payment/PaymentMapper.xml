@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.admin.payment.mapper.PaymentMapper">
+    	
+  		<!-- 결제내역 조회 -->
+		<select id="getPaymentList" resultType="Payment">
+			/* 결제내역 조회 */
+					
+			SELECT
+				ctph_num 				AS ctphNum,
+				mbr_id 					AS mbrId,
+				tpm_num 				AS tpmNum,
+				ctph_date 				AS ctphDate,
+				ctp_code 				AS ctpCode,
+				ctph_status 			AS ctphStatus,
+				ctph_return_status 		AS ctphReturnStatus
+			FROM challenge_ticket_payment_history
+		</select>
+		
+  		<!-- 결제 환불내역 조회 -->
+		<select id="getRefundList" resultType="PaymentRefund">
+			/* 결제 환불내역 조회 */
+					
+			SELECT
+				prl_num 	AS prlNum,
+				prr_num 	AS prrNum,
+				mbr_id 		AS mbrId,
+				prl_date 	AS prlDate,
+				prl_amount 	AS prlAmount
+			FROM payment_refund_log
+		</select>
+  </mapper>

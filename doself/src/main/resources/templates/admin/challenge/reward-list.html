@@ -55,7 +55,18 @@
                                         <th scope="col">보상 지급일</th>                                       
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
+                                <tbody>
+                                <th:block th:if="${rewardList != null}">
+                                	<tr th:each="l : ${rewardList}" class="text-center">
+                                		<td th:text="${l.rphNum}"></td>
+                                		<td th:text="${l.cgNum}"></td>
+                                		<td th:text="${l.mbrId}"></td>
+                                		<td th:text="${l.rhNum}"></td>
+                                		<td th:text="${l.rphRewardSelectedDate}"></td>
+                                		<td th:text="${l.rphAdmin}"></td>
+                                		<td th:text="${l.rphRewardPaymentDate}"></td>                                
+                                	</tr>
+                                </th:block>
                                     
 
                                 </tbody>
@@ -69,7 +80,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<script th:src="@{/manage/assets/js/admin/admin-challenge-reward-list.js}"></script>
+        	<!-- <script th:src="@{/manage/assets/js/admin/admin-challenge-reward-list.js}"></script> -->
         </th:block>
          
         <!--/* 사용자 추가 js script */-->
