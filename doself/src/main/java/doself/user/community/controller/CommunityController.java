@@ -26,7 +26,7 @@ public class CommunityController {
 		model.addAttribute("categoryList", communityService.getArticleCategoryList());
 		model.addAttribute("articleList", communityService.getArticleList());
 		
-		return "user/community/community-list";
+		return "user/community/list";
 	}
 	
 	@GetMapping("/list/category")
@@ -35,14 +35,14 @@ public class CommunityController {
 		model.addAttribute("categoryList", communityService.getArticleCategoryList());
 		model.addAttribute("articleList", communityService.getArticleListByCategory(categoryCode));
 		
-		return "user/community/community-list";
+		return "user/community/list";
 	}
 	
 	@GetMapping("/view")
-	public String getArticleDetail(@RequestParam(name = "articleNum") String articleKeyNum) {
+	public String getArticleDetail(@RequestParam(name = "articleNum") String articleKeyNum, Model model) {
+		model.addAttribute("articleDetail", communityService.getArticleDetail(articleKeyNum));
 		
-		
-		return new String();
+		return "user/community/view";
 	}
 	
 	

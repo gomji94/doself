@@ -18,5 +18,8 @@ public interface CommunityMapper {
 	
 	// 카테고리별 게시글 조회
 	List<Article> getArticleListByCategory(String categoryCode);
+	
+	// 게시글 조회
+	Article getArticleDetail(String articleKeyNum);
 
 }

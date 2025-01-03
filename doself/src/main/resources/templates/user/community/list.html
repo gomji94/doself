@@ -4,7 +4,7 @@
       layout:decorate="~{user/layout/default}">
       
 <head>
-	<link th:href="@{/assets/css/community/community-list.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/css/community/list.css}" rel="stylesheet" type="text/css" />
 </head>
 	
 	<th:block layout:fragment="content-body">
@@ -45,7 +45,7 @@
 									</td>
 									<td th:text="${l.articleAuthorId}"></td>
 									<td th:text="${l.articleCreationDate}"></td>
-									<td th:text="${l.articleViewCnt}"></td>
+									<td th:text="${l.articleLike}"></td>
 								</tr>
 		                   </th:block>
 	                    </tbody>
