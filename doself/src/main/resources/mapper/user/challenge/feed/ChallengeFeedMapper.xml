@@ -53,8 +53,8 @@
 			cmf.cmf_like,
 			cmf.cmf_warning_check,
 			m.mbr_image,
-			cfc.cfc_num,
-			cfc.cfc_content
+			fc.fc_num,
+			fc.fc_content
 		FROM
 			challenge_member_feed cmf
 			INNER JOIN `member` m USING(mbr_id)

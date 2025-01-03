@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>피드 생성</title>
-    <link rel="stylesheet" th:href="@{/assets/css/feed/user-feed-create.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/feed/feed-create.css}">
     <!-- <link rel="stylesheet" href="cl_challenge_feed_view.css">
     <link rel="stylesheet" href="layout.css"> -->
 </head>
@@ -14,14 +14,14 @@
     <iframe th:src="@{/feed/list}" class="background-content"></iframe>
 
     <!-- 오버레이 -->
-    <div class="overlay"></div>
+    <div class="create-modal-overlay"></div>
 
     <!-- 팝업 창 -->
-    <div class="popup-container">
+    <div class="feed-create-modal">
         <div class="popup-header">
             <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
             <h2>새 피드 만들기</h2>
-            <img src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+            <img id = "create-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
         </div>
         <hr>
         <div class="popup-body">
