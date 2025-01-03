@@ -13,38 +13,18 @@
                 <div id="main-container-title">community</div>
                 <div id="main-container-category">
                     <div>
-                        <a href="#">
-                            <button class="category-button">전체</button>
+                        <a th:href="@{/community/list}">
+                            <button type="button" class="category-button">전체</button>
                         </a>
                     </div>
-                    <div>
-                        <a href="#">
-                            <button class="category-button">공지사항</button>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="#">
-                            <button class="category-button">자유</button>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="#">
-                            <button class="category-button">정보</button>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="#">
-                            <button class="category-button">질문</button>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="#">
-                            <button class="category-button">유머</button>
+                    <div th:if="${categoryList}" th:each="l : ${categoryList}">
+                        <a th:href="@{/community/list/category(cateNum=${l.categoryCode})}" >
+                            <button type="button" class="category-button"  th:text="${l.categoryName}"></button>
                         </a>
                     </div>
                 </div>
                 <div id="main-container-listTable">
-                    <table id="main-container__board">
+                    <table id="main-container__board" >
                     <thead>
                         <tr>
                             <th>no</th>
@@ -55,8 +35,20 @@
                             <th>like</th>
                         </tr>
                     </thead>
-                    <tbody>
-                    </tbody>
+	                    <tbody>
+		                   <th:block th:if="${articleList !=null}" >
+								<tr th:each="l : ${articleList}">
+									<td th:text="${l.articleKeyNum}"></td>
+									<td th:text="${l.articleCategory}"></td>
+									<td>
+										<a th:href="@{/community/view(articleNum=${l.articleKeyNum})}" th:text="${l.articleTitle}" id="articleTitleLink"></a>
+									</td>
+									<td th:text="${l.articleAuthorId}"></td>
+									<td th:text="${l.articleCreationDate}"></td>
+									<td th:text="${l.articleViewCnt}"></td>
+								</tr>
+		                   </th:block>
+	                    </tbody>
                     </table>
                 </div>
                 <div id="main-container-footer">
@@ -94,7 +86,7 @@
         </main>
         <div id="main-container-advertise">
             <div id="main-container-advertise__adBlock">
-                <a href="#">
+                <a th:href="@{https://www.tesla.com/ko_kr/cybertruck}" target="_blank">
                     <img id="mcaa__img" src="https://i.pinimg.com/1200x/de/35/56/de355692714024d48880cb98db8f9d4b.jpg" alt="">
                 </a>
             </div>
@@ -109,6 +101,5 @@
     <th:block layout:fragment="customJs">
     	<script th:src="@{/assets/js/layout.js}"></script>
     	
-    	<script th:src="@{/assets/js/community/community-list.js}"></script>
     </th:block> 
 </html>
