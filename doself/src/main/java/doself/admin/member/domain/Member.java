@@ -3,7 +3,7 @@ package doself.admin.member.domain;
 import lombok.Data;
 
 @Data
-public class MemberDTO {
+public class Member {
 	private String mbrId;
 	private String mbrPw;
 	private String mbrName;

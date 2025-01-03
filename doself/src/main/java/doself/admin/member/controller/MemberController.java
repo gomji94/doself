@@ -7,9 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import doself.admin.member.domain.MemberDTO;
+import doself.admin.member.domain.Member;
 import doself.admin.member.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +24,7 @@ public class MemberController {
 	@GetMapping("/list")
 	public String getMemberList(Model model) {
 		
-		List<MemberDTO> memberList = memberService.getMemberList();
+		List<Member> memberList = memberService.getMemberList();
 		log.info("memberList : {}", memberList);
 		
 		model.addAttribute("title", "회원목록");

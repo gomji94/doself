@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.admin.challenge.mapper.ChallengeMapper">    
+  		
+  		<!-- 챌린지목록 조회 -->
+		<select id="getChallengeList" resultType="Challenge">
+			/* 챌린지목록 조회 */
+			
+			SELECT 
+				cg_num 					AS cgNum,
+				ctl_num 				AS ctlNum,
+				cg_leader_name   		AS cgLeaderName,
+				cg_name 				AS cgName, 
+				cg_picture 				AS cgPicture,
+				cg_content 				AS cgContent,
+				cg_creation_date 		AS cgCreationDate,
+				cg_current_mbr_count 	AS cgCurrentMbrCount,
+				cg_max_mbr_count 		AS cgMaxMbrCount,
+				cg_start_date 			AS cgStartDate,
+				cg_end_date 			AS cgEndDate,
+				cg_like 				AS cgLike,
+				cs_num 					AS csNum,
+				mbr_id 					AS mbrId,
+				cs_reward_check 		AS csRewardCheck
+			FROM challenge_group				
+		</select>
+		
+  		<!-- 챌린지내 개인기록 조회 -->
+		<select id="getPersonalStatList" resultType="PersonalStat">
+			/* 챌린지내 개인기록 조회 */
+			
+			SELECT 
+				cmss_num 						AS cmssNum,
+				cg_num 							AS cgNum,
+				mbr_id 							AS mbrId,
+				cmss_date 						AS cmssDate,
+				cmss_upload_feed_count 			AS cmssUploadFeedCount,
+				cmss_today_participation_rate 	AS cmssTodayParticipationRate,
+				cmss_participation_check 		AS cmssParticipationCheck,
+				cmss_today_achievement_rate 	AS cmssTodayAchievementRate
+			FROM challenge_member_score_stats		
+		</select>
+		
+  		<!-- 챌린지내 개인점수 조회 -->
+		<select id="getPersonalScoreList" resultType="PersonalScore">
+			/* 챌린지내 개인점수 조회 */
+			
+			SELECT 
+				cpsl_num 								AS cpslNum,
+				cpsl_year 								AS cpslYear,
+				cpsl_monthly 							AS cpslMonthly,
+				cg_num 									AS cgNum,
+				mbr_id 									AS mbrId,
+				cpsl_cumulative_performance_rate 		AS cpslCumulativePerformanceRate,
+				cpsl_cumulative_participation_rate 		AS cpslCumulativeParticipationRate,
+				cpsl_cumulative_performance_score 		AS cpslCumulativePerformanceScore,
+				cpsl_cumulative_participation_score 	AS cpslCumulativeParticipationScore,
+				cpsl_like_score 						AS cpslLikeScore,
+				cpsl_comments_count 					AS cpslCommentsCount,
+				cpsl_total_score 						AS cpslTotalScore,
+				cpsl_rank 								AS cpslRank
+			FROM challenge_personal_score_list	
+		</select>
+		
+  		<!-- 챌린지 기록 조회 -->
+		<select id="getStatList" resultType="Stat">
+			/* 챌린지 기록 조회 */
+			
+			SELECT 
+				ctps_num 				AS ctpsNum,
+				cg_num 					AS cgNum,
+				ctps_date 				AS ctpsDate,
+				ctps_participation 		AS ctpsParticipation,
+				ctps_achievement_rate 	AS ctpsAchievementRate
+			FROM challenge_today_participation_stats
+		</select>
+		
+  		<!-- 챌린지 점수 조회 -->
+		<select id="getScoreList" resultType="Score">
+			/* 챌린지 점수 조회 */
+			
+			SELECT 
+				mcsl_num 								AS mcslNum,
+				mcsl_year 								AS mcslYear,
+				mcsl_monthly 							AS mcslMonthly,
+				cg_num 									AS cgNum,
+				mcsl_cumulative_performance_rate 		AS mcslCumulativePerformanceRate,
+				mcsl_cumulative_participation_rate 		AS mcslCumulativeParticipationRate,
+				mcsl_level_score 						AS mcslLevelScore,
+				mcsl_cumulative_performance_score 		AS mcslCumulativePerformanceScore,
+				mcsl_cumulative_participation_score 	AS mcslCumulativeParticipationScore,
+				mcsl_like_score 						AS mcslLikeScore,
+				mcsl_total_score 						AS mcslTotalScore,
+				mcsl_rank 								AS mcslRank
+			FROM monthly_challenge_score_list
+		</select>
+		
+  		<!-- 챌린지 리더가 경고한 내역 조회 -->
+		<select id="getWarninglist" resultType="Warning">
+			/* 챌린지 리더가 경고한 내역 조회 */
+			
+			SELECT
+				lcmwl_num 		AS lcmwlNum,
+				cg_num 			AS cgNum,
+				cgm_num 		AS cgmNum,
+				cmwc_num 		AS cmwcNum,
+				olc_code 		AS olcCode,
+				lcmwl_bc_num 	AS lcmwlBcNum,
+				lcmwl_date 		AS lcmwlDate
+			FROM leader_challenge_mbr_warning_log
+		</select>
+		
+  		<!-- 챌린지 보상지급기록 조회 -->
+		<select id="getRewardList" resultType="Reward">
+			/* 챌린지 보상지급기록 조회 */
+			
+			SELECT
+				rph_num 					AS rphNum,
+				cg_num 						AS cgNum,
+				mbr_id 						AS mbrId,
+				rh_num 						AS rhNum,
+				rph_reward_selected_date 	AS rphRewardSelectedDate,
+				rph_admin 					AS rphAdmin,
+				rph_reward_payment_date 	AS rphRewardPaymentDate
+			FROM reward_payment_history
+		</select>
+  </mapper>

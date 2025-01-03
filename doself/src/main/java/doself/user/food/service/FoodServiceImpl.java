@@ -27,6 +27,13 @@ public class FoodServiceImpl implements FoodService {
 		// TODO Auto-generated method stub
 		return foodMapper.getFoodDetail(foodKeyNum);
 	}
+
+	@Override
+	public List<Food> searchFoodByFoodName(String foodName) {
+		// TODO Auto-generated method stub
+		
+		return foodMapper.searchFoodByFoodName(foodName);
+	}
 	
 	
 

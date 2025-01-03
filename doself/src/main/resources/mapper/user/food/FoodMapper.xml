@@ -35,4 +35,11 @@
 		WHERE mni_num = #{foodKeyNum};
   	</select>
   	
+  	<!-- 음식 검색 -->
+	<select id="searchFoodByFoodName" resultMap="foodResultMap" parameterType="String" resultType="Food">
+		SELECT mni_num, mni_name, mni_picture, mni_kcal
+		FROM meal_nutrition_info
+		WHERE mni_name LIKE CONCAT('%', #{foodName}, '%');
+	</select>
+  	
 </mapper>
