@@ -1,7 +1,5 @@
 package doself.user.mypage.controller;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,31 +21,45 @@ public class MypageController {
 
 	private final MembersService membersService;
 
-	// 회원정보
+	// 회원정보수정
 	@GetMapping("/member/info")   //
-	public String getMemberInfo(@RequestParam(name="memberId") String memberId, Model model) {	
+	public String getMemberInfoView(@RequestParam(name="memberId") String memberId, Model model) {	
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		String[] memberTel = memberInfo.getMemberPhoneNum().split("-");
+		String Email = memberInfo.getMemberEmail();
+		int atIndex = Email.indexOf("@");
+		String memberEmail = Email.substring(0, atIndex);
 		model.addAttribute("memberInfo",memberInfo);
 		model.addAttribute("memberTel",memberTel);
-		//log.info("250102memberInfo", memberInfo);
+		model.addAttribute("memberEmail",memberEmail);
 		return "user/mypage/info";
 	}
 	
 	// 회원정보수정
-	@PostMapping("/member/modify")
-	public String modifyUser(Members member, RedirectAttributes reAttr) {
+	@PostMapping("/member/info")
+	public String modifyMember(Members member, RedirectAttributes reAttr, Model model) {
+		member.setMemberEmail(removeCommas(member.getMemberEmail())); 
+		member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum())); 
+		int resultType = membersService.passwordChk(member);
+		System.out.println(member);
+		System.out.println(resultType);
+		if(resultType == 1) {
+			/* membersService.modifyMember(member); */
+		} else {
+			
+		}
+		model.addAttribute("resultType", resultType);
 		
-		//membersService.moidfyMember(member);
 		
-		return "user/mypage/info";
+		reAttr.addAttribute("memberId", member.getMemberId());
+		return "redirect:/mypage/member/info";
 	}
 	
 	// 회원탈퇴
 	@PostMapping("/member/delete" )
 	public String deleteMember() {
 			
-		return "user/mypage/";
+		return "/";
 	}	
 	
 	// 회원티켓내역조회
@@ -90,4 +102,26 @@ public class MypageController {
 		
 		return "user/mypage/";
 	}
+	
+	
+	
+	// 공통 메소드 static common 에 작성 할 것.
+	// 유효성검사 js 로 검증 후 데이터 넘겨받기
+	public static String removeCommas(String input) {
+        if (input == null) {
+            return null; // Handle null input gracefully
+        }
+        return input.replace(",", "");
+    }
+	
+	public static String removeCommasPhone(String input) {
+        if (input == null) {
+            return null; // Handle null input gracefully
+        }
+        return input.replace(",", "-");
+    }
+	
+	
+	
+	
 }

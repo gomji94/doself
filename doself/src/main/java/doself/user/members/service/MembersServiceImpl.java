@@ -19,6 +19,21 @@ public class MembersServiceImpl implements MembersService {
 	public Members getMemberInfoById(String memberId) {
 		return membersMapper.getMemberInfoById(memberId);
 	}
+	
+	// 회원 수정
+	@Override
+	public int modifyMember(Members member) {
+		int result = membersMapper.modifyMember(member);
+		return result;
+	}
+
+	@Override
+	public int passwordChk(Members member) {
+		int result = membersMapper.passwordChk(member);
+		return result;
+	}
+
+
 
 	
 	
