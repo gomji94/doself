@@ -14,7 +14,7 @@
 	<!-- ConsoleAppender -->
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %boldMagenta(%msg%n)</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %boldWhite(%msg%n)</pattern>
 		</encoder>
 	</appender>
 	<!--Query ConsoleAppender -->

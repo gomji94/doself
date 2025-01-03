@@ -14,7 +14,7 @@
         <a th:href="@{/community/list}">커뮤니티</a>
     </nav>
     <div class="profile">
-        <a th:href="@{/mypage/member/info}"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
+        <a th:href="@{/mypage/member/info(memberId=${memberId})}"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
     </div>
 </header>
 </html>
