@@ -24,51 +24,51 @@ public class ChallengeServiceImpl implements ChallengeService {
 	
 	 //챌린지 리스트 출력
 	@Override
-	public List<Challenge> getChallengeList() {
+	public List<Challenge> getChallengeList(String searchType, String searchKeyword, String startDate, String endDate) {
 	
-		return challengeMapper.getChallengeList();
+		return challengeMapper.getChallengeList(searchType, searchKeyword, startDate, endDate);
 	}
 	
 	//챌린지내 개인기록 출력
 	@Override
-	public List<PersonalStat> getPersonalStatList() {
+	public List<PersonalStat> getPersonalStatList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return challengeMapper.getPersonalStatList();
+		return challengeMapper.getPersonalStatList(searchType, searchKeyword, startDate, endDate);
 	}
 
 	//챌린지내 개인점수 출력
 	@Override
-	public List<PersonalScore> getPersonalScoreList() {
+	public List<PersonalScore> getPersonalScoreList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return challengeMapper.getPersonalScoreList();
+		return challengeMapper.getPersonalScoreList(searchType, searchKeyword, startDate, endDate);
 	}
 
 	//챌린지 기록 출력
 	@Override
-	public List<Stat> getStatList() {
+	public List<Stat> getStatList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return challengeMapper.getStatList();
+		return challengeMapper.getStatList(searchType, searchKeyword, startDate, endDate);
 	}
 
 	//챌린지 점수 출력
 	@Override
-	public List<Score> getScoreList() {
+	public List<Score> getScoreList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return challengeMapper.getScoreList();
+		return challengeMapper.getScoreList(searchType, searchKeyword, startDate, endDate);
 	}
 
 	//챌린지 리더가 경고한 내역 출력
 	@Override
-	public List<Warning> getWarninglist() {
+	public List<Warning> getWarninglist(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return challengeMapper.getWarninglist();
+		return challengeMapper.getWarninglist(searchType, searchKeyword, startDate, endDate);
 	}
 
 	//챌린지 보상지급기록 출력
 	@Override
-	public List<Reward> getRewardList() {
+	public List<Reward> getRewardList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return challengeMapper.getRewardList();
+		return challengeMapper.getRewardList(searchType, searchKeyword, startDate, endDate);
 	}
 
 	

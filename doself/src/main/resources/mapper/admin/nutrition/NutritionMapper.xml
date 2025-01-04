@@ -38,14 +38,24 @@
 				m.mbr_name,
 				nirr_content,
 				nirr_date,
-				nirr_category,
-				sc_status,
+				nirr.nirr_category,
+				sc.sc_status,
 				prr_admin,
 				nirr_processing_date,
 				nirr_reason_content
 			FROM nutrition_info_registration_request nirr INNER JOIN `member` m
-			ON nirr.mbr_id = m.mbr_id
-			INNER JOIN status_category sc
-			ON nirr.sc_code = sc.sc_code
+				ON nirr.mbr_id = m.mbr_id
+				INNER JOIN status_category sc
+				ON nirr.sc_code = sc.sc_code
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND nirr_processing_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > nirr_processing_date
+		    </if>
 		</select>
   </mapper>

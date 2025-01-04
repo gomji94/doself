@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import doself.admin.declare.domain.Declare;
 import doself.admin.declare.domain.DeclareUser;
@@ -21,9 +22,12 @@ public class DeclareController {
 	
 	// 신고접수 조회
 	@GetMapping("list")
-	public String getDeclareList(Model model) {
+	public String getDeclareList(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 
-		List<Declare> declareList = declareService.getDeclareList();
+		List<Declare> declareList = declareService.getDeclareList(searchType, searchKeyword, startDate, endDate);
 		
 		model.addAttribute("title", "신고접수");
 		model.addAttribute("declareList", declareList);
@@ -40,9 +44,12 @@ public class DeclareController {
 	
 	// 부정회원관리 조회
 	@GetMapping("userlist")
-	public String getUserHistoryList(Model model) {
+	public String getUserHistoryList(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 		
-		List<DeclareUser> declareUserList = declareService.getDeclareUserList();
+		List<DeclareUser> declareUserList = declareService.getDeclareUserList(searchType, searchKeyword, startDate, endDate);
 		
 		model.addAttribute("title", "부정회원관리");
 		model.addAttribute("declareUserList", declareUserList);

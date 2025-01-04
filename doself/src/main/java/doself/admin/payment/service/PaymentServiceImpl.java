@@ -19,16 +19,16 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	//결제내역 출력
 	@Override
-	public List<Payment> getPaymentList() {
+	public List<Payment> getPaymentList(String searchType, String searchKeyword, String startDate, String endDate) {
 
-		return paymentMapper.getPaymentList();
+		return paymentMapper.getPaymentList(searchType, searchKeyword, startDate, endDate);
 	}
 
 	//결제 환불내역 출력
 	@Override
-	public List<PaymentRefund> getRefundList() {
+	public List<PaymentRefund> getRefundList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return paymentMapper.getRefundList();
+		return paymentMapper.getRefundList(searchType, searchKeyword, startDate, endDate);
 	}
 	
 }

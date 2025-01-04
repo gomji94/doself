@@ -17,9 +17,9 @@ public class NutritionServiceImpl implements NutritionService{
 	private final NutritionMapper nutritionMapper;
 	
 	@Override
-	public List<Nutrition> getNutritionList() {
+	public List<Nutrition> getNutritionList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return nutritionMapper.getNutritionList();
+		return nutritionMapper.getNutritionList(searchType, searchKeyword, startDate, endDate);
 	}
 	
 }

@@ -61,8 +61,18 @@
 				cs_reward_check
 			FROM challenge_group cg	INNER JOIN challenge_topic_level ctl
 					USING(ctl_num)
-				INNER JOIN challenge_status cs
-					USING(cs_num)	
+					INNER JOIN challenge_status cs
+					USING(cs_num)
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND cg_creation_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > cg_creation_date
+		    </if>
 		</select>
 		
 		
@@ -96,7 +106,7 @@
 			
 			SELECT 
 				cmss_num,
-				cg_name,
+				cg.cg_name,
 				m.mbr_name,
 				cmss_date,
 				cmss_upload_feed_count,
@@ -107,6 +117,16 @@
 				USING(cg_num)
 				INNER JOIN `member` m
 				ON cmss.mbr_id = m.mbr_id
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND cmss_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > cmss_date
+		    </if>
 			ORDER BY
 			cmss_num
 		</select>
@@ -163,6 +183,16 @@
 				USING(cg_num)
 				INNER JOIN `member` m
 				ON cpsl.mbr_id = m.mbr_id	
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d')
+		    </if>
 		</select>
 		
 		
@@ -187,12 +217,22 @@
 			
 			SELECT 
 				ctps_num,
-				cg_name,
+				cg.cg_name,
 				ctps_date,
 				ctps_participation,
 				ctps_achievement_rate
 			FROM challenge_today_participation_stats INNER JOIN challenge_group cg
 			USING(cg_num)
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND ctps_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > ctps_date
+		    </if>
 		</select>
 		
 		
@@ -225,7 +265,7 @@
 				mcsl_num,
 				mcsl_year,
 				mcsl_monthly,
-				cg_name,
+				cg.cg_name,
 				mcsl_cumulative_performance_rate,
 				mcsl_cumulative_participation_rate,
 				mcsl_level_score,
@@ -234,8 +274,18 @@
 				mcsl_like_score,
 				mcsl_total_score,
 				mcsl_rank
-			FROM monthly_challenge_score_list INNER JOIN challenge_group
+			FROM monthly_challenge_score_list csl INNER JOIN challenge_group cg
 			USING(cg_num)
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d')
+		    </if>
 		</select>
 		
 		
@@ -285,22 +335,32 @@
 			
 			SELECT
 				lcmwl_num,
-				cg_name,
+				cg.cg_name,
 				m.mbr_name,
 				cmwc_category,
 				olc_name,
 				lcmwl_bc_num,
 				lcmwl_date
 			FROM leader_challenge_mbr_warning_log lcmwl INNER JOIN challenge_group cg
-			ON lcmwl.cg_num = cg.cg_num
-			INNER JOIN challenge_group_member cgm
-			ON lcmwl.cgm_num = cgm.cgm_num
-			INNER JOIN `member` m
-			ON cgm.mbr_id = m.mbr_id
-			INNER JOIN challenge_mbr_warning_category cmwc
-			ON lcmwl.cmwc_num = cmwc.cmwc_num
-			INNER JOIN occurance_location_code olc
-			ON lcmwl.olc_code = olc.olc_code
+				ON lcmwl.cg_num = cg.cg_num
+				INNER JOIN challenge_group_member cgm
+				ON lcmwl.cgm_num = cgm.cgm_num
+				INNER JOIN `member` m
+				ON cgm.mbr_id = m.mbr_id
+				INNER JOIN challenge_mbr_warning_category cmwc
+				ON lcmwl.cmwc_num = cmwc.cmwc_num
+				INNER JOIN occurance_location_code olc
+				ON lcmwl.olc_code = olc.olc_code
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND lcmwl_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > lcmwl_date
+		    </if>
 		</select>
 		
 		
@@ -354,5 +414,15 @@
 				ON rph.mbr_id = m.mbr_id
 				INNER JOIN reward_history rh
 				ON rph.rh_num = rh.rh_num
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND rph_reward_selected_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > rph_reward_selected_date
+		    </if>
 		</select>
   </mapper>

@@ -5,8 +5,16 @@
 
   <mapper namespace="doself.admin.point.mapper.PointMapper">
     	   	
+  		<resultMap type="Point" id="pointResultMap">
+  			<id column="pepl_num" property="peplNum" />
+  			<result column="pepl_name" property="peplName" />  		
+  			<result column="pepl_price" property="peplPrice" />
+  			<result column="pepl_img" property="peplImg" />
+  			<result column="pepl_expl" property="peplExpl" />  			  				  		  		  			 	   	
+  		</resultMap>
+		
   		<!-- 포인트 상품내역 조회 -->
-		<select id="getPointList" resultType="Point">
+		<select id="getPointList" resultMap="pointResultMap">
 			/* 포인트 상품내역 조회 */
 					
 			SELECT
@@ -35,7 +43,7 @@
   		</resultMap>
   		<!-- 포인트 사용내역 조회 -->
 		<select id="getPointUserHistoryList" resultMap="PointUserHistoryResultMap">
-			/* 포인트 상품내역 조회 */
+			/* 포인트 사용내역 조회 */
 					
 			SELECT
 				pumh_num,
@@ -44,5 +52,12 @@
 				pumh_date
 			FROM point_use_management_history pumh INNER JOIN `member` m
 				ON pumh.mbr_id = m.mbr_id
+			WHERE 1=1
+		    <if test="startDate != null and startDate != ''">
+		        AND pumh_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > pumh_date
+		    </if>
 		</select>
   </mapper>

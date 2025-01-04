@@ -11,8 +11,8 @@ import doself.admin.payment.domain.PaymentRefund;
 public interface PaymentMapper {
 	
 	//결제내역 출력
-	List<Payment> getPaymentList();
+	List<Payment> getPaymentList(String searchType, String searchKeyword, String startDate, String endDate);
 	
 	//결제 환불 내역 출력
-	List<PaymentRefund> getRefundList();
+	List<PaymentRefund> getRefundList(String searchType, String searchKeyword, String startDate, String endDate);
 }
