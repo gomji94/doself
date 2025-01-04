@@ -1,32 +1,3 @@
-
-// 예시 데이터
-const challengeData = [];
-
-// 결과를 테이블에 출력하는 함수
-function renderTable(data) {
-    const resultTable = document.getElementById("resultTable");
-    resultTable.innerHTML = ""; // 기존 데이터 초기화
-
-    if (data.length > 0) {
-        data.forEach(item => {
-            const row = `<tr>
-                            <td><a href="/admin/nutrition/modifyrequest" class="userIdDetails">${item.nirrNum}</a></td>
-                            <td>${item.mbrId}</td>
-                            <td>${item.nirrContent}</td>
-                            <td>${item.nirrDate}</td>
-                            <td>${item.nirrCategory}</td>
-                            <td>${item.scCode}</td>
-                            <td>${item.prrAdmin}</td>
-                            <td>${item.nirrProcessingDate}</td>
-                            <td>${item.nirrReasonContent}</td>                                
-                        </tr>`;
-            resultTable.innerHTML += row;
-        });
-    } else {
-        resultTable.innerHTML = `<tr><td colspan="9">검색 결과가 없습니다.</td></tr>`;
-    }
-}
-
 // 검색조건에 따라 자동완성값 변경
 function updateSearchSuggestions() {
     const searchType = document.getElementById("searchType").value;
@@ -34,9 +5,9 @@ function updateSearchSuggestions() {
     suggestions.innerHTML = ""; // 기존 데이터 초기화
 
     let options = [];
-    if (searchType === "nirrCategory") {
+    if (searchType === "nirr.nirr_category") {
         options = ["영양제", "음식"];
-    } else if (searchType === "scCode") {
+    } else if (searchType === "sc.sc_status") {
         options = ["접수", "승인", "반려"];
     }
 
@@ -47,32 +18,15 @@ function updateSearchSuggestions() {
     });
 }
 
-// 데이터 필터링 함수
+// 검색한데이터 url매핑
 function filterData() {
-    const searchType = document.getElementById("searchType").value; // 선택된 조건
-    const searchKeyword = document.getElementById("searchKeyword").value.trim(); // 입력된 검색어
-    const startDate = document.getElementById("startDate").value; // 시작 날짜
-    const endDate = document.getElementById("endDate").value; // 종료 날짜        
+    const searchType = document.getElementById("searchType").value;
+    const searchKeyword = document.getElementById("searchKeyword").value;
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-    // 데이터 초기 렌더링
-    document.addEventListener("DOMContentLoaded", () => {
-        renderTable(challengeData);
-    });
+    const url = `/admin/nutrition/list?searchType=${searchType}&searchKeyword=${encodeURIComponent(searchKeyword)}&startDate=${startDate}&endDate=${endDate}`;
 
-    // 필터링된 데이터
-    const filteredData = challengeData.filter(item => {
-        const matchesSearchType = searchType === "nirrCategory" ? item.nirrCategory.includes(searchKeyword) :
-            searchType === "scCode" ? item.scCode.includes(searchKeyword) : true;
-
-        const withinDateRange = (!startDate || item.nirrDate >= startDate) &&
-            (!endDate || item.nirrDate <= endDate);
-
-        return matchesSearchType && withinDateRange;
-    });
-    // 필터링된 결과 테이블에 출력
-    renderTable(filteredData);
+    // 검색 결과를 새로고침
+    window.location.href = url;
 }
-// 페이지가 로드되었을 때 전체 데이터 표시
-document.addEventListener("DOMContentLoaded", () => {
-    renderTable(challengeData);
-});

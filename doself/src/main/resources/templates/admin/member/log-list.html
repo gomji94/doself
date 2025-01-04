@@ -18,10 +18,8 @@
                         <div class="row gx-3">
                             <!-- 검색 조건 선택 -->
                             <div class="col-lg-6 col-6 col-md-3">
-                                <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
-                                    <option value="mbrId">아이디</option>
-                                    <option value="mbrName">이름</option>
-                                    <option value="mgCode">회원 등급</option>                                    
+                                <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">                                    
+                                    <option value="m.mbr_name">이름</option>                                                                  
                                 </select>
                             </div>
 
@@ -49,15 +47,20 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">로그인로그번호</th>
-                                        <th scope="col">아이디</th>
-                                        <th scope="col">이름</th>
-                                        <th scope="col">회원등급</th>                                        
+                                        <th scope="col">이름</th>                                       
                                         <th scope="col">로그인 IP</th>                                        
                                         <th scope="col">로그인 일자</th>                                        
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
+                                <tbody>
+                                	<th:block th:if="${memberLogList != null}">
+                                		<tr th:each="l : ${memberLogList}" class="text-center">
+                                			<td th:text="${l.mllNum}"></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
+                                			<td th:text="${l.mllIp}"></td>
+                                			<td th:text="${l.mllDate}"></td>
+                                		</tr>                                	
+                                	</th:block>
                                 </tbody>
                             </table>
                         </div>

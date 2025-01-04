@@ -18,8 +18,8 @@
                         <div class="row gx-3">
                             <div class="col-lg-6 col-6 col-md-3">
                                 <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
-	                               <option value="cgName">챌린지 이름</option>
-	                               <option value="csName">챌린지 상태분류</option>
+	                               <option value="cg_name">챌린지 이름</option>
+	                               <option value="cs.cs_status">챌린지 상태분류</option>
 	                            </select>
                             </div>
                             <!-- 검색어 입력 -->
@@ -95,7 +95,7 @@
 
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">
-        	<!-- <script th:src="@{/manage/assets/js/admin/admin-challenge-list.js}"></script> -->
+        	<script th:src="@{/manage/assets/js/admin/admin-challenge-list.js}"></script>
         </th:block>
          
         <!--/* 사용자 추가 js script */-->

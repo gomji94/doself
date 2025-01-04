@@ -26,9 +26,9 @@ public class PointServiceImpl implements PointService {
 
 	// 포인트 사용내역 조회
 	@Override
-	public List<PointUserHistory> getPointUserHistoryList() {
+	public List<PointUserHistory> getPointUserHistoryList(String startDate, String endDate) {
 		
-		return pointMapper.getPointUserHistoryList();
+		return pointMapper.getPointUserHistoryList(startDate, endDate);
 	}
 
 }

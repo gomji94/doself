@@ -24,6 +24,7 @@
 	  		<association property="ticketPriceInfo" javaType="TicketPrice">
 	  			<id 	column="ctp_code" property="ctpCode" />	  			
 	  			<result column="ctp_price" property="ctpPrice" />	  				  				  			  			  				  				  				  				  			  			  			
+	  			<result column="ctc_category" property="ctcCategory" />	  				  				  			  			  				  				  				  				  			  			  			
 	  		</association>	  		  			 	   		
   		</resultMap>    	
     	
@@ -36,6 +37,7 @@
 				m.mbr_name,
 				ctph.tpm_num,
 				ctph_date,
+				ctc.ctc_category,
 				ctp.ctp_price,
 				ctph_status,
 				ctph_return_status
@@ -43,6 +45,20 @@
 				ON ctph.mbr_id = m.mbr_id
 				INNER JOIN challenge_ticket_price ctp
 				ON ctph.ctp_code = ctp.ctp_code
+				INNER JOIN challenge_ticket_category ctc
+				ON ctp.ctc_code = ctc.ctc_code
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND ctph_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > ctph_date
+		    </if>
+		    ORDER BY
+		    	ctph_num
 		</select>
 		
 		
@@ -73,6 +89,16 @@
 				prl_date,
 				prl_amount
 			FROM payment_refund_log prl INNER JOIN `member` m
-			ON prl.mbr_id = m.mbr_id
+				ON prl.mbr_id = m.mbr_id
+			WHERE 1=1
+			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        AND ${searchType} = '${searchKeyword}'
+		    </if>
+		    <if test="startDate != null and startDate != ''">
+		        AND prl_date > #{startDate}
+		    </if>
+		    <if test="endDate != null and endDate != ''">
+		        AND #{endDate} > prl_date
+		    </if>
 		</select>
   </mapper>

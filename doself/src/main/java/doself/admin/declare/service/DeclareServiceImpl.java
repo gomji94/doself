@@ -19,16 +19,16 @@ public class DeclareServiceImpl implements DeclareService{
 	
 	//신고요청 접수 조회
 	@Override
-	public List<Declare> getDeclareList() {
+	public List<Declare> getDeclareList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return declareMapper.getDeclareList();
+		return declareMapper.getDeclareList(searchType, searchKeyword, startDate, endDate);
 	}
 
 	//부정회원 관리 조회
 	@Override
-	public List<DeclareUser> getDeclareUserList() {
+	public List<DeclareUser> getDeclareUserList(String searchType, String searchKeyword, String startDate, String endDate) {
 		
-		return declareMapper.getDeclareUserList();
+		return declareMapper.getDeclareUserList(searchType, searchKeyword, startDate, endDate);
 	}
 	
 }

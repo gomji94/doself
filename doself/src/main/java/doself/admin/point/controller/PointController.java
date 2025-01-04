@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import doself.admin.point.domain.Point;
 import doself.admin.point.domain.PointUserHistory;
@@ -33,9 +34,10 @@ public class PointController {
 	
 	// 회원별 포인트 사용 내역 조회
 	@GetMapping("userhistorylist")
-	public String getUserHistoryList(Model model) {
+	public String getUserHistoryList(@RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 		
-		List<PointUserHistory> pointUserHistoryList = pointService.getPointUserHistoryList();
+		List<PointUserHistory> pointUserHistoryList = pointService.getPointUserHistoryList(startDate, endDate);
 		model.addAttribute("title", "회원별 사용 내역");
 		model.addAttribute("pointUserHistoryList", pointUserHistoryList);
 		return "admin/point/user-history-list";

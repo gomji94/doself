@@ -7,4 +7,5 @@ public class TicketPrice {
 	
 	private String ctpCode;
 	private int ctpPrice;
+	private String ctcCategory;
 }

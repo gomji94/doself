@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import doself.admin.challenge.domain.Challenge;
 import doself.admin.challenge.domain.PersonalScore;
@@ -15,9 +16,7 @@ import doself.admin.challenge.domain.Score;
 import doself.admin.challenge.domain.Stat;
 import doself.admin.challenge.domain.Warning;
 import doself.admin.challenge.service.ChallengeService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/admin/challenge")
@@ -28,11 +27,13 @@ public class ChallengeController {
 	
 	//챌린지관리 조회
 	@GetMapping("/list")
-	public String getChallengeList(HttpServletRequest request, Model model) {
+	public String getChallengeList(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 		
-		List<Challenge> challengeList = challengeService.getChallengeList();
-		
-		model.addAttribute("currentURI", request.getRequestURI());
+		List<Challenge> challengeList = challengeService.getChallengeList(searchType, searchKeyword, startDate, endDate);
+
 		model.addAttribute("title", "챌린지");
 		model.addAttribute("challengeList", challengeList);
 		return "admin/challenge/admin-challenge-list";
@@ -40,10 +41,13 @@ public class ChallengeController {
 	
 	//챌린지내 개인기록 조회
 	@GetMapping("/personalstatlist")
-	public String getChallengePersonalStat(HttpServletRequest request, Model model) {
+	public String getChallengePersonalStat(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 		
-		List<PersonalStat> personalStatlist = challengeService.getPersonalStatList();
-		model.addAttribute("currentURI", request.getRequestURI());
+		List<PersonalStat> personalStatlist = challengeService.getPersonalStatList(searchType, searchKeyword, startDate, endDate);
+
 		model.addAttribute("title", "챌린지내 개인기록");
 		model.addAttribute("personalStatlist", personalStatlist);
 		return "admin/challenge/personal-stat-list";
@@ -51,10 +55,13 @@ public class ChallengeController {
 	
 	//챌린지내 개인점수 조회
 	@GetMapping("/personalscorelist")
-	public String getChallengePersonalScore(HttpServletRequest request, Model model) {
+	public String getChallengePersonalScore(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 		
-		List<PersonalScore> personalScorelist = challengeService.getPersonalScoreList();
-		model.addAttribute("currentURI", request.getRequestURI());
+		List<PersonalScore> personalScorelist = challengeService.getPersonalScoreList(searchType, searchKeyword, startDate, endDate);
+
 		model.addAttribute("title", "챌린지내 개인점수");
 		model.addAttribute("personalScorelist", personalScorelist);
 		return "admin/challenge/personal-score-list";
@@ -62,9 +69,12 @@ public class ChallengeController {
 
 	//챌린지 별 기록 조회
 	@GetMapping("/statlist")
-	public String getChallengeStatList(Model model) {
+	public String getChallengeStatList(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 		
-		List<Stat> statlist = challengeService.getStatList();
+		List<Stat> statlist = challengeService.getStatList(searchType, searchKeyword, startDate, endDate);
 		model.addAttribute("title", "챌린지 별 기록");
 		model.addAttribute("statlist", statlist);
 		return "admin/challenge/stat-list";
@@ -72,9 +82,12 @@ public class ChallengeController {
 	
 	//챌린지 별 점수 조회
 	@GetMapping("/scorelist")
-	public String getChallengeScore(Model model) {
+	public String getChallengeScore(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 
-		List<Score> scoreList = challengeService.getScoreList();
+		List<Score> scoreList = challengeService.getScoreList(searchType, searchKeyword, startDate, endDate);
 		model.addAttribute("title", "챌린지 별 점수");
 		model.addAttribute("scoreList", scoreList);
 		return "admin/challenge/score-list";
@@ -82,9 +95,12 @@ public class ChallengeController {
 	
 	//챌린지 리더가 경고한 내역 조회
 	@GetMapping("/warninglist")
-	public String getWarningList(Model model) {
+	public String getWarningList(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 
-		List<Warning> warningList = challengeService.getWarninglist();
+		List<Warning> warningList = challengeService.getWarninglist(searchType, searchKeyword, startDate, endDate);
 		model.addAttribute("title", "경고내역");
 		model.addAttribute("warningList", warningList);
 		return "admin/challenge/warning-list";
@@ -92,9 +108,12 @@ public class ChallengeController {
 	
 	//챌린지 보상내역 조회
 	@GetMapping("/rewardlist")
-	public String getRewardList(Model model) {
+	public String getRewardList(@RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 
-		List<Reward> rewardList = challengeService.getRewardList();
+		List<Reward> rewardList = challengeService.getRewardList(searchType, searchKeyword, startDate, endDate);
 		model.addAttribute("title", "챌린지 보상내역");
 		model.addAttribute("rewardList", rewardList);
 		return "admin/challenge/reward-list";

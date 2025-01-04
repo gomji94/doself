@@ -9,5 +9,5 @@ import doself.admin.nutrition.domain.Nutrition;
 @Mapper
 public interface NutritionMapper {
 	
-	List<Nutrition> getNutritionList();
+	List<Nutrition> getNutritionList(String searchType, String searchKeyword, String startDate, String endDate);
 }

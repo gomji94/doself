@@ -16,24 +16,24 @@ import doself.admin.challenge.domain.Warning;
 public interface ChallengeMapper {
 	
 	//챌린지 리스트 출력
-	List<Challenge> getChallengeList();
+	List<Challenge> getChallengeList(String searchType, String searchKeyword, String startDate, String endDate);
 	
 	//챌린지내 개인기록 출력
-	List<PersonalStat> getPersonalStatList();
+	List<PersonalStat> getPersonalStatList(String searchType, String searchKeyword, String startDate, String endDate);
 
 	//챌린지내 개인점수 출력
-	List<PersonalScore> getPersonalScoreList();
+	List<PersonalScore> getPersonalScoreList(String searchType, String searchKeyword, String startDate, String endDate);
 	
 	//챌린지 기록 출력
-	List<Stat> getStatList();
+	List<Stat> getStatList(String searchType, String searchKeyword, String startDate, String endDate);
 	
 	//챌린지 점수 출력
-	List<Score> getScoreList();
+	List<Score> getScoreList(String searchType, String searchKeyword, String startDate, String endDate);
 	
 	//챌린지 리더가 경고한내역 출력
-	List<Warning> getWarninglist();
+	List<Warning> getWarninglist(String searchType, String searchKeyword, String startDate, String endDate);
 	
 	//챌린지 보상지급기록 출력
-	List<Reward> getRewardList();
+	List<Reward> getRewardList(String searchType, String searchKeyword, String startDate, String endDate);
 	
 }

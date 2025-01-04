@@ -18,8 +18,8 @@
                         <div class="row gx-3">
                             <div class="col-lg-6 col-6 col-md-3">
                               <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
-                                <option value="rcCode">신고 유형</option>
-                                <option value="scCode">상태</option>
+                                <option value="rc.rc_name">신고 유형</option>
+                                <option value="sc.sc_status">처리상태</option>
                               </select>
                             </div>
                             <!-- 검색어 입력 -->
@@ -62,13 +62,13 @@
                                 	<th:block th:if="${declareList} != null">
                                 		<tr th:each="l : ${declareList}" class="text-center">
                                 			<td th:text="${l.rrNum}"></td>
-                                			<td th:text="${l.mbrId}"></td>
-                                			<td th:text="${l.olcCode}"></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
+                                			<td th:text="${l.occuranceLocationInfo.olcName}"></td>
                                 			<td th:text="${l.rrBcNum}"></td>
-                                			<td th:text="${l.rcCode}"></td>
+                                			<td th:text="${l.declareCategoryInfo.rcName}"></td>
                                 			<td th:text="${l.rrContent}"></td>
                                 			<td th:text="${l.rrDate}"></td>
-                                			<td th:text="${l.scCode}"></td>
+                                			<td th:text="${l.statusCategoryInfo.scStatus}"></td>
                                 			<td th:text="${l.rrAdmin}"></td>
                                 			<td th:text="${l.rrProcessingPeriod}"></td>
                                 			<td th:text="${l.rrReasonContent}"></td>

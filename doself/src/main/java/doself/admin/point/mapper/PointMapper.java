@@ -14,5 +14,5 @@ public interface PointMapper {
 	List<Point> getPointList();
 	
 	//포인트 사용내역 조회
-	List<PointUserHistory> getPointUserHistoryList();
+	List<PointUserHistory> getPointUserHistoryList(String startDate, String endDate);
 }
