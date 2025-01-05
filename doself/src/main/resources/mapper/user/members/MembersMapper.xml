@@ -26,43 +26,48 @@
             mbr_id, 
             mbr_pw,
             mbr_name,
+            mg_code,
             mbr_email, 
             mbr_birth_date, 
-            mbr_phone_num
+            mbr_phone_num,
+            mbr_gender,
+            ac_num,
+            opening_ticket_count,
+            participation_ticket_count,
+            mbr_point,
+            mbr_image
         FROM 
             member
         WHERE
             mbr_id = #{memberId};
     </select>
-  	
-  	<!-- 회원수정 -->
-	<update id="modifyMember" parameterType="Members">
-		UPDATE member <!-- prefix : 생성된 SQL 문 앞에 SET을 추가 ex) UPDATE members SET
-							suffixOverrides : 동적생성시 마지막 콤마 제거	 -->
-		<trim prefix="SET" suffixOverrides=",">	<!-- trim 대신 set 을 써도 결과는 같다 -->
-			<if test="oldMemberPw != null and oldMemberPw !='' and newMemberPw != null and newMemberPw">
-				mbr_pw=#{newMemberPw},
-			</if>
-			<if test="memberPhoneNum != null and memberPhoneNum != ''">
-				mbr_phone_num=#{memberPhoneNum},
-			</if>	
-			<if test="memberEmail != null and memberEmail != ''">
-				mbr_email=#{memberEmail}
-			</if>	
-		</trim>
-			WHERE 
-				mbr_id=#{memberId};
-			
-	</update>
-	
-	<!-- 회원 비밀번호 검증 -->
-	<select id="passwordChk" parameterType="Members">
-		SELECT 
-			COUNT(*)
-		FROM member
-		WHERE
-			mbr_id = #{memberId} AND mbr_pw = #{oldMemberPw};
+    
+	<!-- 현재 비밀번호 확인 -->
+	<select id="passwordChk" parameterType="map" resultType="boolean">
+	    SELECT COUNT(*)
+	    FROM member
+	    WHERE 
+	    mbr_id = #{memberId} AND mbr_pw = #{oldMemberPw}
 	</select>
 	
-		
+	<!-- 새 비밀번호 업데이트 -->
+	<update id="updatePassword" parameterType="map">
+	    UPDATE member
+	    SET mbr_pw = #{newMemberPw}
+	    WHERE mbr_id = #{memberId}
+	</update>
+	
+	<update id="modifyMember" parameterType="Members">
+       UPDATE member 
+    <set>
+        <if test="oldMemberPw != null and oldMemberPw !='' and newMemberPw != null and newMemberPw">
+         mbr_pw = #{newMemberPw},</if>
+        <if test="memberPhoneNum != null">
+         mbr_phone_num = #{memberPhoneNum},</if>
+        <if test="memberEmail != null">
+         mbr_email = #{memberEmail}</if>
+    </set>
+       WHERE mbr_id = #{memberId};
+</update>    
+    
   </mapper>
