@@ -1,21 +1,35 @@
 // --- aside member list modal ---
 $(document).ready(function () {
-    // cf-mbr-modal-overlay 열기
-    $('#cf_mbr_search-panel').on('click', function () {
-        // 다른 모달 숨기기
-        $('.modal-overlay #cf-mbr-modal-overlay').addClass('modal-hidden');
-        $('#cf-mbr-modal-overlay').removeClass('modal-hidden').fadeIn();
+	// 챌린지 멤버 조회 클릭 이벤트
+    $('#cf_mbr_search-panel').on('click', '.open-memberlist-modal', function () {
+        const challengeCode = $(this).data('challenge-code'); // 챌린지 코드 가져오기
+        console.log("Challenge Code:", challengeCode); // 디버깅용 로그
+
+        // Ajax 요청으로 데이터 가져오기
+        $.ajax({
+            url: '/challenge/feed/memberlist', // 서버 URL
+            type: 'GET',
+            data: { challengeCode: challengeCode },
+            success: function (response) {
+                console.log("Response received:", response); // 응답 데이터 확인
+                // 오버레이 내용 업데이트
+                $('#cf-mbr-modal-overlay').html(response);
+                // 오버레이와 모달 표시
+                $('#cf-mbr-modal-overlay').fadeIn(); // 오버레이 활성화
+                $('#cf-mbr-modal').fadeIn(); // 모달 활성화
+            }
+        });
     });
 
-    // cf-mbr-modal-overlay 닫기
-    $('#cf-mbr-modal-close').on('click', function () {
-        $('#cf-mbr-modal-overlay').fadeOut();
+    // 모달 닫기 이벤트
+    $('#cf-mbr-modal-overlay').on('click', '#cf-mbr-modal-close', function () {
+        $('#cf-mbr-modal-overlay').fadeOut(); // 오버레이 닫기
     });
 
-    // 모달 닫기 (오버레이 클릭 시)
+    // 오버레이 클릭 시 닫기
     $('#cf-mbr-modal-overlay').on('click', function (e) {
         if ($(e.target).is('#cf-mbr-modal-overlay')) {
-          $(this).fadeOut();
+            $(this).fadeOut(); // 오버레이 닫기
         }
     });
 

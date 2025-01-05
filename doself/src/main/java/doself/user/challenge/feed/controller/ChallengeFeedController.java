@@ -36,12 +36,27 @@ public class ChallengeFeedController {
 	
 	// 챌린지 멤버 리스트 조회
 	@GetMapping("/memberlist")
-	public String getMemberList(@RequestParam(value="challengeCode") String challengeCode, Model model) {
-		List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
-		log.info("memberList", memberList);
-		model.addAttribute("memberList", memberList);
-		return "user/challenge/member-list";
+	public String getMemberList(@RequestParam(value = "challengeCode") String challengeCode, Model model) {
+	    log.info("Received challengeCode: {}", challengeCode);
+
+	    // 데이터 가져오기
+	    List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
+	    log.info("Fetched memberList: {}", memberList);
+
+	    model.addAttribute("memberList", memberList);
+
+	    // Thymeleaf fragment 반환
+	    return "user/challenge/member-list :: member-list";
 	}
+	/*
+	 * public String getMemberList(@RequestParam(value = "challengeCode") String
+	 * challengeCode, Model model) { log.info("Received challengeCode: {}",
+	 * challengeCode); // 입력 확인 List<ChallengeMemberList> memberList =
+	 * challengeFeedService.getMemberList(challengeCode);
+	 * log.info("Fetched memberList from Service: {}", memberList);
+	 * model.addAttribute("memberList", memberList); return
+	 * "user/challenge/member-list"; }
+	 */
 	
 	// 챌린지 멤버 경고 사유 선택 조회(지금은 스킵하고 나중에 작업)
 	@GetMapping("/warning")

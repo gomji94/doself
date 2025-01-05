@@ -24,9 +24,9 @@
 		<id 	column="cgm_num"	 property="challengeMemberCode" />
 		<id 	column="cg_num" 	 property="challengeCode" />
 		<result column="mbr_id"		 property="memberId" />
-		<result column="cs_num" 	 property="memberProfileImage" />
-		<result column="cgm_date"	 property="challengeStatus" />
-		<result column="mbr_image"   property="challengeMemberInOutDate" />
+		<result column="cs_num" 	 property="challengeStatus" />
+		<result column="cgm_date"	 property="challengeMemberInOutDate" />
+		<result column="mbr_image"   property="memberProfileImage" />
 	</resultMap>
 	
 	<!-- 챌린지 댓글 리스트 조회 -->
@@ -53,8 +53,8 @@
 			cmf.cmf_like,
 			cmf.cmf_warning_check,
 			m.mbr_image,
-			fc.fc_num,
-			fc.fc_content
+			cfc.cfc_num,
+			cfc.cfc_content
 		FROM
 			challenge_member_feed cmf
 			INNER JOIN `member` m USING(mbr_id)
@@ -63,19 +63,21 @@
 	</select>
 	
 	<!-- 챌린지 멤버 리스트 조회 -->
-  	<select id="getMemberList" resultMap="ChallengeMemberListMap">
-  		SELECT
-			cgm.cgm_num,
-			cgm.cg_num,
+  	<select id="getMemberList" resultMap="ChallengeMemberListMap">		
+		SELECT
+			MAX(cgm.cgm_num),
+			MAX(cgm.cg_num),
 			cgm.mbr_id,
-			cgm.cs_num,
-			cgm.cgm_date,
+			MAX(cgm.cs_num),
+			MAX(cgm.cgm_date),
 			m.mbr_image
 		FROM
 			challenge_group_member cgm
 			LEFT JOIN `member` m USING(mbr_id)
 		WHERE
-			cg_num = #{challengeCode};
+			cg_num = #{challengeCode}
+		GROUP BY
+			cgm.mbr_id, m.mbr_image;
   	</select>
   	
   	<!-- 챌린지 댓글 리스트 조회 -->
