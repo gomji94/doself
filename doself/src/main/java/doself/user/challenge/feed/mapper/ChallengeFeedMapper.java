@@ -14,6 +14,5 @@ public interface ChallengeFeedMapper {
 	List<ChallengeFeed> getChallengeFeedList(@Param("offset") int offset, @Param("pageSize") int pageSize);
 	
 	// 챌린지 참여 멤버 리스트 조회
-//	List<ChallengeMemberList> getMemberList(@Param("challengeCode") String challengeCode);
-	List<ChallengeMemberList> getMemberList(String challengeCode);
+	List<ChallengeMemberList> getMemberList(@Param("challengeCode") String challengeCode);
 }

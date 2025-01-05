@@ -45,7 +45,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	@Override
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
 		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
-		log.info("memberList test", memberList);
-		return memberList;
+	    log.info("Fetched memberList from Mapper: {}", memberList); // Mapper에서 가져온 데이터 확인
+	    return memberList;
 	}	
 }
