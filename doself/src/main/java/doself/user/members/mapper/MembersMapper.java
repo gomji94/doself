@@ -13,11 +13,14 @@ public interface MembersMapper {
 	//회원 수정
 	public int modifyMember(Members member);
 	
-	//회원 비밀번호 검증
-	public int passwordChk(Members member);
+	public boolean passwordChk(String memberId, String oldMemberPw);
 	
+	public boolean updatePassword(String memberId, String newMemberPw);
+
 	// 특정회원 탈퇴
 	public int removeLoginHistoryById(String memberId);
+
+
 	
 	
 }

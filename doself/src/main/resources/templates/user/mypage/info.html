@@ -50,24 +50,26 @@
             </div>
 		<th:block th:object="${memberInfo}">
             <div id="main-user-info">
-                <div id = "profile-image">
-                    <a href="#">
-                        <img src="https://www.fitpetmall.com/wp-content/uploads/2023/09/shutterstock_2205178589-1-1.png" alt="프로필 이미지" class="profile-image">
-                    </a>
-                </div>    
-                <div id="profile-info">
-                    <div id="profile-edit">
-                        <input type="file" id="btnChangeUplode" style="display:none">
-                        <button type="button" id="btnChangeProfile" style="">프로필 변경</button>
-                    </div>
-                    <div id="profile-userId" th:text="*{memberId}"></div>
-                </div>
+            	<!-- multipart/form-data : 모든 문자를 인코딩하지 않음 (원본 데이터가 유지되어 이미지, 파일 등을 서버로 전송할 수 있음) -->
+            	<form th:action="@{/mypage/member/info}" method="POST" id="myPageFrm" enctype="multipart/form-data">
+	                <div id = "profile-image">
+	                        <img th:src="*{memberImage}" 
+	                         id="memberImage" name="memberImage" alt="프로필 이미지" class="profile-image">
+	                </div>    
+	                <div id="profile-info">
+	                    <div id="profile-edit">
+	                        <input type="file" id="btnChangeUplode" style="display:none">
+	                        <button type="button" id="btnChangeProfile" style="">프로필 변경</button>
+	                    </div>
+	                    <div id="profile-userId" th:text="*{memberId}"></div>
+	                </div>
+            	</form>
             </div>
 
             <form class="account-form" id="modifyMemberForm" th:action="@{/mypage/member/info}" method="post" >
-            	<input type="hidden" name="memberId" th:value="*{memberId}">
+            	<input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
                 <div class="form-group">
-                    <label for="name">이름</label><!-- 241224 사용자 입력막기(이름변경x) -->
+                    <label for="name">이름</label>
                     <input class="width-fit" type="text" id="name" th:value="*{memberName}" name="memberName" disabled="disabled">
                 </div>
                 <div class="form-group">
@@ -76,30 +78,45 @@
                 </div>
                 <div class="form-group">
                     <label for="current-password">현재 비밀번호</label>
-                    <input class="width-fit" type="password" id="current-password" name="oldMemberPw" th:value="*{oldMemberPw}">
+                    <div class="input-wrapper">
+                    	<input class="width-fit" type="password" id="oldMemberPw" name="oldMemberPw" >
+                    	<br />
+                 	    <span id="currentPasswordError" class="error-message" style= "display: none;">현재 비밀번호가 틀렸습니다.</span>
+                    </div> 
                 </div>
                 <div class="form-group">
                     <label for="new-password">새 비밀번호</label>
-                    <input class="width-fit" type="password" id="new-password" name="newMemberPw" th:value="*{newMemberPw}">
+                    <div class="input-wrapper">
+                   		<input class="width-fit" type="password" id="newMemberPw" name="newMemberPw" disabled="disabled">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="confirm-password">비밀번호 다시입력</label>
-                    <input class="width-fit" type="password" id="confirm-password" name="newMemberPw" th:value="*{newMemberPw}">
-      
+                    <label for="confirm-password">새 비밀번호 확인</label>
+                    <div class="input-wrapper">
+                   		 <input class="width-fit" type="password" id="confirmMemberPw" name="confirmMemberPw" disabled="disabled">
+                   		 <br />
+                	     <span id="passwordMatchError" class="error-message" style= "display: none;">새 비밀번호가 일치하지 않습니다.</span>
+                	     <br />
+                	     <span id="passwordLengthError" class="error-message" style= "display: none;">비밀번호는 8자 이상 16자 이하로 입력해야 합니다.</span>
+                	     <span id="samePasswordError" class="error-message" style= "display: none;">현재 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
                     <div class="phone-input">
-                        <input type="text" id="phone-number-part1" th:value="${memberTel[0]}" name="memberPhoneNum"> -
-                        <input type="text" id="phone-number-part2" th:value="${memberTel[1]}" name="memberPhoneNum"> -
-                        <input type="text" id="phone-number-part3" th:value="${memberTel[2]}" name="memberPhoneNum">
+                        <input type="text" id="phone-number-part1" th:value="${memberTel[0]}" name="memberPhoneNum" maxlength="3" 
+                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+                        <input type="text" id="phone-number-part2" th:value="${memberTel[1]}" name="memberPhoneNum" maxlength="4" 
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+                        <input type="text" id="phone-number-part3" th:value="${memberTel[2]}" name="memberPhoneNum" maxlength="4" 
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     </div>
                 </div>
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <div class="email-input">
-                            <input type="text" id="email" th:value="${memberEmail}" name="memberEmail">
-                            <input type="text" name="memberEmail" value="@" readonly="readonly">
+                            <input type="text" id="memberEmail" th:value="${memberEmail}" name="memberEmail" maxlength="20">
+                            <input type="text" name="memberEmail" value="@" readonly="readonly" style="border:none; width: 35px; ">
                             <select name="memberEmail">
                                 <option value="gmail.com">gmail.com</option>
                                 <option value="naver.com">naver.com</option>
@@ -126,19 +143,100 @@
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript">
     	
-/*     	$('#modifyMemberBtn').click(function(){
-    		
-    	});
-	    
-		$('#removeBtn').click(function(){
-			
-		});
-		 */
+
 		$('#btnChangeProfile').click(function(){
 			$('#btnChangeUplode').click();
 		});	
 		
+		function isPassword(asValue) {
+			let regExp = /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
+			return regExp.test(asValue);
+		}
 		
+		$('#oldMemberPw').on('input', function () {
+		    const oldMemberPw = $(this).val();
+		    if (oldMemberPw) {
+		        $('#newMemberPw').prop('disabled', false);
+		        $('#confirmMemberPw').prop('disabled', false);
+		    } else {
+		        $('#newMemberPw').prop('disabled', true);
+		        $('#confirmMemberPw').prop('disabled', true);
+		    }
+		});
+		
+	    $('#modifyMemberBtn').click(function (e) {
+	        e.preventDefault();
+       
+	        const memberId = $('#memberId').val();
+	        const oldMemberPw = $('#oldMemberPw').val();
+	        const newMemberPw = $('#newMemberPw').val();
+	        const confirmMemberPw = $('#confirmMemberPw').val();
+	        const memberPhoneNum = $('#phone-number-part1').val() + '-' + $('#phone-number-part2').val() + '-' + $('#phone-number-part3').val();
+	        const memberEmail = $('#memberEmail').val() + '@' + $('select[name="memberEmail"]').val();
+       
+	        $('#currentPasswordError').hide();
+	        $('#passwordMatchError').hide();
+	        $('#passwordLengthError').hide();
+	        $('#samePasswordError').hide();
+	        
+	        // 현재 비밀번호 확인 Ajax 요청
+	        $.ajax({
+	            url: '/mypage/pwCheck',
+	            method: 'POST',
+	            data: { 'memberId': memberId, 'oldMemberPw': oldMemberPw },
+	            dataType: 'json'
+	        })
+	            .done(function (isValid) {
+	                if (!isValid) {
+	                    $('#currentPasswordError').show(); 
+	                    return;
+	                }
+	                $('#currentPasswordError').hide();
+       
+	   		     // 비밀번호 길이 유효성 검사
+	   		       if (!isPassword(newMemberPw)) {
+	   		    	 $('#passwordLengthError').show();
+	   		         return; 
+	   		     }
+       
+	   		     // 새 비밀번호와 확인 비밀번호 비교
+	   		     if (newMemberPw !== confirmMemberPw) {
+	   		         $('#passwordMatchError').show(); 
+	   		         return; 
+	   		     }
+
+	   		     // 새 비밀번호와 현재 비밀번호 비교
+	   		     if (oldMemberPw === newMemberPw) {
+	   		    	 $('#samePasswordError').show();
+	   		         return; 
+	   		     }
+	                // 비밀번호 변경 Ajax 요청
+	                $.ajax({
+	                    url: '/mypage/pwUpdate',
+	                    method: 'POST',
+	                    data: {
+	                        'memberId': memberId,
+	                        'oldMemberPw': oldMemberPw,
+	                        'newMemberPw': newMemberPw,
+	                        'confirmMemberPw': confirmMemberPw
+	                    },
+	                    dataType: 'json'
+	                })
+	                    .done(function (response) {
+	                        if (response) {
+	                            alert('정보가 변경되었습니다.');
+	                        } else {
+	                            alert('정보변경에 실패했습니다.');
+	                        }
+	                    })
+	                    .fail(function () {
+	                        alert('정보변경 요청 중 오류가 발생했습니다.');
+	                    });
+	            })
+	            .fail(function () {
+	                alert('현재 정보확인 요청 중 오류가 발생했습니다.');
+	            });
+		   });
 	</script>
     </th:block> 
 </html>
