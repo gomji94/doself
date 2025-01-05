@@ -8,6 +8,7 @@ public class Members {
 	private String memberId;
 	private String oldMemberPw;
 	private String newMemberPw;
+	private String confirmMemberPw;
 	private String memberEmail;
 	private String memberName;
 	private String memberBrith;
