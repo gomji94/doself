@@ -78,7 +78,7 @@
 		        AND #{endDate} > rr_date
 		    </if>
 			ORDER BY
-				rr_num
+				rr.rr_num
 		</select>
 		
 		
@@ -133,5 +133,7 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > rmm_sanction_end_date
 		    </if>
+		    ORDER BY
+		    	rmm.rmm_num
 		</select>
   </mapper>

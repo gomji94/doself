@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import doself.admin.member.domain.Member;
 import doself.admin.member.domain.MemberLog;
 import doself.admin.member.mapper.MemberMapper;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,17 +19,14 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberMapper memberMapper;
 
-	@Override
-	public List<MemberLog> getMemberLogList() {
-		
-		return memberMapper.getMemberLogList();
-	}
-
+	
 	//멤버 검색 조회
 	@Override
-	public List<Member> getMemberList(String searchType, String searchKeyword, String startDate, String endDate) {
+	public PageInfo<Member> getMemberList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
         
-		return memberMapper.getMemberList(searchType, searchKeyword, startDate, endDate);
+		int rowCnt = memberMapper.getCntMemberList();
+		List<Member> memberList = memberMapper.getMemberList(searchType, searchKeyword, startDate, endDate, pageable);
+		return new PageInfo<>(memberList, pageable, rowCnt);
     }
 
 	//멤버 로그 검색 조회
@@ -37,4 +36,15 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.getMemberLogList(searchType, searchKeyword, startDate, endDate);
 	}
 
+	
+	// 페이징
+	@Override
+	public PageInfo<Member> getCntMemberList(Pageable pageable) {
+		
+		int rowCnt = memberMapper.getCntMemberList();
+		List<Member> memberList = memberMapper.getMember(pageable);
+		return new PageInfo<>(memberList, pageable, rowCnt);
+	}
+
+	
 }

@@ -53,7 +53,7 @@
   		
   		
   		<!-- 회원목록 조회 -->
-		<select id="getMemberList" resultMap="memberResultMap">
+		<select id="getMemberList" parameterType="Pageable" resultMap="memberResultMap">
 			/* 회원목록 조회 */
 			SELECT 
 				m.mbr_id,
@@ -74,7 +74,7 @@
 				ON m.mg_code = mg.mg_code
 			WHERE 1=1
 			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
-		        AND ${searchType} = '${searchKeyword}'
+		        AND ${searchType} = #{searchKeyword}
 		    </if>
 		    <if test="startDate != null and startDate != ''">
 		        AND m.mbr_birth_date > #{startDate}
@@ -83,6 +83,7 @@
 		        AND #{endDate} > m.mbr_birth_date
 		    </if>
 		    ORDER BY m.mbr_id
+		    LIMIT #{rowPerPage} OFFSET #{offset};
 		</select>
 		
 		
@@ -121,5 +122,40 @@
 		    </if>
 		    ORDER BY mll_num
 		</select>
-
+		
+	
+		
+		
+		
+		<!-- 페이징 -->
+		<select id="getCntMemberList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				COUNT(*) 
+			FROM
+				member
+		</select>
+		
+		<select id="getMember" parameterType="Pageable" resultMap="memberResultMap">
+			SELECT 
+				m.mbr_id,
+				m.mbr_pw,
+				m.mbr_name, 
+				mg.mg_name,
+				m.mbr_email,
+				m.mbr_birth_date, 
+				m.mbr_phone_num, 
+				m.mbr_gender,
+				ac.ac_name,
+				m.opening_ticket_count,
+				m.participation_ticket_count,
+				m.mbr_point			
+			FROM member m INNER JOIN age_category ac
+				USING(ac_num)
+				INNER JOIN member_grade mg
+				ON m.mg_code = mg.mg_code
+			
+		    ORDER BY m.mbr_id
+			LIMIT #{rowPerPage} OFFSET #{offset};
+		</select>
   </mapper>
