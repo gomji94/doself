@@ -3,6 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{user/layout/default}">
 <head>
+	<title>market</title>
 	<link th:href="@{/assets/css/market/purchase-list.css}" rel="stylesheet" type="text/css" />
 </head>
 	
@@ -28,60 +29,35 @@
         <!-- 메인 콘텐츠 -->
         <main id="main-content">
             <div id="main-container-title">purchase list</div>
-                <div id="main-container-listTable">
-                    <table id="main-container__purchase">
-                        <thead>
-                            <tr>
-                                <th>상품명</th>
-                                <th>상품 코드</th>
-                                <th>가격</th>
-                                <th>구매 일자</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="mcp__tr">
-                                <td>배민 상품권 10000</td>
-                                <td>HUCD-SDFS-3K</td>
-                                <td>10,000 point</td>
-                                <td>2024.11.26 15:06</td>
-                            </tr>
-                            <tr class="mcp__tr">
-                                <td>챌린지 참여 티켓</td>
-                                <td>CTPH-094</td>
-                                <td>3,900 point</td>
-                                <td>2024.11.24 11:16</td>
-                            </tr>
-                            <tr class="mcp__tr">
-                                <td>배민 상품권 5000</td>
-                                <td>SDFS-QWEX-9K</td>
-                                <td>5,000 point</td>
-                                <td>2024.11.26 15:06</td>
-                            </tr>
-                            <tr class="mcp__tr">
-                                <td>네이버페이 포인트 쿠폰 5000</td>
-                                <td>SADAA-S3Z-SADS22</td>
-                                <td>5,000 point</td>
-                                <td>2024.11.11 11:11</td>
-                            </tr>
-                            <tr class="mcp__tr">
-                                <td>챌린지 개설 티켓</td>
-                                <td>CTPH-083</td>
-                                <td>9,800 point</td>
-                                <td>2024.10.05 04:06</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="pagination"></div>
-            </div>
+			<div id="main-container-listTable">
+			    <table id="main-container__purchase">
+			        <thead>
+			            <tr>
+			                <th>상품명</th>
+			                <th>상품 코드</th>
+			                <th>가격</th>
+			                <th>구매 일자</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr class="mcp__tr">
+			                <td>배민 상품권 10000</td>
+			                <td>HUCD-SDFS-3K</td>
+			                <td>10,000 point</td>
+			                <td>2024.11.26 15:06</td>
+			            </tr>
+			        </tbody>
+			    </table>
+			</div>
         </main>
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+    	<script th:src="@{/assets/js/layout.js}"></script>
+    </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"></script>
     </th:block> 
 </html>

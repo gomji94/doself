@@ -100,5 +100,7 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > prl_date
 		    </if>
+		    ORDER BY
+		    	prl.prl_num
 		</select>
   </mapper>
