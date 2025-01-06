@@ -41,8 +41,8 @@
                                 			<!-- <td th:text="${l.peplImg}"></td>    -->                             			
                                 			<td th:text="${l.peplExpl}"></td>  
                                 			<td>
-	                                			<a th:href="@{/admin/point/modify}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-		                                    	<a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+	                                			<a th:href="@{/admin/point/modify(peplNum=${l.peplNum})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+		                                    	<a href="@{/admin/point/delete(peplNum=$(l.peplNum))}" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
                                 			</td>                              			
                                 		</tr>                                
                                 	</th:block>

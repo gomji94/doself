@@ -18,6 +18,7 @@
 		</th:block>
 		
 		<th:block layout:fragment="content-body">
+			<form id="modifyPointForm" th:action="@{/admin/point/modify}" method="post" th:object="${pointInfo}">
 			<div class="row">
                 <div class="col-lg-6">
                     <div class="card mb-4">
@@ -25,8 +26,8 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">1. 상품명</label>
-                                        <input type="text" placeholder="Type here" class="form-control">
+                                        <label for="peplName" class="form-label">1. 상품명</label>
+                                        <input type="text" placeholder="Type here" class="form-control" id="peplName" name="peplName" th:value="*{peplName}">
                                     </div>                
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->
@@ -34,8 +35,8 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">2. 상품 가격</label>
-                                        <input type="text" placeholder="0p" class="form-control">
+                                        <label for="peplPrice" class="form-label">2. 상품 가격</label>
+                                        <input type="text" placeholder="0p" class="form-control" id="peplPrice" name="peplPrice" th:value="*{peplPrice}">
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->
@@ -44,15 +45,15 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">3. 이미지</label>
-                                        <input class="form-control" type="file">
+                                        <label for="peplImg" class="form-label">3. 이미지</label>
+                                        <input class="form-control" type="file" id="peplImg" name="peplImg" th:value="*{peplImg}">
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- .row end// -->
                             
                             <div class="row">                                
                                 <div class="col-md-9 addBtn">
-                                    <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="@{#}">수정하기</a>
+                                    <button type="submit" id="modifyPointBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">수정하기</button>
                             		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/point/list}">취소</a>
                                 </div> <!-- col.// -->
                             </div>
@@ -60,6 +61,7 @@
                     </div>
                 </div>
             </div>
+            </form>
 		</th:block> 
 
 		<!--/* 사용자 추가 js file */-->
