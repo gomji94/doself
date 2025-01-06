@@ -73,6 +73,8 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > cg_creation_date
 		    </if>
+		    ORDER BY
+		    	cg.cg_num
 		</select>
 		
 		
@@ -128,7 +130,7 @@
 		        AND #{endDate} > cmss_date
 		    </if>
 			ORDER BY
-			cmss_num
+				cmss.cmss_num
 		</select>
 		
 		
@@ -193,6 +195,8 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d')
 		    </if>
+		    ORDER BY
+		    	cpsl.cpsl_num
 		</select>
 		
 		
@@ -221,7 +225,7 @@
 				ctps_date,
 				ctps_participation,
 				ctps_achievement_rate
-			FROM challenge_today_participation_stats INNER JOIN challenge_group cg
+			FROM challenge_today_participation_stats ctps INNER JOIN challenge_group cg
 			USING(cg_num)
 			WHERE 1=1
 			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
@@ -233,6 +237,8 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > ctps_date
 		    </if>
+		    ORDER BY
+		    	ctps.ctps_num
 		</select>
 		
 		
@@ -274,7 +280,7 @@
 				mcsl_like_score,
 				mcsl_total_score,
 				mcsl_rank
-			FROM monthly_challenge_score_list csl INNER JOIN challenge_group cg
+			FROM monthly_challenge_score_list mcsl INNER JOIN challenge_group cg
 			USING(cg_num)
 			WHERE 1=1
 			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
@@ -286,6 +292,8 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d')
 		    </if>
+		    ORDER BY
+		    	mcsl.mcsl_num
 		</select>
 		
 		
@@ -361,6 +369,8 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > lcmwl_date
 		    </if>
+		    ORDER BY
+		    	lcmwl.lcmwl_num
 		</select>
 		
 		
@@ -424,5 +434,7 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > rph_reward_selected_date
 		    </if>
+		    ORDER BY
+		    	rph.rph_num
 		</select>
   </mapper>

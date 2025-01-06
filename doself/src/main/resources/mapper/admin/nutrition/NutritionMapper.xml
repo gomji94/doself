@@ -57,5 +57,7 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > nirr_processing_date
 		    </if>
+		    ORDER BY
+		    	nirr.nirr_num
 		</select>
   </mapper>
