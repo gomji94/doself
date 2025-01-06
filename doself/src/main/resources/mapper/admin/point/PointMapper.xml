@@ -60,4 +60,40 @@
 		        AND #{endDate} > pumh_date
 		    </if>
 		</select>
+		
+		<!-- 특정 포인트상품 조회 -->
+		<select id="getPointInfoByPeplNum" parameterType="String" resultMap="pointResultMap">
+  		SELECT
+			pepl_num,
+			pepl_name,
+			pepl_price,
+			pepl_img,
+			pepl_expl
+		FROM point_exchange_product_list
+		WHERE
+			pepl_num = #{peplNum};
+  		</select>
+  		
+  		<!-- 특정 포인트상품 수정 -->
+  		<update id="modifyPoint" parameterType="Point">
+  			UPDATE point_exchange_product_list
+  			<set>  	
+  				pepl_num = #{peplNum};		
+				<if test="peplName != null and peplName != ''">
+					pepl_name = #{peplName},
+				</if>  			
+				<if test="peplPrice != null and peplPrice != ''">
+					pepl_price = #{peplPrice},
+				</if>  			
+				<if test="peplImg != null and peplImg != ''">
+					pepl_img = #{peplImg},
+				</if>  			
+				<if test="peplExpl != null and peplExpl != ''">
+					pepl_expl = #{peplExpl}
+				</if>  			
+  			</set>
+  			WHERE
+  				pepl_num = #{peplNum};
+  		</update>
+  		
   </mapper>

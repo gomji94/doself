@@ -22,16 +22,25 @@ public class MembersServiceImpl implements MembersService {
 	
 	// 회원 수정
 	@Override
-	public int modifyMember(Members member) {
-		int result = membersMapper.modifyMember(member);
-		return result;
+	public void modifyMember(Members member) {
+		//int result = membersMapper.modifyMember(member);
+		//return result;
+		membersMapper.modifyMember(member);
 	}
 
 	@Override
-	public int passwordChk(Members member) {
-		int result = membersMapper.passwordChk(member);
-		return result;
+	public boolean passwordChk(String memberId, String oldMemberPw) {
+		System.out.println("**************"+ memberId + oldMemberPw); 
+	    // DB에 저장된 비밀번호 가져오기
+	    return membersMapper.passwordChk(memberId, oldMemberPw);
 	}
+		 
+	@Override
+	public boolean updatePassword(String memberId, String newMemberPw) {
+		// 새 비밀번호 업데이트
+		return membersMapper.updatePassword(memberId, newMemberPw);
+	}
+
 
 
 

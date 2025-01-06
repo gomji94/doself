@@ -12,4 +12,10 @@ public interface PointService {
 	
 	//포인트 사용내역 조회
 	List<PointUserHistory> getPointUserHistoryList(String startDate, String endDate);
+	
+	//특정 포인트 상품 조회
+	Point getPointInfoByPeplNum(String peplNum);
+	
+	//특정 포인트 상품 정보 수정
+	void modifyPoint(Point point);
 }

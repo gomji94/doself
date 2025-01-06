@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.admin.point.domain.Point;
 import doself.admin.point.domain.PointUserHistory;
@@ -22,7 +24,7 @@ public class PointController {
 	private final PointService pointService;
 	
 	// 포인트 상품 조회
-	@GetMapping("list")
+	@GetMapping("/list")
 	public String getPointList(Model model) {
 		
 		List<Point> pointList = pointService.getPointList();
@@ -33,7 +35,7 @@ public class PointController {
 	}
 	
 	// 회원별 포인트 사용 내역 조회
-	@GetMapping("userhistorylist")
+	@GetMapping("/userhistorylist")
 	public String getUserHistoryList(@RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate, Model model) {
 		
@@ -44,7 +46,7 @@ public class PointController {
 	}
 	
 	// 포인트 상품 생성
-	@GetMapping("create")
+	@GetMapping("/create")
 	public String createPointList(Model model) {
 
 		model.addAttribute("title", "상품 추가");
@@ -52,11 +54,22 @@ public class PointController {
 	}
 	
 	// 포인트 상품 수정
-	@GetMapping("modify")
-	public String modifyPointList(Model model) {
+	@GetMapping("/modify")
+	public String getModifyPointList(@RequestParam(name="peplNum") String peplNum, Model model) {
 
 		model.addAttribute("title", "상품 수정");
+		Point pointInfo = pointService.getPointInfoByPeplNum(peplNum);
+		model.addAttribute("pointInfo", pointInfo);
+		
 		return "admin/point/modify-point-list";
 	}
 	
+	@PostMapping("/modify")
+	public String modifyPointList(Point point, RedirectAttributes reAttr, Model model) {
+
+		pointService.modifyPoint(point);
+		model.addAttribute("title", "상품 수정");
+		
+		return "redirect:/admin/point/modify";
+	}
 }
