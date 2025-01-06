@@ -82,4 +82,24 @@
 			#{challengeRewardCheck} 	  -- null 허용
 		);
   	</insert>
+  	<select id="getChallengePage" parameterType="CardPageable" resultType="ChallengeList">
+	    SELECT 
+			cg_num,
+			cg_name,
+			cg_leader_name,
+			cg_start_date,
+			cg_end_date
+		FROM 
+		    challenge_group
+		ORDER BY 
+		    cg_start_date DESC 
+	    LIMIT #{rowPerPage} OFFSET #{offset}
+	</select>
+  	<select id="getCntChallengeList" resultType="int">
+  		/* 챌린지 리스트 총 갯수 */
+  		SELECT
+			COUNT(*)
+		FROM
+			challenge_group
+  	</select>
   </mapper>

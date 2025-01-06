@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import doself.user.challenge.list.controller.ChallengeListController;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.mapper.ChallengeListMapper;
+import doself.util.CardPageInfo;
+import doself.util.CardPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,6 +52,14 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	public void addChallenge(ChallengeList challengeList) {
 		int addChallengeResult = challengeListMapper.addChallenge(challengeList);
 		
+	}
+
+	// 챌린지 리스트 페이지
+	@Override
+	public CardPageInfo<ChallengeList> getChallengePage(CardPageable cardPageable) {
+	    int rowCnt = challengeListMapper.getCntChallengeList();
+	    List<ChallengeList> challengeList = challengeListMapper.getChallengePage(cardPageable);
+	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
 	}
 	
 }

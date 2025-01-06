@@ -20,6 +20,12 @@ section.content-main {
 	flex: 1;
 }
 
+.page-item.active .page-link {
+	background-color: #D7E790 !important;
+	color: #618141 !important;
+	border-color: #a9bd4d !important;
+}
+
 /* 메인 컨테이너 */
 .view-container {
     flex: 1; /* 남은 공간을 채우도록 설정 */
@@ -161,6 +167,7 @@ section.content-main {
 
 .card-content .challenge-level, .challenge-start-date, .challenge-people {
     display: flex;
+    align-items: center;
 }
 
 .card-content .challenge-people p {
@@ -170,7 +177,7 @@ section.content-main {
 .card-content .card-info {
     display: flex;
     justify-content: space-around;
-    margin-top: 16px;
+    margin-top: 9px;
     margin-bottom: 5px;
     width: 250px;
     padding: 0 1px;
