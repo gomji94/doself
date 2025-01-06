@@ -1,5 +1,6 @@
 package doself.user.community.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.community.domain.Article;
 import doself.user.community.mapper.CommunityMapper;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,9 +21,11 @@ public class CommunityServiceImpl implements CommunityService {
 	private final CommunityMapper communityMapper;
 
 	@Override
-	public List<Article> getArticleList() {
+	public PageInfo<Article> getArticleList(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return communityMapper.getArticleList();
+		int rowCnt = communityMapper.getCntOfArticle();
+		List<Article> articleList = communityMapper.getArticleList(pageable);
+		return new PageInfo<>(articleList, pageable, rowCnt);
 	}
 
 	@Override
@@ -30,9 +35,14 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public List<Article> getArticleListByCategory(String categoryCode) {
+	public PageInfo<Article> getArticleListByCategory(Pageable pageable, Integer categoryCode) {
 		// TODO Auto-generated method stub
-		return communityMapper.getArticleListByCategory(categoryCode);
+		int rowCnt = communityMapper.getCntOfArticleByCategory(categoryCode);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("categoryCode", categoryCode);
+		params.put("pageable", pageable);
+		List<Article> articleList = communityMapper.getArticleListByCategory(params);
+		return new PageInfo<>(articleList, pageable, rowCnt);
 	}
 
 	@Override

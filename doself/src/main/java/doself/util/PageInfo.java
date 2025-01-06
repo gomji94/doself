@@ -21,6 +21,7 @@ public class PageInfo<T> {
 		this.totalRowCount = totalRowCount;
 		pageNumProcess();
 	}
+	
 	public void pageNumProcess() {
 		int currentPage = pageable.getCurrentPage();
 		int rowPerPage = pageable.getRowPerPage();
