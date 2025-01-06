@@ -1,9 +1,14 @@
 package doself.user.members.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import doself.user.members.domain.Members;
+import doself.user.members.domain.TicketList;
 import doself.user.members.mapper.MembersMapper;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,22 +28,26 @@ public class MembersServiceImpl implements MembersService {
 	// 회원 수정
 	@Override
 	public void modifyMember(Members member) {
-		//int result = membersMapper.modifyMember(member);
-		//return result;
+		
 		membersMapper.modifyMember(member);
 	}
 
 	@Override
 	public boolean passwordChk(String memberId, String oldMemberPw) {
-		System.out.println("**************"+ memberId + oldMemberPw); 
-	    // DB에 저장된 비밀번호 가져오기
 	    return membersMapper.passwordChk(memberId, oldMemberPw);
 	}
 		 
 	@Override
 	public boolean updatePassword(String memberId, String newMemberPw) {
-		// 새 비밀번호 업데이트
 		return membersMapper.updatePassword(memberId, newMemberPw);
+	}
+
+	//회원 티켓정보 조회
+	@Override
+	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable) {
+		int rowCnt = membersMapper.getCntTicketHistory();
+		List<TicketList> ticketList = membersMapper.getTicketListById(memberId, pageable);
+		return new PageInfo<>(ticketList, pageable, rowCnt);
 	}
 
 

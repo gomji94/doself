@@ -1,6 +1,11 @@
 package doself.user.members.service;
 
+import java.util.List;
+
 import doself.user.members.domain.Members;
+import doself.user.members.domain.TicketList;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 
 public interface MembersService {
 
@@ -15,5 +20,11 @@ public interface MembersService {
 	public boolean passwordChk(String memberId, String oldMemberPw);
 
 	public boolean updatePassword(String memberId, String oldMemberPw);
+	
+	//회원 티켓정보 조회
+	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable);
+	
+
+
 	
 }

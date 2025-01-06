@@ -375,6 +375,7 @@
         max-width: 100%;
         min-height: 200px;
         justify-content: center;
+        gap: 30px;
     }
     
     .ticket-table {
@@ -389,8 +390,10 @@
     }
     
     .pagination {
-        text-align: center;
-        margin-top: 10px;
+	    text-align: center;
+	    margin-top: 10px;
+	    display: flex;
+	    list-style: none; /* 점 제거 */
     }
     
     .pagination a {

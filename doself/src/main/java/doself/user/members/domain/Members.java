@@ -16,8 +16,8 @@ public class Members {
 	private String memberGrdCode;
 	private String memberGender;
 	private String memberAgeRange;
-	private Integer openTicketCnt;
-	private Integer partTicketCnt;
+	private Integer openTicketCnt; //챌린지개설 티켓 갯수
+	private Integer partTicketCnt; //챌린지참여 티켓 갯수
 	private Integer memberPoint;
 	private String memberImage;
 	
