@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{user/layout/default}">
 <head>
-	<link th:href="@{/assets/css/mypage/ticket-hisory.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/css/mypage/ticket-history.css}" rel="stylesheet" type="text/css" />
 </head>			
 		
 	
@@ -49,17 +49,17 @@
                     <div id="main-container-title__eng">Payment</div>
                     <div id="main-container-title__kor">티켓조회</div>
             </div>
-
+			<th:block th:object="${memberInfo}">
             <div id="main-user-info">
                 <div id = "profile-image">
                     <a href="#">
-                        <img src="https://www.fitpetmall.com/wp-content/uploads/2023/09/shutterstock_2205178589-1-1.png" alt="프로필 이미지" class="profile-image">
+                        <img th:src="*{memberImage}" alt="프로필 이미지" class="profile-image">
                     </a>
                 </div>   
-                <div id="profile-userId">id002</div>
+                <div id="profile-userId" th:text="*{memberId}"></div>
                     <div id="remaining-point">이용한 티켓: <strong>1</strong> | 남은 티켓: <strong>9</strong></div>
             </div>
-            
+            </th:block>
                 <form class="search-form">
                     <label for="start-date">조회기간 설정:</label>
                     <input type="date" id="start-date" value="2024-01-01">
@@ -67,46 +67,48 @@
                     <input type="date" id="end-date" value="2024-12-31">
                     <button type="button" class="btn-search">검색</button>
                 </form>
-                <!-- 테이블 -->
-                <div class="tab-section">
-                    <button class="tab active">전체</button>
-                    <button class="tab">사용</button>
-                    <button class="tab">구매</button>
-                </div>
                 <div class="ticket-table-container">
                     <table class="ticket-table">
                         <thead>
                             <tr>
-                                <th>날짜</th>
+                                <th>구매 날짜</th>
                                 <th>티켓 이름</th>
                                 <th>결제 수단</th>
-                                <th>결제 금액</th>
+                                <th>사용 현황</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>2024-11-30</td>
-                                <td>참여형 티켓</td>
-                                <td>카드 결제</td>
-                                <td>+1개</td>
-                            </tr>
-                            <tr>
-                                <td>2024-11-29</td>
-                                <td>참여형 티켓</td>
-                                <td>포인트 사용</td>
-                                <td>-1개</td>
-                            </tr>
+                            <th:block th:if="${ticketList != null}">
+                        		<tr th:each="l : ${ticketList}"> 
+                        			<td th:text="${l.ticketBuyDate}"></td>
+                        			<td th:text="${l.ticketName}"></td>
+                        			<td th:text="${l.ticketPaymentMethod}"></td>
+                        			<td th:text="${l.ticketUseChk}"></td>
+                        		</tr>
+                            </th:block>
+                            <th:block th:unless="${ticketList}">
+								<tr>
+									<td colspan="4">구매한 티켓 이력이 없습니다.</td>
+								</tr>
+                            </th:block>
                             <!-- 추가 행 -->
                         </tbody>
                     </table>
                     <div class="pagination">
-                        <a href="#">&lt;</a>
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">4</a>
-                        <a href="#">5</a>
-                        <a href="#">&gt;</a>
+                    	<li><a th:href="@{/mypage/tickethistory/(memberId=${memberId})}">&lt;</a></li>
+                    	<li th:classappend="${currentPage < 2} ? 'disabled'">
+                        	<a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${currentPage - 1})}" class="active"></a>
+                    	</li>
+                    	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+		                    <li th:classappend="${num == currentPage} ? 'active'">
+		                    	<a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${num})}" th:text="${num}"></a>
+		                    </li>
+                  		</th:block>
+                  		<li th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                    	    <a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${currentPage + 1})}"></a>
+                  		</li>
+					    <li><a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${lastPage})}">&gt;</a></li>                    
+                        
                     </div>
                  </div>
         </main>

@@ -1,5 +1,7 @@
 package doself.user.mypage.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.user.members.domain.Members;
+import doself.user.members.domain.TicketList;
 import doself.user.members.service.MembersService;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 @RequestMapping("/mypage")
@@ -35,6 +37,7 @@ public class MypageController {
 		model.addAttribute("memberInfo",memberInfo);
 		model.addAttribute("memberTel",memberTel);
 		model.addAttribute("memberEmail",memberEmail);
+		
 		return "user/mypage/info";
 	}
 	
@@ -47,13 +50,13 @@ public class MypageController {
 		reAttr.addAttribute("memberId", member.getMemberId());
 		
 		return "redirect:/mypage/member/info";
-
 	}
 	
 	@PostMapping("/pwCheck")
 	@ResponseBody
 	public boolean pwCheck(@RequestParam(name="memberId") String memberId,
 					       @RequestParam(name="oldMemberPw") String oldMemberPw) {
+		
 		return membersService.passwordChk(memberId, oldMemberPw);
 	}
 	
@@ -92,28 +95,38 @@ public class MypageController {
             return null; // Handle null input gracefully
         }
         return input.replace(",", "-");
-    }
-	
-	//프로필사진 변경
-	@PostMapping("/imgUpdate")
-	public String postMethodName(@RequestBody String entity) {
-		//TODO: process POST request
-		
-		return entity;
-	}
-	
+    }	
 	
 	// 회원탈퇴
 	@PostMapping("/member/delete" )
 	public String deleteMember() {
-			
+		 
 		return "/";
 	}	
 	
 	// 회원티켓내역조회
 	@GetMapping("/tickethistory" )
-	public String getTicketHistory() {
-			
+	public String getTicketHistory(@RequestParam(name="memberId", required=false, defaultValue="id001") 
+									String memberId, Model model, Pageable pageable) {
+		
+		var pageInfo = membersService.getTicketHistory(memberId, pageable);
+		
+		Members memberInfo = membersService.getMemberInfoById(memberId);
+		List<TicketList> ticketList = pageInfo.getContents();
+		int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lastPage = pageInfo.getLastPage();
+		
+		log.info("ticketList: {}", ticketList);
+		
+		model.addAttribute("ticketList", ticketList);
+		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lastPage", lastPage);
+		
 		return "user/mypage/ticket-hisory";
 	}
 	
