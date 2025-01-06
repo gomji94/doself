@@ -31,4 +31,18 @@ public class PointServiceImpl implements PointService {
 		return pointMapper.getPointUserHistoryList(startDate, endDate);
 	}
 
+	//특정 포인트 상품 조회
+	@Override
+	public Point getPointInfoByPeplNum(String peplNum) {
+		
+		return pointMapper.getPointInfoByPeplNum(peplNum);
+	}
+
+	//특정 포인트 상품 수정
+	@Override
+	public void modifyPoint(Point point) {
+
+		pointMapper.modifyPoint(point);
+	}
+
 }
