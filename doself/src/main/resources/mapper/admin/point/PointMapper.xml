@@ -24,6 +24,8 @@
 				pepl_img,
 				pepl_expl
 			FROM point_exchange_product_list
+			ORDER BY
+				pepl_num
 		</select>
 		
 		
@@ -59,6 +61,8 @@
 		    <if test="endDate != null and endDate != ''">
 		        AND #{endDate} > pumh_date
 		    </if>
+		    ORDER BY
+		    	pumh.pumh_num
 		</select>
 		
 		<!-- 특정 포인트상품 조회 -->
@@ -72,6 +76,8 @@
 		FROM point_exchange_product_list
 		WHERE
 			pepl_num = #{peplNum};
+		ORDER BY
+			pepl_num
   		</select>
   		
   		<!-- 특정 포인트상품 수정 -->

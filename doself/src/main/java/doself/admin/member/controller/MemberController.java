@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import doself.admin.member.domain.Member;
 import doself.admin.member.domain.MemberLog;
 import doself.admin.member.service.MemberService;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,15 +25,33 @@ public class MemberController {
 	
 	// 회원관리 조회
 	@GetMapping("/list")
-	public String getMemberList(@RequestParam(value = "searchType", required = false) String searchType,
-            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-            @RequestParam(value = "startDate", required = false) String startDate,
-            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
+	public String getMemberList(@RequestParam(value = "searchType", required = false, defaultValue = "") String searchType,
+            @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword,
+            @RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "") String endDate, Model model, Pageable pageable) {
 		
-		List<Member> memberList = memberService.getMemberList(searchType, searchKeyword, startDate, endDate);
-		
+		var pageInfo = memberService.getCntMemberList(pageable);
+		List<Member> memberList = pageInfo.getContents();
+		int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lastPage = pageInfo.getLastPage();
+	
 		model.addAttribute("title", "회원목록");
 		model.addAttribute("memberList", memberList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lastPage", lastPage);
+		
+		/*
+		 * List<Member> memberList = memberService.getMemberList(searchType,
+		 * searchKeyword, startDate, endDate);
+		 * 
+		 * model.addAttribute("title", "회원목록"); model.addAttribute("memberList",
+		 * memberList);
+		 */
+		
 		
 		return "admin/member/admin-member-list";
 	}
