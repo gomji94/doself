@@ -28,7 +28,7 @@ public class CardPageInfo<T> {
 		
 		// 1 ~ 10p
 		int startPageNum = 1;
-		int endPageNum = lastPage < 10 ? lastPage : 10;
+		int endPageNum = lastPage < 12 ? lastPage : 12;
 		
 		if(currentPage > 6 && lastPage > 9) {
 			startPageNum = currentPage - 5; // 2
