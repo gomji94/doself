@@ -40,10 +40,12 @@ public class MemberController {
 	
 		model.addAttribute("title", "회원목록");
 		model.addAttribute("memberList", memberList);
+		
 		model.addAttribute("searchType", searchType);
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
+		
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
 		model.addAttribute("endPageNum", endPageNum);

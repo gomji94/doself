@@ -54,14 +54,4 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	
-	// 페이징
-	@Override
-	public PageInfo<Member> getCntMemberList(Pageable pageable) {
-		
-		int rowCnt = memberMapper.getCntMemberList();
-		List<Member> memberList = memberMapper.getMember(pageable);
-		return new PageInfo<>(memberList, pageable, rowCnt);
-	}
-
-	
 }

@@ -12,7 +12,5 @@ public interface MemberService {
 	// 멤버 검색조회
 	PageInfo<Member> getMemberList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 	List<MemberLog> getMemberLogList(String searchType, String searchKeyword, String startDate, String endDate);
-	
-	// 페이징
-	PageInfo<Member> getCntMemberList(Pageable pageable);
+
 }

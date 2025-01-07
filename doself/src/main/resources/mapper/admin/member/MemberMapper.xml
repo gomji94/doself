@@ -25,18 +25,18 @@
   		</select> -->
   		
   		<resultMap type="Member" id="memberResultMap">
-  			<id column="mbr_id" property="mbrId" />
-  			<result column="mbr_pw" property="mbrPw" />
-  			<result column="mbr_name" property="mbrName" />
-  			<result column="mg_code" property="mgCode" />
-  			<result column="mbr_email" property="mbrEmail" />
-  			<result column="mbr_birth_date" property="mbrBirthDate" />
-  			<result column="mbr_phone_num" property="mbrPhoneNum" />
-  			<result column="mbr_gender" property="mbrGender" />
-  			<result column="ac_num" property="acNum" />
-  			<result column="opening_ticket_count" property="openingTicketCount" />
+  			<id column="mbr_id" 						property="mbrId" />
+  			<result column="mbr_pw" 					property="mbrPw" />
+  			<result column="mbr_name" 					property="mbrName" />
+  			<result column="mg_code" 					property="mgCode" />
+  			<result column="mbr_email" 					property="mbrEmail" />
+  			<result column="mbr_birth_date" 			property="mbrBirthDate" />
+  			<result column="mbr_phone_num" 				property="mbrPhoneNum" />
+  			<result column="mbr_gender" 				property="mbrGender" />
+  			<result column="ac_num" 					property="acNum" />
+  			<result column="opening_ticket_count" 		property="openingTicketCount" />
   			<result column="participation_ticket_count" property="participationTicketCount" />
-  			<result column="mbr_point" property="mbrPoint" />
+  			<result column="mbr_point" 					property="mbrPoint" />
 
 	  		<!-- 연령대 카테고리 관계 -->
 	  		<association property="ageInfo" javaType="Age">
@@ -151,29 +151,6 @@
 			        AND m.mbr_birth_date<![CDATA[ < ]]>#{endDate}
 			    </if>
 			</where>			
-		    ORDER BY m.mbr_id
-		</select>
-		
-		<select id="getMember" parameterType="Pageable" resultMap="memberResultMap">
-			SELECT 
-				m.mbr_id,
-				m.mbr_pw,
-				m.mbr_name, 
-				mg.mg_name,
-				m.mbr_email,
-				m.mbr_birth_date, 
-				m.mbr_phone_num, 
-				m.mbr_gender,
-				ac.ac_name,
-				m.opening_ticket_count,
-				m.participation_ticket_count,
-				m.mbr_point			
-			FROM member m INNER JOIN age_category ac
-				USING(ac_num)
-				INNER JOIN member_grade mg
-				ON m.mg_code = mg.mg_code
-			
-		    ORDER BY m.mbr_id
-			LIMIT #{rowPerPage} OFFSET #{offset};
+		    ORDER BY m.mbr_id		   
 		</select>
   </mapper>

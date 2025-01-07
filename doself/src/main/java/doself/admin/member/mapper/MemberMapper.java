@@ -23,6 +23,4 @@ public interface MemberMapper {
 	//페이징
 	// 멤버 총 갯수
 	int getCntMemberList();
-	// 멤버 조회
-	List<Member> getMember(Pageable pageable);
 }
