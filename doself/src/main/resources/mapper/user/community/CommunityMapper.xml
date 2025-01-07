@@ -55,9 +55,8 @@
 		FROM free_board fb INNER JOIN free_board_category fbc
 		USING(fbctg_code)
 		WHERE fbc.fbctg_code = CONCAT('fbcate_00', #{categoryCode})
-		ORDER BY fb_date DESC;
+		ORDER BY fb_date DESC
 		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
-		
   	</select>
   	
   	 <!-- 검색 게시글 총 갯수 행 조회 -->
@@ -107,7 +106,7 @@
 	  	SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
 		FROM free_board fb INNER JOIN free_board_category fbc
 		USING(fbctg_code)
-		WHERE fb.fb_num = CONCAT('fb_00', #{articleKeyNum});
+		WHERE fb.fb_num = #{articleKeyNum}
   	</select>
   	
   	

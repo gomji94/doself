@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.food.domain.Food;
+import doself.user.food.domain.NutritionRequestInfo;
 import doself.user.food.mapper.FoodMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,23 @@ public class FoodServiceImpl implements FoodService {
 		// TODO Auto-generated method stub
 		
 		return foodMapper.searchFoodByFoodName(foodName);
+	}
+
+	@Override
+	public void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo) {
+		// TODO Auto-generated method stub
+		
+		switch (nutritionRequestInfo.getRequestCategory()) {
+			case "food" -> nutritionRequestInfo.setRequestCategory("음식");
+			case "nutritionalSupplements" -> nutritionRequestInfo.setRequestCategory("영양제");
+		}
+		
+		String formattedKeyNum = String.format("nirr_%03d", foodMapper.getNirrTablePkNum());
+		
+		nutritionRequestInfo.setRequestTableLastPkNum(formattedKeyNum);
+		
+		foodMapper.createNutritionRequest(nutritionRequestInfo);
+		
 	}
 	
 	

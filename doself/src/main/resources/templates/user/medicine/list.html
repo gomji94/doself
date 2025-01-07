@@ -48,16 +48,16 @@
                     <div class="body-content">
                         <div class="body-titlebox">
                             <div id="modal-request-title">등록 요청</div>
-                            <form id="modal-request-form">
+                            <form id="modal-request-form" th:action="@{/medicine/createrequest}" method="post">
                                 <div>
                                     <span>분류</span>
                                     <div id="request-cate-container">
-                                        <input type='radio' name='request-cate' value='nutritionalSupplements' checked="checked"/>영양제
+                                        <input type='radio' id="requestCategory" name='requestCategory' value='nutritionalSupplements' checked="checked"/>영양제
                                     </div>
                                 </div>
                                 <div>
                                     <span>이름</span>
-                                    <input id="modal-request-form__input" type="text" />
+                                    <input id="modal-request-form__input" type="text" name="requestItemName" />
                                 </div>
                             </form>
                             <div id="modal-request-form__buttons">
@@ -99,7 +99,7 @@
     <th:block layout:fragment="customJs">
     <script th:src="@{/assets/js/layout.js}"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script th:src="@{/assets/js/medicine/modal.js}"></script>
+    <script th:src="@{/assets/js/food/modal.js}"></script>
     <script th:src="@{/assets/js/medicine/list.js}"></script>
     </th:block> 
 </html>

@@ -47,17 +47,45 @@
 				ON nirr.mbr_id = m.mbr_id
 				INNER JOIN status_category sc
 				ON nirr.sc_code = sc.sc_code
-			WHERE 1=1
-			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
-		        AND ${searchType} = '${searchKeyword}'
-		    </if>
-		    <if test="startDate != null and startDate != ''">
-		        AND nirr_processing_date > #{startDate}
-		    </if>
-		    <if test="endDate != null and endDate != ''">
-		        AND #{endDate} > nirr_processing_date
-		    </if>
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND nirr_processing_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND nirr_processing_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
 		    ORDER BY
 		    	nirr.nirr_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntNutritionList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM nutrition_info_registration_request nirr INNER JOIN `member` m
+				ON nirr.mbr_id = m.mbr_id
+				INNER JOIN status_category sc
+				ON nirr.sc_code = sc.sc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND nirr_processing_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND nirr_processing_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	nirr.nirr_num	   
 		</select>
   </mapper>
