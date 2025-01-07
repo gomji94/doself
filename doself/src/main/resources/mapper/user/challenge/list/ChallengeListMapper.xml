@@ -22,7 +22,7 @@
 	</resultMap>
 
   	<!-- 특정 챌린지 리스트 조회 -->
-  	<select id="getChallengeList" resultType="ChallengeList" resultMap="ChallengeListResultMap">
+  	<select id="getChallengeList"  parameterType="CardPageable" resultType="ChallengeList" resultMap="ChallengeListResultMap">
 	  	SELECT
 			cg.cg_num,
 			cg.mbr_id,
@@ -42,6 +42,9 @@
 		    INNER JOIN challenge_topic_level stl USING(ctl_num)
 		    INNER JOIN challenge_status cs USING(cs_num)
 		    INNER JOIN challenge_topic ct USING(ct_num)
+		ORDER BY 
+		    cg_start_date DESC 
+	    LIMIT #{rowPerPage} OFFSET #{offset}
 	 <!--    WHERE
 			cg.cg_num = #{ChallengeCode}; -->
   	</select>
@@ -82,19 +85,6 @@
 			#{challengeRewardCheck} 	  -- null 허용
 		);
   	</insert>
-  	<select id="getChallengePage" parameterType="CardPageable" resultType="ChallengeList">
-	    SELECT 
-			cg_num,
-			cg_name,
-			cg_leader_name,
-			cg_start_date,
-			cg_end_date
-		FROM 
-		    challenge_group
-		ORDER BY 
-		    cg_start_date DESC 
-	    LIMIT #{rowPerPage} OFFSET #{offset}
-	</select>
   	<select id="getCntChallengeList" resultType="int">
   		/* 챌린지 리스트 총 갯수 */
   		SELECT

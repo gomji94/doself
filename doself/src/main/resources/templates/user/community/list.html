@@ -103,9 +103,9 @@
                     </div>
                 </div>
                 <div id="search-container">
-                	<form id="searchForm" action="@{/community/list/search}" method="get">
+                	<form id="searchForm" th:action="@{/community/list/search(date=${dateFilter})}" method="get">
 	                    <div class="search-filter">
-	                        <select id="date-filter__dropdown" name="date">
+	                        <select id="date-filter__dropdown" name="dateFilter">
 	                            <option value="all">전체</option>
 	                            <option value="one-week">일주일</option>
 	                            <option value="one-month">1개월</option>
@@ -113,14 +113,14 @@
 	                        </select>
 	                    </div>
 	                    <div class="search-filter">
-	                        <select id="search-filter__dropdown" name="search">
+	                        <select id="search-filter__dropdown" name="searchFilter">
 	                            <option value="title">제목</option>
 	                            <option value="content">내용</option>
 	                            <option value="id">아이디</option>
 	                        </select>
 	                    </div>
 	                    <div id="search-box">
-	                        <input id="search-box__input">
+	                        <input id="search-box__input" name="searchValue">
 	                        <button id="search-box__button">
 	                            <i class="fa-solid fa-magnifying-glass"></i>
 	                        </button>
