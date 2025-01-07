@@ -64,24 +64,24 @@ $(document).ready(function () {
 
 // --- challenge detail info modal ---
 $(document).ready(function () {
-    // 카드 클릭 이벤트 핸들러
-    $('.card').on('click', 'card-modal', function () {
-        const challengeId = $(this).data('challenge-code');   // 챌린지 코드 가져오기
-		console.log("challengeId: ", challengeId);
-		
-		$.ajax({
-            url: `/challenge/list/view`, // 서버 URL
+    $('.card').on('click', function () {
+        const challengeCode = $(this).data('code'); // 클릭된 카드의 데이터 속성에서 challengeCode 가져오기
+
+        $.ajax({
+            url: '/list/view',
             type: 'GET',
-            data: { ChallengeCode: challengeId },
-            success: function (response) {
-				$('#card-modal h2').text(response.challengeName); // 예: 챌린지 이름
-				// 오버레이 내용 업데이트
-				$('card-modal-overlay').html(response);
-				$('#card-modal-overlay').fadeIn(); // 모달 오버레이 표시
-                $('#card-modal').fadeIn(); // 모달 표시
+            data: { ChallengeCode: challengeCode },
+            success: function (data) {
+                // 데이터가 성공적으로 로드되면 모달 내용 업데이트
+                $('#card-modal .popup-body').html(data);
+				$('#card-modal h2').text(data.challengeName); // 챌린지 이름
+                // 모달 보이기
+                $('#card-modal-overlay').fadeIn();
+                $('#card-modal').fadeIn();
             },
-            error: function () {
-                alert('챌린지 정보를 가져오는 데 실패했습니다.');
+            error: function (xhr, status, error) {
+                console.error('Error fetching challenge details:', error);
+                alert('챌린지 정보를 불러오는데 실패했습니다.');
             }
         });
     });
@@ -92,6 +92,7 @@ $(document).ready(function () {
         $('#card-modal').fadeOut(); // 모달 숨김
     });
 });
+
 
     // 서버에서 상세 데이터 가져오기
    /* function fetchChallengeDetails(challengeId) {

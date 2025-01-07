@@ -11,7 +11,7 @@ public interface ChallengeListService {
 	List<ChallengeList> getChallengeList();
 	
 	// 특정 챌린지 정보 조회(detail view)
-	List<ChallengeList> getChallengeListView(String ChallengeCode);
+	List<ChallengeList> getChallengeListView(String challengeCode);
 	
 	// 챌린지 추가(작업중)
 	void addChallenge(ChallengeList challengeList);
