@@ -63,20 +63,47 @@
 					USING(ctl_num)
 					INNER JOIN challenge_status cs
 					USING(cs_num)
-			WHERE 1=1
-			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
-		        AND ${searchType} = '${searchKeyword}'
-		    </if>
-		    <if test="startDate != null and startDate != ''">
-		        AND cg_creation_date > #{startDate}
-		    </if>
-		    <if test="endDate != null and endDate != ''">
-		        AND #{endDate} > cg_creation_date
-		    </if>
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND mll_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND mll_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
 		    ORDER BY
 		    	cg.cg_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
+		<!-- 페이징 -->
+		<select id="getCntChallengeList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_group cg	INNER JOIN challenge_topic_level ctl
+					USING(ctl_num)
+					INNER JOIN challenge_status cs
+					USING(cs_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND mll_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND mll_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cg.cg_num		   
+		</select>
 		
 		
 		<resultMap type="PersonalStat" id="PersonalStatResultMap">
