@@ -64,14 +64,31 @@ public class MemberController {
 	
 	// 로그관리 조회
 	@GetMapping("/loglist")
-	public String getMemberLog(@RequestParam(value = "searchType", required = false) String searchType,
-            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-            @RequestParam(value = "startDate", required = false) String startDate,
-            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
+	public String getMemberLog(@RequestParam(value = "searchType", required = false, defaultValue = "") String searchType,
+            @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword,
+            @RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "") String endDate, Model model, Pageable pageable) {
 
-		List<MemberLog> memberLogList = memberService.getMemberLogList(searchType, searchKeyword, startDate, endDate);
+		
+		var pageInfo = memberService.getMemberLogList(searchType, searchKeyword, startDate, endDate, pageable);
+		List<MemberLog> memberLogList = pageInfo.getContents();
+		int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lastPage = pageInfo.getLastPage();
+
 		model.addAttribute("title", "회원로그목록");
 		model.addAttribute("memberLogList", memberLogList);
+		
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lastPage", lastPage);
 		
 		return "admin/member/log-list";
 	}
