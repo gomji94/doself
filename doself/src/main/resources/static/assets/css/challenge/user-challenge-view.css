@@ -148,6 +148,7 @@ html, body {
     padding: 0px 3px;
     justify-content: flex-end;
     gap: 67px;
+    margin-bottom: 10px;
 }
 
 #search-modal-header h2 {
@@ -921,7 +922,7 @@ hr {
 }
 
 .modal-container hr {
-    opacity: 0.3;
+    opacity: 0.7;
     margin-top: 14px;
 }
 

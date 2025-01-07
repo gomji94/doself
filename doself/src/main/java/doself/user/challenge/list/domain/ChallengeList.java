@@ -31,4 +31,6 @@ public class ChallengeList {
 	private String  challengeStatusCode;
 	private String  challengeStatus;
 	private String  challengeRewardCheck;
+	
+	private ChallengeDetailView challengeDetailView;
 }

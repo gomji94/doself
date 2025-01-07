@@ -9,38 +9,53 @@
 	            <img id="card-modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
 	        </div>
 	        <hr>
-	        <div class="popup-body" th:if="${challengeList}" th:each="cl, iterStat : ${challengeList}" th:id="'card-' + ${iterStat.index}">
-	            <!-- 이미지 업로드 영역 -->
-	            <div class="image-upload">
-	                <img th:src="${cl.challengePicture}" alt="업로드된 이미지 미리보기" id="image-preview">
-	            </div>
-	
-	            <!-- 정보 입력 영역 -->
-	            <div class="feed-info">
-	                <div class="user-block">
-	                    <span id="challenge-leader">챌린지 리더</span>
-	                    <img src="https://velog.velcdn.com/images/mekite/post/8e79bd6b-a5e7-4d06-abac-9a273fbe98df/image.png" alt="왕관" id="leader-icon">
-	                    <img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필" id="profile">
-	                    <a href="#" class="user-link" th:text="${cl.memberId}"></a>
-	                    <span class="comment-day-count"></span>
-	                </div>
-	                <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" id="info-section">
-	                <div class="challenge-info-content">
-	                    <span id="challenge-tag" th:text="|# ${cl.challengeTopicName}|"></span>
-	                    <div id="info-content-detail">
-	                        <!-- <p>📌 챌린지 소개 📌</p>
-	                        <p>🗓 챌린지 일정 : 11.18(월) ~ 12.01(일)</p>
-	                        <p>🎯 난이도 : 보통</p>
-	                        <p>📝 진행 내용 : 1일 2개 다이어트 식단 업로드</p>
-	                        <p>🤗‍ 참여 인원 : 5 / 15</p>
-	                        <p>📢 필독 📢</p>
-	                        <p>친목질, 종교권유, 이성만남목적, 정치질 🙅‍♀️</p>
-	                        <p>※ 공지 안 지키면 경고 없이 경고합니다</p>
-	                        <p>(3회 누적 시, 자동 탈퇴 처리)</p> -->
-	                    </div>
-	                </div>
-	                <button type="submit" class="submit-btn">참여하기</button>
-	            </div>
+	        <div class="popup-body" th:if="${challengeList != null and !challengeList.isEmpty()}"
+	      	     th:each="cl : ${challengeList}">
+	        	<div th:if="${ChallengeDetailView}" th:each="cdv : ${ChallengeDetailView}">
+		            <!-- 이미지 업로드 영역 -->
+		            <div class="image-upload">
+		                <img th:src="${cl.challengePicture}" alt="업로드된 이미지 미리보기" id="image-preview">
+		            </div>
+		            <!-- 정보 입력 영역 -->
+		            <div class="feed-info">
+		                <div class="user-block">
+		                    <span id="challenge-leader">챌린지 리더</span>
+		                    <img src="https://velog.velcdn.com/images/mekite/post/8e79bd6b-a5e7-4d06-abac-9a273fbe98df/image.png" alt="왕관" id="leader-icon">
+		                    <img th:src="${cdv.challengeLeaderImage}" alt="프로필" id="profile" />
+		                    <a href="#" class="user-link" th:text="${cdv.challengeLeaderId}"></a>
+		                    <span class="comment-day-count"></span>
+		                </div>
+		                <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" id="info-section">
+		                <div class="challenge-info-content">
+		                    <span id="challenge-tag" th:text="|# ${cl.challengeTopicName}|"></span>
+		                    <div id="info-content-detail">
+		                        <p>📌 챌린지 소개 📌</p>
+		                    	<div class="detail-discription">
+			                        <p>🗓 챌린지 일정 : </p>
+			                        <p th:text="${#dates.format(cl.challengeStartDate, 'yy/MM/dd')}~${#dates.format(cl.challengeEndDate, 'yy/MM/dd')}"></p>
+		                    	</div>
+		                    	<div class="detail-discription">
+			                        <p>🎯 난이도 : </p>
+			                        <p th:text="${cl.challengeTopicLevel}"></p>
+		                    	</div>
+		                    	<div class="detail-discription">
+			                        <p>📝 진행 내용 : </p>
+			                        <p th:text="${cdv.challengeTopicContent}"></p>
+		                    	</div>
+		                    	<div class="detail-discription">
+			                        <p>🤗‍ 참여 인원 : </p>
+			                        <p th:text="|${cl.challengeCurrentMember}/${cl.challengeMaxMember}|"></p>
+		                    	</div>
+		                        <p>📢 필독 📢</p>
+		                        <p>친목질, 종교권유, 이성만남목적, 정치질 🙅‍♀️</p>
+		                        <p>※ 공지 안 지키면 경고 없이 경고합니다</p>
+		                        <p>(3회 누적 시, 자동 탈퇴 처리)</p>
+	                    		<p th:text="${cdv.challengeContent}"></p>
+		                    </div>
+		                </div>
+		                <button type="submit" class="submit-btn">참여하기</button>
+		            </div>
+	        	</div>
 	        </div>
 	    </div>
 	</div>
