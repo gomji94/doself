@@ -113,16 +113,20 @@
 				mll_date
 			FROM member_login_log mll INNER JOIN `member` m
 			ON mll.mbr_id = m.mbr_id
-			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
-		        AND ${searchType} = '${searchKeyword}'
-		    </if>
-		    <if test="startDate != null and startDate != ''">
-		        AND mll_date > #{startDate}
-		    </if>
-		    <if test="endDate != null and endDate != ''">
-		        AND #{endDate} > mll_date
-		    </if>
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND mll_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND mll_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
 		    ORDER BY mll_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
 	
@@ -150,6 +154,27 @@
 			    <if test="endDate != null and endDate != ''">
 			        AND m.mbr_birth_date<![CDATA[ < ]]>#{endDate}
 			    </if>
+			</where>			
+		    ORDER BY m.mbr_id		   
+		</select>
+		
+		<select id="getCntMemberLogList" resultType="int">
+			/* 멤버로그 총개수 */
+			SELECT 
+				COUNT(*) 
+			FROM member_login_log mll INNER JOIN `member` m
+				ON mll.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND mll_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND mll_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
 			</where>			
 		    ORDER BY m.mbr_id		   
 		</select>

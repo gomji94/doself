@@ -48,9 +48,23 @@ public class MemberServiceImpl implements MemberService {
 
 	//멤버 로그 검색 조회
 	@Override
-	public List<MemberLog> getMemberLogList(String searchType, String searchKeyword, String startDate, String endDate) {
+	public PageInfo<MemberLog> getMemberLogList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
-		return memberMapper.getMemberLogList(searchType, searchKeyword, startDate, endDate);
+		switch(searchType) {	
+		case "mbrName" 	-> searchType = "m.mbr_name";		
+	}
+	
+	Map<String, Object> searchMap = new HashMap<String, Object>();
+	searchMap.put("searchType", searchType);
+	searchMap.put("searchKeyword", searchKeyword);
+	searchMap.put("startDate", startDate);
+	searchMap.put("endDate", endDate);
+	searchMap.put("pageable", pageable);
+	
+	int rowCnt = memberMapper.getCntMemberLogList();		
+	List<MemberLog> memberLogList = memberMapper.getMemberLogList(searchMap);
+	
+		return new PageInfo<>(memberLogList, pageable, rowCnt);
 	}
 
 	
