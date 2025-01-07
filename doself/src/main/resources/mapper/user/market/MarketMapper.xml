@@ -14,6 +14,8 @@
   		<result column="pepl_expl" 			property="pointExplanation"/>
   	</resultMap>
   	
+  	<!-- 마켓아이템 resultMap 만들기 -->
+  	
   	<!-- 마켓 아이템 리스트 조회 -->
   	<select id="getMarketItemList" resultMap="marketItemResultMap" >
 		SELECT *
@@ -25,6 +27,23 @@
 		SELECT *
 		FROM point_exchange_product_list
 		WHERE pepl_num = #{pointItemKeyNum};
+  	</select>
+  	
+  	<!-- 포인트 구매내역 행 총 갯수 조회 -->
+  	<select id="getCntOfPurchaseListById" parameterType="String" resultType="int">
+  		SELECT COUNT(*)
+		FROM point_use_management_history pumh INNER JOIN point_exchange_product_list pepl
+		USING(pepl_num)
+		WHERE mbr_id = #{memberId}
+  	</select>
+  	
+  	<select id="getPurchaseListById" parameterType="Map" resultMap="purchaseItemResultMap">
+  		SELECT pepl.pepl_name, pepl.pepl_price, pumh.mbr_id, pumh.pumh_date 
+		FROM point_use_management_history pumh INNER JOIN point_exchange_product_list pepl
+		USING(pepl_num)
+		WHERE pumh.mbr_id = #{memberId}
+		ORDER BY pumh.pumh_date
+		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
   	</select>
   	
 </mapper>

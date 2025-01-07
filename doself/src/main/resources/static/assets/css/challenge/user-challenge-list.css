@@ -260,7 +260,7 @@ p.challenge-text {
     left: 50%;
     transform: translate(-50%, -50%); /* 화면 중앙에 정렬 */
 
-    background-color: white;
+    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
     z-index: 1006; /* 오버레이보다 위에 표시 */

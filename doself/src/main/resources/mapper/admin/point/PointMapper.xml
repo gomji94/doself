@@ -42,6 +42,12 @@
 	  			<id 	column="mbr_id" property="mbrId" />	  			
 	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
 	  		</association>	  		  		  			 	   		
+
+  			<!-- 포인트 상품 관계 -->
+	  		<association property="pointInfo" javaType="Point">
+	  			<id 	column="pepl_num" property="peplNum" />	  			
+	  			<result column="pepl_name" property="peplName" />	  				  				  			  			  			
+	  		</association>	  		  		  			 	   		
   		</resultMap>
   		<!-- 포인트 사용내역 조회 -->
 		<select id="getPointUserHistoryList" resultMap="PointUserHistoryResultMap">
@@ -49,21 +55,69 @@
 					
 			SELECT
 				pumh_num,
-				pepl_num,
+				pepl.pepl_name,
 				m.mbr_name,
 				pumh_date
 			FROM point_use_management_history pumh INNER JOIN `member` m
 				ON pumh.mbr_id = m.mbr_id
-			WHERE 1=1
-		    <if test="startDate != null and startDate != ''">
-		        AND pumh_date > #{startDate}
-		    </if>
-		    <if test="endDate != null and endDate != ''">
-		        AND #{endDate} > pumh_date
-		    </if>
+				INNER JOIN point_exchange_product_list pepl
+				ON pumh.pepl_num = pepl.pepl_num
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND pumh_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND pumh_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
 		    ORDER BY
 		    	pumh.pumh_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntPointUserHistoryList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM point_use_management_history pumh INNER JOIN `member` m
+				ON pumh.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND pumh_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND pumh_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	pumh.pumh_num		      
+		</select>
+		
+		<!-- 포인트 상품 추가 -->
+		<insert id="createPointList" parameterType="Point">
+			INSERT INTO point_exchange_product_list(
+				pepl_num,
+				pepl_name,
+				pepl_price,
+				pepl_img,
+				pepl_expl
+			) VALUES (
+				#{peplNum},
+				#{peplName},
+				#{peplPrice},
+				#{peplImg},
+				#{peplExpl}				
+			);
+		</insert>
 		
 		<!-- 특정 포인트상품 조회 -->
 		<select id="getPointInfoByPeplNum" parameterType="String" resultMap="pointResultMap">
@@ -75,16 +129,14 @@
 			pepl_expl
 		FROM point_exchange_product_list
 		WHERE
-			pepl_num = #{peplNum};
-		ORDER BY
-			pepl_num
+			pepl_num = #{peplNum};		
   		</select>
   		
   		<!-- 특정 포인트상품 수정 -->
   		<update id="modifyPoint" parameterType="Point">
   			UPDATE point_exchange_product_list
-  			<set>  	
-  				pepl_num = #{peplNum};		
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				pepl_num = #{peplNum},		
 				<if test="peplName != null and peplName != ''">
 					pepl_name = #{peplName},
 				</if>  			
@@ -97,9 +149,28 @@
 				<if test="peplExpl != null and peplExpl != ''">
 					pepl_expl = #{peplExpl}
 				</if>  			
-  			</set>
+  			</trim>
   			WHERE
   				pepl_num = #{peplNum};
   		</update>
   		
+  		<!-- 포인트상품 마지막번호 찾은후 다음키생성 -->
+  		<select id="getPointLastNum" resultType="int">
+  			SELECT
+				SUBSTRING(pepl_num,6)
+			FROM
+				point_exchange_product_list
+			ORDER BY
+				pepl_num DESC
+			LIMIT 1
+  		</select>
+  		
+  		<!-- 포인트 상품 제거 -->
+  		<delete id="deletePointList">
+  			DELETE
+  			FROM
+  				point_exchange_product_list
+  			WHERE
+  				pepl_num=#{peplNum};
+  		</delete>
   </mapper>

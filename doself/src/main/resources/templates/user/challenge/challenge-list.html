@@ -35,9 +35,9 @@
 	            </div>
 	        </section>
 	        <!-- 카드 목록 -->
-	        <section class="card-grid" th:if="${challengeList}">
-	            <!-- 카드 1 -->
-	            <div class="card" th:each="cl, iterStat : ${challengeList}" th:id="'card-' + ${iterStat.index}" style="border: none;">
+	        <section class="card-grid" th:if="${challengeList != null and !challengeList.isEmpty()}">
+	            <div class="card" th:each="cl, iterStat : ${challengeList}" th:id="'card-' + ${iterStat.index}"
+	            	 th:data-code="${cl.challengeCode}" style="border: none;">
 	                <img th:src="${cl.challengePicture}" alt="카드 이미지">
 	                <div class="card-content">
 	                    <div class="tag-container">
