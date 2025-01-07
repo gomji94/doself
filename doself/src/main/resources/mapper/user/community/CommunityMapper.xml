@@ -57,7 +57,6 @@
 		WHERE fbc.fbctg_code = CONCAT('fbcate_00', #{categoryCode})
 		ORDER BY fb_date DESC
 		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
-		
   	</select>
   	
   	 <!-- 검색 게시글 총 갯수 행 조회 -->
