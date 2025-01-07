@@ -20,9 +20,9 @@ public interface MembersService {
 	public boolean updatePassword(String memberId, String oldMemberPw);
 	
 	//회원 티켓정보 조회
-	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable);
+	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable, String startDate, String endDate);
 	
-
+	
 
 	
 }

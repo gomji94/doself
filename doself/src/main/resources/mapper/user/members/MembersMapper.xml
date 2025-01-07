@@ -26,7 +26,11 @@
 		<result column="ctph_date" 			         property="ticketBuyDate" />
 		<result column="ctc_category" 			     property="ticketName" />
 		<result column="pmc_name" 			         property="ticketPaymentMethod" />
-		<result column="ctp_use" 			         property="ticketUseChk" />
+		<result column="ctm_date" 			         property="ticketUseChk" />
+		<result column="ctm_return_status" 			 property="ticketReturnChk" />
+		<result column="ticketUsedCnt" 			     property="ticketUsedCnt" />
+		<result column="ticketNotUsedCnt" 			 property="ticketNotUsedCnt" />
+		
 	</resultMap>
   		
   	<!-- 회원정보 -->	
@@ -80,22 +84,34 @@
 </update>    
 
     <!-- 회원 티켓정보 조회 -->
-    <select id="getTicketListById" resultMap="TicketListResultMap" >
-    	SELECT
-			ctph.ctph_date,
-			ctc.ctc_category,
-			pmc.pmc_name,
-			ctp.ctp_use
-		FROM
-			challenge_ticket_payment_history ctph LEFT JOIN
-			challenge_ticket_management ctm ON ctph.ctph_num = ctm.ctph_num INNER JOIN
-			ticket_payment_method tpm ON tpm.tpm_num = ctph.tpm_num INNER JOIN	
-			payment_method_category pmc ON pmc.pmc_code = tpm.pmc_code INNER JOIN
-			challenge_ticket_price ctp ON ctp.ctp_code = ctph.ctp_code INNER JOIN	
-			challenge_ticket_category ctc ON ctc.ctc_code = ctp.ctc_code
-		WHERE
-			ctph.mbr_id = #{memberId};
-			
+    <!-- /* <![CDATA[<= ]]> 꺽쇠 텍스트인식 */ -->
+    <select id="getTicketListById" parameterType="map" resultMap="TicketListResultMap" >
+		SELECT 
+			ctph.mbr_id, 
+			ctph.ctph_date, 
+			ctc.ctc_category, 
+			pmc.pmc_name, 
+			ctm.ctm_date, 
+			ctm.ctm_return_status,
+			COUNT(ctm.ctm_date) OVER () AS ticketUsedCnt, 
+			COUNT(*) OVER () - COUNT(ctm.ctm_date) OVER () AS ticketNotUsedCnt
+		FROM 
+		    challenge_ticket_payment_history ctph INNER JOIN challenge_ticket_price ctp
+		    USING(ctp_code) INNER JOIN challenge_ticket_category ctc
+		    USING(ctc_code) INNER JOIN ticket_payment_method tpm
+		    USING(tpm_num) INNER JOIN payment_method_category pmc
+		    USING(pmc_code) INNER JOIN challenge_ticket_management ctm
+		    USING(ctph_num)
+		WHERE 
+			ctph.mbr_id = #{memberId}
+			<if test="startDate != null">
+			AND ctph.ctph_date >= #{startDate} 
+			</if>
+			<if test="endDate != null">
+			AND ctph.ctph_date <![CDATA[ <= ]]> #{endDate} 
+			</if>
+		ORDER BY ctph_date DESC
+		LIMIT #{rowPerPage}	OFFSET #{offset};
     </select>
     
     <!-- 회원 티켓이력 총 행의 갯수 -->
@@ -104,7 +120,16 @@
 			COUNT(*)
 		FROM
 			challenge_ticket_payment_history
+		where
+			mbr_id = #{memberId}
+			<if test="startDate != null">
+			AND ctph_date >= #{startDate} 
+			</if>
+			<if test="endDate != null">
+			AND ctph_date <![CDATA[ <= ]]> #{endDate} 
+			</if>
    	</select>
+    
     
     
   </mapper>
