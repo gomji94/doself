@@ -55,7 +55,7 @@ public class LoginController {
 			  if(membergrade.equals("mg_001")) {
 				  viewName = "redirect:/admin/member/list";
 			  }else if(membergrade.equals("mg_002") || membergrade.equals("mg_003")) {
-				  viewName = "redirect:/feed/list";				 
+				  viewName = "redirect:/food/list";				 
 			  }
 		  }else { 
 			  reAttr.addAttribute("msg", "회원의 정보가 일치하지 않습니다."); 
