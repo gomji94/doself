@@ -32,7 +32,6 @@
 		USING(fbctg_code)
 		ORDER BY fb_date DESC, fb_num DESC
 		LIMIT #{rowPerPage} OFFSET #{offset}; 
-
   	</select>
   	
   	<select id="getArticleCategoryList" resultType="Map">
@@ -56,18 +55,59 @@
 		FROM free_board fb INNER JOIN free_board_category fbc
 		USING(fbctg_code)
 		WHERE fbc.fbctg_code = CONCAT('fbcate_00', #{categoryCode})
-		ORDER BY fb_num DESC
+		ORDER BY fb_date DESC;
 		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		
   	</select>
   	
-  	<select id="getArticleDetail" resultMap="ArticleResultMap" parameterType="String">
+  	 <!-- 검색 게시글 총 갯수 행 조회 -->
+	  	<select id="getCntOfArticleBySearch" parameterType="Map" resultType="int">
+	  		SELECT COUNT(*)
+			FROM free_board fb
+			<where>
+				<if test="searchArticle.days != null">
+					fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
+				</if>
+				<if test="searchArticle.searchValue != null">
+					AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
+				</if>
+			</where>
+			ORDER BY fb_date DESC;
+	  	</select>
   	
+  	<!-- 게시글 검색 -->
+  	<select id="getArticleListBySearch" parameterType="Map" resultMap="ArticleResultMap">
+	  	SELECT 
+	  		CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, 
+	  		fb.mbr_id, fbc.fbctg_name, 
+	  		fb.fb_title, 
+	  		fb.fb_content, 
+	  		fb.fb_date, 
+	  		fb.fb_views, 
+	  		fb.fb_attachment_file, 
+	  		fb.fb_like
+		FROM 
+			free_board fb INNER JOIN free_board_category fbc
+			USING(fbctg_code)
+		<where>
+			<if test="searchArticle.days != null">
+				fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
+			</if>
+			<if test="searchArticle.searchValue != null">
+				AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY 
+			fb_date DESC, fb_num DESC
+		LIMIT 
+			#{pageable.rowPerPage} OFFSET #{pageable.offset};
+  	</select>
+  	
+  	<select id="getArticleDetail" resultMap="ArticleResultMap" parameterType="String">
 	  	SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
 		FROM free_board fb INNER JOIN free_board_category fbc
 		USING(fbctg_code)
 		WHERE fb.fb_num = CONCAT('fb_00', #{articleKeyNum});
-	  		
   	</select>
   	
   	
