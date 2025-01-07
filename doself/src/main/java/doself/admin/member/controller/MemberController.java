@@ -23,6 +23,7 @@ public class MemberController {
 	
 	private final MemberService memberService;
 	
+	
 	// 회원관리 조회
 	@GetMapping("/list")
 	public String getMemberList(@RequestParam(value = "searchType", required = false, defaultValue = "") String searchType,
@@ -30,7 +31,7 @@ public class MemberController {
             @RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
             @RequestParam(value = "endDate", required = false, defaultValue = "") String endDate, Model model, Pageable pageable) {
 		
-		var pageInfo = memberService.getCntMemberList(pageable);
+		var pageInfo = memberService.getMemberList(searchType, searchKeyword, startDate, endDate, pageable);
 		List<Member> memberList = pageInfo.getContents();
 		int currentPage = pageInfo.getCurrentPage();
 		int startPageNum = pageInfo.getStartPageNum();
@@ -39,19 +40,14 @@ public class MemberController {
 	
 		model.addAttribute("title", "회원목록");
 		model.addAttribute("memberList", memberList);
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
 		model.addAttribute("endPageNum", endPageNum);
 		model.addAttribute("lastPage", lastPage);
-		
-		/*
-		 * List<Member> memberList = memberService.getMemberList(searchType,
-		 * searchKeyword, startDate, endDate);
-		 * 
-		 * model.addAttribute("title", "회원목록"); model.addAttribute("memberList",
-		 * memberList);
-		 */
-		
 		
 		return "admin/member/admin-member-list";
 	}

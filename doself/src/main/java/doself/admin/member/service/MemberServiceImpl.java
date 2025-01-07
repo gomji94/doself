@@ -1,6 +1,8 @@
 package doself.admin.member.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +25,24 @@ public class MemberServiceImpl implements MemberService {
 	//멤버 검색 조회
 	@Override
 	public PageInfo<Member> getMemberList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
-        
-		int rowCnt = memberMapper.getCntMemberList();
-		List<Member> memberList = memberMapper.getMemberList(searchType, searchKeyword, startDate, endDate, pageable);
+		
+		switch(searchType) {
+			case "mbrId" 	-> searchType = "m.mbr_id";
+			case "mbrName" 	-> searchType = "m.mbr_name";
+			case "mgName" 	-> searchType = "mg.mg_name";
+			case "acName" 	-> searchType = "ac.ac_name";		
+		}
+		
+		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap.put("searchType", searchType);
+		searchMap.put("searchKeyword", searchKeyword);
+		searchMap.put("startDate", startDate);
+		searchMap.put("endDate", endDate);
+		searchMap.put("pageable", pageable);
+		
+		int rowCnt = memberMapper.getCntMemberList();		
+		List<Member> memberList = memberMapper.getMemberList(searchMap);
+		
 		return new PageInfo<>(memberList, pageable, rowCnt);
     }
 
