@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.SearchArticle;
 import doself.user.community.mapper.CommunityMapper;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -49,6 +50,41 @@ public class CommunityServiceImpl implements CommunityService {
 	public Article getArticleDetail(String articleKeyNum) {
 		// TODO Auto-generated method stub
 		return communityMapper.getArticleDetail(articleKeyNum);
+	}
+
+	@Override
+	public PageInfo<Article> getArticleListBySearch(Pageable pageable, SearchArticle searchArticle) {
+		// TODO Auto-generated method stub
+		
+		switch (searchArticle.getDateFilter()) {
+			case "week" :
+				searchArticle.setDays(7);
+				break;
+			case "month" : 
+				searchArticle.setDays(30);
+				break;
+			case "month3" : 
+				searchArticle.setDays(90);
+				break;
+		}
+		
+		switch (searchArticle.getSearchFilter()) {
+			case "title" -> 
+				searchArticle.setSearchFilter("fb.fb_title");
+			case "content" ->
+				searchArticle.setSearchFilter("fb.fb_content");
+			case "id" -> {
+				searchArticle.setSearchFilter("fb.mbr_id");
+			}
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("searchArticle", searchArticle);
+		params.put("pageable", pageable);
+		int rowCnt = communityMapper.getCntOfArticleBySearch(params);
+		List<Article> articleList = communityMapper.getArticleListBySearch(params);
+		
+		return new PageInfo<>(articleList, pageable, rowCnt);
 	}
 
 }

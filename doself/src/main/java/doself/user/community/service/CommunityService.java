@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.SearchArticle;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 
@@ -20,5 +21,8 @@ public interface CommunityService {
 	
 	// 게시글 조회
 	Article getArticleDetail(String articleKeyNum);
+	
+	// 게시글 검색
+	PageInfo<Article> getArticleListBySearch(Pageable pageable, SearchArticle searchArticle);
 
 }
