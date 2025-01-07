@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import doself.admin.challenge.domain.Challenge;
 import doself.admin.nutrition.domain.Nutrition;
 import doself.admin.nutrition.service.NutritionService;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -21,15 +23,30 @@ public class NutritionController {
 	
 	// 영양정보등록 요청 조회
 	@GetMapping("/list")
-	public String getNutritionList(@RequestParam(value = "searchType", required = false) String searchType,
-            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-            @RequestParam(value = "startDate", required = false) String startDate,
-            @RequestParam(value = "endDate", required = false) String endDate, Model model) {
-		
-		List<Nutrition> nutritionList = nutritionService.getNutritionList(searchType, searchKeyword, startDate, endDate);
+	public String getNutritionList(@RequestParam(value = "searchType", required = false, defaultValue = "") String searchType,
+            @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword,
+            @RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "") String endDate, Model model, Pageable pageable) {
+			
+		var pageInfo = nutritionService.getNutritionList(searchType, searchKeyword, startDate, endDate, pageable);
+		List<Nutrition> nutritionList = pageInfo.getContents();
+		int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lastPage = pageInfo.getLastPage();
 		
 		model.addAttribute("title", "등록 요청 관리");
 		model.addAttribute("nutritionList", nutritionList);
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lastPage", lastPage);
+		
 		return "admin/nutrition/admin-nutrition-list";
 	}
 	

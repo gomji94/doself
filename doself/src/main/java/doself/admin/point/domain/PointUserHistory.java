@@ -12,4 +12,5 @@ public class PointUserHistory {
 	private String pumhDate;
 	
 	private Member memberInfo;
+	private Point pointInfo;
 }

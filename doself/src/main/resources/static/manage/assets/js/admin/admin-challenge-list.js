@@ -6,7 +6,7 @@ function updateSearchSuggestions() {
 
     let options = [];
     if (searchType === "csStatus") {
-        options = ["완료", "진행중", "진행중(리더 양도)", "대기중", "챌린지 최소인원 미달 종료", "챌린지 중단(남은 멤버가 없을 경우)"];
+        options.push("완료", "진행중", "진행중(리더 양도)", "대기중", "챌린지 최소인원 미달 종료", "챌린지 중단(남은 멤버가 없을 경우)");
     }
 
     options.forEach(value => {
@@ -15,3 +15,23 @@ function updateSearchSuggestions() {
         suggestions.appendChild(option);
     });
 }
+// 검색 기능
+$('#searchBtn').click(function(){
+	const searchType = $('#searchType').val();
+	const searchKeyword = $('#searchKeyword').val();
+	const startDate = $('#startDate').val();
+	const endDate = $('#endDate').val();
+	
+	const $form = $('<form />', { 'action' : '/admin/challenge/list', 'method': 'get'});
+	const $searchType = 
+			$('<input />', {'type':'hidden', 'name' : 'searchType'}).val(searchType);
+	const $searchKeyword = 
+			$('<input />', {'type':'hidden', 'name' : 'searchKeyword'}).val(searchKeyword);
+	const $startDate = 
+			$('<input />', {'type':'hidden', 'name' : 'startDate'}).val(startDate);
+	const $endDate = 
+			$('<input />', {'type':'hidden', 'name' : 'endDate'}).val(endDate);
+	$form.append($searchType, $searchKeyword, $startDate, $endDate);
+	$('body').append($form);
+	$form.submit();
+});

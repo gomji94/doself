@@ -1,6 +1,8 @@
 package doself.admin.payment.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import doself.admin.payment.domain.Payment;
 import doself.admin.payment.domain.PaymentRefund;
 import doself.admin.payment.mapper.PaymentMapper;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,16 +23,45 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	//결제내역 출력
 	@Override
-	public List<Payment> getPaymentList(String searchType, String searchKeyword, String startDate, String endDate) {
+	public PageInfo<Payment> getPaymentList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 
-		return paymentMapper.getPaymentList(searchType, searchKeyword, startDate, endDate);
+		switch(searchType) {
+			case "ctcCategory" 	-> searchType = "ctc.ctc_category";
+		}
+		
+		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap.put("searchType", searchType);
+		searchMap.put("searchKeyword", searchKeyword);
+		searchMap.put("startDate", startDate);
+		searchMap.put("endDate", endDate);
+		searchMap.put("pageable", pageable);
+		
+		int rowCnt = paymentMapper.getCntPaymentList();		
+		List<Payment> paymentList = paymentMapper.getPaymentList(searchMap);
+		
+		return new PageInfo<>(paymentList, pageable, rowCnt);
 	}
 
 	//결제 환불내역 출력
 	@Override
-	public List<PaymentRefund> getRefundList(String searchType, String searchKeyword, String startDate, String endDate) {
+	public PageInfo<PaymentRefund> getRefundList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
-		return paymentMapper.getRefundList(searchType, searchKeyword, startDate, endDate);
+		switch(searchType) {
+			case "nirrCategory" 	-> searchType = "nirr.nirr_category";
+			case "scStatus" 		-> searchType = "sc.sc_status";	
+		}
+		
+		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap.put("searchType", searchType);
+		searchMap.put("searchKeyword", searchKeyword);
+		searchMap.put("startDate", startDate);
+		searchMap.put("endDate", endDate);
+		searchMap.put("pageable", pageable);
+		
+		int rowCnt = paymentMapper.getCntRefundList();		
+		List<PaymentRefund> paymentList = paymentMapper.getRefundList(searchMap);
+		
+		return new PageInfo<>(paymentList, pageable, rowCnt);
 	}
 	
 }

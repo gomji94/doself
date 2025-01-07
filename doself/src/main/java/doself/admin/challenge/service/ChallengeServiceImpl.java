@@ -32,8 +32,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public PageInfo<Challenge> getChallengeList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 			
 		switch(searchType) {
-		case "cgName" 	-> searchType = "cg_name";
-		case "csStatus" 	-> searchType = "cs.cs_status";	
+			case "cgName" 	-> searchType = "cg_name";
+			case "csStatus" 	-> searchType = "cs.cs_status";	
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -54,8 +54,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public PageInfo<PersonalStat> getPersonalStatList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
 		switch(searchType) {
-		case "cgName" 	-> searchType = "cg_name";
-		case "csStatus" 	-> searchType = "cs.cs_status";	
+			case "cgName" 	-> searchType = "cg.cg_name";
+			case "mbrName" 	-> searchType = "m.mbr_name";
+			case "cmssParticipationCheck " 	-> searchType = "cmss_participation_check";
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -65,7 +66,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntChallengeList();		
+		int rowCnt = challengeMapper.getCntPersonalStatList();		
 		List<PersonalStat> challengeList = challengeMapper.getPersonalStatList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -76,8 +77,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public PageInfo<PersonalScore> getPersonalScoreList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
 		switch(searchType) {
-		case "cgName" 	-> searchType = "cg_name";
-		case "csStatus" 	-> searchType = "cs.cs_status";	
+		case "cgName" 	-> searchType = "cg.cg_name";
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -87,7 +87,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntChallengeList();		
+		int rowCnt = challengeMapper.getCntPersonalScoreList();		
 		List<PersonalScore> challengeList = challengeMapper.getPersonalScoreList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -98,8 +98,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public PageInfo<Stat> getStatList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
 		switch(searchType) {
-		case "cgName" 	-> searchType = "cg_name";
-		case "csStatus" 	-> searchType = "cs.cs_status";	
+		case "cgName" 	-> searchType = "cg.cg_name";
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -109,7 +108,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntChallengeList();		
+		int rowCnt = challengeMapper.getCntStatList();		
 		List<Stat> challengeList = challengeMapper.getStatList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -120,8 +119,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public PageInfo<Score> getScoreList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
 		switch(searchType) {
-		case "cgName" 	-> searchType = "cg_name";
-		case "csStatus" 	-> searchType = "cs.cs_status";	
+		case "cgName" 	-> searchType = "cg.cg_name";
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -131,7 +129,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntChallengeList();		
+		int rowCnt = challengeMapper.getCntScoreList();		
 		List<Score> challengeList = challengeMapper.getScoreList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -142,8 +140,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public PageInfo<Warning> getWarninglist(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
 		switch(searchType) {
-		case "cgName" 	-> searchType = "cg_name";
-		case "csStatus" 	-> searchType = "cs.cs_status";	
+		case "cgName" 	-> searchType = "cg.cg_name";
+		case "mbrName" 	-> searchType = "m.mbr_name";	
+		case "cmwcCategory" 	-> searchType = "cmwc.cmwc_category";	
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -153,7 +152,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntChallengeList();		
+		int rowCnt = challengeMapper.getCntWarninglist();		
 		List<Warning> challengeList = challengeMapper.getWarninglist(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -164,8 +163,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public PageInfo<Reward> getRewardList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
 		switch(searchType) {
-		case "cgName" 	-> searchType = "cg_name";
-		case "csStatus" 	-> searchType = "cs.cs_status";	
+		case "cgName" 	-> searchType = "cg.cg_name";
+		case "mbrName" 	-> searchType = "m.mbr_name";	
+		case "reward" 	-> searchType = "CONCAT_WS(' ', rh.rh_target, rh.rh_reward_type, rh.rh_rank)";	
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -175,7 +175,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntChallengeList();		
+		int rowCnt = challengeMapper.getCntRewardList();		
 		List<Reward> challengeList = challengeMapper.getRewardList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
