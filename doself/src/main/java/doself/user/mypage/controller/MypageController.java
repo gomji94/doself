@@ -106,10 +106,13 @@ public class MypageController {
 	
 	// 회원티켓내역조회
 	@GetMapping("/tickethistory" )
-	public String getTicketHistory(@RequestParam(name="memberId", required=false, defaultValue="id001") 
-									String memberId, Model model, Pageable pageable) {
+	public String getTicketHistory(@RequestParam(name="memberId", required=false, defaultValue="id008") String memberId,
+								   @RequestParam(name="startDate", required=false) String startDate,
+								   @RequestParam(name="endDate", required=false) String endDate,
+								   Model model,
+								   Pageable pageable) {
 		
-		var pageInfo = membersService.getTicketHistory(memberId, pageable);
+		var pageInfo = membersService.getTicketHistory(memberId, pageable, startDate, endDate);
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		List<TicketList> ticketList = pageInfo.getContents();
@@ -118,24 +121,24 @@ public class MypageController {
 		int endPageNum = pageInfo.getEndPageNum();
 		int lastPage = pageInfo.getLastPage();
 		
-		log.info("ticketList: {}", ticketList);
+		log.info("pageInfo: {}", pageInfo);
+		//log.info("ticketUsedCnt: {}", ticketList.get(0).getTicketUsedCnt());
+		//log.info("ticketNotUseCnt: {}", ticketList.get(0).getTicketNotUsedCnt());
 		
 		model.addAttribute("ticketList", ticketList);
+		model.addAttribute("ticketUsedCnt", ticketList.get(0).getTicketUsedCnt());
+		model.addAttribute("ticketNotUsedCnt", ticketList.get(0).getTicketNotUsedCnt());
 		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
 		model.addAttribute("endPageNum", endPageNum);
 		model.addAttribute("lastPage", lastPage);
 		
-		return "user/mypage/ticket-hisory";
+		
+		return "user/mypage/ticket-history";
 	}
 	
-	// 회원티켓내역검색
-	@GetMapping("/tickethistory/search" )
-	public String getTicketHistoryByDate() {
-			
-		return "user/mypage/";
-	}
+
 	// 회원포인트내역조회
 	@GetMapping("/pointhistory" )
 	public String getPointHistory() {

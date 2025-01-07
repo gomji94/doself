@@ -55,17 +55,19 @@
                     <a href="#">
                         <img th:src="*{memberImage}" alt="프로필 이미지" class="profile-image">
                     </a>
-                </div>   
+                </div>
                 <div id="profile-userId" th:text="*{memberId}"></div>
-                    <div id="remaining-point">이용한 티켓: <strong>1</strong> | 남은 티켓: <strong>9</strong></div>
+               <th:block th:if="${ticketList != null}">
+	                <div id="remaining-point">이용한 티켓: <a th:text="${ticketUsedCnt}"></a> | 남은 티켓: <a th:text="${ticketNotUsedCnt}"></a></div>
+               </th:block>    
             </div>
-            </th:block>
-                <form class="search-form">
+            
+                <form class="search-form" th:action="@{/mypage/tickethistory}">
                     <label for="start-date">조회기간 설정:</label>
-                    <input type="date" id="start-date" value="2024-01-01">
+                    <input type="date" id="start-date" value="2024-01-01" name="startDate">
                     ~
-                    <input type="date" id="end-date" value="2024-12-31">
-                    <button type="button" class="btn-search">검색</button>
+                    <input type="date" id="end-date" value="2024-12-31" name="endDate">
+                    <button type="submit" class="btn-search" id="btn-search">검색</button>
                 </form>
                 <div class="ticket-table-container">
                     <table class="ticket-table">
@@ -83,34 +85,36 @@
                         			<td th:text="${l.ticketBuyDate}"></td>
                         			<td th:text="${l.ticketName}"></td>
                         			<td th:text="${l.ticketPaymentMethod}"></td>
-                        			<td th:text="${l.ticketUseChk}"></td>
+                        			<td th:text="${l.ticketUseChk eq null} ? '사용 안함' : '사용'"></td>
                         		</tr>
                             </th:block>
                             <th:block th:unless="${ticketList}">
 								<tr>
 									<td colspan="4">구매한 티켓 이력이 없습니다.</td>
 								</tr>
-                            </th:block>
+                            
                             <!-- 추가 행 -->
                         </tbody>
                     </table>
                     <div class="pagination">
-                    	<li><a th:href="@{/mypage/tickethistory/(memberId=${memberId})}">&lt;</a></li>
-                    	<li th:classappend="${currentPage < 2} ? 'disabled'">
-                        	<a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${currentPage - 1})}" class="active"></a>
-                    	</li>
-                    	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
-		                    <li th:classappend="${num == currentPage} ? 'active'">
-		                    	<a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${num})}" th:text="${num}"></a>
-		                    </li>
-                  		</th:block>
-                  		<li th:classappend="${currentPage eq lastPage} ? 'disabled'">
-                    	    <a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${currentPage + 1})}"></a>
-                  		</li>
-					    <li><a th:href="@{/mypage/tickethistory/(memberId=${memberId},currentPage=${lastPage})}">&gt;</a></li>                    
-                        
+						<ul class="pagination">
+	                    	<li><a th:href="@{/mypage/tickethistory(memberId=${memberId})}">&lt;&lt;</a></li>
+	                    	<li th:classappend="${currentPage < 2} ? 'disabled'">
+	                        	<a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${currentPage - 1})}" >&lt;</a>
+	                    	</li>
+	                    	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+			                    <li th:classappend="${num == currentPage} ? 'active'">
+			                    	<a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${num})}" th:text="${num}"></a>
+			                    </li>
+	                  		</th:block>
+	                  		<li th:classappend="${currentPage eq lastPage} ? 'disabled'">
+	                    	    <a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${currentPage + 1})}">&gt;</a>
+	                  		</li>
+						    <li><a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${lastPage})}">&gt;&gt;</a></li>                    
+						</ul>                    
                     </div>
                  </div>
+                 </th:block>
         </main>
 	</th:block> 
 
@@ -120,5 +124,11 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     <script th:src="@{/assets/js/layout.js}"></script>
+    <script type="text/javascript">
+    
+     
+     </script>
+    
     </th:block> 
+    
 </html>
