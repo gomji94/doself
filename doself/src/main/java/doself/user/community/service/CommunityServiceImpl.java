@@ -47,12 +47,6 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public Article getArticleDetail(String articleKeyNum) {
-		// TODO Auto-generated method stub
-		return communityMapper.getArticleDetail(articleKeyNum);
-	}
-
-	@Override
 	public PageInfo<Article> getArticleListBySearch(Pageable pageable, SearchArticle searchArticle) {
 		// TODO Auto-generated method stub
 		
@@ -85,6 +79,15 @@ public class CommunityServiceImpl implements CommunityService {
 		List<Article> articleList = communityMapper.getArticleListBySearch(params);
 		
 		return new PageInfo<>(articleList, pageable, rowCnt);
+	}
+	
+	@Override
+	public Article getArticleDetail(String articleKeyNum) {
+		
+		int castKeyNum = Integer.parseInt(articleKeyNum);
+		String formattedKeyNum = String.format("fb_%03d", castKeyNum);
+		
+		return communityMapper.getArticleDetail(formattedKeyNum);
 	}
 
 }
