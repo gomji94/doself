@@ -18,5 +18,5 @@ public interface ChallengeListService {
 	void addChallenge(ChallengeList challengeList);
 	
 	// 챌린지 페이지
-	CardPageInfo<ChallengeList> getChallengePage(CardPageable cardPageable);
+	CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable);
 }

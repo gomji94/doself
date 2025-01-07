@@ -21,7 +21,7 @@ public interface ChallengeListMapper {
 	int addChallenge(ChallengeList challengeList);
 	
 	// 챌린지 페이지
-	List<ChallengeList> getChallengePage(CardPageable cardPageable);
+	List<ChallengeList> getChallengeList(CardPageable cardPageable);
 	
 	// 챌린지 총 갯수
 	int getCntChallengeList();
