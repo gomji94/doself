@@ -50,14 +50,14 @@ public class ChallengeListController {
 	// 진행중인 챌린지 상세 정보 조회
 	@GetMapping("/list/view")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
-	public String getChallengeListView(@RequestParam(name="ChallengeCode") String challengeCode, Model model) {
+	public String getChallengeListView(@RequestParam(name ="challengeCode") String challengeCode, Model model) {
 		log.info("challengeCode: {}", challengeCode);
-		
+		// 서비스 호출
 		List<ChallengeList> challengeList = challengeListService.getChallengeListView(challengeCode);
 		log.info("challengeList: {}", challengeList);
 		
-		model.addAttribute("challengeDetails", challengeList);
-		return "user/challenge/challenge-list-view :: challenge-list-view";
+		model.addAttribute("challengeList", challengeList);
+		return "user/challenge/challenge-list-view :: challenge-list-view";  // thymeleaf  조각 반환
 	}
 	
 	@PostMapping("/list/createchallengerequest")
