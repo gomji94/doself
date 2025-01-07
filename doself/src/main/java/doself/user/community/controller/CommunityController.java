@@ -66,6 +66,12 @@ public class CommunityController {
 		return "user/community/list";
 	}
 	
+	@GetMapping("/list/search")
+	public String getMethodName(@RequestParam String param) {
+		return new String();
+	}
+	
+	
 	@GetMapping("/view")
 	public String getArticleDetail(@RequestParam(name = "articleNum") String articleKeyNum, Model model) {
 		model.addAttribute("articleDetail", communityService.getArticleDetail(articleKeyNum));
