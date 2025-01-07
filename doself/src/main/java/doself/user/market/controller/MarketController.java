@@ -1,12 +1,17 @@
 package doself.user.market.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import doself.user.community.domain.Article;
 import doself.user.market.service.MarketService;
+import doself.util.Pageable;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +49,23 @@ public class MarketController {
 	}
 	
 	@GetMapping("/purchaselist")
-	public String getPurchaseList() {
+	public String getPurchaseListById(Pageable pageable, Model model, HttpSession session) {
+		
+		String memberId = (String) session.getAttribute("SID");
+		
+		var pageInfo = marketService.getPurchaseListById(memberId, pageable);
+		List<PurchaseItem> purchaseList = pageInfo.getContents();
+		int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lastPage = pageInfo.getLastPage();
+		
+		model.addAttribute("purchaseList", purchaseList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lastPage", lastPage);
+		
 		return "user/market/purchase-list";
 	}
 	
