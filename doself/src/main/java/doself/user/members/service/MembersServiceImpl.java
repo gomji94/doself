@@ -1,6 +1,8 @@
 package doself.user.members.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -44,9 +46,15 @@ public class MembersServiceImpl implements MembersService {
 
 	//회원 티켓정보 조회
 	@Override
-	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable) {
-		int rowCnt = membersMapper.getCntTicketHistory();
-		List<TicketList> ticketList = membersMapper.getTicketListById(memberId, pageable);
+	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable,String startDate, String endDate) {
+		int rowCnt = membersMapper.getCntTicketHistory(memberId,startDate,endDate);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("memberId", memberId);
+		paramMap.put("rowPerPage", pageable.getRowPerPage());
+		paramMap.put("offset", pageable.getOffset());
+		paramMap.put("startDate", startDate);
+		paramMap.put("endDate", endDate);
+		List<TicketList> ticketList = membersMapper.getTicketListById(paramMap);
 		return new PageInfo<>(ticketList, pageable, rowCnt);
 	}
 

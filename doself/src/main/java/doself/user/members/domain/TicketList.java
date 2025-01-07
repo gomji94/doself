@@ -10,5 +10,11 @@ public class TicketList {
 	private String ticketName;
 	private String ticketPaymentMethod;
 	private String ticketUseChk;
+	private String ticketReturnChk;
+	private String ticketUsedCnt;
+	private String ticketNotUsedCnt;
+	
+	
+	
 	
 }
