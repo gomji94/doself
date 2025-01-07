@@ -29,8 +29,9 @@ public class ChallengeListController {
 	@GetMapping("/list")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public String getChallengeList(CardPageable cardPageable, Model model) {
-		var challengeListPageInfo = challengeListService.getChallengePage(cardPageable);
-		List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		var challengeListPageInfo = challengeListService.getChallengeList(cardPageable);
+		//List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		List<ChallengeList> challengeList = challengeListPageInfo.getContents();
 		int currentPage = challengeListPageInfo.getCurrentPage();
 		int startPageNum = challengeListPageInfo.getStartPageNum();
 		int endPageNum = challengeListPageInfo.getEndPageNum();

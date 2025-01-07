@@ -56,9 +56,9 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 챌린지 리스트 페이지
 	@Override
-	public CardPageInfo<ChallengeList> getChallengePage(CardPageable cardPageable) {
+	public CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable) {
 	    int rowCnt = challengeListMapper.getCntChallengeList();
-	    List<ChallengeList> challengeList = challengeListMapper.getChallengePage(cardPageable);
+	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
 	}
 	
