@@ -11,6 +11,8 @@ import doself.util.Pageable;
 
 @Mapper
 public interface MembersMapper {
+	// 회원탈퇴
+	public int removeMemberById(String memberId);
 
 	//회원 정보 조회
 	public Members getMemberInfoById(String memberId);
