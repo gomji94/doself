@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.user.members.domain.Members;
+import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
 import doself.user.members.service.MembersService;
 import doself.util.Pageable;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +30,9 @@ public class MypageController {
 
 	// 회원정보수정
 	@GetMapping("/member/info")   //
-	public String getMemberInfoView(@RequestParam(name="memberId") String memberId, Model model) {	
+	public String getMemberInfoView(HttpSession session, Model model) {	
+		
+		String memberId = (String)session.getAttribute("SID");
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		String[] memberTel = memberInfo.getMemberPhoneNum().split("-");
 		String Email = memberInfo.getMemberEmail();
@@ -100,19 +104,19 @@ public class MypageController {
 	// 회원탈퇴
 	@PostMapping("/member/delete" )
 	public String deleteMember(@RequestParam(name="memberId") String memberId) {
-		//var removeMember = membersService.removerMemeberById(memberId);
+		
+		
 		membersService.removeMemberById(memberId);
 		return "redirect:/login";
 	}	
 	
-	// 회원티켓내역조회
+	// 회원티켓 내역조회
 	@GetMapping("/tickethistory" )
-	public String getTicketHistory(@RequestParam(name="memberId", required=false, defaultValue="id008") String memberId,
-								   @RequestParam(name="startDate", required=false) String startDate,
+	public String getTicketHistory(@RequestParam(name="startDate", required=false) String startDate,
 								   @RequestParam(name="endDate", required=false) String endDate,
-								   Model model,
+								   HttpSession session, Model model,
 								   Pageable pageable) {
-		
+		String memberId = (String)session.getAttribute("SID");
 		var pageInfo = membersService.getTicketHistory(memberId, pageable, startDate, endDate);
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
@@ -122,7 +126,7 @@ public class MypageController {
 		int endPageNum = pageInfo.getEndPageNum();
 		int lastPage = pageInfo.getLastPage();
 		
-		log.info("pageInfo: {}", pageInfo);
+		//log.info("pageInfo: {}", pageInfo);
 		//log.info("ticketUsedCnt: {}", ticketList.get(0).getTicketUsedCnt());
 		//log.info("ticketNotUseCnt: {}", ticketList.get(0).getTicketNotUsedCnt());
 		
@@ -135,30 +139,39 @@ public class MypageController {
 		model.addAttribute("endPageNum", endPageNum);
 		model.addAttribute("lastPage", lastPage);
 		
-		
 		return "user/mypage/ticket-history";
 	}
 	
 
 	// 회원포인트내역조회
 	@GetMapping("/pointhistory" )
-	public String getPointHistory() {
+	public String getPointHistory(@RequestParam(name="startDate", required=false) String startDate,
+			                      @RequestParam(name="endDate", required=false) String endDate,
+			                      HttpSession session, Model model, Pageable pageable) {
+		
+		String memberId = (String)session.getAttribute("SID");
+		var pageInfo = membersService.getPointHistory(memberId, pageable, startDate, endDate);
+		Members memberInfo = membersService.getMemberInfoById(memberId);
+		
+		List<PointList> pointList = pageInfo.getContents();
+		int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lasePage = pageInfo.getLastPage();
+		log.info("pageInfo: {}", pageInfo);
+		
+		
+		
 		
 		return "user/mypage/point-hisory";
 	}
-	
-	// 회원포인트내역검색
-	@GetMapping("/pointhistory/search" )
-	public String getPointHistoryByDate() {
-		
-		return "user/mypage/";
-	}
+
 	
 	// 회원피드내역조회
 	@GetMapping("/feedlist" )
 	public String getFeedList() {
 		
-		return "user/mypage/feed-list";
+		return "user/mypage/feed-list";	
 	}
 
 	// 회원 특정피드조회
