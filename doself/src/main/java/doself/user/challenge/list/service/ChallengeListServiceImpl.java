@@ -42,9 +42,10 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 특정 챌린지 카드 조회
 	@Override
-	public ChallengeList getChallengeListView(String ChallengeCode) {
-			
-		return challengeListMapper.getChallengeListView(ChallengeCode);
+	public List<ChallengeList> getChallengeListView(String challengeCode) {
+		List<ChallengeList> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
+		log.info("challengeListDetail: {}", challengeListDetail);   // mapper에서 가져온 데이터 확인
+		return challengeListDetail;
 	}
 
 	// 챌린지 생성(등록)
@@ -56,9 +57,9 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 챌린지 리스트 페이지
 	@Override
-	public CardPageInfo<ChallengeList> getChallengePage(CardPageable cardPageable) {
+	public CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable) {
 	    int rowCnt = challengeListMapper.getCntChallengeList();
-	    List<ChallengeList> challengeList = challengeListMapper.getChallengePage(cardPageable);
+	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
 	}
 	

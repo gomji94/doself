@@ -19,10 +19,17 @@
 	    <result column="ct_num"				  property="challengeTopicCode"/>
 	    <result column="ct_name" 			  property="challengeTopicName"/>
 	    <result column="cs_status"			  property="challengeStatus"/>
+		<collection property="challengeDetailView" ofType="ChallengeDetailView">
+			<id 	column="cg_num"   			  property="challengeCode"/>
+			<result column="mbr_id" 			  property="challengeLeaderId"/>
+			<result column="mbr_image" 			  property="challengeLeaderImage"/>
+			<result column="ctl_content"		  property="challengeTopicContent"/>
+			<result column="cg_current_mbr_count" property="challengeContent"/>
+		</collection>
 	</resultMap>
 
   	<!-- 특정 챌린지 리스트 조회 -->
-  	<select id="getChallengeList" resultType="ChallengeList" resultMap="ChallengeListResultMap">
+  	<select id="getChallengeList"  parameterType="CardPageable" resultType="ChallengeList" resultMap="ChallengeListResultMap">
 	  	SELECT
 			cg.cg_num,
 			cg.mbr_id,
@@ -42,6 +49,9 @@
 		    INNER JOIN challenge_topic_level stl USING(ctl_num)
 		    INNER JOIN challenge_status cs USING(cs_num)
 		    INNER JOIN challenge_topic ct USING(ct_num)
+		ORDER BY 
+		    cg_start_date DESC 
+	    LIMIT #{rowPerPage} OFFSET #{offset}
 	 <!--    WHERE
 			cg.cg_num = #{ChallengeCode}; -->
   	</select>
@@ -82,24 +92,28 @@
 			#{challengeRewardCheck} 	  -- null 허용
 		);
   	</insert>
-  	<select id="getChallengePage" parameterType="CardPageable" resultType="ChallengeList">
-	    SELECT 
-			cg_num,
-			cg_name,
-			cg_leader_name,
-			cg_start_date,
-			cg_end_date
-		FROM 
-		    challenge_group
-		ORDER BY 
-		    cg_start_date DESC 
-	    LIMIT #{rowPerPage} OFFSET #{offset}
-	</select>
+  	<!-- 챌린지 페이징 처리 -->
   	<select id="getCntChallengeList" resultType="int">
   		/* 챌린지 리스트 총 갯수 */
   		SELECT
 			COUNT(*)
 		FROM
 			challenge_group
+  	</select>
+  	
+  	<!-- 챌린지 상세 정보 모달 -->
+  	<select id="getChallengeListView" parameterType="ChallengeDetailView" resultMap="ChallengeListResultMap">
+		SELECT
+			cg.cg_num,
+			m.mbr_image,
+			cg.mbr_id,
+			ctl.ctl_content,
+			cg.cg_content
+		FROM
+			challenge_group cg
+			INNER JOIN `member` m USING(mbr_id)
+			INNER JOIN challenge_topic_level ctl USING(ctl_num)
+		WHERE
+			cg_num = #{challengeCode};
   	</select>
   </mapper>

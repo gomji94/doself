@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
@@ -29,8 +30,9 @@ public class ChallengeListController {
 	@GetMapping("/list")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public String getChallengeList(CardPageable cardPageable, Model model) {
-		var challengeListPageInfo = challengeListService.getChallengePage(cardPageable);
-		List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		var challengeListPageInfo = challengeListService.getChallengeList(cardPageable);
+		//List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		List<ChallengeList> challengeList = challengeListPageInfo.getContents();
 		int currentPage = challengeListPageInfo.getCurrentPage();
 		int startPageNum = challengeListPageInfo.getStartPageNum();
 		int endPageNum = challengeListPageInfo.getEndPageNum();
@@ -49,9 +51,13 @@ public class ChallengeListController {
 	@GetMapping("/list/view")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public String getChallengeListView(@RequestParam(name="ChallengeCode") String challengeCode, Model model) {
-		ChallengeList challengeDetails = challengeListService.getChallengeListView(challengeCode);
-		model.addAttribute("challengeDetails", challengeDetails);
-		return "user/challenge/challenge-list-view";
+		log.info("challengeCode: {}", challengeCode);
+		
+		List<ChallengeList> challengeList = challengeListService.getChallengeListView(challengeCode);
+		log.info("challengeList: {}", challengeList);
+		
+		model.addAttribute("challengeDetails", challengeList);
+		return "user/challenge/challenge-list-view :: challenge-list-view";
 	}
 	
 	@PostMapping("/list/createchallengerequest")

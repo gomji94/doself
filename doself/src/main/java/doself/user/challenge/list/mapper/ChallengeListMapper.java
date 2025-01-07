@@ -3,6 +3,7 @@ package doself.user.challenge.list.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.util.CardPageable;
@@ -15,13 +16,13 @@ public interface ChallengeListMapper {
 	List<ChallengeList> getChallengeList();
 	
 	// 특정 챌린지 정보 조회(detail view)
-	ChallengeList getChallengeListView(String ChallengeCode);
+	List<ChallengeList> getChallengeListView(@Param("challengeCode") String challengeCode);
 
 	// 챌린지 추가(작업중)
 	int addChallenge(ChallengeList challengeList);
 	
 	// 챌린지 페이지
-	List<ChallengeList> getChallengePage(CardPageable cardPageable);
+	List<ChallengeList> getChallengeList(CardPageable cardPageable);
 	
 	// 챌린지 총 갯수
 	int getCntChallengeList();

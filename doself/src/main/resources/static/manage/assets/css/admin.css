@@ -145,6 +145,7 @@ input:focus::-moz-placeholder {
   position: relative;
 }
 
+
 .height-100vh {
   height: 100vh !important;
 }
@@ -4266,6 +4267,17 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
   white-space: nowrap; /* 콘텐츠 줄바꿈 방지 */
 }
 
+.searchInput {
+	display: flex;
+}
+
+.searchLeft{
+	margin-left: 25px;
+}
+
+.align-content {
+	align-content: center !important;
+}
 @media (max-width: 1200px) {
   /* tablet devices */
   .main-wrap {
