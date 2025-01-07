@@ -67,18 +67,50 @@
 				ON rr.sc_code = sc.sc_code
 				INNER JOIN report_category rc
 				ON rr.rc_code = rc.rc_code
-			WHERE 1=1
-			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
-		        AND ${searchType} = '${searchKeyword}'
-		    </if>
-		    <if test="startDate != null and startDate != ''">
-		        AND rr_date > #{startDate}
-		    </if>
-		    <if test="endDate != null and endDate != ''">
-		        AND #{endDate} > rr_date
-		    </if>
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rr_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rr_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
 			ORDER BY
 				rr.rr_num
+			LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntDeclareList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM report_request rr INNER JOIN `member` m
+				ON rr.mbr_id = m.mbr_id
+				INNER JOIN occurance_location_code olc
+				ON rr.olc_code = olc.olc_code
+				INNER JOIN status_category sc
+				ON rr.sc_code = sc.sc_code
+				INNER JOIN report_category rc
+				ON rr.rc_code = rc.rc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rr_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rr_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+			ORDER BY
+				rr.rr_num   
 		</select>
 		
 		
@@ -123,17 +155,45 @@
 				ON rmm.mbr_id = m.mbr_id
 				INNER JOIN report_category rc
 				ON rmm.rc_code = rc.rc_code
-			WHERE 1=1
-			<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
-		        AND ${searchType} = '${searchKeyword}'
-		    </if>
-		    <if test="startDate != null and startDate != ''">
-		        AND rmm_sanction_end_date > #{startDate}
-		    </if>
-		    <if test="endDate != null and endDate != ''">
-		        AND #{endDate} > rmm_sanction_end_date
-		    </if>
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rmm_sanction_end_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rmm_sanction_end_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
 		    ORDER BY
 		    	rmm.rmm_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntDeclareUserList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM report_member_management rmm INNER JOIN `member` m
+				ON rmm.mbr_id = m.mbr_id
+				INNER JOIN report_category rc
+				ON rmm.rc_code = rc.rc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rmm_sanction_end_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rmm_sanction_end_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	rmm.rmm_num  
 		</select>
   </mapper>

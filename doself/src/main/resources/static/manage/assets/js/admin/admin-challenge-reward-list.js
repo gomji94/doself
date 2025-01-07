@@ -5,11 +5,9 @@ function updateSearchSuggestions() {
     suggestions.innerHTML = ""; // 기존 데이터 초기화
 
     let options = [];
-    if (searchType === "cg.cg_name") {
-        options = ["가보자고", "간식먹자"];
-    } else if (searchType === "CONCAT_WS(' ', rh.rh_target, rh.rh_reward_type, rh.rh_rank)") {
-        options = ["멤버 챌린지별 1위", "멤버 챌린지별 2위", "멤버 챌린지별 3위", "챌린지 월간 1위", "챌린지 월간 2위", "챌린지 월간 3위"];
-    }
+    if (searchType === "reward") {
+        options.push("멤버 챌린지별 1위", "멤버 챌린지별 2위", "멤버 챌린지별 3위", "챌린지 월간 1위", "챌린지 월간 2위", "챌린지 월간 3위");
+    } 
 
     options.forEach(value => {
         const option = document.createElement("option");
@@ -17,3 +15,24 @@ function updateSearchSuggestions() {
         suggestions.appendChild(option);
     });
 }
+
+// 검색기능
+$('#searchBtn').click(function(){
+	const searchType = $('#searchType').val();
+	const searchKeyword = $('#searchKeyword').val();
+	const startDate = $('#startDate').val();
+	const endDate = $('#endDate').val();
+	
+	const $form = $('<form />', { 'action' : '/admin/challenge/rewardlist', 'method': 'get'});
+	const $searchType = 
+			$('<input />', {'type':'hidden', 'name' : 'searchType'}).val(searchType);
+	const $searchKeyword = 
+			$('<input />', {'type':'hidden', 'name' : 'searchKeyword'}).val(searchKeyword);
+	const $startDate = 
+			$('<input />', {'type':'hidden', 'name' : 'startDate'}).val(startDate);
+	const $endDate = 
+			$('<input />', {'type':'hidden', 'name' : 'endDate'}).val(endDate);
+	$form.append($searchType, $searchKeyword, $startDate, $endDate);
+	$('body').append($form);
+	$form.submit();
+});

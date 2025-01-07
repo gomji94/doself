@@ -6,7 +6,7 @@ function updateSearchSuggestions() {
 
     let options = [];
     if (searchType === "mgCode") {
-        options = ["관리자", "회원", "부정회원"];
+        options.push("관리자", "회원", "부정회원");
     }
 
     options.forEach(value => {
