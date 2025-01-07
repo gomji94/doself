@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import doself.user.members.domain.Members;
+import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
 import doself.user.members.mapper.MembersMapper;
 import doself.util.PageInfo;
@@ -63,6 +64,20 @@ public class MembersServiceImpl implements MembersService {
 		paramMap.put("endDate", endDate);
 		List<TicketList> ticketList = membersMapper.getTicketListById(paramMap);
 		return new PageInfo<>(ticketList, pageable, rowCnt);
+	}
+
+	@Override
+	public PageInfo<PointList> getPointHistory(String memberId, Pageable pageable, String startDate, String endDate) {
+		int rowCnt = membersMapper.getCntTicketHistory(memberId, startDate, endDate);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("memberId", memberId);
+		paramMap.put("rowPerPage", pageable.getRowPerPage());
+		paramMap.put("offset", pageable.getOffset());
+		paramMap.put("startDate", startDate);
+		paramMap.put("endDate", endDate);
+		List<PointList> pointList = membersMapper.getPointListById(paramMap);
+
+		return new PageInfo<>(pointList, pageable, rowCnt);
 	}
 
 

@@ -30,7 +30,15 @@
 		<result column="ctm_return_status" 			 property="ticketReturnChk" />
 		<result column="ticketUsedCnt" 			     property="ticketUsedCnt" />
 		<result column="ticketNotUsedCnt" 			 property="ticketNotUsedCnt" />
-		
+	</resultMap>
+	
+	<!-- 포인트리스트 -->
+	<resultMap type="PointList" id="PointListResultMap">
+		<id 	column="mbr_id" 		    property="memberId"/>
+		<result column="point_date" 	    property="pointTotalDate" />
+		<result column="point_detail" 	    property="pointDetail" />
+		<result column="point_amount" 	    property="pointUseChk" />
+		<result column="point_usechk" 	    property="unUsePoint" />
 	</resultMap>
 	
 	<!-- 회원탈퇴 -->
@@ -92,7 +100,7 @@
        WHERE mbr_id = #{memberId};
 </update>    
 
-    <!-- 회원 티켓정보 조회 -->
+    <!-- 회원 티켓내역 조회 -->
     <!-- /* <![CDATA[<= ]]> 꺽쇠 텍스트인식 */ -->
     <select id="getTicketListById" parameterType="map" resultMap="TicketListResultMap" >
 		SELECT 
@@ -138,7 +146,35 @@
 			AND ctph_date <![CDATA[ <= ]]> #{endDate} 
 			</if>
    	</select>
+   	<!-- 회원 포인트내역 조회 -->
+    <select id="getPointListById" parameterType="map" resultMap="PointListResultMap">
+    	SELECT
+    		rph.mbr_id AS mbr_id,
+			rph.rph_reward_payment_date AS point_date,
+			rh.rh_reward_type AS point_detail,
+			rh.rh_point AS point_amount,
+			'적립' AS point_usechk
+			FROM
+			reward_payment_history rph INNER JOIN	
+			reward_history rh ON rh.rh_num = rph.rh_num
+		WHERE
+			mbr_id = 'id008'
+		UNION ALL	
+		SELECT
+			pumh.mbr_id AS mbr_id,
+			pumh.pumh_date AS point_date,
+			pepl.pepl_name AS point_detail,
+			pepl.pepl_price AS point_amount,
+			'사용' AS point_usechk
+		FROM
+			point_use_management_history pumh
+		INNER JOIN	
+			point_exchange_product_list pepl ON pepl.pepl_num = pumh.pepl_num
+		WHERE
+			mbr_id = 'id008'
+		ORDER BY point_date;
     
+    </select>
     
     
   </mapper>
