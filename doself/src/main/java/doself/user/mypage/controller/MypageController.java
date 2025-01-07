@@ -99,9 +99,10 @@ public class MypageController {
 	
 	// 회원탈퇴
 	@PostMapping("/member/delete" )
-	public String deleteMember() {
-		 
-		return "/";
+	public String deleteMember(@RequestParam(name="memberId") String memberId) {
+		//var removeMember = membersService.removerMemeberById(memberId);
+		membersService.removeMemberById(memberId);
+		return "redirect:/login";
 	}	
 	
 	// 회원티켓내역조회

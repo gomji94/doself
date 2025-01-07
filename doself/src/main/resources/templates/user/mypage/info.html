@@ -125,8 +125,11 @@
                         </div>
                     </div>
                     <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
+                </form>
+                <form action="/mypage/member/delete" method="post">
+                <input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
                     <div id="withdrawa">
-                    <button type="button" id="removeBtn">회원탈퇴</button>
+          	          <button type="submit" id="removeBtn">회원탈퇴</button>
                     </div>
                 </form>
 		</th:block>

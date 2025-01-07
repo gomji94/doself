@@ -32,6 +32,15 @@
 		<result column="ticketNotUsedCnt" 			 property="ticketNotUsedCnt" />
 		
 	</resultMap>
+	
+	<!-- 회원탈퇴 -->
+	<update id="removeMemberById" parameterType="String">
+		UPDATE member
+		SET
+			is_deleted = 'delete'
+		WHERE
+			mbr_id = #{memberId};
+	</update>
   		
   	<!-- 회원정보 -->	
     <select id="getMemberInfoById" parameterType="String" resultMap="membersResultMap">

@@ -21,6 +21,13 @@ public class MembersServiceImpl implements MembersService {
 
 	private final MembersMapper membersMapper;
 	
+	
+	@Override
+	public void removeMemberById(String memberId) {
+		membersMapper.removeMemberById(memberId);
+		
+	}
+	
 	// 회원 정보 조회
 	@Override
 	public Members getMemberInfoById(String memberId) {

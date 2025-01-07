@@ -22,66 +22,6 @@
             flex-wrap: nowrap; /* 컨테이너 안 요소 줄바꿈 방지 */
         }
 
-        /* 상단 바 스타일 */
-        .header {
-            width: 1280px; /* 최소 너비 설정 */
-            min-width: 1000px; /* 최소 너비 설정 */
-            max-width: 100%; /* 화면 최대 너비 */
-            height: 70px;
-            background-color: #fff;
-            display: flex;
-            align-items: center; /* 세로 중앙 정렬 */
-            justify-content: space-between; /* 로고와 프로필 사진 양쪽 정렬 */
-            position: fixed; /* 스크롤에도 고정된 위치 유지 */
-            top: 0; /* 화면 맨 위 */
-            left: 50%; /* 화면 중앙 기준으로 정렬 */
-            transform: translateX(-50%); /* 중앙 정렬 */
-            z-index: 1000; /* 다른 요소보다 위에 표시 */
-            border-bottom: 1px solid #ddd;
-            padding: 0 15px; /* 좌우 패딩 */
-            box-sizing: border-box; /* 패딩 포함 계산 */
-            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-            margin: 0 auto; /* 자동으로 가운데 배치 */
-        }
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            color: #9ACD32;
-            text-decoration: none;
-            flex: 0 0 auto; /* 크기 고정 */
-        }
-        .header .logo img {
-            width: 120px;
-            height: auto;
-        }
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            flex: 1; /* 남은 공간을 차지 */
-            justify-content: flex-start; /* 왼쪽 정렬 */
-            padding-left: 227px; /* 추가 여백 */
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-size: 15px;
-            padding: 8px 12px;
-            border-radius: 4px;
-        }
-        .nav-links a:hover {
-            background-color: #f4f4f4;
-        }
-        .profile {
-            display: flex;
-            align-items: center; /* 세로 중앙 정렬 */
-        }
-        
-        .profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
         /* 왼쪽 사이드바 스타일 */
         .sidebar {
             width: 230px;

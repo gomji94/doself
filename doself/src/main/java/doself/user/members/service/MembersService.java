@@ -21,6 +21,9 @@ public interface MembersService {
 	
 	//회원 티켓정보 조회
 	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable, String startDate, String endDate);
+
+	// 회원탈퇴
+	public void removeMemberById(String memberId);
 	
 	
 
