@@ -117,8 +117,8 @@ public class MypageController {
 		int startPageNum = pageInfo.getStartPageNum();
 		int endPageNum = pageInfo.getEndPageNum();
 		int lastPage = pageInfo.getLastPage();
-		
-		log.info("ticketList: {}", ticketList);
+		System.out.println("************"+ ticketList);
+		log.info("ticketList: {}", ticketList.size());
 		
 		model.addAttribute("ticketList", ticketList);
 		model.addAttribute("memberInfo", memberInfo);

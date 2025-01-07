@@ -1,7 +1,5 @@
 package doself.user.members.service;
 
-import java.util.List;
-
 import doself.user.members.domain.Members;
 import doself.user.members.domain.TicketList;
 import doself.util.PageInfo;

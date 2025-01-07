@@ -87,7 +87,7 @@
 			pmc.pmc_name,
 			ctp.ctp_use
 		FROM
-			challenge_ticket_payment_history ctph INNER JOIN
+			challenge_ticket_payment_history ctph LEFT JOIN
 			challenge_ticket_management ctm ON ctph.ctph_num = ctm.ctph_num INNER JOIN
 			ticket_payment_method tpm ON tpm.tpm_num = ctph.tpm_num INNER JOIN	
 			payment_method_category pmc ON pmc.pmc_code = tpm.pmc_code INNER JOIN
@@ -95,6 +95,7 @@
 			challenge_ticket_category ctc ON ctc.ctc_code = ctp.ctc_code
 		WHERE
 			ctph.mbr_id = #{memberId};
+			
     </select>
     
     <!-- 회원 티켓이력 총 행의 갯수 -->
