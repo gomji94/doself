@@ -16,7 +16,7 @@ public interface NutritionMapper {
 	List<Nutrition> getNutritionRequestList(Map<String, Object> searchMap);
 	
 	//등록요청 갯수
-	int getCntNutritionRequestList();
+	int getCntNutritionRequestList(Map<String, Object> searchMap);
 	//특정 등록 조회
 	Nutrition getNutritionByNirrNum(String nirrNum);
 	

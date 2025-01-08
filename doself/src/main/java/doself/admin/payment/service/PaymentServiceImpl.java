@@ -36,7 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = paymentMapper.getCntPaymentList();		
+		int rowCnt = paymentMapper.getCntPaymentList(searchMap);		
 		List<Payment> paymentList = paymentMapper.getPaymentList(searchMap);
 		
 		return new PageInfo<>(paymentList, pageable, rowCnt);
@@ -58,7 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = paymentMapper.getCntRefundList();		
+		int rowCnt = paymentMapper.getCntRefundList(searchMap);		
 		List<PaymentRefund> paymentList = paymentMapper.getRefundList(searchMap);
 		
 		return new PageInfo<>(paymentList, pageable, rowCnt);

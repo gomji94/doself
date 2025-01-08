@@ -19,36 +19,36 @@ public interface ChallengeMapper {
 	//챌린지 리스트 출력
 	List<Challenge> getChallengeList(Map<String, Object> searchMap);
 	//챌린지 갯수
-	int getCntChallengeList();
+	int getCntChallengeList(Map<String, Object> searchMap);
 	
 	//챌린지내 개인기록 출력
 	List<PersonalStat> getPersonalStatList(Map<String, Object> searchMap);
 	//챌린지 개인기록 갯수
-	int getCntPersonalStatList();
+	int getCntPersonalStatList(Map<String, Object> searchMap);
 	
 	//챌린지내 개인점수 출력
 	List<PersonalScore> getPersonalScoreList(Map<String, Object> searchMap);
 	//챌린지 개인기록 갯수
-	int getCntPersonalScoreList();
+	int getCntPersonalScoreList(Map<String, Object> searchMap);
 	
 	//챌린지 기록 출력
 	List<Stat> getStatList(Map<String, Object> searchMap);
 	//챌린지 개인기록 갯수
-	int getCntStatList();
+	int getCntStatList(Map<String, Object> searchMap);
 	
 	//챌린지 점수 출력
 	List<Score> getScoreList(Map<String, Object> searchMap);
 	//챌린지 개인기록 갯수
-	int getCntScoreList();
+	int getCntScoreList(Map<String, Object> searchMap);
 	
 	//챌린지 리더가 경고한내역 출력
 	List<Warning> getWarninglist(Map<String, Object> searchMap);
 	//챌린지 개인기록 갯수
-	int getCntWarninglist();
+	int getCntWarninglist(Map<String, Object> searchMap);
 		
 	//챌린지 보상지급기록 출력
 	List<Reward> getRewardList(Map<String, Object> searchMap);
 	//챌린지 개인기록 갯수
-	int getCntRewardList();
+	int getCntRewardList(Map<String, Object> searchMap);
 		
 }
