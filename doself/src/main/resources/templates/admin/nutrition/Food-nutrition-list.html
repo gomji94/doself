@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="content-header">
+              <div>
+              	<h2 class="content-title card-title">음식영양정보관리</h2>
+              </div>             
+          </div>          
+		</th:block>
+		
+		<th:block layout:fragment="content-body">
+			<div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-6 col-6 col-md-3">
+                                <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
+	                                <option value="mniName">음식이름</option>
+	                            </select>
+                            </div>
+                            <!-- 검색어 입력 -->
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
+                                <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                                <datalist id="searchSuggestions"></datalist>                                                                                             
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
+                            </div>
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>음식 영양정보 번호</th>
+                                        <th>음식이름</th>
+                                        <!-- <th>음식사진</th> -->
+                                        <th>1인분 중량</th>
+                                        <th>에너지</th>                                        
+                                        <th>탄수화물</th>
+                                        <th>단백질</th>                                        
+                                        <th>지방</th>                                        
+                                        <th>당류</th>                                                                               
+                                        <th>콜레스테롤</th>                                                                               
+                                        <th>나트륨</th>                                                                               
+                                        <th>칼슘</th>                                                                               
+                                        <th>철분</th>                                                                               
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	<th:block th:if="${nutritionList != null}">
+                                		<tr th:each="l : ${nutritionList}" class="text-center">
+                                			<td th:text="${l.mniNum}"></td>
+                                			<td th:text="${l.mniName}"></td>
+                                			<!-- <td th:text="${l.mniPicture}"></td> -->
+                                			<td th:text="${l.mniWeight}"></td>
+                                			<td th:text="${l.mniKcal}"></td>
+                                			<td th:text="${l.mniCarbo}"></td>
+                                			<td th:text="${l.mniProtein}"></td>
+                                			<td th:text="${l.mniFat}"></td>
+                                			<td th:text="${l.mniSugar}"></td>                                		
+                                			<td th:text="${l.mniCholesterol}"></td>                                		
+                                			<td th:text="${l.mniSodium}"></td>                                		
+                                			<td th:text="${l.mniCalcium}"></td>                                		
+                                			<td th:text="${l.mniIron}"></td>                                		                                			                                	
+                                		</tr>
+                                	</th:block>                                                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+                
+                <!-- 페이징 -->
+               <div class="pagination-area mt-15 mb-50">
+              		<nav>
+                   <ul class="pagination justify-content-center">
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist}">
+                   			<i class="material-icons md-first_page"></i>
+                   		</a>
+                   	</li>
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage - 1})}">
+                   			<i class="material-icons md-chevron_left"></i>
+                   		</a>
+                   	</li>
+                   		<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+					        <li class="page-item" th:classappend="${num == currentPage} ? 'active'">
+					            <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${num})}" th:text="${num}"></a>
+					        </li>
+					    </th:block>     
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage +1})}"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${lastPage})}"><i class="material-icons md-last_page"></i></a>
+                    </li>
+                   </ul>
+               </nav>
+           </div>  
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">
+        	<script th:src="@{/manage/assets/js/admin/admin-food-nutrition-list.js}"></script>
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>

@@ -9,7 +9,9 @@ public class PointList {
 	private String pointTotalDate;  //적립,사용날자
 	private String pointDetail; 	//내용
 	private String pointUseChk;     //사용여부
+	private String pointAmount;
 	private String unUsePoint;      //잔여포인트
+	
 	
 	
 	

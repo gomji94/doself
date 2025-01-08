@@ -17,6 +17,6 @@ public interface FoodService {
 	List<Food> searchFoodByFoodName(String foodName);
 	
 	// 음식 등록 요청
-	void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
+	int createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
 
 }

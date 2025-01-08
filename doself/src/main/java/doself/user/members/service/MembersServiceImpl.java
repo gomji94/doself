@@ -68,7 +68,7 @@ public class MembersServiceImpl implements MembersService {
 
 	@Override
 	public PageInfo<PointList> getPointHistory(String memberId, Pageable pageable, String startDate, String endDate) {
-		int rowCnt = membersMapper.getCntTicketHistory(memberId, startDate, endDate);
+		int rowCnt = membersMapper.getCntPointHistory(memberId, startDate, endDate);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("memberId", memberId);
 		paramMap.put("rowPerPage", pageable.getRowPerPage());
@@ -80,7 +80,7 @@ public class MembersServiceImpl implements MembersService {
 		return new PageInfo<>(pointList, pageable, rowCnt);
 	}
 
-
+	//회원 피드내역 조회
 
 
 	

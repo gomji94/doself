@@ -37,10 +37,10 @@
 		<id 	column="mbr_id" 		    property="memberId"/>
 		<result column="point_date" 	    property="pointTotalDate" />
 		<result column="point_detail" 	    property="pointDetail" />
-		<result column="point_amount" 	    property="pointUseChk" />
-		<result column="point_usechk" 	    property="unUsePoint" />
+		<result column="point_amount" 	    property="pointAmount" />
+		<result column="point_usechk" 	    property="pointUseChk" />
 	</resultMap>
-	
+
 	<!-- 회원탈퇴 -->
 	<update id="removeMemberById" parameterType="String">
 		UPDATE member
@@ -172,9 +172,37 @@
 			point_exchange_product_list pepl ON pepl.pepl_num = pumh.pepl_num
 		WHERE
 			mbr_id = 'id008'
-		ORDER BY point_date;
-    
+			<if test="startDate!= null">
+			AND point_date >= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			AND point_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+		ORDER BY point_date
+    	LIMIT #{rowPerPage}	OFFSET #{offset};
     </select>
-    
+        <!-- 회원 포인트이력 총 행의 갯수 -->
+
+   	<select id="getCntPointHistory" resultType="int">
+
+   		SELECT
+			COUNT(*)
+		FROM
+			reward_payment_history
+		where
+			mbr_id = #{memberId}
+			<if test="startDate != null">
+			AND point_date >= #{startDate} 
+			</if>
+			<if test="endDate != null">
+			AND point_date <![CDATA[ <= ]]> #{endDate} 
+			</if>
+   	</select>
+	
+	<select id="getFeedList">
+		
+	
+	</select>
+
     
   </mapper>

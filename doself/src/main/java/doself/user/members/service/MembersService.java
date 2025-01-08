@@ -27,8 +27,7 @@ public interface MembersService {
 	//회원 포인트내역 조회
 	public PageInfo<PointList> getPointHistory(String memberId, Pageable pageable, String startDate, String endDate);
 
-	
-	
+	//회원 피드내역 조회
 
 	
 }

@@ -31,9 +31,12 @@ public interface MembersMapper {
 	//회원 티켓이력 총 갯수
 	int getCntTicketHistory(String memberId,String startDate, String endDate);
 	
-	//회원 티켓정보 조회
+	//회원 포인트정보 조회
 	public List<PointList> getPointListById(Map<String, Object> paramMap);
 	
+	//회원 포인트이력 총 갯수
+	int getCntPointHistory(String memberId,String startDate, String endDate);
 	
+	//회원 피드내역 조회
 	
 }

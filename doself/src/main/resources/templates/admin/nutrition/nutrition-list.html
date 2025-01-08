@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="content-header">
+              <div>
+              	<h2 class="content-title card-title">영양제 영양정보 관리</h2>
+              </div>             
+          </div>          
+		</th:block>
+		
+		<th:block layout:fragment="content-body">
+			<div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-6 col-6 col-md-3">
+                                <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
+	                                <option value="dsiName">음식이름</option>
+	                            </select>
+                            </div>
+                            <!-- 검색어 입력 -->
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
+                                <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                                <datalist id="searchSuggestions"></datalist>                                                                                             
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
+                            </div>
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>영양제 관리 번호</th>
+                                        <th>브랜드 번호</th>
+                                        <th>영양제명</th>
+                                        <th>영양제 효능</th>                                                                                                                    
+                                        <th>일일 권장 섭취량</th>                                                                                                                     
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	<th:block th:if="${nutritionList != null}">
+                                		<tr th:each="l : ${nutritionList}" class="text-center">
+                                			<td th:text="${l.dsiNum}"></td>
+                                			<td th:text="${l.dsbNum}"></td>
+                                			<td th:text="${l.dsiName}"></td>
+                                			<td th:text="${l.dsiEfficacy}"></td>
+                                			<td th:text="${l.dsiDailyRecommendedIntake}"></td>                                			                       		                                			                                	
+                                		</tr>
+                                	</th:block>                                                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+                
+                <!-- 페이징 -->
+               <div class="pagination-area mt-15 mb-50">
+              		<nav>
+                   <ul class="pagination justify-content-center">
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist}">
+                   			<i class="material-icons md-first_page"></i>
+                   		</a>
+                   	</li>
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage - 1})}">
+                   			<i class="material-icons md-chevron_left"></i>
+                   		</a>
+                   	</li>
+                   		<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+					        <li class="page-item" th:classappend="${num == currentPage} ? 'active'">
+					            <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${num})}" th:text="${num}"></a>
+					        </li>
+					    </th:block>     
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage +1})}"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${lastPage})}"><i class="material-icons md-last_page"></i></a>
+                    </li>
+                   </ul>
+               </nav>
+           </div>  
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">
+        	<script th:src="@{/manage/assets/js/admin/admin-food-nutrition-list.js}"></script>
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>

@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import doself.user.market.controller.PurchaseItem;
 import doself.user.market.domain.MarketItem;
+import doself.user.market.domain.PurchaseItem;
 import doself.user.market.mapper.MarketMapper;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -25,6 +25,12 @@ public class MarketServiceImpl implements MarketService {
 	public List<MarketItem> getMarketItemList() {
 		// TODO Auto-generated method stub
 		return marketMapper.getMarketItemList();
+	}
+	
+	@Override
+	public int getMemberPointById(String memberId) {
+		// TODO Auto-generated method stub
+		return marketMapper.getMemberPointById(memberId);
 	}
 
 	@Override
@@ -47,6 +53,7 @@ public class MarketServiceImpl implements MarketService {
 		
 		return new PageInfo<>(purchaseList, pageable, rowCnt);
 	}
+
 	
 
 }
