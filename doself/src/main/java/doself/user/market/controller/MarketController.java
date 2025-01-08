@@ -65,8 +65,7 @@ public class MarketController {
 		String memberId = (String) session.getAttribute("SID");
 		purchaseItemInfo.setMemberId(memberId);
 		
-		System.out.println("================> " + purchaseItemInfo.toString());
-		
+		marketService.createPurchaseItem(purchaseItemInfo);
 		
 		return "user/market/purchase-list";
 	}
