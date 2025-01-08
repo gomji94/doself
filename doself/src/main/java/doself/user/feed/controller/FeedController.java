@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import doself.user.feed.domain.Feed;
 import doself.user.feed.service.FeedService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedController {
 	
 	private final FeedService feedService;
+	
+	// 피드 검색
+	@PostMapping("/searchList")
+	public String searchListView(Model model) {
+		model.addAttribute("title", "피드목록");
+		
+		return "user/feed/feed-list";
+	}
 	
 	// 메인 피드 조회
 	@GetMapping("/list")
@@ -39,12 +49,13 @@ public class FeedController {
 		return "user/feed/feed-view";
 	}
 	
-	// 피드 만들기
-	@GetMapping("/create")
-	public String getCreateFeed(Model model) {
-		model.addAttribute("title", "피드 만들기");
+	// 피드 수정
+	@GetMapping("/modifyfeed")
+	public String getModifyFeed(HttpServletRequest request, Model model) {
+		model.addAttribute("currentURI", request.getRequestURI());
+		model.addAttribute("title", "피드 수정");
 		
-		return "user/feed/feed-create";
+		return "user/feed/feed-modify";
 	}
 	
 	// 피드 댓글 조회
