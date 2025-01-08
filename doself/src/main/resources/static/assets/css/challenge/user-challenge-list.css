@@ -12,6 +12,15 @@ html, body {
     flex-direction: column; /* 세로 정렬 */
 }
 
+p {
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.submit-btn {
+	padding: 0px !important;
+}
+
 section.content-main {
     display: contents !important;
 }
@@ -329,7 +338,7 @@ p.challenge-text {
     justify-content: space-between;
     text-align: center;
     margin-bottom: -1px;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .popup-container .popup-header img {
@@ -374,6 +383,7 @@ p.challenge-text {
     object-fit:cover;
     position: relative;
     border-radius: 0px 0px 0px 10px;
+    margin-top: 1px;
 }
 
 /* .upload-box img {
@@ -409,17 +419,26 @@ p.challenge-text {
     flex-direction: row;
 }
 
+div#info-content-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
 .feed-info .user-block #leader-icon {
     width: 21px;
     height: auto;
-    margin-left: 136px;
-    margin-bottom: 31px;
+    margin-left: 133px;
+    margin-bottom: 39px;
     position: absolute;
     transform: rotate(34deg);
 }
 
 .feed-info .user-block #profile {
     margin-left: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
 }
 
 .feed-info .user-block #challenge-leader {
@@ -443,7 +462,7 @@ p.challenge-text {
     bottom: 37px;
     width: 98%;
     height: auto;
-    margin: -30px 0px -35px 0px;
+    margin: 5px 0px 0px 0px;
     opacity: 0.6;
 }
 
@@ -467,8 +486,6 @@ p.challenge-text {
     border-radius: 24px;
     margin-bottom: 13px;
 }
-
-
 
 .challenge-info-content #info-content-detail {
     font-size: 13px;
@@ -511,6 +528,10 @@ hr {
     white-space: nowrap;
     padding: 0px;
     margin-bottom: 1px;
+}
+
+#participation-challenge {
+    width: 80px;
 }
 
 .submit-btn:hover {
