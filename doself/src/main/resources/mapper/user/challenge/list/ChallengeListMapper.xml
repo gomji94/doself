@@ -113,7 +113,7 @@
   	</select>
   	
   	<!-- 챌린지 상세 정보 모달 -->
-  	<select id="getChallengeListView" resultMap="challengeListDetailMap">
+  	<select id="selectChallengeDetail" parameterType="string" resultMap="challengeListDetailMap">
 		SELECT
 			cg.cg_num,
 			cg.cg_name,
@@ -127,8 +127,7 @@
 			ctl.ctl_content,
 			cg.cg_current_mbr_count,
 			cg.cg_max_mbr_count,
-			cg.cg_content,
-
+			cg.cg_content
 		FROM
 			challenge_group cg
 			INNER JOIN `member` m USING(mbr_id)
