@@ -52,7 +52,7 @@ public class PointServiceImpl implements PointService {
 	}
 	@Override
 	public void createPointList(Point point) {
-		int result = pointMapper.createPointList(point);
+		pointMapper.createPointList(point);
 	}
 	
 
