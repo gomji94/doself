@@ -2,8 +2,8 @@ package doself.user.market.service;
 
 import java.util.List;
 
-import doself.user.market.controller.PurchaseItem;
 import doself.user.market.domain.MarketItem;
+import doself.user.market.domain.PurchaseItem;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 

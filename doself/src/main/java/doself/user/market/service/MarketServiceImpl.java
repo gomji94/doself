@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import doself.user.market.controller.PurchaseItem;
 import doself.user.market.domain.MarketItem;
+import doself.user.market.domain.PurchaseItem;
 import doself.user.market.mapper.MarketMapper;
 import doself.util.PageInfo;
 import doself.util.Pageable;
