@@ -9,4 +9,5 @@ public class MarketItem {
 	private int pointItemPrice;
 	private String pointItemImg;
 	private String pointExplanation;
+	private int memberPoint;
 }

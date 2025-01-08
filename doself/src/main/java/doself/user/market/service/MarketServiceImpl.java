@@ -26,6 +26,12 @@ public class MarketServiceImpl implements MarketService {
 		// TODO Auto-generated method stub
 		return marketMapper.getMarketItemList();
 	}
+	
+	@Override
+	public int getMemberPointById(String memberId) {
+		// TODO Auto-generated method stub
+		return marketMapper.getMemberPointById(memberId);
+	}
 
 	@Override
 	public MarketItem getItemDetail(String pointItemKeyNum) {
@@ -47,6 +53,7 @@ public class MarketServiceImpl implements MarketService {
 		
 		return new PageInfo<>(purchaseList, pageable, rowCnt);
 	}
+
 	
 
 }

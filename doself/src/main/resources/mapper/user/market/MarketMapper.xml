@@ -14,8 +14,6 @@
   		<result column="pepl_expl" 			property="pointExplanation"/>
   	</resultMap>
   	
-  	<!-- 마켓아이템 resultMap 만들기 -->
-  	
   	<resultMap type="PurchaseItem" id="purchaseItemResultMap">
   		<id 	column="mbr_id" 			property="memberId"/>
   		<result column="pepl_name" 			property="itemName"/>
@@ -28,6 +26,13 @@
   	<select id="getMarketItemList" resultMap="marketItemResultMap" >
 		SELECT *
 		FROM point_exchange_product_list;
+  	</select>
+  	
+  	<!-- 회원 포인트 조회 -->
+  	<select id="getMemberPointById" parameterType="String" resultType="int">
+  		SELECT mbr_point
+		FROM member
+		WHERE mbr_id = #{meberId};
   	</select>
   	
   	<!-- 마켓 아이템 상세 조회 -->
