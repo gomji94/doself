@@ -117,14 +117,14 @@ public class MypageController {
 								   HttpSession session, Model model,
 								   Pageable pageable) {
 		String memberId = (String)session.getAttribute("SID");
-		var pageInfo = membersService.getTicketHistory(memberId, pageable, startDate, endDate);
+		var pageTicketInfo = membersService.getTicketHistory(memberId, pageable, startDate, endDate);
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
-		List<TicketList> ticketList = pageInfo.getContents();
-		int currentPage = pageInfo.getCurrentPage();
-		int startPageNum = pageInfo.getStartPageNum();
-		int endPageNum = pageInfo.getEndPageNum();
-		int lastPage = pageInfo.getLastPage();
+		List<TicketList> ticketList = pageTicketInfo.getContents();
+		int currentPage = pageTicketInfo.getCurrentPage();
+		int startPageNum = pageTicketInfo.getStartPageNum();
+		int endPageNum = pageTicketInfo.getEndPageNum();
+		int lastPage = pageTicketInfo.getLastPage();
 		
 		//log.info("pageInfo: {}", pageInfo);
 		//log.info("ticketUsedCnt: {}", ticketList.get(0).getTicketUsedCnt());
@@ -150,26 +150,36 @@ public class MypageController {
 			                      HttpSession session, Model model, Pageable pageable) {
 		
 		String memberId = (String)session.getAttribute("SID");
-		var pageInfo = membersService.getPointHistory(memberId, pageable, startDate, endDate);
+		var pagePointInfo = membersService.getPointHistory(memberId, pageable, startDate, endDate);
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		
-		List<PointList> pointList = pageInfo.getContents();
-		int currentPage = pageInfo.getCurrentPage();
-		int startPageNum = pageInfo.getStartPageNum();
-		int endPageNum = pageInfo.getEndPageNum();
-		int lasePage = pageInfo.getLastPage();
-		log.info("pageInfo: {}", pageInfo);
+		List<PointList> pointList = pagePointInfo.getContents();
+		int currentPage = pagePointInfo.getCurrentPage();
+		int startPageNum = pagePointInfo.getStartPageNum();
+		int endPageNum = pagePointInfo.getEndPageNum();
+		int lasePage = pagePointInfo.getLastPage();
 		
+		//log.info("pageInfo: {}", pagePointInfo);
+		//log.info("pointList: {}", pointList);
 		
+		model.addAttribute("pointList", pointList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lasePage", lasePage);
+		model.addAttribute("memberInfo", memberInfo);
 		
-		
-		return "user/mypage/point-hisory";
+		return "user/mypage/point-history";
 	}
 
 	
 	// 회원피드내역조회
-	@GetMapping("/feedlist" )
-	public String getFeedList() {
+	@GetMapping("/feedlist")
+	public String getFeedList(HttpSession session, Model model) {
+		String memberId = (String)session.getAttribute("SID");
+		Members memberInfo = membersService.getMemberInfoById(memberId);
+		
+		model.addAttribute("memberInfo", memberInfo);
 		
 		return "user/mypage/feed-list";	
 	}
@@ -178,10 +188,17 @@ public class MypageController {
 	@GetMapping("/feedList/view" )
 	public String getFeedDetail() {
 		
-		return "user/mypage/";
+		return "user/mypage";
 	}
 	
+	// 회원 영앙제알람체크
+	@GetMapping("/medicinearlam")
+	public String getMedicineArlam() {
+		
+		return "user/mypage/medicine-arlam";
+	}
 	
+		
 	
 
 	

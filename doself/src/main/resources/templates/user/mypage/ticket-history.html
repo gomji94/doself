@@ -30,7 +30,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item">
+                    <a th:href="@{/mypage/medicinearlam}" class="menu-item">
                         <i class="fa-solid fa-capsules"></i>
                         <div>영양제 알림 체크</div>
                     </a>
@@ -58,7 +58,7 @@
                 </div>
                 <div id="profile-userId" th:text="*{memberId}"></div>
                <th:block th:if="${ticketList != null}">
-	                <div id="remaining-point">이용한 티켓: <a th:text="${ticketUsedCnt}"></a> | 남은 티켓: <a th:text="${ticketNotUsedCnt}"></a></div>
+	                <div id="remaining-point">이용한 티켓: <a th:text="${ticketUsedCnt}"></a> 남은 티켓: <a th:text="${ticketNotUsedCnt}"></a></div>
                </th:block>    
             </div>
             
@@ -98,19 +98,19 @@
                     </table>
                     <div class="pagination">
 						<ul class="pagination">
-	                    	<li><a th:href="@{/mypage/tickethistory(memberId=${memberId})}">&lt;&lt;</a></li>
+	                    	<li><a th:href="@{/mypage/tickethistory}">&lt;&lt;</a></li>
 	                    	<li th:classappend="${currentPage < 2} ? 'disabled'">
-	                        	<a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${currentPage - 1})}" >&lt;</a>
+	                        	<a th:href="@{/mypage/tickethistory(currentPage=${currentPage - 1})}" >&lt;</a>
 	                    	</li>
 	                    	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 			                    <li th:classappend="${num == currentPage} ? 'active'">
-			                    	<a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${num})}" th:text="${num}"></a>
+			                    	<a th:href="@{/mypage/tickethistory(currentPage=${num})}" th:text="${num}"></a>
 			                    </li>
 	                  		</th:block>
 	                  		<li th:classappend="${currentPage eq lastPage} ? 'disabled'">
-	                    	    <a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${currentPage + 1})}">&gt;</a>
+	                    	    <a th:href="@{/mypage/tickethistory(currentPage=${currentPage + 1})}">&gt;</a>
 	                  		</li>
-						    <li><a th:href="@{/mypage/tickethistory(memberId=*{memberId},currentPage=${lastPage})}">&gt;&gt;</a></li>                    
+						    <li><a th:href="@{/mypage/tickethistory(currentPage=${lastPage})}">&gt;&gt;</a></li>                    
 						</ul>                    
                     </div>
                  </div>
