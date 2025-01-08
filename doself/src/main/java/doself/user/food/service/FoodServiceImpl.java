@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import doself.common.mapper.CommonMapper;
 import doself.user.food.domain.Food;
 import doself.user.food.domain.NutritionRequestInfo;
 import doself.user.food.mapper.FoodMapper;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class FoodServiceImpl implements FoodService {
 	
 	private final FoodMapper foodMapper;
+	private final CommonMapper commonMapper;
 	
 	@Override
 	public List<Food> getFoodList() {
@@ -37,7 +39,7 @@ public class FoodServiceImpl implements FoodService {
 	}
 
 	@Override
-	public void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo) {
+	public int createNutritionRequest(NutritionRequestInfo nutritionRequestInfo) {
 		// TODO Auto-generated method stub
 		
 		switch (nutritionRequestInfo.getRequestCategory()) {
@@ -45,11 +47,11 @@ public class FoodServiceImpl implements FoodService {
 			case "nutritionalSupplements" -> nutritionRequestInfo.setRequestCategory("영양제");
 		}
 		
-		String formattedKeyNum = String.format("nirr_%03d", foodMapper.getNirrTablePkNum());
+		String formattedKeyNum = commonMapper.getPrimaryKey("nirr_", "nutrition_info_registration_request", "nirr_num");
 		
 		nutritionRequestInfo.setRequestTableLastPkNum(formattedKeyNum);
 		
-		foodMapper.createNutritionRequest(nutritionRequestInfo);
+		return foodMapper.createNutritionRequest(nutritionRequestInfo);
 		
 	}
 	

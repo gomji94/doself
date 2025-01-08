@@ -40,12 +40,19 @@
 			            </tr>
 			        </thead>
 			        <tbody>
-			            <tr class="mcp__tr">
-			                <td>배민 상품권 10000</td>
-			                <td>HUCD-SDFS-3K</td>
-			                <td>10,000 point</td>
-			                <td>2024.11.26 15:06</td>
-			            </tr>
+  		                <th:block th:if="${purchaseList !=null}" >
+							<tr class="mcp__tr" th:each="l : ${purchaseList}">
+								<td th:text="${l.itemName}"></td>
+								<td th:text="${l.itemCode}"></td>
+								<td th:text="${#numbers.formatInteger(l.itemPrice, 3, 'COMMA') + ' point'}"></td>
+								<td th:text="${l.itemPurchaseDate}"></td>
+							</tr>
+	                   </th:block>
+	                   <th:block th:unless="${not #lists.isEmpty(purchaseList)}">
+							<tr>
+								<td colspan="6">구매한 내역이 없습니다.</td>
+							</tr>
+						</th:block>
 			        </tbody>
 			    </table>
 			</div>
