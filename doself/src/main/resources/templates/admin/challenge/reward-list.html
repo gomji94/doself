@@ -46,7 +46,8 @@
                                         <th scope="col">보상 지급 번호</th>                              
                                         <th scope="col">챌린지 이름</th>                              
                                         <th scope="col">보상 수령 멤버</th>
-                                        <th scope="col">보상 내역</th>
+                                        <th scope="col">보상 내역</th>                                        
+                                        <th scope="col">보상 포인트</th>                                        
                                         <th scope="col">보상 선정일</th>
                                         <th scope="col">보상 선정 관리자</th>
                                         <th scope="col">보상 지급일</th>                                       
@@ -59,6 +60,7 @@
                                 		<td th:text="${l.challengeInfo.cgName}"></td>
                                 		<td th:text="${l.memberInfo.mbrName}"></td>
                                 		<td th:text="${l.rewardHistoryInfo.rhName}"></td>
+                                		<td th:text="${l.rewardHistoryInfo.rhPoint}"></td>
                                 		<td th:text="${l.rphRewardSelectedDate}"></td>
                                 		<td th:text="${l.rphAdmin}"></td>
                                 		<td th:text="${l.rphRewardPaymentDate}"></td>                                

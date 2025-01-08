@@ -40,7 +40,7 @@ public class NutritionServiceImpl implements NutritionService{
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = nutritionMapper.getCntNutritionRequestList();		
+		int rowCnt = nutritionMapper.getCntNutritionRequestList(searchMap);		
 		List<Nutrition> nutritionList = nutritionMapper.getNutritionRequestList(searchMap);
 		
 		return new PageInfo<>(nutritionList, pageable, rowCnt);
