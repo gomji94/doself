@@ -48,7 +48,7 @@
 	</select>
 	
 	<!-- 음식 등록 요청 -->
-	<insert id="createNutritionRequest" parameterType="NutritionRequestInfo">
+	<insert id="createNutritionRequest" parameterType="NutritionRequestInfo" >
 		INSERT INTO nutrition_info_registration_request
 		(nirr_num, mbr_id, nirr_content, nirr_date, nirr_category)
 		VALUES

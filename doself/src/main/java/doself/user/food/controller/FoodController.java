@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.user.food.domain.Food;
 import doself.user.food.domain.NutritionRequestInfo;
@@ -48,13 +49,16 @@ public class FoodController {
 	}
 	
 	@PostMapping("/createrequest")
-	public String createNutritionRequest(NutritionRequestInfo nutritionRequestInfo, HttpSession session) {
+	@ResponseBody
+	public boolean createNutritionRequest(NutritionRequestInfo nutritionRequestInfo, HttpSession session) {
 		//TODO: process POST request
 		
+		boolean isReg = false;
 		nutritionRequestInfo.setMemberId((String) session.getAttribute("SID"));
-		foodService.createNutritionRequest(nutritionRequestInfo);
+		int result = foodService.createNutritionRequest(nutritionRequestInfo);
+		if(result > 0) isReg = true; 
 		
-		return "redirect:/food/list";
+		return isReg;
 	}
 	
 	@GetMapping("/search")

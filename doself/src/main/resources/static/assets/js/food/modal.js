@@ -32,16 +32,34 @@ $(document).ready(function () {
 		}
 
 		if(isSubmit) {
+			const request = $.ajax({
+				url: '/food/createrequest',
+				method: 'post',
+				data : { requestCategory : $('#requestCategory').val(), requestItemName : $requestItemName},
+				dataType: 'json'
+			});
 			
-			$('#modal-request-form').submit();
-	        $('.confirm-popup-wrap').fadeIn(); // 모달창 활성화
-	        $('.popup-wrap').fadeOut();
-	        // 2초 후에 새 창을 닫고 다른 페이지로 이동
-	        setTimeout(() => {
-	            $('.confirm-popup-wrap').fadeOut();
+			request.done(response => {
+		        // 2초 후에 새 창을 닫고 다른 페이지로 이동
+		        $('.confirm-popup-wrap').fadeIn(); // 모달창 활성화
+		        $('.popup-wrap').fadeOut();
+		        setTimeout(() => {
+		            $('.confirm-popup-wrap').fadeOut();
+					
+					if(response){
+						const url = new URL(location.herf);
+						location.href = url.pathname;
+						return;
+					}
+		        }, 1000);
 				
-	        }, 1000);
+			});
 			
+			request.fail((jqXHR, textStatus, error)=>{
+				console.log(error)
+			})
+			
+			//$('#modal-request-form').submit();
 		}
     });
 

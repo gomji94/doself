@@ -39,7 +39,7 @@ public class FoodServiceImpl implements FoodService {
 	}
 
 	@Override
-	public void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo) {
+	public int createNutritionRequest(NutritionRequestInfo nutritionRequestInfo) {
 		// TODO Auto-generated method stub
 		
 		switch (nutritionRequestInfo.getRequestCategory()) {
@@ -51,7 +51,7 @@ public class FoodServiceImpl implements FoodService {
 		
 		nutritionRequestInfo.setRequestTableLastPkNum(formattedKeyNum);
 		
-		foodMapper.createNutritionRequest(nutritionRequestInfo);
+		return foodMapper.createNutritionRequest(nutritionRequestInfo);
 		
 	}
 	
