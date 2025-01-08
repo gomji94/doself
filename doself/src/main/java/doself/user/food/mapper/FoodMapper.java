@@ -19,10 +19,7 @@ public interface FoodMapper {
 	// 음식 검색
 	List<Food> searchFoodByFoodName(String foodName);
 	
-	// 요청 테이블 마지막 pk값
-	int getNirrTablePkNum();
-	
 	// 요청 접수
-	void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
+	int createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
 
 }
