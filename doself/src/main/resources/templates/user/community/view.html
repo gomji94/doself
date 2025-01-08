@@ -44,9 +44,11 @@
 
                     <!-- 글 버튼 -->
                     <div class="article-button-container">
-                        <a href="#">
-                            <button id="article-like__button">like</button>
-                        </a>
+                    	<th:block th:if="${session.SID != null and session.SID eq articleDetail.articleAuthorId}">
+	                        <a href="#">
+	                            <button id="article-like__button">like</button>
+	                        </a>
+                        </th:block>
                         
 						<th:block th:if="${session.SID != null and session.SID eq articleDetail.articleAuthorId}">
 						    <a href="#">

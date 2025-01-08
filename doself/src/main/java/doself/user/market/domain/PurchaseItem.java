@@ -1,4 +1,4 @@
-package doself.user.market.controller;
+package doself.user.market.domain;
 
 import lombok.Data;
 

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import doself.user.market.controller.PurchaseItem;
 import doself.user.market.domain.MarketItem;
+import doself.user.market.domain.PurchaseItem;
 
 @Mapper
 public interface MarketMapper {

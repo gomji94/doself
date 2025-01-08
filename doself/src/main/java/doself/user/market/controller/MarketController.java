@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import doself.user.community.domain.Article;
+import doself.user.market.domain.PurchaseItem;
 import doself.user.market.service.MarketService;
 import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
