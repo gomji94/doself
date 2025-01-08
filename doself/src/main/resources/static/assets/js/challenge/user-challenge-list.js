@@ -67,7 +67,7 @@ $(document).ready(function () {
     $('.card').on('click', function () {
         const getChallengeCode = $(this).data('code'); // 클릭된 카드의 데이터 속성에서 challengeCode 가져오기
 		const request = $.ajax({
-			url : '/list/view',
+			url : '/challenge/list/view',
 			method : 'GET',
 			data : { challengeCode: getChallengeCode },
 			dataType: 'json'
@@ -79,7 +79,6 @@ $(document).ready(function () {
 				$('#card-modal').fadeIn();
 				
 				// 데이터가 성공적으로 로드되면 모달 내용 업데이트
-				$('#card-modal h2').text(data.challengeName);
 		        $('#card-modal #card-body').html(data);
 			}
 		});
