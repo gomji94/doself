@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.admin.declare.domain.Declare;
 import doself.admin.declare.domain.DeclareUser;
@@ -14,10 +16,12 @@ import doself.admin.declare.service.DeclareService;
 import doself.admin.nutrition.domain.Nutrition;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/admin/declare")
 @RequiredArgsConstructor
+@Slf4j
 public class DeclareController {
 	
 	private final DeclareService declareService;
@@ -51,12 +55,35 @@ public class DeclareController {
 		return "admin/declare/admin-declare-list";
 	}
 	
-	// 신고접수상세 수정
+	// 신고접수 반려
 	@GetMapping("/modifyrequest")
-	public String modifyRequest(Model model) {
+	public String getModifyDeclareByRrNum(@RequestParam(value="rrNum") String rrNum, Model model) {
 
+		Declare declareInfo = declareService.getModifyDeclareByRrNum(rrNum);
+		
 		model.addAttribute("title", "신고접수상세");
-		return "admin/declare/modify-declare-list";
+		model.addAttribute("declareInfo", declareInfo);
+		
+		return "admin/declare/modify-declare-rejection";
+	}
+
+	// 반려
+	@PostMapping("/modifyrequest")
+	public String modifyDeclare(Declare declare) {
+		
+		declareService.modifyDeclare(declare);
+		
+		return "redirect:/admin/declare/list";
+	}
+	// 신고접수 부정회원 처리
+	@GetMapping("/createUser")
+	public String createDeclareUser(@RequestParam(value="rrNum") String rrNum, Model model) {
+		
+		Declare declareInfo = declareService.getModifyDeclareByRrNum(rrNum);
+		int declarePeriod = declareService.getDeclarePeriod(declareInfo.getRcCode());
+		declareService.createDeclareUser(declareInfo, declarePeriod);
+		
+		return "redirect:/admin/declare/userlist";
 	}
 	
 	// 부정회원관리 조회
