@@ -20,5 +20,6 @@ public class Members {
 	private Integer partTicketCnt; //챌린지참여 티켓 갯수
 	private Integer memberPoint;
 	private String memberImage;
+	private String memberFeed;
 	
 }
