@@ -62,7 +62,7 @@ section.content-main {
 
 .tag-buttons button {
     /* background-color: #D1E480; */
-    background-color: #D3D3D3;
+    background-color: #D2D2D2;
     color: #fff;
     border: none;
     border-radius: 65px;
@@ -71,6 +71,7 @@ section.content-main {
     width: 110px;
     height: 32px;
     font-weight: bold;
+    margin-bottom: -1px;
 }
 
 .tag-buttons button:hover {
@@ -136,13 +137,16 @@ section.content-main {
     gap: 10px;
     justify-content: center;
     align-items: center;
+    margin-top: 2px;
 }
 
 .card-content .challenge-tag {
     background: #D1E480;
     color: #618141;
     border-radius: 65px;
-    width: 120px;
+    max-width: 120px;
+    min-width: 102px;
+    width: 100%;
     height: 30px;
     display: flex;
     justify-content: center;
@@ -188,6 +192,7 @@ section.content-main {
     display: flex;
     margin-top: 8px;
     margin-bottom: 5px;
+    min-width: 270px;
     width: 250px;
     padding: 0 1px;
     align-items: center;
@@ -218,7 +223,7 @@ section.content-main {
 .card-content p {
     font-size: 0.9rem;
     color: #666;
-    margin-left: 5px;
+    margin-left: 5px !important;
 }
 
 p.challenge-text {
@@ -348,13 +353,14 @@ p.challenge-text {
 }
 
 .popup-container hr {
-    opacity: 0.3;
+    opacity: 0.7;
     margin-top: 14px;
 }
 
 .popup-container .popup-header h2 {
     font-size: 17px;
     color: #333;
+    font-weight: bold;
 }
 
 .popup-body {
@@ -428,10 +434,10 @@ div#info-content-detail {
 .feed-info .user-block #leader-icon {
     width: 21px;
     height: auto;
-    margin-left: 133px;
+    margin-left: 129px;
     margin-bottom: 39px;
     position: absolute;
-    transform: rotate(34deg);
+    transform: rotate(38deg);
 }
 
 .feed-info .user-block #profile {

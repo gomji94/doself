@@ -1853,6 +1853,7 @@ select #meal-type option:checked {
 .popup-container .popup-header h2 {
     font-size: 17px;
     color: #333;
+    font-weight: bold;
 }
 
 .mbr-warning-popup-body ul {
