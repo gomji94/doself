@@ -37,13 +37,4 @@
 		WHERE mbr_id = #{memberId}
   	</select>
   	
-  	<select id="getPurchaseListById" parameterType="Map" resultMap="purchaseItemResultMap">
-  		SELECT pepl.pepl_name, pepl.pepl_price, pumh.mbr_id, pumh.pumh_date 
-		FROM point_use_management_history pumh INNER JOIN point_exchange_product_list pepl
-		USING(pepl_num)
-		WHERE pumh.mbr_id = #{memberId}
-		ORDER BY pumh.pumh_date
-		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
-  	</select>
-  	
 </mapper>
