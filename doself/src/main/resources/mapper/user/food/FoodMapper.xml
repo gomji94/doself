@@ -41,5 +41,18 @@
 		FROM meal_nutrition_info
 		WHERE mni_name LIKE CONCAT('%', #{foodName}, '%');
 	</select>
+	
+	<select id="getNirrTablePkNum" resultType="int">
+		SELECT MAX(CAST(SUBSTRING_INDEX(nirr_num, '_', -1) AS UNSIGNED)) + 1 
+		FROM nutrition_info_registration_request;
+	</select>
+	
+	<!-- 음식 등록 요청 -->
+	<insert id="createNutritionRequest" parameterType="NutritionRequestInfo" >
+		INSERT INTO nutrition_info_registration_request
+		(nirr_num, mbr_id, nirr_content, nirr_date, nirr_category)
+		VALUES
+		(#{requestTableLastPkNum}, #{memberId}, #{requestItemName}, NOW(), #{requestCategory})
+	</insert>
   	
 </mapper>

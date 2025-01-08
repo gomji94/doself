@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<div class="modal-overlay cf-mbr-modal-overlay" id="cf-mbr-modal-overlay" th:fragment="member-list">
+	<div class="cf-mbr-modal-overlay" id="cf-mbr-modal-overlay" th:fragment="member-list">
         <div class="modal-container" id="cf-mbr-modal">
             <div class="cf-modal-header" id="search-modal-header">
                 <h2>챌린지 참여 멤버</h2>
@@ -9,16 +9,16 @@
             <hr>
             <div class="cf-mbr-modal-body">
                 <div class="challenge-mbr-list">
-                	<section th:if="${memberList != null && !memberList.isEmpty()}">
-	                    <div class="mbr-id" th:each="cml, iterStat : ${memberList}" th:id="'memberList-' + ${iterStat.index}">
-	                        <img th:src="${cml.memberProfileImage}" alt="프로필">
+                	<section th:if="${memberList != null and !memberList.isEmpty()}">
+				        <div class="mbr-id" th:each="cml : ${memberList}">
+	                        <img th:src="${cml.memberProfileImage}" alt="프로필" onerror="this.src='/images/default-profile.png'">
 	                        <p class="user-icon" th:text="${cml.memberId}"></p>
 	                        <span class="mbr-warning">경고</span>
 	                        <button type="button">강퇴</button>
 	                    </div>
-	                    <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="구분" id="section-bar">
-		            </section>
-		            <div th:if="${memberList == null || memberList.isEmpty()}">
+				    </section>
+	                <!-- <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="구분" id="section-bar"> -->
+		            <div th:if="${memberList == null or memberList.isEmpty()}">
 					    <p>참여중인 멤버가 없습니다.</p>
 					</div>
                 </div>

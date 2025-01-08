@@ -1,51 +1,38 @@
+// 검색조건에 따라 자동완성값 변경
+function updateSearchSuggestions() {
+    const searchType = document.getElementById("searchType").value;
+    const suggestions = document.getElementById("searchSuggestions");
+    suggestions.innerHTML = ""; // 기존 데이터 초기화
 
-// 예시 데이터
-const challengeData = [];
-
-// 결과를 테이블에 출력하는 함수
-function renderTable(data) {
-    const resultTable = document.getElementById("resultTable");
-    resultTable.innerHTML = ""; // 기존 데이터 초기화
-
-    if (data.length > 0) {
-        data.forEach(item => {
-            const row = `<tr>
-                                    <td>${item.cmssNum}</td>
-                                    <td>${item.cgNum}</td>
-                                    <td>${item.mbrId}</td>
-                                    <td>${item.cmssDate}</td>
-                                    <td>${item.cmssUploadFeedCount}</td>
-                                    <td>${item.cmssParticipationCheck}</td>
-                                    <td>${item.cmssTodayAchievementRate}</td>                               
-                                </tr>`;
-            resultTable.innerHTML += row;
-        });
-    } else {
-        resultTable.innerHTML = `<tr><td colspan="7">검색 결과가 없습니다.</td></tr>`;
+    let options = [];
+    if (searchType === "cmssParticipationCheck ") {
+        options.push("달성", "실패");
     }
-}
 
-// 데이터 필터링 함수
-function filterData() {
-    const searchType = document.getElementById("searchType").value; // 선택된 조건
-    const searchKeyword = document.getElementById("searchKeyword").value.trim(); // 입력된 검색어
-    const startDate = document.getElementById("startDate").value; // 시작 날짜
-    const endDate = document.getElementById("endDate").value; // 종료 날짜                                    
-
-    // 필터링된 데이터
-    const filteredData = challengeData.filter(item => {
-        const matchesSearchType = searchType === "cgName" ? item.cgNum.includes(searchKeyword) :
-            searchType === "mbrId" ? item.mbrId.includes(searchKeyword) : true;
-
-        const withinDateRange = (!startDate || item.cmssDate >= startDate) &&
-            (!endDate || item.cmssDate <= endDate);
-
-        return matchesSearchType && withinDateRange;
+    options.forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        suggestions.appendChild(option);
     });
-    // 필터링된 결과 테이블에 출력
-    renderTable(filteredData);
 }
-// 페이지가 로드되었을 때 전체 데이터 표시
-document.addEventListener("DOMContentLoaded", () => {
-    renderTable(challengeData);
+
+// 검색기능
+$('#searchBtn').click(function(){
+	const searchType = $('#searchType').val();
+	const searchKeyword = $('#searchKeyword').val();
+	const startDate = $('#startDate').val();
+	const endDate = $('#endDate').val();
+	
+	const $form = $('<form />', { 'action' : '/admin/challenge/personalstatlist', 'method': 'get'});
+	const $searchType = 
+			$('<input />', {'type':'hidden', 'name' : 'searchType'}).val(searchType);
+	const $searchKeyword = 
+			$('<input />', {'type':'hidden', 'name' : 'searchKeyword'}).val(searchKeyword);
+	const $startDate = 
+			$('<input />', {'type':'hidden', 'name' : 'startDate'}).val(startDate);
+	const $endDate = 
+			$('<input />', {'type':'hidden', 'name' : 'endDate'}).val(endDate);
+	$form.append($searchType, $searchKeyword, $startDate, $endDate);
+	$('body').append($form);
+	$form.submit();
 });

@@ -24,6 +24,7 @@
 	  		<association property="ticketPriceInfo" javaType="TicketPrice">
 	  			<id 	column="ctp_code" property="ctpCode" />	  			
 	  			<result column="ctp_price" property="ctpPrice" />	  				  				  			  			  				  				  				  				  			  			  			
+	  			<result column="ctc_category" property="ctcCategory" />	  				  				  			  			  				  				  				  				  			  			  			
 	  		</association>	  		  			 	   		
   		</resultMap>    	
     	
@@ -36,6 +37,7 @@
 				m.mbr_name,
 				ctph.tpm_num,
 				ctph_date,
+				ctc.ctc_category,
 				ctp.ctp_price,
 				ctph_status,
 				ctph_return_status
@@ -43,9 +45,51 @@
 				ON ctph.mbr_id = m.mbr_id
 				INNER JOIN challenge_ticket_price ctp
 				ON ctph.ctp_code = ctp.ctp_code
+				INNER JOIN challenge_ticket_category ctc
+				ON ctp.ctc_code = ctc.ctc_code			
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND ctph_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND ctph_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	ctph_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
-		
+		<!-- 페이징 -->
+		<select id="getCntPaymentList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_ticket_payment_history ctph INNER JOIN `member` m
+				ON ctph.mbr_id = m.mbr_id
+				INNER JOIN challenge_ticket_price ctp
+				ON ctph.ctp_code = ctp.ctp_code
+				INNER JOIN challenge_ticket_category ctc
+				ON ctp.ctc_code = ctc.ctc_code			
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND ctph_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND ctph_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	ctph_num 
+		</select>
 		
 		
 		<resultMap type="PaymentRefund" id="PaymentRefundResultMap">
@@ -73,6 +117,44 @@
 				prl_date,
 				prl_amount
 			FROM payment_refund_log prl INNER JOIN `member` m
-			ON prl.mbr_id = m.mbr_id
+				ON prl.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND prl_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND prl_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	prl.prl_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntRefundList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM payment_refund_log prl INNER JOIN `member` m
+				ON prl.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND prl_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND prl_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	prl.prl_num	   
 		</select>
   </mapper>

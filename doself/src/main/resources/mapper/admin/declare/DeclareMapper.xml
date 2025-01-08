@@ -5,38 +5,195 @@
 
   <mapper namespace="doself.admin.declare.mapper.DeclareMapper">
     	
+    	<resultMap type="Declare" id="declareResultMap">
+  			<id column="rr_num" property="rrNum" />
+  			<result column="mbr_id" property="mbrId" />  		
+  			<result column="olc_code" property="olcCode" />
+  			<result column="rr_bc_num" property="rrBcNum" />
+  			<result column="rc_code" property="rcCode" />
+  			<result column="rr_content" property="rrContent" />
+  			<result column="rr_date" property="rrDate" />
+  			<result column="sc_code" property="scCode" />
+  			<result column="rr_admin" property="rrAdmin" />
+  			<result column="rr_processing_period" property="rrProcessingPeriod" />
+  			<result column="rr_reason_content" property="rrReasonContent" />
+  			
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association>	
+	  		
+	  		<!-- 발생위치카테고리 관계 -->
+	  		<association property="occuranceLocationInfo" javaType="OccuranceLocation">
+	  			<id 	column="olc_code" property="olcCode" />	  			
+	  			<result column="olc_name" property="olcName" />	  				  				  			  			  			
+	  		</association> 
+	  		
+	  		<!-- 처리상태카테고리 관계 -->
+	  		<association property="statusCategoryInfo" javaType="StatusCategory">
+	  			<id 	column="sc_code" property="scCode" />	  			
+	  			<result column="sc_status" property="scStatus" />	  				  				  			  			  			
+	  		</association>
+	  		   		  		  			 	   		
+	  		<!-- 신고유형카테고리 관계 -->
+	  		<association property="declareCategoryInfo" javaType="DeclareCategory">
+	  			<id 	column="rc_code" property="rcCode" />	  			
+	  			<result column="rc_name" property="rcName" />	  				  				  			  			  			
+	  		</association>   		  		  			 	   		
+  		</resultMap>
+    	
   		<!-- 신고요청 접수 조회 -->
-		<select id="getDeclareList" resultType="Declare">
+		<select id="getDeclareList" resultMap="declareResultMap">
 			/* 신고요청 접수 조회 */
 			
 			SELECT
-				rr_num 					AS rrNum,
-				mbr_id 					AS mbrId,
-				olc_code 				AS olcCode,
-				rr_bc_num 				AS rrBcNum,
-				rc_code 				AS rcCode,
-				rr_content 				AS rrContent,
-				rr_date 				AS rrDate,
-				sc_code 				AS scCode,
-				rr_admin 				AS rrAdmin,
-				rr_processing_period 	AS rrProcessingPeriod,
-				rr_reason_content 		AS rrReasonContent
-			FROM report_request		
+				rr_num,
+				m.mbr_name,
+				olc.olc_name,
+				rr_bc_num,
+				rc.rc_name,
+				rr_content,
+				rr_date,
+				sc.sc_status,
+				rr_admin,
+				rr_processing_period,
+				rr_reason_content
+			FROM report_request rr INNER JOIN `member` m
+				ON rr.mbr_id = m.mbr_id
+				INNER JOIN occurance_location_code olc
+				ON rr.olc_code = olc.olc_code
+				INNER JOIN status_category sc
+				ON rr.sc_code = sc.sc_code
+				INNER JOIN report_category rc
+				ON rr.rc_code = rc.rc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rr_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rr_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+			ORDER BY
+				rr.rr_num
+			LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
+		<!-- 페이징 -->
+		<select id="getCntDeclareList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM report_request rr INNER JOIN `member` m
+				ON rr.mbr_id = m.mbr_id
+				INNER JOIN occurance_location_code olc
+				ON rr.olc_code = olc.olc_code
+				INNER JOIN status_category sc
+				ON rr.sc_code = sc.sc_code
+				INNER JOIN report_category rc
+				ON rr.rc_code = rc.rc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rr_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rr_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+			ORDER BY
+				rr.rr_num   
+		</select>
+		
+		
+		
+		<resultMap type="DeclareUser" id="declareUserResultMap">
+  			<id column="rmm_num" property="rmmNum" />
+  			<result column="rr_num" property="rrNum" />  		
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="rc_code" property="rcCode" />
+  			<result column="rmm_sanction_start_date" property="rmmSanctionStartDate" />
+  			<result column="rmm_sanction_period" property="rmmSanctionPeriod" />
+  			<result column="rmm_sanction_end_date" property="rmmSanctionEndDate" />
+  			<result column="rmm_admin" property="rmmAdmin" />
+  			
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association>	
+	  			  		   		  		  			 	   		
+	  		<!-- 신고유형카테고리 관계 -->
+	  		<association property="declareCategoryInfo" javaType="DeclareCategory">
+	  			<id 	column="rc_code" property="rcCode" />	  			
+	  			<result column="rc_name" property="rcName" />	  				  				  			  			  			
+	  		</association>   		  		  			 	   		
+  		</resultMap>
+		
   		<!-- 부정회원 관리 조회 -->
-		<select id="getDeclareUserList" resultType="DeclareUser">
+		<select id="getDeclareUserList" resultMap="declareUserResultMap">
 			/* 신고요청 접수 조회 */
 			
-			SELECT
-				rmm_num 					AS rmmNum,
-				rr_num 						AS rrNum,
-				mbr_id 						AS mbrId,
-				rc_code 					AS rcCode,
-				rmm_sanction_start_date 	AS rmmSanctionStartDate,
-				rmm_sanction_period 		AS rmmSanctionPeriod,
-				rmm_sanction_end_date 		AS rmmSanctionEndDate,
-				rmm_admin 					AS rmmAdmin
-			FROM report_member_management	
+			SELECT		
+				rmm_num,
+				rr_num,
+				m.mbr_name,
+				rc.rc_name,
+				rmm_sanction_start_date,
+				rmm_sanction_period,
+				rmm_sanction_end_date,
+				rmm_admin
+			FROM report_member_management rmm INNER JOIN `member` m
+				ON rmm.mbr_id = m.mbr_id
+				INNER JOIN report_category rc
+				ON rmm.rc_code = rc.rc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rmm_sanction_end_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rmm_sanction_end_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	rmm.rmm_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntDeclareUserList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM report_member_management rmm INNER JOIN `member` m
+				ON rmm.mbr_id = m.mbr_id
+				INNER JOIN report_category rc
+				ON rmm.rc_code = rc.rc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rmm_sanction_end_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rmm_sanction_end_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	rmm.rmm_num  
 		</select>
   </mapper>

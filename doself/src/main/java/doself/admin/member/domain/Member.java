@@ -18,4 +18,5 @@ public class Member {
 	private int mbrPoint;
 	
 	private Age ageInfo;
+	private Grade GradeInfo;
 }

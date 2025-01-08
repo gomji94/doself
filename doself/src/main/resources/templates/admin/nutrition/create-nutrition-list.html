@@ -8,196 +8,47 @@
           <div class="row">
                 <div class="col-6">
                     <div class="content-header">
-                        <h2 class="content-title">음식, 영양제 등록</h2>
-                        <div>
-							<header class="card-header" style="display:flex;">
-								<div class="row gx-3">
-									<div class="col-lg-6 col-6 col-md-3">
-										<select class="form-select" id="searchType" onchange="toggleForm()">
-											<option value="food">음식</option>
-											<option value="nutritional">영양제</option>
-										</select>
-									</div>																
-								</div>
-							</header>
-						</div>
+                        <h2 class="content-title">영양제 등록</h2>
+                        
                     </div>
                 </div>
             </div>    
 		</th:block>
-		
-		<th:block layout:fragment="content-body">
-			<!-- 음식추가 폼 -->
-			<div id="foodForm" style="display: none;">
-			<form action="#" method="post">
+		<!-- 영양제추가 폼 -->
+			<th:block layout:fragment="content-body" th:object="${getNutritionByNirrNum}">
+			<div id="nutritionForm" th:style="*{nirrCategory} == '영양제' ? 'display: block;' : 'display: none;'">
+			<form id="addNutritionForm" th:action="@{/admin/nutrition/createNutrition}" method="post">
 			<div class="row">
                 <div class="col-lg-6">
                     <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">1. 음식 영양 정보 번호</label>
-                                        <input type="text" placeholder="mni_" class="form-control">
-                                    </div>                
-                                </div> <!-- col.// -->
-                            </div> <!-- row.// -->
+                        <div class="card-body">                            
 
                             <hr class="mb-4 mt-0">
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">2. 음식 이름</label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- row.// -->                            
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">3. 음식사진</label>
-                                        <input class="form-control" type="file">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">4. 1인분 중량</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">5. 에너지</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                                          
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">6. 탄수화물</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">7. 단백질</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">8. 지방</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">9. 당류</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">10. 콜레스테롤</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">11. 나트륨</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">12. 칼슘</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">13. 철분</label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- .row end// -->
-                            
-                            <div class="row">                                
-                                <div class="col-md-9 addBtn">
-                                    <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="@{#}">수정하기</a>
-                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/nutrition/list}">취소</a>
-                                </div> <!-- col.// -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>             
-			</form>
-			</div>
-			
-			<!-- 영양제추가 폼 -->
-			<div id="nutritionForm" style="display: none;">
-			<form action="#" method="post">
-			<div class="row">
-                <div class="col-lg-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">1. 영양제 관리 번호</label>
-                                        <input type="text" placeholder="dsi_" class="form-control">
-                                    </div>                
-                                </div>
-                            </div>
-
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">2. 브랜드 번호</label>
-                                        <input type="text" placeholder="dsb_" class="form-control">
+                                        <label class="form-label">1. 브랜드 번호</label>
+                                        <input type="hidden" id="nirrNum" name="nirrNum" class="form-control" th:value="*{nirrNum}">
+                                        <input type="hidden" id="dsiNum" name="dsiNum" class="form-control" th:value="${newKey}">                                   
+                                        <select name="dsbNum" id="dsbNum">
+                                        	<option value="dsb_001">고려은단</option>
+                                        	<option value="dsb_002">솔가</option>
+                                        	<option value="dsb_003">종근당건강</option>
+                                        	<option value="dsb_004">닥터스베스트</option>
+                                        	<option value="dsb_005">라이프익스텐션</option>
+                                        	<option value="dsb_006">나우푸드</option>
+                                        	<option value="dsb_007">자포우포뮬라</option>
+                                        	<option value="dsb_008">네이처메이드</option>
+                                        	<option value="dsb_009">얼라이브</option>
+                                        	<option value="dsb_010">센트룸</option>
+                                        	<option value="dsb_011">에버그린</option>
+                                        	<option value="dsb_012">GNC</option>
+                                        	<option value="dsb_013">포뉴</option>
+                                        	<option value="dsb_014">팜엔탑</option>
+                                        	<option value="dsb_015">오쏘몰</option>
+                                        	<option value="dsb_016">뉴트리라이트</option>
+                                        	<option value="dsb_017">쏜리서치</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>                         
@@ -206,8 +57,8 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">3. 영양제명</label>
-                                        <input class="form-control" type="text">
+                                        <label class="form-label">2. 영양제명</label>
+                                        <input id="dsiName" name="dsiName" class="form-control" type="text" th:value="*{nirrContent}">
                                     </div>
                                 </div>
                             </div>
@@ -216,8 +67,8 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">4. 영양제 효능</label>
-                                        <input class="form-control" type="text">
+                                        <label class="form-label">3. 영양제 효능</label>
+                                        <input id="dsiEfficacy" name="dsiEfficacy"  class="form-control" type="text">
                                     </div>
                                 </div>
                             </div>
@@ -226,8 +77,8 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">5. 영양제 사진</label>
-                                        <input class="form-control" type="file">
+                                        <label class="form-label">4. 영양제 사진</label>
+                                        <input id="dsiPicture" name="dsiPicture"  class="form-control" type="text">
                                     </div>
                                 </div>
                             </div>
@@ -236,16 +87,16 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">6. 일일 권장 섭취량</label>
-                                        <input class="form-control" type="text">
+                                        <label class="form-label">5. 일일 권장 섭취량</label>
+                                        <input id="dsiDailyRecommendedIntake" name="dsiDailyRecommendedIntake" class="form-control" type="text">
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="row">                                
                                 <div class="col-md-9 addBtn">
-                                    <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="@{#}">수정하기</a>
-                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/nutrition/list}">취소</a>
+                                    <button id="addNutritionBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up" disabled="disabled">추가하기</button>
+                            		<a id="cancelBtn" class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/nutrition/list}">취소</a>
                                 </div>
                             </div>
                         </div>
@@ -253,9 +104,8 @@
                 </div>
             </div>             
 			</form>
-			</div>
-		</th:block> 
-
+			</div>	
+			</th:block>
 		<!--/* 사용자 추가 js file */-->
         <th:block layout:fragment="customJsResource">        	
         </th:block>
@@ -263,23 +113,35 @@
         <!--/* 사용자 추가 js script */-->
         <th:block layout:fragment="customJs">
         	<script>
-	            function toggleForm() {
-	                const selectedType = document.getElementById("searchType").value;
-	                const foodForm = document.getElementById("foodForm");
-	                const nutritionForm = document.getElementById("nutritionForm");
-	
-	                if (selectedType === "food") {
-	                    foodForm.style.display = "block";
-	                    nutritionForm.style.display = "none";
-	                } else if (selectedType === "nutritional") {
-	                    nutritionForm.style.display = "block";
-	                    foodForm.style.display = "none";
-	                }
-	            }
-	
-	            document.addEventListener("DOMContentLoaded", function () {
-	                toggleForm(); // 페이지 로드 시 기본 값에 따라 폼 표시
+	        	$(document).ready(function () {               
+	                $('#addNutritionForm input').on('input', function () {
+	                    
+	                	let isAllFilled = true;
+	                    $('#addNutritionForm input').each(function () {
+	                        if ($(this).val().trim() === '') {
+	                            isAllFilled = false;
+	                        }
+	                    });
+	                    $('#addNutritionBtn').prop('disabled', !isAllFilled);
+	                });
+	      
+	                $('#addNutritionBtn').click(function (e) {
+	                    e.preventDefault();
+	                    let isSubmit = true;
+		               
+	                    $('#addNutritionForm input').each(function () {
+		                   
+	                    	if ($(this).val().trim() === '') {
+	                    		isSubmit = false;
+	                    		$(this).focus();
+		                        return false;
+	                    	}                  
+		                });
+	                    if (isSubmit) {
+	                    	$('#addNutritionForm').submit();
+	                    }
+	                });
 	            });
-        </script>
+        	</script>
         </th:block> 
 </html>

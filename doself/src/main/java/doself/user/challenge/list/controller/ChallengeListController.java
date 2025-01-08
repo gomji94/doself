@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
-import jakarta.servlet.http.HttpServletRequest;
+import doself.util.CardPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -29,21 +29,35 @@ public class ChallengeListController {
 	// 진행중인 챌린지 리스트 조회
 	@GetMapping("/list")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
-	public String getChallengeList(Model model) {
-		List<ChallengeList> challengeList = challengeListService.getChallengeList();
+	public String getChallengeList(CardPageable cardPageable, Model model) {
+		var challengeListPageInfo = challengeListService.getChallengeList(cardPageable);
+		//List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		List<ChallengeList> challengeList = challengeListPageInfo.getContents();
+		int currentPage = challengeListPageInfo.getCurrentPage();
+		int startPageNum = challengeListPageInfo.getStartPageNum();
+		int endPageNum = challengeListPageInfo.getEndPageNum();
+		int lastPage = challengeListPageInfo.getLastPage();
 		
 		log.info("Fetched Challenge List: {}", challengeList);
 		model.addAttribute("challengeList", challengeList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lastPage", lastPage);
 		return "user/challenge/challenge-list";
 	}
 	
 	// 진행중인 챌린지 상세 정보 조회
 	@GetMapping("/list/view")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
-	public String getChallengeListView(@RequestParam(name="ChallengeCode") String challengeCode, Model model) {
-		ChallengeList challengeDetails = challengeListService.getChallengeListView(challengeCode);
-		model.addAttribute("challengeDetails", challengeDetails);
-		return "user/challenge/challenge-list-view";
+	public String getChallengeListView(@RequestParam(value="challengeCode") String challengeCode, Model model) {
+		log.info("challengeCode: {}", challengeCode); 
+		
+		List<ChallengeDetailView> challengeListDetail = challengeListService.getChallengeListView(challengeCode);
+		log.info("challengeListDetail: {}", challengeListDetail);
+		
+		model.addAttribute("challengeListDetail", challengeListDetail);
+		return "user/challenge/challenge-list-view :: challenge-list-view";
 	}
 	
 	@PostMapping("/list/createchallengerequest")
@@ -55,8 +69,6 @@ public class ChallengeListController {
 	
 	@PostMapping("list/view/participation")
 	public String challengeParticipation(ChallengeList challengeList) {
-		
-		
 		return "redirect:/challenge/list";
 	}
 	

@@ -6,7 +6,9 @@ import lombok.Data;
 public class Members {
 	
 	private String memberId;
-	private String memberPw;
+	private String oldMemberPw;
+	private String newMemberPw;
+	private String confirmMemberPw;
 	private String memberEmail;
 	private String memberName;
 	private String memberBrith;
@@ -14,9 +16,10 @@ public class Members {
 	private String memberGrdCode;
 	private String memberGender;
 	private String memberAgeRange;
-	private Integer openTicketCnt;
-	private Integer partTicketCnt;
+	private Integer openTicketCnt; //챌린지개설 티켓 갯수
+	private Integer partTicketCnt; //챌린지참여 티켓 갯수
 	private Integer memberPoint;
 	private String memberImage;
+	private String memberFeed;
 	
 }

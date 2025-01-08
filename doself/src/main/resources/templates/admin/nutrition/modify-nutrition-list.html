@@ -8,52 +8,40 @@
           <div class="row">
                 <div class="col-6">
                     <div class="content-header">
-                        <h2 class="content-title">등록 요청 처리</h2>                        
+                        <h2 class="content-title">등록 요청 반려 처리</h2>                        
                     </div>
                 </div>
             </div>    
 		</th:block>
 		
-		<th:block layout:fragment="content-body">			
-			<form action="#" method="post">
+		<th:block layout:fragment="content-body">					
 			<div class="row">
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">1. 처리 상태 코드</label>
-                                        <select name="scCode" id="scCode" class="form-select">
-                                        	<option value="sc_001">접수</option>
-                                        	<option value="sc_002">승인</option>
-                                        	<option value="sc_003">반려</option>
-                                        </select>
-                                    </div>                
-                                </div> <!-- col.// -->
-                            </div> <!-- row.// -->
-
+                            <form id="modifyNutritionForm" th:action="@{/admin/nutrition/modify}" method="post" th:object="${nutritionInfo}">
                             <hr class="mb-4 mt-0">
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">2. 반려 사유 내용</label>
-                                        <input type="text" class="form-control">
+                                        <label class="form-label">1. 반려 사유 내용</label>
+                                        <input type="hidden" id="nirrNum" name="nirrNum" class="form-control" th:value="*{nirrNum}">
+                                        <input type="text" id="nirrReasonContent" name="nirrReasonContent" class="form-control">
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->                            
                             
                             <div class="row">                                
                                 <div class="col-md-9 addBtn">
-                                    <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="@{#}">수정하기</a>
+                                    <button type="submit" id="modifyNutritionBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">수정하기</button>
                             		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/nutrition/list}">취소</a>
                                 </div> <!-- col.// -->
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>             
-			</form>		
 		</th:block> 
 
 		<!--/* 사용자 추가 js file */-->

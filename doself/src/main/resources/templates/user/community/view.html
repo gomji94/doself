@@ -13,7 +13,6 @@
 
         <main id="main-content">
   		<th:block th:object="${articleDetail}">
-  		
             <div id="main-container-contents">
                 <div id="main-container-title">community</div>
                 <!-- 게시글 전체 영역 -->
@@ -32,6 +31,7 @@
                         <span  th:text="*{articleCreationDate}"></span>
                         <span id="post-like">like</span>
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
+                        
                     </div>
                     
 					<th:block th:with="imgSrc=*{articleAttachmentFile}" th:if="${!#strings.isEmpty(imgSrc)}">
@@ -44,16 +44,23 @@
 
                     <!-- 글 버튼 -->
                     <div class="article-button-container">
-                        <a href="#">
-                            <button id="article-like__button">like</button>
-                        </a>
-                        <a href="#">
-                            <button id="article-modify__button">modify</button>
-                        </a>
-                        <a href="#">
-                            <button id="article-delete__button">delete</button>
-                        </a>
-                        <a href="#">
+                    	<th:block th:if="${session.SID != null and session.SID eq articleDetail.articleAuthorId}">
+	                        <a href="#">
+	                            <button id="article-like__button">like</button>
+	                        </a>
+                        </th:block>
+                        
+						<th:block th:if="${session.SID != null and session.SID eq articleDetail.articleAuthorId}">
+						    <a href="#">
+						        <button id="article-modify__button">modify</button>
+						    </a>
+						    <a href="#">
+						        <button id="article-delete__button">delete</button>
+						    </a>
+						</th:block>
+
+                        <a th:href="@{/community/list}">
+                        
                             <button id="article-list__button">list</button>
                         </a>
                     </div>
@@ -64,7 +71,7 @@
                         <ul id="comment-list">
                             <li class="comment">
                                 <div class="comment-info__left">
-                                    <p class="comment-author">id001</p>
+                                    <p class="comment-author" >id001</p>
                                     <p class="comment-content">이 글에 대한 댓글 내용입니다.</p>
                                 </div>
                                 <div class="comment-info__right">
@@ -89,16 +96,15 @@
                         </ul>
 
                         <!-- 댓글 작성 폼 -->
-                        <form id="comment-form">
+                        <form id="comment-form" action="#">
                             <div id="comment-userId">id015</div>
                             <textarea id="comment-text" placeholder="댓글을 남겨보세요"></textarea>
                             <button type="submit" id="comment-submit">등록</button>
                         </form>
                     </div>
-
                 </div>
             </div>
-            </th:block>
+         </th:block>
         </main>
         <div id="main-container-advertise">
             <div id="main-container-advertise__adBlock">
@@ -112,11 +118,16 @@
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
+    	<script th:src="@{/assets/js/layout.js}"></script>
+    	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    	<script th:src="@{/assets/js/layout.js}"></script>
-    	
+    	<script>
+    		$('#comment-submit').click(event => {
+    			event.preventDefault();
+    		})
+    	</script>
     </th:block> 
 </html>

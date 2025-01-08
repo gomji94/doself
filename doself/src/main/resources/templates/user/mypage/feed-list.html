@@ -30,7 +30,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="menu-item">
+                <a th:href="@{/mypage/medicinearlam}" class="menu-item">
                     <i class="fa-solid fa-capsules"></i>
                     <div>영양제 알림 체크</div>
                 </a>
@@ -57,11 +57,11 @@
                     <img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필">
                 </a>
             </div>
-            <div id="main-userId">id002</div>
+            <div id="main-userId" th:text="*{memberId}"></div>
             <div id="main-user-feed-info">
                 <div id="feed">
                     <span>피드</span>
-                    <span>5</span>
+                    <span></span>
                 </div>
              </div>    
         </div>
@@ -113,6 +113,24 @@
                     </a>
                 </li>
         </div>
+        <!-- 모달창 여기부터 복사 -->
+		<div class="modal-confirm-container">
+		    <div class="confirm-popup-wrap" style="display: none;">
+		        <div class="confirm-popup">
+		            <div class="confirm-popup-body">
+		                <div class="confirm-body-content">
+		                    <div class="confirm-body-titlebox">
+		                        <div id="modal-request-title">DoSelf</div>
+		                        <div id="confirm-message">
+		                            성공적으로 제출 되었습니다.
+		                            <p style="display: none;">요청 상태는 [티켓상세내역조회]을 통해 확인하실 수 있습니다. </p>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
         
     </main>
 

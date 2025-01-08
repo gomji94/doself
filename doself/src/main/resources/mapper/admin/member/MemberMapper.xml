@@ -25,36 +25,41 @@
   		</select> -->
   		
   		<resultMap type="Member" id="memberResultMap">
-  			<id column="" property="" />
-  			<result column="mbr_id" property="mbrId" />
-  			<result column="mbr_pw" property="mbrPw" />
-  			<result column="mbr_name" property="mbrName" />
-  			<result column="mg_code" property="mgCode" />
-  			<result column="mbr_email" property="mbrEmail" />
-  			<result column="mbr_birth_date" property="mbrBirthDate" />
-  			<result column="mbr_phone_num" property="mbrPhoneNum" />
-  			<result column="mbr_gender" property="mbrGender" />
-  			<result column="ac_num" property="acNum" />
-  			<result column="opening_ticket_count" property="openingTicketCount" />
+  			<id column="mbr_id" 						property="mbrId" />
+  			<result column="mbr_pw" 					property="mbrPw" />
+  			<result column="mbr_name" 					property="mbrName" />
+  			<result column="mg_code" 					property="mgCode" />
+  			<result column="mbr_email" 					property="mbrEmail" />
+  			<result column="mbr_birth_date" 			property="mbrBirthDate" />
+  			<result column="mbr_phone_num" 				property="mbrPhoneNum" />
+  			<result column="mbr_gender" 				property="mbrGender" />
+  			<result column="ac_num" 					property="acNum" />
+  			<result column="opening_ticket_count" 		property="openingTicketCount" />
   			<result column="participation_ticket_count" property="participationTicketCount" />
-  			<result column="mbr_point" property="mbrPoint" />
+  			<result column="mbr_point" 					property="mbrPoint" />
 
 	  		<!-- 연령대 카테고리 관계 -->
 	  		<association property="ageInfo" javaType="Age">
 	  			<id 	column="ac_num" property="acNum" />
 	  			<result column="ac_name" property="acName" />
 	  		</association>
+	  		
+	  		<!-- 등급 카테고리 관계 -->
+	  		<association property="GradeInfo" javaType="Grade">
+	  			<id 	column="mg_code" property="mgCode" />
+	  			<result column="mg_name" property="mgName" />
+	  		</association>
   		</resultMap>
   		
   		
   		<!-- 회원목록 조회 -->
-		<select id="getMemberList" resultMap="memberResultMap">
+		<select id="getMemberList" parameterType="map" resultMap="memberResultMap">
 			/* 회원목록 조회 */
 			SELECT 
 				m.mbr_id,
 				m.mbr_pw,
 				m.mbr_name, 
-				m.mg_code,
+				mg.mg_name,
 				m.mbr_email,
 				m.mbr_birth_date, 
 				m.mbr_phone_num, 
@@ -65,8 +70,112 @@
 				m.mbr_point			
 			FROM member m INNER JOIN age_category ac
 				USING(ac_num)
-			ORDER BY
-				m.mbr_id
+				INNER JOIN member_grade mg
+				ON m.mg_code = mg.mg_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        	AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND m.mbr_birth_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND m.mbr_birth_date<![CDATA[ < ]]>#{endDate}
+			    </if>
+			</where>			
+		    ORDER BY m.mbr_id
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
+		
+		
+		
+		<resultMap type="MemberLog" id="memberLogResultMap">
+  			<id column="mll_num" property="mllNum" />
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="mll_ip" property="mllIp" />
+  			<result column="mll_date" property="mllDate" />  		  			
 
+	  		<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />
+	  			<result column="mbr_name" property="mbrName" />	  				  			  			  			  			
+	  		</association>  
+  		</resultMap>
+		
+  		<!-- 회원로그 조회 -->
+		<select id="getMemberLogList" resultMap="memberLogResultMap">
+			/* 회원로그 조회 */
+			SELECT 
+				mll_num, 
+				m.mbr_name, 
+				mll_ip, 
+				mll_date
+			FROM member_login_log mll INNER JOIN `member` m
+			ON mll.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND mll_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND mll_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY mll_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+	
+		
+		
+		
+		<!-- 페이징 -->
+		<select id="getCntMemberList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				COUNT(*) 
+			FROM
+				member m INNER JOIN age_category ac
+				USING(ac_num)
+				INNER JOIN member_grade mg
+				ON m.mg_code = mg.mg_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+		        	AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND m.mbr_birth_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND m.mbr_birth_date<![CDATA[ < ]]>#{endDate}
+			    </if>
+			</where>			
+		    ORDER BY m.mbr_id		   
+		</select>
+		
+		<select id="getCntMemberLogList" resultType="int">
+			/* 멤버로그 총개수 */
+			SELECT 
+				COUNT(*) 
+			FROM member_login_log mll INNER JOIN `member` m
+				ON mll.mbr_id = m.mbr_id
+			<where>
+				
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND mll_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND mll_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>			
+		    ORDER BY m.mbr_id		   
+		</select>
   </mapper>

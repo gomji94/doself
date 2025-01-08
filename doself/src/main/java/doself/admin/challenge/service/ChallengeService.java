@@ -9,27 +9,29 @@ import doself.admin.challenge.domain.Reward;
 import doself.admin.challenge.domain.Score;
 import doself.admin.challenge.domain.Stat;
 import doself.admin.challenge.domain.Warning;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 
 public interface ChallengeService {
 	
 	//챌린지 리스트 출력
-	List<Challenge> getChallengeList();
+	PageInfo<Challenge> getChallengeList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 	
 	//챌린지내 개인기록 출력
-	List<PersonalStat> getPersonalStatList();
+	PageInfo<PersonalStat> getPersonalStatList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 
 	//챌린지내 개인점수 출력
-	List<PersonalScore> getPersonalScoreList();
+	PageInfo<PersonalScore> getPersonalScoreList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 	
 	//챌린지 기록 출력
-	List<Stat> getStatList();
+	PageInfo<Stat> getStatList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 	
 	//챌린지 점수 출력
-	List<Score> getScoreList();
+	PageInfo<Score> getScoreList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 	
 	//챌린지 리더가 경고한 내역 출력
-	List<Warning> getWarninglist();
+	PageInfo<Warning> getWarninglist(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 	
 	//챌린지 보상지급기록 출력
-	List<Reward> getRewardList();
+	PageInfo<Reward> getRewardList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
 }

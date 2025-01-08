@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import doself.user.challenge.list.controller.ChallengeListController;
+import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.mapper.ChallengeListMapper;
+import doself.util.CardPageInfo;
+import doself.util.CardPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,9 +43,10 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 특정 챌린지 카드 조회
 	@Override
-	public ChallengeList getChallengeListView(String ChallengeCode) {
-			
-		return challengeListMapper.getChallengeListView(ChallengeCode);
+	public List<ChallengeDetailView> getChallengeListView(String challengeCode) {
+		List<ChallengeDetailView> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
+	    log.info("challengeListDetail: {}", challengeListDetail);
+	    return challengeListDetail;
 	}
 
 	// 챌린지 생성(등록)
@@ -52,5 +55,12 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		int addChallengeResult = challengeListMapper.addChallenge(challengeList);
 		
 	}
-	
+
+	// 챌린지 리스트 페이지
+	@Override
+	public CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable) {
+	    int rowCnt = challengeListMapper.getCntChallengeList();
+	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
+	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
+	}
 }

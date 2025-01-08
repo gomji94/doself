@@ -17,24 +17,24 @@
                     <header class="card-header">
                         <div class="row gx-3">
                             <div class="col-lg-6 col-6 col-md-3">
-                              <select class="form-select" id="searchType">                                
+                              <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">                                
                                 <option value="mbrName">이름</option>
-                                <option value="ctpCode">상품명</option>
-                                <option value="ctphStatus">결제 상태</option>
+                                <option value="ctcCategory">상품명</option>
                               </select>
                             </div>
-                            <div class="col-lg-4 col-md-6 me-auto">
-                              <input type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                            <!-- 검색어 입력 -->
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
+                                <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                                <datalist id="searchSuggestions"></datalist>                               
+                                
+                                <p class="searchLeft align-content">날짜</p>
+                                <input type="date" class="date date-container searchLeft" id="startDate" />
+                                <p class="searchLeft">~</p> 
+                                <input type="date" class="date date-container searchLeft" id="endDate" />
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
                             </div>
-                            <div class="col-lg-6 col-6 col-md-3">
-                              <div class="date-container">
-                                <p>날짜</p>
-                                <input type="date" class="date" id="startDate" /> ~
-                                <input type="date" class="date" id="endDate" />
-                              </div>
-                            </div>                            
-                                <input class="searchBtn" type="button" value="검색" onclick="filterData()">                            
-                          </div>
+                        </div>
                     </header>
                     <!-- card-header end// -->
                     <div class="card-body">
@@ -46,6 +46,7 @@
                                         <th scope="col">아이디</th>                                        
                                         <th scope="col">결제수단번호</th>                                        
                                         <th scope="col">결제일시</th>
+                                        <th scope="col">상품명</th>                                        
                                         <th scope="col">상품가격</th>                                        
                                         <th scope="col">결제상태</th>                                        
                                         <th scope="col">환불상태</th>                                        
@@ -58,6 +59,7 @@
                                 			<td th:text="${l.memberInfo.mbrName}"></td>
                                 			<td th:text="${l.tpmNum}"></td>
                                 			<td th:text="${l.ctphDate}"></td>
+                                			<td th:text="${l.ticketPriceInfo.ctcCategory}"></td>
                                 			<td th:text="${l.ticketPriceInfo.ctpPrice}"></td>
                                 			<td th:text="${l.ctphStatus}"></td>
                                 			<td th:text="${l.ctphReturnStatus}"></td>

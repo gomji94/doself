@@ -20,6 +20,6 @@ public interface FoodMapper {
 	List<Food> searchFoodByFoodName(String foodName);
 	
 	// 요청 접수
-	void createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
+	int createNutritionRequest(NutritionRequestInfo nutritionRequestInfo);
 
 }

@@ -14,10 +14,25 @@
   		<result column="pepl_expl" 			property="pointExplanation"/>
   	</resultMap>
   	
+  	<resultMap type="PurchaseItem" id="purchaseItemResultMap">
+  		<id 	column="mbr_id" 			property="memberId"/>
+  		<result column="pepl_name" 			property="itemName"/>
+  		<result column="pumh_code"			property="itemCode"/>
+ 		<result column="pepl_price" 		property="itemPrice"/>
+  		<result column="pumh_date" 			property="itemPurchaseDate"/>
+  	</resultMap>
+  	
   	<!-- 마켓 아이템 리스트 조회 -->
   	<select id="getMarketItemList" resultMap="marketItemResultMap" >
 		SELECT *
 		FROM point_exchange_product_list;
+  	</select>
+  	
+  	<!-- 회원 포인트 조회 -->
+  	<select id="getMemberPointById" parameterType="String" resultType="int">
+  		SELECT mbr_point
+		FROM member
+		WHERE mbr_id = #{meberId};
   	</select>
   	
   	<!-- 마켓 아이템 상세 조회 -->
@@ -25,6 +40,31 @@
 		SELECT *
 		FROM point_exchange_product_list
 		WHERE pepl_num = #{pointItemKeyNum};
+  	</select>
+  	
+  	<!-- 포인트 구매내역 행 총 갯수 조회 -->
+  	<select id="getCntOfPurchaseListById" parameterType="String" resultType="int">
+  		SELECT COUNT(*)
+		FROM point_use_management_history pumh INNER JOIN point_exchange_product_list pepl
+		USING(pepl_num)
+		WHERE mbr_id = #{memberId}
+  	</select>
+  	
+  	<!-- 포인트 구매내역 조회 -->
+  	<select id="getPurchaseListById" resultMap="purchaseItemResultMap" parameterType="Map">
+  		SELECT 
+  			pumh.mbr_id, 
+  			pepl.pepl_name, 
+  			pumh.pumh_code, 
+  			pepl.pepl_price, 
+  			pumh.pumh_date
+		FROM 
+			point_use_management_history pumh 
+			INNER JOIN point_exchange_product_list pepl
+		USING(pepl_num)
+		WHERE mbr_id = #{memberId}
+  		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+  	
   	</select>
   	
 </mapper>

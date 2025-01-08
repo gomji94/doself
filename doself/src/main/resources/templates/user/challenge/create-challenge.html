@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+	  
 	<div class="modal-overlay" id="cl-create-modal-overlay" th:fragment="create-challenge">
         <div class="modal-container">
             <div class="modal-header">
@@ -8,7 +9,7 @@
                 <!-- <button id="modalCloseBtn">&times;</button> -->
                 <img id="modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
             </div>
-            <hr>
+            <hr id="header-section">
            	<form id="addChallenge" th:action="@{/user/list/createchallengerequest}" method="post">
 	            <div class="modal-body">
 	                <!-- 이미지 업로드 영역 -->

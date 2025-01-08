@@ -1,35 +1,3 @@
-
-// 예시 데이터
-const challengeData = [];
-
-// 데이터 초기 렌더링
-document.addEventListener("DOMContentLoaded", () => {
-    renderTable(challengeData);
-});
-
-// 결과를 테이블에 출력하는 함수
-function renderTable(data) {
-    const resultTable = document.getElementById("resultTable");
-    resultTable.innerHTML = ""; // 기존 데이터 초기화
-
-    if (data.length > 0) {
-        data.forEach(item => {
-            const row = `<tr>
-                                <td>${item.rphNum}</td>
-                                <td>${item.cgName}</td>
-                                <td>${item.mbrId}</td>
-                                <td>${item.rhNum}</td>
-                                <td>${item.rphRewardSelectedDate}</td>
-                                <td>${item.rphAdmin}</td>
-                                <td>${item.rphRewardPaymentDate}</td>                               
-                            </tr>`;
-            resultTable.innerHTML += row;
-        });
-    } else {
-        resultTable.innerHTML = `<tr><td colspan="7">검색 결과가 없습니다.</td></tr>`;
-    }
-}
-
 // 검색조건에 따라 자동완성값 변경
 function updateSearchSuggestions() {
     const searchType = document.getElementById("searchType").value;
@@ -37,11 +5,9 @@ function updateSearchSuggestions() {
     suggestions.innerHTML = ""; // 기존 데이터 초기화
 
     let options = [];
-    if (searchType === "cgName") {
-        options = ["가보자고", "간식먹자"];
-    } else if (searchType === "rhNum") {
-        options = ["멤버 챌린지별 1위", "멤버 챌린지별 2위", "멤버 챌린지별 3위", "챌린지 월간 1위", "챌린지 월간 2위", "챌린지 월간 3위"];
-    }
+    if (searchType === "reward") {
+        options.push("멤버 챌린지별 1위", "멤버 챌린지별 2위", "멤버 챌린지별 3위", "챌린지 월간 1위", "챌린지 월간 2위", "챌린지 월간 3위");
+    } 
 
     options.forEach(value => {
         const option = document.createElement("option");
@@ -50,28 +16,23 @@ function updateSearchSuggestions() {
     });
 }
 
-// 데이터 필터링 함수
-function filterData() {
-    const searchType = document.getElementById("searchType").value; // 선택된 조건
-    const searchKeyword = document.getElementById("searchKeyword").value.trim(); // 입력된 검색어
-    const startDate = document.getElementById("startDate").value; // 시작 날짜
-    const endDate = document.getElementById("endDate").value; // 종료 날짜        
-
-    // 필터링된 데이터
-    const filteredData = challengeData.filter(item => {
-        const matchesSearchType = searchType === "cgName" ? item.cgName.includes(searchKeyword) :
-            searchType === "mbrId" ? item.mbrId.includes(searchKeyword) :
-                searchType === "rhNum" ? item.rhNum.includes(searchKeyword) : true;
-
-        const withinDateRange = (!startDate || item.rphRewardSelectedDate >= startDate) &&
-            (!endDate || item.rphRewardSelectedDate <= endDate);
-
-        return matchesSearchType && withinDateRange;
-    });
-    // 필터링된 결과 테이블에 출력
-    renderTable(filteredData);
-}
-// 페이지가 로드되었을 때 전체 데이터 표시
-document.addEventListener("DOMContentLoaded", () => {
-    renderTable(challengeData);
+// 검색기능
+$('#searchBtn').click(function(){
+	const searchType = $('#searchType').val();
+	const searchKeyword = $('#searchKeyword').val();
+	const startDate = $('#startDate').val();
+	const endDate = $('#endDate').val();
+	
+	const $form = $('<form />', { 'action' : '/admin/challenge/rewardlist', 'method': 'get'});
+	const $searchType = 
+			$('<input />', {'type':'hidden', 'name' : 'searchType'}).val(searchType);
+	const $searchKeyword = 
+			$('<input />', {'type':'hidden', 'name' : 'searchKeyword'}).val(searchKeyword);
+	const $startDate = 
+			$('<input />', {'type':'hidden', 'name' : 'startDate'}).val(startDate);
+	const $endDate = 
+			$('<input />', {'type':'hidden', 'name' : 'endDate'}).val(endDate);
+	$form.append($searchType, $searchKeyword, $startDate, $endDate);
+	$('body').append($form);
+	$form.submit();
 });

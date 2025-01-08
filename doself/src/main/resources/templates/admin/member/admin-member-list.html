@@ -22,26 +22,23 @@
                                 <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
                                     <option value="mbrId">아이디</option>
                                     <option value="mbrName">이름</option>
-                                    <option value="mgCode">회원 등급</option>
-                                    <option value="acNum">연령대</option>
+                                    <option value="mgName">회원 등급</option>
+                                    <option value="acName">연령대</option>
                                 </select>
                             </div>
 
                             <!-- 검색어 입력 -->
-                            <div class="col-lg-4 col-md-6 me-auto">
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
                                 <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
-                                <datalist id="searchSuggestions"></datalist>
+                                <datalist id="searchSuggestions"></datalist>                               
+                                
+                                <p class="searchLeft align-content">날짜</p>
+                                <input type="date" class="date date-container searchLeft" id="startDate" />
+                                <p class="searchLeft">~</p> 
+                                <input type="date" class="date date-container searchLeft" id="endDate" />
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
                             </div>
-
-                            <!-- 날짜 선택 -->
-                            <div class="col-lg-6 col-6 col-md-3">
-                                <div class="date-container">
-                                    <p>날짜</p>
-                                    <input type="date" class="date" id="startDate" /> ~
-                                    <input type="date" class="date" id="endDate" />
-                                </div>
-                            </div>
-                            <input class="searchBtn" type="button" value="검색" onclick="filterData()" />
                         </div>
                     </header>
 
@@ -69,14 +66,12 @@
 										<tr th:each="l : ${memberList}" class="text-center">
 											<td th:text="${l.mbrId}"></td>	
 											<td th:text="${l.mbrName}"></td>																			
-											<td th:text="${l.mgCode}"></td>
+											<td th:text="${l.GradeInfo.mgName}"></td>
 											<td th:text="${l.mbrEmail}"></td>
 											<td th:text="${l.mbrBirthDate}"></td>
 											<td th:text="${l.mbrPhoneNum}"></td>
-											<td th:text="${l.mbrGender}"></td>
-											<th:block th:object="${l.ageInfo}">
-												<td th:text="*{acName}"></td>											
-											</th:block>
+											<td th:text="${l.mbrGender}"></td>									
+											<td th:text="${l.ageInfo.acName}"></td>																						
 											<td th:text="${l.openingTicketCount}"></td>
 											<td th:text="${l.participationTicketCount}"></td>
 											<td th:text="${l.mbrPoint}"></td>											
@@ -92,7 +87,36 @@
                             </table>
                         </div>
                     </div>
-                </div>                          
+                </div>
+                
+               <!-- 페이징 -->
+               <div class="pagination-area mt-15 mb-50">
+              		<nav>
+                   <ul class="pagination justify-content-center">
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/member/list}">
+                   			<i class="material-icons md-first_page"></i>
+                   		</a>
+                   	</li>
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/member/list(currentPage=${currentPage - 1})}">
+                   			<i class="material-icons md-chevron_left"></i>
+                   		</a>
+                   	</li>
+                   		<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+					        <li class="page-item" th:classappend="${num == currentPage} ? 'active'">
+					            <a class="page-link" th:href="@{/admin/member/list(currentPage=${num})}" th:text="${num}"></a>
+					        </li>
+					    </th:block>     
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/member/list(currentPage=${currentPage +1})}"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/member/list(currentPage=${lastPage})}"><i class="material-icons md-last_page"></i></a>
+                    </li>
+                   </ul>
+               </nav>
+           </div>                          
 		</th:block> 
 
 		<!--/* 사용자 추가 js file */-->
@@ -103,7 +127,25 @@
         <!--/* 사용자 추가 js script */-->
         <th:block layout:fragment="customJs">
         	<script>
-        	
+	        	$('#searchBtn').click(function(){
+	    			const searchType = $('#searchType').val();
+	    			const searchKeyword = $('#searchKeyword').val();
+	    			const startDate = $('#startDate').val();
+	    			const endDate = $('#endDate').val();
+	    			
+	    			const $form = $('<form />', { 'action' : '/admin/member/list', 'method': 'get'});
+	    			const $searchType = 
+	    					$('<input />', {'type':'hidden', 'name' : 'searchType'}).val(searchType);
+	    			const $searchKeyword = 
+	    					$('<input />', {'type':'hidden', 'name' : 'searchKeyword'}).val(searchKeyword);
+	    			const $startDate = 
+	    					$('<input />', {'type':'hidden', 'name' : 'startDate'}).val(startDate);
+	    			const $endDate = 
+	    					$('<input />', {'type':'hidden', 'name' : 'endDate'}).val(endDate);
+	    			$form.append($searchType, $searchKeyword, $startDate, $endDate);
+	    			$('body').append($form);
+	    			$form.submit();
+	    		});
         	</script>
         </th:block> 
 </html>

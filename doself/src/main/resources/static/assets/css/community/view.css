@@ -4,6 +4,7 @@
     display: flex;
     justify-content: space-between;
     min-height: 1155px;
+    width: 100%;
 }
 
 #main-container {
@@ -163,8 +164,13 @@
     cursor: pointer;
 }
 
+.comment p {
+	margin: 12px 0;
+}
+
 #comment-list {
     padding: 0;
+    margin: 16px 0;
 }
 
 #comment-form {

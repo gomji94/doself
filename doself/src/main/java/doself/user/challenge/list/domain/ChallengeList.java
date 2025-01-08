@@ -1,6 +1,7 @@
 package doself.user.challenge.list.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -31,4 +32,6 @@ public class ChallengeList {
 	private String  challengeStatusCode;
 	private String  challengeStatus;
 	private String  challengeRewardCheck;
+	
+//	private List<ChallengeDetailView> challengeDetailView;
 }

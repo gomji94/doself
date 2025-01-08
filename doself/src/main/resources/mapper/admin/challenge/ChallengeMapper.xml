@@ -61,10 +61,49 @@
 				cs_reward_check
 			FROM challenge_group cg	INNER JOIN challenge_topic_level ctl
 					USING(ctl_num)
-				INNER JOIN challenge_status cs
-					USING(cs_num)	
+					INNER JOIN challenge_status cs
+					USING(cs_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cg_start_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cg_start_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cg.cg_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
+		<!-- 페이징 -->
+		<select id="getCntChallengeList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_group cg	INNER JOIN challenge_topic_level ctl
+					USING(ctl_num)
+					INNER JOIN challenge_status cs
+					USING(cs_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cg_start_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cg_start_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cg.cg_num		   
+		</select>
 		
 		
 		<resultMap type="PersonalStat" id="PersonalStatResultMap">
@@ -96,7 +135,7 @@
 			
 			SELECT 
 				cmss_num,
-				cg_name,
+				cg.cg_name,
 				m.mbr_name,
 				cmss_date,
 				cmss_upload_feed_count,
@@ -107,10 +146,47 @@
 				USING(cg_num)
 				INNER JOIN `member` m
 				ON cmss.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cmss_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cmss_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
 			ORDER BY
-			cmss_num
+				cmss.cmss_num
+			LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
-		
+	
+		<!-- 페이징 -->
+		<select id="getCntPersonalStatList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_member_score_stats cmss INNER JOIN challenge_group cg
+				USING(cg_num)
+				INNER JOIN `member` m
+				ON cmss.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cmss_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cmss_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+			ORDER BY
+				cmss.cmss_num		   
+		</select>
 		
 		
 		<resultMap type="PersonalScore" id="PersonalScoreResultMap">
@@ -163,8 +239,47 @@
 				USING(cg_num)
 				INNER JOIN `member` m
 				ON cpsl.mbr_id = m.mbr_id	
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cpsl.cpsl_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
+		<!-- 페이징 -->
+		<select id="getCntPersonalScoreList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_personal_score_list cpsl INNER JOIN challenge_group cg
+				USING(cg_num)
+				INNER JOIN `member` m
+				ON cpsl.mbr_id = m.mbr_id	
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cpsl.cpsl_num	   
+		</select>
 		
 		
 		<resultMap type="Stat" id="StatResultMap">
@@ -187,14 +302,51 @@
 			
 			SELECT 
 				ctps_num,
-				cg_name,
+				cg.cg_name,
 				ctps_date,
 				ctps_participation,
 				ctps_achievement_rate
-			FROM challenge_today_participation_stats INNER JOIN challenge_group cg
+			FROM challenge_today_participation_stats ctps INNER JOIN challenge_group cg
 			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND ctps_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND ctps_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	ctps.ctps_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
+		<!-- 페이징 -->
+		<select id="getCntStatList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_today_participation_stats ctps INNER JOIN challenge_group cg
+			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND ctps_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND ctps_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	ctps.ctps_num
+		</select>
 		
 		
 		<resultMap type="Score" id="ScoreResultMap">
@@ -225,7 +377,7 @@
 				mcsl_num,
 				mcsl_year,
 				mcsl_monthly,
-				cg_name,
+				cg.cg_name,
 				mcsl_cumulative_performance_rate,
 				mcsl_cumulative_participation_rate,
 				mcsl_level_score,
@@ -234,10 +386,47 @@
 				mcsl_like_score,
 				mcsl_total_score,
 				mcsl_rank
-			FROM monthly_challenge_score_list INNER JOIN challenge_group
+			FROM monthly_challenge_score_list mcsl INNER JOIN challenge_group cg
 			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	mcsl.mcsl_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
+		<!-- 페이징 -->
+		<select id="getCntScoreList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM monthly_challenge_score_list mcsl INNER JOIN challenge_group cg
+			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	mcsl.mcsl_num
+		</select>
 		
 		
 		<resultMap type="Warning" id="WarningResultMap">
@@ -285,24 +474,69 @@
 			
 			SELECT
 				lcmwl_num,
-				cg_name,
+				cg.cg_name,
 				m.mbr_name,
 				cmwc_category,
 				olc_name,
 				lcmwl_bc_num,
 				lcmwl_date
 			FROM leader_challenge_mbr_warning_log lcmwl INNER JOIN challenge_group cg
-			ON lcmwl.cg_num = cg.cg_num
-			INNER JOIN challenge_group_member cgm
-			ON lcmwl.cgm_num = cgm.cgm_num
-			INNER JOIN `member` m
-			ON cgm.mbr_id = m.mbr_id
-			INNER JOIN challenge_mbr_warning_category cmwc
-			ON lcmwl.cmwc_num = cmwc.cmwc_num
-			INNER JOIN occurance_location_code olc
-			ON lcmwl.olc_code = olc.olc_code
+				ON lcmwl.cg_num = cg.cg_num
+				INNER JOIN challenge_group_member cgm
+				ON lcmwl.cgm_num = cgm.cgm_num
+				INNER JOIN `member` m
+				ON cgm.mbr_id = m.mbr_id
+				INNER JOIN challenge_mbr_warning_category cmwc
+				ON lcmwl.cmwc_num = cmwc.cmwc_num
+				INNER JOIN occurance_location_code olc
+				ON lcmwl.olc_code = olc.olc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND lcmwl_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND lcmwl_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	lcmwl.lcmwl_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
 		</select>
 		
+		<!-- 페이징 -->
+		<select id="getCntWarninglist" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM leader_challenge_mbr_warning_log lcmwl INNER JOIN challenge_group cg
+				ON lcmwl.cg_num = cg.cg_num
+				INNER JOIN challenge_group_member cgm
+				ON lcmwl.cgm_num = cgm.cgm_num
+				INNER JOIN `member` m
+				ON cgm.mbr_id = m.mbr_id
+				INNER JOIN challenge_mbr_warning_category cmwc
+				ON lcmwl.cmwc_num = cmwc.cmwc_num
+				INNER JOIN occurance_location_code olc
+				ON lcmwl.olc_code = olc.olc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND lcmwl_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND lcmwl_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	lcmwl.lcmwl_num
+		</select>
 		
 		
 		<resultMap type="Reward" id="RewardResultMap">
@@ -354,5 +588,47 @@
 				ON rph.mbr_id = m.mbr_id
 				INNER JOIN reward_history rh
 				ON rph.rh_num = rh.rh_num
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rph_reward_selected_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rph_reward_selected_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	rph.rph_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntRewardList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM reward_payment_history rph INNER JOIN challenge_group cg
+				ON rph.cg_num = cg.cg_num
+				INNER JOIN `member` m
+				ON rph.mbr_id = m.mbr_id
+				INNER JOIN reward_history rh
+				ON rph.rh_num = rh.rh_num
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rph_reward_selected_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rph_reward_selected_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	rph.rph_num
 		</select>
   </mapper>

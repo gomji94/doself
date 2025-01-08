@@ -5,6 +5,7 @@
 
   <mapper namespace="doself.user.challenge.list.mapper.ChallengeListMapper">
   
+  	<!-- 특정 챌린지 리스트 조회 -->
   	<resultMap type="ChallengeList" id="ChallengeListResultMap">
 	    <id 	column="cg_num" 			  property="challengeCode"/>
 	    <result column="mbr_id"				  property="memberId"/>
@@ -20,9 +21,26 @@
 	    <result column="ct_name" 			  property="challengeTopicName"/>
 	    <result column="cs_status"			  property="challengeStatus"/>
 	</resultMap>
+	
+	<!-- 챌린지 상세 정보 모달 -->
+	<resultMap type="ChallengeDetailView" id="challengeListDetailMap">
+		<id 	column="cg_num" 			  property="challengeCode"/>
+		<result column="cg_name" 			  property="challengeName"/>
+		<result column="cg_picture"			  property="challengeImage"/>
+		<result column="mbr_image"			  property="challengeLeaderImage"/>
+		<result column="mbr_id"				  property="challengeLeaderId"/>
+		<result column="ct_name"			  property="challengeCategory"/>
+		<result column="cg_start_date"		  property="challengeStartDate"/>
+		<result column="cg_end_date"		  property="challengeEndDate"/>
+		<result column="ctl_level" 			  property="challengeTopicLevel"/>
+		<result column="ctl_content"		  property="challengeLevelContent"/>
+		<result column="cg_current_mbr_count" property="challengeCurrentMember"/>
+		<result column="cg_max_mbr_count"	  property="challengeMaxMember"/>
+		<result column="cg_content" 		  property="challengeContent"/>
+	</resultMap>
 
   	<!-- 특정 챌린지 리스트 조회 -->
-  	<select id="getChallengeList" resultType="ChallengeList" resultMap="ChallengeListResultMap">
+  	<select id="getChallengeList"  parameterType="CardPageable" resultType="ChallengeList" resultMap="ChallengeListResultMap">
 	  	SELECT
 			cg.cg_num,
 			cg.mbr_id,
@@ -42,6 +60,9 @@
 		    INNER JOIN challenge_topic_level stl USING(ctl_num)
 		    INNER JOIN challenge_status cs USING(cs_num)
 		    INNER JOIN challenge_topic ct USING(ct_num)
+		ORDER BY 
+		    cg_start_date DESC 
+	    LIMIT #{rowPerPage} OFFSET #{offset}
 	 <!--    WHERE
 			cg.cg_num = #{ChallengeCode}; -->
   	</select>
@@ -82,4 +103,38 @@
 			#{challengeRewardCheck} 	  -- null 허용
 		);
   	</insert>
+  	<!-- 챌린지 페이징 처리 -->
+  	<select id="getCntChallengeList" resultType="int">
+  		/* 챌린지 리스트 총 갯수 */
+  		SELECT
+			COUNT(*)
+		FROM
+			challenge_group
+  	</select>
+  	
+  	<!-- 챌린지 상세 정보 모달 -->
+  	<select id="getChallengeListView" resultMap="challengeListDetailMap">
+		SELECT
+			cg.cg_num,
+			cg.cg_name,
+			cg.cg_picture,
+			m.mbr_image,
+			cg.mbr_id,
+			ct.ct_name,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			ctl.ctl_level,
+			ctl.ctl_content,
+			cg.cg_current_mbr_count,
+			cg.cg_max_mbr_count,
+			cg.cg_content,
+
+		FROM
+			challenge_group cg
+			INNER JOIN `member` m USING(mbr_id)
+			INNER JOIN challenge_topic_level ctl USING(ctl_num)
+			INNER JOIN challenge_topic ct USING(ct_num)
+		WHERE
+			cg_num = #{challengeCode};
+  	</select>
   </mapper>
