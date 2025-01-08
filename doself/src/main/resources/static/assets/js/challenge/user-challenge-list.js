@@ -65,27 +65,27 @@ $(document).ready(function () {
 // --- challenge detail info modal ---
 $(document).ready(function () {
     $('.card').on('click', function () {
-        const challengeCode = $(this).data('code'); // 클릭된 카드의 데이터 속성에서 challengeCode 가져오기
-
-        $.ajax({
-            url: '/list/view',
-            type: 'GET',
-            data: { ChallengeCode: challengeCode },
-            success: function (data) {
-                // 데이터가 성공적으로 로드되면 모달 내용 업데이트
-                $('#card-modal .popup-body').html(data);
-				$('#card-modal h2').text(data.challengeName); // 챌린지 이름
-                // 모달 보이기
-                $('#card-modal-overlay').fadeIn();
-                $('#card-modal').fadeIn();
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching challenge details:', error);
-                alert('챌린지 정보를 불러오는데 실패했습니다.');
-            }
-        });
-    });
-
+        const getChallengeCode = $(this).data('code'); // 클릭된 카드의 데이터 속성에서 challengeCode 가져오기
+		const request = $.ajax({
+			url : '/challenge/list/view',
+			method : 'GET',
+			data : { challengeCode: getChallengeCode },
+			dataType: 'json'
+		});
+		request.done((data) => {
+			if(data) {
+				// 모달 보이기
+				$('#card-modal-overlay').fadeIn();
+				$('#card-modal').fadeIn();
+				
+				// 데이터가 성공적으로 로드되면 모달 내용 업데이트
+		        $('#card-modal #card-body').html(data);
+			}
+		});
+		request.fail((jqXHR, textStatus, error)=>{
+		console.log(error)
+		});
+	});
     // 모달 닫기 버튼 클릭 시
     $('#card-modal-close, #card-modal-overlay').on('click', function () {
         $('#card-modal-overlay').fadeOut(); // 오버레이 숨김

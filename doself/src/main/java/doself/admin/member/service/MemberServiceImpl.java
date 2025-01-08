@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = memberMapper.getCntMemberList();		
+		int rowCnt = memberMapper.getCntMemberList(searchMap);		
 		List<Member> memberList = memberMapper.getMemberList(searchMap);
 		
 		return new PageInfo<>(memberList, pageable, rowCnt);
@@ -61,7 +61,7 @@ public class MemberServiceImpl implements MemberService {
 	searchMap.put("endDate", endDate);
 	searchMap.put("pageable", pageable);
 	
-	int rowCnt = memberMapper.getCntMemberLogList();
+	int rowCnt = memberMapper.getCntMemberLogList(searchMap);
 	List<MemberLog> memberLogList = memberMapper.getMemberLogList(searchMap);
 	
 		return new PageInfo<>(memberLogList, pageable, rowCnt);

@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<div class="cf-comment-modal-overlay" id="cf-comment-modalOverlay" style="display: none;" th:fragment="feed-comment">
-       <div class="cf-comment-modal-container">
-           <div class="cf-comment-modal-header">
+	<div class="feed-comment-modal-overlay" id="feed-comment-modalOverlay" style="display: none;" th:fragment="feed-comment">
+       <div class="feed-comment-modal-container">
+           <div class="feed-comment-modal-header">
                <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
                <h2>피드 댓글</h2>
-               <img class="cf-comment-modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+               <img class="feed-comment-modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
            </div>
            <hr>
-           <div class="cf-comment-modal-body">
+           <div class="feed-comment-modal-body">
                <!-- 이미지 업로드 영역 -->
-               <div class="cf-comment-modal-image-upload">
+               <div class="feed-comment-modal-image-upload">
                    <img src="https://velog.velcdn.com/images/mekite/post/3fb90300-352c-4764-bd26-8aed93be3a9a/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
                </div>
    
                <!-- 정보 입력 영역 -->
-               <div class="cf-comment-feed-info">
-                   <div class="cf-user-comment-container">
-                       <div class="cf-comment-user-block">
+               <div class="feed-comment-feed-info">
+                   <div class="feed-user-comment-container">
+                       <div class="feed-comment-user-block">
                            <img class="comment-profile" src="https://buly.kr/EdsBkqu" alt="프로필">
-                           <a href="#" class="cf-comment-user-link">아이디</a>
+                           <a href="#" class="feed-comment-user-link">아이디</a>
                            <span class="comment-day-count"></span>
-                           <div class="cf-comment-feed-comment">
+                           <div class="feed-comment-feed-comment">
                                <span>맛있겠네요</span>
                            </div>
                        </div>
-                       <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" class="comment-section">
-                       <div class="cf-comment-user-block">
+                       <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0feed3859686e/image.png" alt="댓글구분" class="comment-section">
+                       <div class="feed-comment-user-block">
                            <img class="comment-profile" src="https://img.daily.co.kr/@files/www.daily.co.kr/content/food/2020/20200730/f1f553b68a93b5b3262518e9424690db.jpg" alt="프로필">
-                           <a href="#" class="cf-comment-user-link">아이디</a>
+                           <a href="#" class="feed-comment-user-link">아이디</a>
                            <span class="comment-day-count"></span>
-                           <div class="cf-comment-feed-comment">
+                           <div class="feed-comment-feed-comment">
                                <span>시럽은 시럽... 푸킼</span>
                            </div>
                        </div>
                    </div>
-                   <div class="cf-comment-feed-info-under">
+                   <div class="feed-comment-feed-info-under">
                        <div class="action-icons">
                            <button class="action-btn likeBtn" data-liked="false">
                                <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
@@ -45,13 +45,13 @@
                            </button>
                            <span>좋아요 3</span>
                        </div>
-                       <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" class="comment-section-under">
-                       <div class="cf-comment-under-input">
+                       <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0feed3859686e/image.png" alt="댓글구분" class="comment-section-under">
+                       <div class="feed-comment-under-input">
                            <button type="button" class="emoji-btn">
                                <img class="emoji-btn-img" src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
                            </button>
                            <input type="text" placeholder="댓글 달기...">
-                           <button type="button" class="cf-comment-comment-btn">게시</button>
+                           <button type="button" class="feed-comment-comment-btn">게시</button>
                        </div>
                    </div>
                </div>

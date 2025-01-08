@@ -19,7 +19,7 @@ public interface MemberMapper {
 	
 	//페이징
 	// 멤버 총 갯수
-	int getCntMemberList();
+	int getCntMemberList(Map<String, Object> searchMap);
 	// 멤버로그 총 갯수
-	int getCntMemberLogList();
+	int getCntMemberLogList(Map<String, Object> searchMap);
 }

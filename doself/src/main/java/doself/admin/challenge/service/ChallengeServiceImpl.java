@@ -43,7 +43,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntChallengeList();		
+		int rowCnt = challengeMapper.getCntChallengeList(searchMap);		
 		List<Challenge> challengeList = challengeMapper.getChallengeList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -66,7 +66,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntPersonalStatList();		
+		int rowCnt = challengeMapper.getCntPersonalStatList(searchMap);		
 		List<PersonalStat> challengeList = challengeMapper.getPersonalStatList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -87,7 +87,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntPersonalScoreList();		
+		int rowCnt = challengeMapper.getCntPersonalScoreList(searchMap);		
 		List<PersonalScore> challengeList = challengeMapper.getPersonalScoreList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -108,7 +108,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntStatList();		
+		int rowCnt = challengeMapper.getCntStatList(searchMap);		
 		List<Stat> challengeList = challengeMapper.getStatList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -129,7 +129,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntScoreList();		
+		int rowCnt = challengeMapper.getCntScoreList(searchMap);		
 		List<Score> challengeList = challengeMapper.getScoreList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -152,7 +152,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntWarninglist();		
+		int rowCnt = challengeMapper.getCntWarninglist(searchMap);		
 		List<Warning> challengeList = challengeMapper.getWarninglist(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
@@ -175,7 +175,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = challengeMapper.getCntRewardList();		
+		int rowCnt = challengeMapper.getCntRewardList(searchMap);		
 		List<Reward> challengeList = challengeMapper.getRewardList(searchMap);
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
