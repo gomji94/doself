@@ -165,7 +165,7 @@
 			FROM member_login_log mll INNER JOIN `member` m
 				ON mll.mbr_id = m.mbr_id
 			<where>
-				1=1
+				
 				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
 			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
 			    </if>

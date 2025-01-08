@@ -50,13 +50,14 @@
                                         <th>처리 상태 코드</th>
                                         <th>처리 관리자 아이디</th>                                        
                                         <th>처리 일자</th>                                        
-                                        <th>반려 사유내용</th>                                        
+                                        <th>반려 사유내용</th>                                                                               
+                                        <th>해당 상품추가</th>                                                                               
                                     </tr>
                                 </thead>
                                 <tbody>
                                 	<th:block th:if="${nutritionList != null}">
                                 		<tr th:each="l : ${nutritionList}" class="text-center">
-                                			<td th:text="${l.nirrNum}"></td>
+                                			<td><a th:href="@{/admin/nutrition/modify(nirrNum=${l.nirrNum})}" class="userIdDetails" th:text="${l.nirrNum}"></a></td>
                                 			<td th:text="${l.memberInfo.mbrName}"></td>
                                 			<td th:text="${l.nirrContent}"></td>
                                 			<td th:text="${l.nirrDate}"></td>
@@ -65,6 +66,11 @@
                                 			<td th:text="${l.prrAdmin}"></td>
                                 			<td th:text="${l.nirrProcessingDate}"></td>
                                 			<td th:text="${l.nirrReasonContent}"></td>                                		
+                                			<td>
+                                				<a th:href="@{/admin/nutrition/createList(nirrNum=${l.nirrNum})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
+                                				추가
+                                				</a>
+                                			</td>                                		
                                 		</tr>
                                 	</th:block>                                                                    
                                 </tbody>
