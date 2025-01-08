@@ -35,7 +35,7 @@ public interface MembersMapper {
 	public List<PointList> getPointListById(Map<String, Object> paramMap);
 	
 	//회원 포인트이력 총 갯수
-	int getCntPointHistory(String memberId,String startDate, String endDate);
+	int getCntPointHistory(String memberId, String startDate, String endDate);
 	
 	//회원 피드내역 조회
 	
