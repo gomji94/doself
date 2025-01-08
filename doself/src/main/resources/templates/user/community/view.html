@@ -96,7 +96,7 @@
                         </ul>
 
                         <!-- 댓글 작성 폼 -->
-                        <form id="comment-form">
+                        <form id="comment-form" action="#">
                             <div id="comment-userId">id015</div>
                             <textarea id="comment-text" placeholder="댓글을 남겨보세요"></textarea>
                             <button type="submit" id="comment-submit">등록</button>
@@ -118,11 +118,16 @@
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
+    	<script th:src="@{/assets/js/layout.js}"></script>
+    	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    	<script th:src="@{/assets/js/layout.js}"></script>
-    	
+    	<script>
+    		$('#comment-submit').click(event => {
+    			event.preventDefault();
+    		})
+    	</script>
     </th:block> 
 </html>

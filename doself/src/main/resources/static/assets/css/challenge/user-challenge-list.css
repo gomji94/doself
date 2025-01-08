@@ -484,6 +484,15 @@ p.challenge-text {
     text-decoration: none;
 }
 
+hr {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.form-control {
+    padding: 0px !important;
+}
+
 .user-link:hover {
     text-decoration: underline;
 }

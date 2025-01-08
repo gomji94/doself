@@ -10,6 +10,7 @@
 <body>
     <div id="container">
         <div id="main-title">마켓 상품 결제</div>
+        <form id="purchaseItemForm" th:action="@{/market/purchaseitem}" method="post">
         <div id="main-content" th:object="${itemInfo}">
             <div class="main-item-header">
                 <div id="item-title">
@@ -21,22 +22,22 @@
                 <div class="item-info">
                     결제 상품명
                 </div>
-                <div id="item-name" th:text="*{pointItemName}">
+                <div id="item-name" name="purchaseItemName" th:text="*{pointItemName}">
                 </div>
+                <input type="hidden" name="pointItemKeyNum" th:value="*{pointItemKeyNum}">
             </div>
             <div class="main-items">
                 <div class="item-info">
                     결제 가격
                 </div>
-                <div id="item-price" th:text="*{pointItemPrice} + 'point'">
+                <div id="item-price" th:text="*{pointItemPrice} + ' point'">
                 </div>
             </div>
             <div class="main-items">
                 <div class="item-info">
                     보유 포인트
                 </div>
-                <div id="user-point">
-                    보유포인트 보여지는 곳
+                <div id="user-point" th:text="*{memberPoint} + ' point'">
                 </div>
             </div>
             <div class="main-items">
@@ -44,9 +45,9 @@
                     사용 포인트
                 </div>
                 <div id="use-point">
-                    <input type="text" id="point-input">
+                    <input type="text" name="inputPointValue" id="point-input" th:attr="disabled=*{pointItemPrice} > *{memberPoint} ? 'disabled' : null">
                     <span>&nbsp;point</span>
-                    <button id="use-point__button">전액 사용</button>
+                    <!-- <button id="use-point__button">전액 사용</button> -->
                 </div>
             </div>
         </div>
@@ -55,10 +56,42 @@
                 <input type="checkbox" id="pay-agree-checkbox">
                 <label for="pay-agree-checkbox">[필수] 결제 서비스 이용 약관, 개인정보 처리 동의</label>
             </div>
-            <a href="#">
-                <button id="item-purchase__button">결제하기</button>
-            </a>
+            <button type="submit" id="item-purchase__button">결제하기</button>
         </div>
+        </form>
     </div>
 </body>
+
+    <th:block layout:fragment="customJsResource">
+   		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    </th:block>
+    
+    <th:block layout:fragment="customJs">
+    	<script th:inline="javascript">
+	    	$('#item-purchase__button').click(event => {
+	    		const itemPrice = /*[[${itemInfo.pointItemPrice}]]*/;
+	    		const memberPoint = /*[[${itemInfo.memberPoint}]]*/;
+	    		let isValid = true; 
+	    		event.preventDefault();
+	    		
+	    		const inputPointValue = $('#point-input').val();
+	    		const isAgreeChecked = $('#pay-agree-checkbox').prop('checked');
+	    		
+	    		if(!isAgreeChecked) {
+	    			alert("결제 서비스 동의 체크를 확인해주세요");
+	    			$('#pay-agree-checkbox').focus();
+	    			isValid = false;
+	    			return;
+	    		} else if(memberPoint < inputPointValue && !(inputPointValue === itemPrice)) {
+	    			alert("사용 포인트를 확인해주세요");
+	    			$('#point-input').focus();
+	    			isValid = false;
+	    		};
+	    		
+	    		if(isValid) $('#purchaseItemForm').submit();
+	    		
+	    	})
+    	
+    	</script>
+    </th:block> 
 </html>
