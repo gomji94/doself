@@ -11,6 +11,10 @@ html, body {
     flex-direction: column;
 }
 
+dl, ol, ul {
+	margin-bottom: 0 !important;	
+}
+
 /* feed-container */
 .feed-container {
     flex: 1;
@@ -21,7 +25,7 @@ html, body {
     max-width: 1280px;
     width: 100%;
     margin: 80px auto;
-    margin-top: 0px;
+    margin-top: 70px;
     margin-bottom: 0px;
     height: calc(100vh - 80px);
     overflow: hidden;
@@ -204,7 +208,7 @@ img#section-bar {
 
 .mbr-id .user-icon {
     flex: 1;
-    margin-left: 10px;
+    margin-left: 11px !important;
 }
 
 .mbr-id button {
@@ -449,8 +453,12 @@ p.progress-text {
 }
 
 .feed .feed-description {
-    margin-left: 11px;
-    margin-bottom: 12px;
+    display: flex;
+    margin-left: 18.5px;
+    margin-top: 9px;
+    margin-bottom: 16px;
+    gap: 7px;
+    flex-direction: column;
 }
 
 .feed .feed-description #feed-likes {
@@ -1903,26 +1911,26 @@ select #meal-type option:checked {
 .progress-container .challenge h3 {
     position: absolute;
     margin-left: 86px;
-    margin-top: 9.5px;
+    margin-top: 11.5px;
     color: #515151;
     font-size: 16px;
 }
 
 .progress-container .challenge h5 {
     position: absolute;
-    font-size: 13px;
+    font-size: 14px;
     margin-left: 258px;
-    margin-top: 12px;
+    margin-top: 13.5px;
     color: #515151;
 }
 
 .progress-container .challenge-info {
-    margin-top: 5px;
+    margin-top: 15px;
     width: 100%;
-    height: 522px;
+    height: 527px;
     background: #F6F6F6;
     border-radius: 10px;
-    padding-bottom: 18px;
+    padding-bottom: 19px;
 }
 
 .challenge-info .talk {
@@ -1932,10 +1940,11 @@ select #meal-type option:checked {
 }
 
 .challenge-info .talk p {
-    font-size: 12px;
+    font-size: 12.5px;
     position: absolute;
-    padding-left: 32px;
-    margin-top: -2px;
+    padding-left: 32px !important;
+    margin-top: -2px !important;
+    margin-left: 3px !important;
 }
 
 .challenge-info .progress-chart {
@@ -2011,7 +2020,7 @@ select #meal-type option:checked {
     position: relative;
     width: 100px;
     margin-left: 5px;
-    margin-top: 21px;
+    margin-top: 19.5px;
     z-index: 1;
 }
 
@@ -2030,7 +2039,7 @@ select #meal-type option:checked {
     padding-top: 33px;
     padding-bottom: 5px;
     border-radius: 10px;
-    top: 358px;
+    top: 364px;
 }
 
 .participants .participants-list img {
@@ -2073,7 +2082,7 @@ select #meal-type option:checked {
 .progress-bar {
     flex: 1;
     height: 22px;
-    background-color: #f0f0f0;
+    background-color: #f0f0f0  !important;
     border-radius: 37px;
     margin: 0px 22px 0px 0px;
     position: relative;
