@@ -91,10 +91,10 @@ $(document).on("click", ".card", function () {
 
                 $("#info-content-detail").html(`
                     <p>📌 챌린지 소개 📌</p>
-                    <p>🗓 챌린지 일정: ${formatDate(data.challengeStartDate)} ~ ${formatDate(data.challengeEndDate)}</p>
-                    <p>🎯 난이도: ${data.challengeTopicLevel || "난이도 정보 없음"}</p>
-                    <p>📝 진행 내용: ${data.challengeLevelContent || "진행 내용 없음"}</p>
-                    <p>🤗‍ 참여 인원: ${data.challengeCurrentMember || 0} / ${data.challengeMaxMember || 0}</p>
+                    <p>🗓 챌린지 일정 : ${formatDate(data.challengeStartDate)} ~ ${formatDate(data.challengeEndDate)}</p>
+                    <p>🎯 난이도 : ${data.challengeTopicLevel || "난이도 정보 없음"}</p>
+                    <p>📝 진행 내용 : ${data.challengeLevelContent || "진행 내용 없음"}</p>
+                    <p>🤗‍ 참여 인원 : ${data.challengeCurrentMember || 0} / ${data.challengeMaxMember || 0}</p>
                     <p>📢 필독 📢</p>
                     <p>친목질, 종교권유, 이성만남목적, 정치질 🙅‍♀️</p>
                     <p>※ 공지 안 지키면 경고 없이 경고합니다</p>
