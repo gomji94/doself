@@ -47,6 +47,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 			ModelAndView modelAndView) throws Exception {
 		// TODO Auto-generated method stub
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+		
 	}
 	
 	@Override

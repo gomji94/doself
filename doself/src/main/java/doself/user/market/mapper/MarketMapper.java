@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import doself.user.market.domain.MarketItem;
 import doself.user.market.domain.PurchaseItem;
+import doself.user.market.domain.PurchaseItemInfo;
 
 @Mapper
 public interface MarketMapper {
@@ -25,5 +26,11 @@ public interface MarketMapper {
 	
 	// 포인트 구매내역 조회
 	List<PurchaseItem> getPurchaseListById(Map<String, Object> params);
+	
+	// 마켓 아이템 구매
+	int createPurchaseItem(PurchaseItemInfo purchaseItemInfo);
+	
+	// 마켓 아이템 구매 후 포인트 차감
+	void modifyMemberPoint(Map<String, Object> params);
 	
 }
