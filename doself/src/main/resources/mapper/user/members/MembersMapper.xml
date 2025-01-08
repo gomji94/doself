@@ -159,6 +159,12 @@
 			reward_history rh ON rh.rh_num = rph.rh_num
 		WHERE
 			mbr_id = 'id008'
+			<if test="startDate!= null">
+			AND rph.rph_reward_payment_date >= #{startDate}
+			</if>
+			<if test="endDate!=null">
+			AND rph.rph_reward_payment_date <![CDATA[ <= ]]> #{endDate}
+			</if>
 		UNION ALL	
 		SELECT
 			pumh.mbr_id AS mbr_id,
@@ -173,10 +179,10 @@
 		WHERE
 			mbr_id = 'id008'
 			<if test="startDate!= null">
-			AND point_date >= #{startDate}
+			AND pumh.pumh_date >= #{startDate}
 			</if>
 			<if test="endDate!=null">
-			AND point_date <![CDATA[ <= ]]> #{endDate}
+			AND pumh.pumh_date <![CDATA[ <= ]]> #{endDate}
 			</if>
 		ORDER BY point_date
     	LIMIT #{rowPerPage}	OFFSET #{offset};
@@ -184,19 +190,35 @@
         <!-- 회원 포인트이력 총 행의 갯수 -->
 
    	<select id="getCntPointHistory" resultType="int">
-
-   		SELECT
-			COUNT(*)
-		FROM
-			reward_payment_history
-		where
-			mbr_id = #{memberId}
-			<if test="startDate != null">
-			AND point_date >= #{startDate} 
-			</if>
-			<if test="endDate != null">
-			AND point_date <![CDATA[ <= ]]> #{endDate} 
-			</if>
+		WITH reward_point AS 
+		(
+			SELECT 
+				rph.rph_num AS num
+			FROM 
+				reward_payment_history rph
+			WHERE
+				rph.mbr_id = #{memberId}
+				<if test="startDate != null">	
+				AND rph_reward_payment_date >= #{startDate}
+				</if>
+				<if test="endDate != null"> 
+				AND rph_reward_payment_date <![CDATA[ <= ]]> #{endDate} 
+				</if>
+			UNION ALL 
+			SELECT 
+				pymh.pumh_num AS num
+			FROM
+				point_use_management_history pymh
+			WHERE
+				pymh.mbr_id = #{memberId}
+				<if test="startDate != null">
+				AND pymh.pumh_date >= #{startDate} 
+				</if>
+				<if test="endDate != null">
+				AND pymh.pumh_date <![CDATA[ <= ]]> #{endDate}
+				</if> 
+		)
+		SELECT COUNT(*) FROM reward_point;
    	</select>
 	
 	<select id="getFeedList">

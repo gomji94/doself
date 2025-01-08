@@ -64,9 +64,9 @@
            </div>
                <form class="search-form" th:action="@{/mypage/pointhistory}">
                    <label for="start-date">조회기간 설정:</label>
-                   <input type="date" id="start-date" value="2024-01-01" name="start-date">
+                   <input type="date" id="start-date" th:value="${startDate}" name="startDate">
                    ~
-                   <input type="date" id="end-date" value="2024-12-31" name="end-date">
+                   <input type="date" id="end-date" th:value="${endDate}" name="endDate">
                    <button type="submit" class="btn-search">검색</button>
                </form>
                <div class="ticket-table-container">

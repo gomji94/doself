@@ -145,8 +145,8 @@ public class MypageController {
 
 	// 회원포인트내역조회
 	@GetMapping("/pointhistory" )
-	public String getPointHistory(@RequestParam(name="startDate", required=false) String startDate,
-			                      @RequestParam(name="endDate", required=false) String endDate,
+	public String getPointHistory(@RequestParam(name="startDate", required=false, defaultValue = "2024-01-01") String startDate,
+			                      @RequestParam(name="endDate", required=false, defaultValue = "2024-12-31") String endDate,
 			                      HttpSession session, Model model, Pageable pageable) {
 		
 		String memberId = (String)session.getAttribute("SID");
@@ -168,6 +168,9 @@ public class MypageController {
 		model.addAttribute("endPageNum", endPageNum);
 		model.addAttribute("lasePage", lasePage);
 		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
 		
 		return "user/mypage/point-history";
 	}
@@ -192,7 +195,7 @@ public class MypageController {
 	}
 	
 	// 회원 영앙제알람체크
-	@GetMapping("/medicinearlam")
+	@GetMapping("/medicinearla")
 	public String getMedicineArlam() {
 		
 		return "user/mypage/medicine-arlam";
