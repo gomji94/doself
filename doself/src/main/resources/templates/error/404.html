@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>error-page</title>
+    <link rel="stylesheet" href="error.css">
+    <link th:href="@{/error/404.css}" rel="stylesheet" type="text/css" />
+</head>
+	
+	<th:block layout:fragment="content-body">
+		<div class="container">
+		    <!-- 메인 콘텐츠 -->
+		    <main id="main-content" class="main page-404">
+		        <div class="error-404">            
+		            <p class="error-message">죄송합니다. 현재 페이지를 찾을 수 없습니다.</p>
+		            <p class="error-description">홈페이지를 방문하시거나 문제에 대해 문의해주세요.</p>
+		            <div class="error-actions">
+		                <button href="#" class="btn btn-primary" id="backBtn">이전으로</button>
+		                <button href="#" class="btn btn-secondary" >홈으로</button>
+		            </div>
+		        </div>
+		    </main>
+		</div>
+	</th:block> 
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource">
+	    <script th:src="@{/assets/js/layout.js}"></script>
+    	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    </th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script>
+	    	$('#backBtn').click(event => {
+	    		history.back();
+	    	})
+    	</script>
+    
+    </th:block> 
+</html>
