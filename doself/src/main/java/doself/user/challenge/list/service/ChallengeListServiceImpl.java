@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.mapper.ChallengeListMapper;
 import doself.util.CardPageInfo;
@@ -42,8 +43,8 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 특정 챌린지 카드 조회
 	@Override
-	public List<ChallengeList> getChallengeListView(String challengeCode) {
-	    List<ChallengeList> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
+	public List<ChallengeDetailView> getChallengeListView(String challengeCode) {
+		List<ChallengeDetailView> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
 	    log.info("challengeListDetail: {}", challengeListDetail);
 	    return challengeListDetail;
 	}
@@ -62,5 +63,4 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
 	}
-	
 }

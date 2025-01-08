@@ -97,7 +97,7 @@ html, body {
      */
 
 /* 모달 오버레이 */
-.modal-overlay {
+/* .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -106,7 +106,7 @@ html, body {
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 1000;
     display: none;
-}
+} */
 
 /* 모달 컨테이너 */
 #cf-mbr-modal {
@@ -118,7 +118,7 @@ html, body {
     background: #fff;
     width: 330px;
     height: auto;
-    z-index: 1005;
+    z-index: 1007;
     border-radius: 10px;
     overflow: hidden;
     /* display: none; */
@@ -132,7 +132,7 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: 1004;
     display: none;
 }
@@ -152,7 +152,7 @@ html, body {
 }
 
 #search-modal-header h2 {
-    font-size: 18px;
+    font-size: 16.5px;
     color: #333;
     margin-left: auto;
 }
@@ -783,14 +783,14 @@ button.cf-comment-comment-btn {
 /* create challenge modal */
 /* 모달 전체 배경 (오버레이) */
 .modal-overlay {
-    display: none; /* 초기에는 숨김 */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000; /* 최상위 표시 */
+    z-index: 1000;
 }
 
 /* 모달 창 */
@@ -812,14 +812,14 @@ button.cf-comment-comment-btn {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 20px !important;
+    font-weight: bold !important;
     border-bottom: none !important;
 }
 
 .modal-header h2 {
-    font-size: 18px;
-    color: #333;
+    font-size: 18px !important;
+    color: #333 !important;
 }
 
 #modalCloseBtn {
@@ -879,6 +879,10 @@ button.cf-comment-comment-btn {
 hr {
 	margin: 0px !important;
 	padding: 0px !important;
+}
+
+.modal-header {
+    border-bottom: none !important;
 }
 
 .overlay {

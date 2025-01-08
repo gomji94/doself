@@ -12,10 +12,11 @@ $(document).ready(function () {
             data: { challengeCode: challengeCode },
             success: function (response) {
                 console.log("Response received:", response); // 응답 데이터 확인
-                // 오버레이 내용 업데이트
-                $('#cf-mbr-modal-overlay').html(response);
+				// 기존 내용을 지운 후 업데이트
+                $('.cf-mbr-modal-overlay').empty().html(response);
                 // 오버레이와 모달 표시
-                $('#cf-mbr-modal-overlay').fadeIn(); // 오버레이 활성화
+                $('.cf-mbr-modal-overlay').css('display', 'block');
+                //$('#cf-mbr-modal-overlay').fadeIn(); // 오버레이 활성화
                 $('#cf-mbr-modal').fadeIn(); // 모달 활성화
             }
         });

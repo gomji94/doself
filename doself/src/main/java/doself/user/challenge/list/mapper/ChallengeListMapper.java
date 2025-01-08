@@ -5,10 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.util.CardPageable;
-import doself.util.PageInfo;
-import doself.util.Pageable;
 
 @Mapper
 public interface ChallengeListMapper {
@@ -16,7 +15,7 @@ public interface ChallengeListMapper {
 	List<ChallengeList> getChallengeList();
 	
 	// 특정 챌린지 정보 조회(detail view)
-	List<ChallengeList> getChallengeListView(@Param("challengeCode") String challengeCode);
+	List<ChallengeDetailView> getChallengeListView(@Param("challengeCode") String challengeCode);
 
 	// 챌린지 추가(작업중)
 	int addChallenge(ChallengeList challengeList);
