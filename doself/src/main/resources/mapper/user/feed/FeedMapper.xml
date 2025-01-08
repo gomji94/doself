@@ -41,5 +41,35 @@
 			INNER JOIN `member` m USING(mbr_id)
 			LEFT JOIN feed_comments fc USING(feed_num)
 	</select>
+	
+	<!-- 피드 검색조회 -->
+	<select id="getSearchList" parameterType="map" resultMap="FeedResultMap">
+		SELECT
+			f.feed_num,
+			f.mbr_id,
+			f.mni_num,
+			f.feed_food_intake,
+			f.feed_content,
+			f.feed_picture,
+			f.mc_num,
+			f.feed_date,
+			f.feed_intake_date,
+			f.feed_like,
+			f.feed_open_status,
+			m.mbr_image,
+			fc.fc_num,
+			fc.fc_content
+		FROM
+			feed f
+			INNER JOIN `member` m USING(mbr_id)
+			LEFT JOIN feed_comments fc USING(feed_num)
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				${searchCate} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(f.mbr_id, 'ksmartid', -1) AS UNSIGNED) 
+		LIMIT #{listSize}
+	</select>
   </mapper>
   
