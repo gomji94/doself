@@ -309,7 +309,7 @@
 		</select>		
 		
 		
-		<!-- 특정 포인트상품 수정 -->
+		<!-- 영양정보 등록요청 반려 -->
   		<update id="modifyNutrition" parameterType="Nutrition">
   			UPDATE nutrition_info_registration_request
   			<trim prefix="SET" suffixOverrides=","> 	

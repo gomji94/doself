@@ -53,12 +53,13 @@
                                         <th scope="col">처리관리자</th>                                        
                                         <th scope="col">처리기간</th>
                                         <th scope="col">반려사유</th>
+                                        <th scope="col">승인처리</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 	<th:block th:if="${declareList} != null">
                                 		<tr th:each="l : ${declareList}" class="text-center">
-                                			<td th:text="${l.rrNum}"></td>
+                                			<td><a th:href="@{/admin/declare/modifyrequest(rrNum=${l.rrNum})}" class="userIdDetails" th:text="${l.rrNum}"></a></td>
                                 			<td th:text="${l.memberInfo.mbrName}"></td>
                                 			<td th:text="${l.occuranceLocationInfo.olcName}"></td>
                                 			<td th:text="${l.rrBcNum}"></td>
@@ -69,6 +70,11 @@
                                 			<td th:text="${l.rrAdmin}"></td>
                                 			<td th:text="${l.rrProcessingPeriod}"></td>
                                 			<td th:text="${l.rrReasonContent}"></td>
+                                			<td>
+                                				<a th:href="@{/admin/declare/createUser(rrNum=${l.rrNum})}" th:style="${l.statusCategoryInfo.scStatus} == '반려' ? 'display:none;' : 'display:block;'" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
+                                				승인
+                                				</a>
+                                			</td>  
                                 		</tr>                                	
                                 	</th:block>
                                 </tbody>
