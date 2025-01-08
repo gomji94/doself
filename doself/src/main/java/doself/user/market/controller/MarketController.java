@@ -61,6 +61,8 @@ public class MarketController {
 		int endPageNum = pageInfo.getEndPageNum();
 		int lastPage = pageInfo.getLastPage();
 		
+		log.info("purchaseList : {}", purchaseList);
+		
 		model.addAttribute("purchaseList", purchaseList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);

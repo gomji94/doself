@@ -16,6 +16,14 @@
   	
   	<!-- 마켓아이템 resultMap 만들기 -->
   	
+  	<resultMap type="PurchaseItem" id="purchaseItemResultMap">
+  		<id 	column="mbr_id" 			property="memberId"/>
+  		<result column="pepl_name" 			property="itemName"/>
+  		<result column="pumh_code"			property="itemCode"/>
+ 		<result column="pepl_price" 		property="itemPrice"/>
+  		<result column="pumh_date" 			property="itemPurchaseDate"/>
+  	</resultMap>
+  	
   	<!-- 마켓 아이템 리스트 조회 -->
   	<select id="getMarketItemList" resultMap="marketItemResultMap" >
 		SELECT *
@@ -35,6 +43,23 @@
 		FROM point_use_management_history pumh INNER JOIN point_exchange_product_list pepl
 		USING(pepl_num)
 		WHERE mbr_id = #{memberId}
+  	</select>
+  	
+  	<!-- 포인트 구매내역 조회 -->
+  	<select id="getPurchaseListById" resultMap="purchaseItemResultMap" parameterType="Map">
+  		SELECT 
+  			pumh.mbr_id, 
+  			pepl.pepl_name, 
+  			pumh.pumh_code, 
+  			pepl.pepl_price, 
+  			pumh.pumh_date
+		FROM 
+			point_use_management_history pumh 
+			INNER JOIN point_exchange_product_list pepl
+		USING(pepl_num)
+		WHERE mbr_id = #{memberId}
+  		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+  	
   	</select>
   	
 </mapper>

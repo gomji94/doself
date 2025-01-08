@@ -47,7 +47,7 @@ public class FoodServiceImpl implements FoodService {
 			case "nutritionalSupplements" -> nutritionRequestInfo.setRequestCategory("영양제");
 		}
 		
-		String formattedKeyNum = commonMapper.getPrimaryKey("pumh_", "point_use_management_history", "pumh_num");
+		String formattedKeyNum = commonMapper.getPrimaryKey("nirr_", "nutrition_info_registration_request", "nirr_num");
 		
 		nutritionRequestInfo.setRequestTableLastPkNum(formattedKeyNum);
 		
