@@ -34,7 +34,7 @@ $(document).ready(function () {
         }
     });
 
-    // cf-warning-modal-overlay 열기
+    // feed-warning-modal-overlay 열기
     $('.mbr-warning').on('click', function () {
         // 다른 모달 숨기기
         $('.modal-overlay').addClass('modal-hidden');

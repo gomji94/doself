@@ -17,7 +17,7 @@ public interface PointMapper {
 	//포인트 사용내역 조회
 	List<PointUserHistory> getPointUserHistoryList(Map<String, Object> searchMap);
 	//포인트 사용내역 개수
-	int getCntPointUserHistoryList();
+	int getCntPointUserHistoryList(Map<String, Object> searchMap);
 	
 	//포인트 상품 추가
 	int createPointList(Point point);

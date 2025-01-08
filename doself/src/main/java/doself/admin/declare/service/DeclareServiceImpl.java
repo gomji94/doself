@@ -38,7 +38,7 @@ public class DeclareServiceImpl implements DeclareService{
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = declareMapper.getCntDeclareList();		
+		int rowCnt = declareMapper.getCntDeclareList(searchMap);		
 		List<Declare> declareList = declareMapper.getDeclareList(searchMap);
 		
 		return new PageInfo<>(declareList, pageable, rowCnt);
@@ -60,7 +60,7 @@ public class DeclareServiceImpl implements DeclareService{
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = declareMapper.getCntDeclareUserList();		
+		int rowCnt = declareMapper.getCntDeclareUserList(searchMap);		
 		List<DeclareUser> declareUserList = declareMapper.getDeclareUserList(searchMap);
 		
 		return new PageInfo<>(declareUserList, pageable, rowCnt);

@@ -14,10 +14,10 @@ public interface PaymentMapper {
 	//결제내역 출력
 	List<Payment> getPaymentList(Map<String, Object> searchMap);
 	//결제내역 개수
-	int getCntPaymentList();
+	int getCntPaymentList(Map<String, Object> searchMap);
 	
 	//결제 환불 내역 출력
 	List<PaymentRefund> getRefundList(Map<String, Object> searchMap);
 	//결제 환불 내역 개수
-	int getCntRefundList();
+	int getCntRefundList(Map<String, Object> searchMap);
 }

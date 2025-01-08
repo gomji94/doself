@@ -4278,6 +4278,10 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
 .align-content {
 	align-content: center !important;
 }
+.padding-left {
+	margin-left: 5px !important;
+}
+
 @media (max-width: 1200px) {
   /* tablet devices */
   .main-wrap {

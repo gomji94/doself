@@ -45,7 +45,7 @@ public class PointServiceImpl implements PointService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = pointMapper.getCntPointUserHistoryList();		
+		int rowCnt = pointMapper.getCntPointUserHistoryList(searchMap);		
 		List<PointUserHistory> pointUserHistoryList = pointMapper.getPointUserHistoryList(searchMap);
 	
 		return new PageInfo<>(pointUserHistoryList, pageable, rowCnt);

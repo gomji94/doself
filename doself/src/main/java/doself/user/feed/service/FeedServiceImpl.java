@@ -1,6 +1,8 @@
 package doself.user.feed.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,23 @@ public class FeedServiceImpl implements FeedService {
 		if (feedList == null || feedList.isEmpty()) {
 	        log.warn("피드 정보가 없습니다.");
 	    }
+		return feedList;
+	}
+	
+	@Override
+	public List<Feed> searchList(String searchCate, String searchValue, int listSize) {
+		switch (searchCate) {
+			case "id" 		-> searchCate = "f.mbr_id";
+			case "content" 	-> searchCate = "f.feed_content";	
+		}
+		
+		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap.put("searchCate", searchCate);
+		searchMap.put("searchValue", searchValue);
+		searchMap.put("listSize", listSize);
+		
+		List<Feed> feedList = feedMapper.getSearchList(searchMap);
+		
 		return feedList;
 	}
 }
