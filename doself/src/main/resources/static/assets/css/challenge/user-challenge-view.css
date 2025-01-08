@@ -1840,7 +1840,7 @@ select #meal-type option:checked {
     justify-content: space-between;
     text-align: center;
     margin-bottom: -1px;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .popup-container .popup-header img {

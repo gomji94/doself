@@ -1,3 +1,13 @@
+// --- challenge card page change ---
+$(document).ready(function () {
+    $('.page-link').on('click', function (event) {
+        event.preventDefault();
+        const url = $(this).attr('href');
+        window.location.href = url;
+    });
+});
+
+
 // --- create challenge ---
 $(document).ready(function() {
     const uploadBtn = $('#cl-create-upload-btn'); // 파일 불러오기 버튼
@@ -63,6 +73,76 @@ $(document).ready(function () {
 
 
 // --- challenge detail info modal ---
+$(document).on("click", ".card", function () {
+    const challengeCode = $(this).data("code"); // 카드의 데이터 코드 가져오기
+
+    // AJAX 요청
+    $.ajax({
+        url: `/challenge/list/view?challengeCode=${challengeCode}`,
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            if (data) {
+                // 동적으로 HTML 요소 업데이트
+                $("#challenge-name").text(data.challengeName || "챌린지 이름 없음");
+                $("#image-preview").attr("src", data.challengeImage || "default-image-url.png");
+                $("#profile").attr("src", data.challengeLeaderImage || "default-profile-url.png");
+                $("#leader-link").text(data.challengeLeaderId || "리더 정보 없음");
+
+                $("#info-content-detail").html(`
+                    <p>📌 챌린지 소개 📌</p>
+                    <p>🗓 챌린지 일정: ${formatDate(data.challengeStartDate)} ~ ${formatDate(data.challengeEndDate)}</p>
+                    <p>🎯 난이도: ${data.challengeTopicLevel || "난이도 정보 없음"}</p>
+                    <p>📝 진행 내용: ${data.challengeLevelContent || "진행 내용 없음"}</p>
+                    <p>🤗‍ 참여 인원: ${data.challengeCurrentMember || 0} / ${data.challengeMaxMember || 0}</p>
+                    <p>📢 필독 📢</p>
+                    <p>친목질, 종교권유, 이성만남목적, 정치질 🙅‍♀️</p>
+                    <p>※ 공지 안 지키면 경고 없이 경고합니다</p>
+                    <p>(3회 누적 시, 자동 탈퇴 처리)</p>
+                    <p>${data.challengeContent || ""}</p>
+                `);
+
+                // 에러 메시지 숨기기
+                $("#error-message").hide();
+
+                // 해당 모달만 표시
+                $("#card-modal-overlay").css("display", "block");
+                $("#card-modal").css("display", "block");
+            } else {
+                // 데이터가 없을 경우 에러 메시지 표시
+                $("#error-message").text("챌린지 정보를 불러올 수 없습니다.").show();
+            }
+            console.log("AJAX Response:", data);
+            console.log("Challenge Name:", data.challengeName);
+            console.log("Challenge Image:", data.challengeImage);
+        },
+        error: function (err) {
+            console.error("데이터 로드 실패:", err);
+            $("#error-message").text("데이터를 불러오는데 실패했습니다.").show();
+        }
+    });
+});
+
+// 모달 닫기 이벤트
+$(document).on("click", "#card-modal-close, #card-modal-overlay", function () {
+    // 해당 모달 닫기
+    $("#card-modal-overlay").css("display", "none");
+    $("#card-modal").css("display", "none");
+});
+
+// 날짜 형식 변환 함수
+function formatDate(dateString) {
+    if (!dateString) return "날짜 정보 없음";
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+}
+
+
+
+
+/*
 $(document).ready(function () {
     $('.card').on('click', function () {
         const getChallengeCode = $(this).data('code'); // 클릭된 카드의 데이터 속성에서 challengeCode 가져오기
@@ -92,7 +172,7 @@ $(document).ready(function () {
         $('#card-modal').fadeOut(); // 모달 숨김
     });
 });
-
+*/
 
     // 서버에서 상세 데이터 가져오기
    /* function fetchChallengeDetails(challengeId) {
