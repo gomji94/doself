@@ -16,10 +16,12 @@ import doself.util.CodeGenerator;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class MarketServiceImpl implements MarketService {
 	
 	private final MarketMapper marketMapper;
@@ -62,27 +64,33 @@ public class MarketServiceImpl implements MarketService {
 		// TODO Auto-generated method stub
 		String itemKey = purchaseItemInfo.getPointItemKeyNum();
 		String memberId = purchaseItemInfo.getMemberId();
-		int currentMemberPoint = marketMapper.getMemberPointById(memberId);
-		int calculatedPoint = currentMemberPoint - purchaseItemInfo.getInputPointValue();
 		
+		// 회원 포인트 조회 및 차감 포인트 계산
+		int currentMemberPoint = marketMapper.getMemberPointById(memberId);
+		int calculatedPoint = currentMemberPoint - purchaseItemInfo.getItemPrice();
+		
+		// 참여티켓 또는 개설티켓이 아닐시 상품 코드 생성
 		if (!(itemKey.equals("pepl_001") || itemKey.equals("pepl_002"))) {
 			String generatedItemCode = CodeGenerator.generateCode(itemKey);
 			purchaseItemInfo.setPurchaseItemCode(generatedItemCode);
 		}
 		
+		// DB insert 키값 생성
 		String formattedKeyNum = commonMapper.getPrimaryKey("pumh_", "point_use_management_history", "pumh_num");
 		purchaseItemInfo.setRequestTableLastPkNum(formattedKeyNum);
 		
-		int result = marketMapper.createPurchaseItem(purchaseItemInfo);
+//		// 구매내역 insert
+//		int result = marketMapper.createPurchaseItem(purchaseItemInfo);
+//		
+//		// 결과에 따라 포인트 차감 업데이트
+//		if (result > 0) {
+//			Map<String, Object> params = new HashMap<String, Object>();
+//			params.put("memberId", memberId);
+//			params.put("calculatedPoint", calculatedPoint);
+//			marketMapper.modifyMemberPoint(params);
+//		}
 		
-		if (result > 0) {
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("memberId", memberId);
-			params.put("calculatedPoint", calculatedPoint);
-			marketMapper.modifyMemberPoint(params);
-		}
-		
-		return result;
+		return 0;
 	}
 
 	

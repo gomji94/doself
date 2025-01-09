@@ -37,7 +37,7 @@
                                 <p class="searchLeft">~</p> 
                                 <input type="date" class="date date-container searchLeft" id="endDate" />
                                 
-                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
+                                <a id="searchBtn" class="btn btn-sm font-sm rounded btn-brand"><i class="material-icons md-image_search"></i>검색</a>                               
                             </div>
                         </div>
                     </header>
@@ -59,6 +59,7 @@
                                         <th>챌린지 개설 티켓</th>
                                         <th>챌린지 참여 티켓</th>
                                         <th>포인트</th>
+                                        <th>비고</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,7 +75,11 @@
 											<td th:text="${l.ageInfo.acName}"></td>																						
 											<td th:text="${l.openingTicketCount}"></td>
 											<td th:text="${l.participationTicketCount}"></td>
-											<td th:text="${l.mbrPoint}"></td>											
+											<td th:text="${l.mbrPoint}"></td>	
+											<td>
+	                                			<a th:href="@{/admin/member/modify(mbrId=${l.mbrId})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+		                                    	<a th:href="@{/admin/member/delete(mbrId=${l.mbrId})}" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                			</td>										
 										</tr>							
 									</th:block>
 									<th:block th:unless="${memberList != null}">

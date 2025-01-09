@@ -92,7 +92,7 @@ public class DeclareServiceImpl implements DeclareService{
 		
 		declareMapper.createDeclareUser(searchMap);
 		declareMapper.modifyScCode(declare);
-		
+		declareMapper.modifyMgCode(declare);		
 	}
 
 	//신고유형별 제제기간 가져오기

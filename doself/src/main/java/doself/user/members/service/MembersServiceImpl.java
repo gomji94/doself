@@ -22,16 +22,16 @@ public class MembersServiceImpl implements MembersService {
 
 	private final MembersMapper membersMapper;
 	
-	
+	// 회원삭제
 	@Override
 	public void removeMemberById(String memberId) {
 		membersMapper.removeMemberById(memberId);
-		
 	}
 	
 	// 회원 정보 조회
 	@Override
 	public Members getMemberInfoById(String memberId) {
+		
 		return membersMapper.getMemberInfoById(memberId);
 	}
 	
@@ -79,8 +79,10 @@ public class MembersServiceImpl implements MembersService {
 
 		return new PageInfo<>(pointList, pageable, rowCnt);
 	}
-
-	//회원 피드내역 조회
+	
+	
+		
+		
 
 
 	

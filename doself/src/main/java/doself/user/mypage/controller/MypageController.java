@@ -16,7 +16,6 @@ import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
 import doself.user.members.service.MembersService;
 import doself.util.Pageable;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,9 +29,8 @@ public class MypageController {
 
 	// 회원정보수정
 	@GetMapping("/member/info")   //
-	public String getMemberInfoView(HttpSession session, Model model) {	
+	public String getMemberInfoView(@RequestParam(name = "memberId") String memberId, Model model) {	
 		
-		String memberId = (String)session.getAttribute("SID");
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		String[] memberTel = memberInfo.getMemberPhoneNum().split("-");
 		String Email = memberInfo.getMemberEmail();
@@ -112,14 +110,14 @@ public class MypageController {
 	
 	// 회원티켓 내역조회
 	@GetMapping("/tickethistory" )
-	public String getTicketHistory(@RequestParam(name="startDate", required=false) String startDate,
+	public String getTicketHistory(@RequestParam(name = "memberId") String memberId,
+								   @RequestParam(name="startDate", required=false) String startDate,
 								   @RequestParam(name="endDate", required=false) String endDate,
-								   HttpSession session, Model model,
-								   Pageable pageable) {
-		String memberId = (String)session.getAttribute("SID");
-		var pageTicketInfo = membersService.getTicketHistory(memberId, pageable, startDate, endDate);
+								   Model model, Pageable pageable) {
 		
+		var pageTicketInfo = membersService.getTicketHistory(memberId, pageable, startDate, endDate);
 		Members memberInfo = membersService.getMemberInfoById(memberId);
+		
 		List<TicketList> ticketList = pageTicketInfo.getContents();
 		int currentPage = pageTicketInfo.getCurrentPage();
 		int startPageNum = pageTicketInfo.getStartPageNum();
@@ -145,11 +143,11 @@ public class MypageController {
 
 	// 회원포인트내역조회
 	@GetMapping("/pointhistory" )
-	public String getPointHistory(@RequestParam(name="startDate", required=false, defaultValue = "2024-01-01") String startDate,
+	public String getPointHistory(@RequestParam(name = "memberId") String memberId,
+								  @RequestParam(name="startDate", required=false, defaultValue = "2024-01-01") String startDate,
 			                      @RequestParam(name="endDate", required=false, defaultValue = "2024-12-31") String endDate,
-			                      HttpSession session, Model model, Pageable pageable) {
+			                      Model model, Pageable pageable) {
 		
-		String memberId = (String)session.getAttribute("SID");
 		var pagePointInfo = membersService.getPointHistory(memberId, pageable, startDate, endDate);
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		
@@ -174,23 +172,21 @@ public class MypageController {
 		
 		return "user/mypage/point-history";
 	}
-
 	
 	// 회원피드내역조회
 	@GetMapping("/feedlist")
-	public String getFeedList(HttpSession session, Model model) {
-		String memberId = (String)session.getAttribute("SID");
+	public String getFeedList(@RequestParam(name = "memberId") String memberId, Model model) {
+		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
-		
+		System.out.println(memberInfo);
 		model.addAttribute("memberInfo", memberInfo);
-		
 		return "user/mypage/feed-list";	
 	}
 
 	// 회원 특정피드조회
 	@GetMapping("/feedList/view" )
 	public String getFeedDetail() {
-		
+			
 		return "user/mypage";
 	}
 	

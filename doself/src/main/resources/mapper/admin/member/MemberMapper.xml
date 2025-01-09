@@ -60,6 +60,7 @@
 				m.mbr_pw,
 				m.mbr_name, 
 				mg.mg_name,
+				m.mg_code,
 				m.mbr_email,
 				m.mbr_birth_date, 
 				m.mbr_phone_num, 
@@ -178,4 +179,83 @@
 			</where>			
 		    ORDER BY m.mbr_id		   
 		</select>
+		
+		
+		<!-- 특정 회원 조회 -->
+		<select id="getMemberInfoByMbrId" parameterType="String" resultMap="memberResultMap">
+  		SELECT
+			m.mbr_id,
+			m.mbr_pw,
+			m.mbr_name,
+			m.mg_code,
+			m.mbr_email,
+			m.mbr_birth_date, 
+			m.mbr_phone_num, 
+			m.mbr_gender,
+			m.ac_num,
+			m.opening_ticket_count,
+			m.participation_ticket_count,
+			m.mbr_point	
+		FROM `member` m
+		WHERE
+			mbr_id = #{mbrId};		
+  		</select>
+  		
+  		<!-- 특정 회원 수정 -->
+  		<update id="modifyMember" parameterType="Member">
+  			UPDATE `member`
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				mbr_id = #{mbrId},		
+				<if test="mbrName != null and mbrName != ''">
+					mbr_name = #{mbrName},
+				</if>  			
+				<if test="mgCode != null and mgCode != ''">
+					mg_code = #{mgCode},
+				</if>  			
+				<if test="mbrEmail != null and mbrEmail != ''">
+					mbr_email = #{mbrEmail},
+				</if>  			
+				<if test="mbrBirthDate != null and mbrBirthDate != ''">
+					mbr_birth_date = #{mbrBirthDate},
+				</if>  			
+				<if test="mbrPhoneNum != null and mbrPhoneNum != ''">
+					mbr_phone_num = #{mbrPhoneNum},
+				</if>  			
+				<if test="acNum != null and acNum != ''">
+					ac_num = #{acNum},
+				</if>  			
+				<if test="mbrPoint != null and mbrPoint != ''">
+					mbr_point = #{mbrPoint}
+				</if>  			
+  			</trim>
+  			WHERE
+  				mbr_id = #{mbrId};
+  		</update>
+  		
+  		<!-- 회원 제거 -->
+  		<delete id="deleteMember">
+  			DELETE
+  			FROM
+  				`member`
+  			WHERE
+  				mbr_id=#{mbrId};
+  		</delete>
+  		
+  		<!-- 회원등급 조회 -->
+  		<select id="getMemberMgCodeList" resultType="map">
+  			SELECT
+  				mg_code AS mgCode,
+  				mg_name AS mgName
+  			FROM
+  				member_grade
+  		</select>
+  		
+  		<!-- 연령대카테고리 조회 -->
+  		<select id="getAgeCategoryList" resultType="map">
+  			SELECT
+  				ac_num AS acNum,
+  				ac_name AS acName
+  			FROM
+  				age_category
+  		</select>
   </mapper>

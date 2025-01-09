@@ -273,4 +273,15 @@
   			WHERE
   				rr_num = #{rrNum};
   		</update>
+  		
+  		<!-- 부정회원 추가후 회원등급 변경 -->
+  		<update id="modifyMgCode" parameterType="Declare">
+  			UPDATE `member`
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				mbr_id = #{mbrId},									
+				mg_code = 'mg_003'				  			
+  			</trim>
+  			WHERE
+  				mbr_id = #{mbrId};
+  		</update>
   </mapper>
