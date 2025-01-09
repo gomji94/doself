@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeProcess;
 import doself.user.challenge.feed.service.ChallengeFeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,19 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 조회
 	@GetMapping("/view")
-	public String getChallengeView(@RequestParam(defaultValue = "1") int page, Model model) {
+	public String getChallengeView(@RequestParam(defaultValue = "1") int page,
+								   @RequestParam(value="challengeCode") String challengeCode,
+								   Model model) {
 		int pageSize = 10;
+		
 		List<ChallengeFeed> challengeFeedList = challengeFeedService.getChallengeFeedList(page, pageSize);
-		log.info("Fetched challenge feed list: {}", challengeFeedList); // 로그 추가
+		List<ChallengeProcess> challengeProgress = challengeFeedService.getChallengeProgress(challengeCode);
+		
+		log.info("challengeFeedList: {}", challengeFeedList);
+		log.info("getChallengeProgress: {}", challengeProgress);
 		model.addAttribute("challengeFeedList", challengeFeedList);
+		model.addAttribute("getChallengeProgress", challengeProgress);
+		
 		return "user/challenge/challenge-view";
 	}
 	
@@ -48,15 +57,6 @@ public class ChallengeFeedController {
 	    // Thymeleaf fragment 반환
 	    return "user/challenge/member-list :: member-list";
 	}
-	/*
-	 * public String getMemberList(@RequestParam(value = "challengeCode") String
-	 * challengeCode, Model model) { log.info("Received challengeCode: {}",
-	 * challengeCode); // 입력 확인 List<ChallengeMemberList> memberList =
-	 * challengeFeedService.getMemberList(challengeCode);
-	 * log.info("Fetched memberList from Service: {}", memberList);
-	 * model.addAttribute("memberList", memberList); return
-	 * "user/challenge/member-list"; }
-	 */
 	
 	// 챌린지 멤버 경고 사유 선택 조회(지금은 스킵하고 나중에 작업)
 	@GetMapping("/warning")

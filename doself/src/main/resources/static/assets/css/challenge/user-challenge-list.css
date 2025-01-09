@@ -17,6 +17,10 @@ p {
 	margin: 0px !important;
 }
 
+ul.pagination.pagination-sm.justify-content-center.text-muted {
+    padding-bottom: 25px !important;
+}
+
 .submit-btn {
 	padding: 0px !important;
 }
