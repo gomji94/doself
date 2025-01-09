@@ -22,32 +22,22 @@
                 <div class="item-info">
                     결제 상품명
                 </div>
-                <div id="item-name" name="purchaseItemName" th:text="*{pointItemName}">
-                </div>
-                <input type="hidden" name="pointItemKeyNum" th:value="*{pointItemKeyNum}">
+                <div id="item-name" name="purchaseItemName" th:text="*{pointItemName}"></div>
+                <input type="hidden" id="pointItemKeyNum" name="pointItemKeyNum" th:value="*{pointItemKeyNum}">
             </div>
             <div class="main-items">
                 <div class="item-info">
                     결제 가격
                 </div>
-                <div id="item-price" th:text="*{pointItemPrice} + ' point'">
-                </div>
+                <div id="item-price" th:text="*{pointItemPrice} + ' point'"></div>
+                <input type="hidden" id="itemPrice" name="itemPrice" th:value="*{pointItemPrice}">
+
             </div>
             <div class="main-items">
                 <div class="item-info">
                     보유 포인트
                 </div>
                 <div id="user-point" th:text="*{memberPoint} + ' point'">
-                </div>
-            </div>
-            <div class="main-items">
-                <div class="item-info">
-                    사용 포인트
-                </div>
-                <div id="use-point">
-                    <input type="text" name="inputPointValue" id="point-input" th:attr="disabled=*{pointItemPrice} > *{memberPoint} ? 'disabled' : null">
-                    <span>&nbsp;point</span>
-                    <!-- <button id="use-point__button">전액 사용</button> -->
                 </div>
             </div>
         </div>
@@ -67,14 +57,12 @@
     </th:block>
     
     <th:block layout:fragment="customJs">
-    	<script th:inline="javascript">
+    	<script>
 	    	$('#item-purchase__button').click(event => {
-	    		const itemPrice = /*[[${itemInfo.pointItemPrice}]]*/;
-	    		const memberPoint = /*[[${itemInfo.memberPoint}]]*/;
-	    		let isValid = true; 
+
 	    		event.preventDefault();
 	    		
-	    		const inputPointValue = $('#point-input').val();
+	    		let isValid = true; 
 	    		const isAgreeChecked = $('#pay-agree-checkbox').prop('checked');
 	    		
 	    		if(!isAgreeChecked) {
@@ -82,13 +70,30 @@
 	    			$('#pay-agree-checkbox').focus();
 	    			isValid = false;
 	    			return;
-	    		} else if(memberPoint < inputPointValue && !(inputPointValue === itemPrice)) {
-	    			alert("사용 포인트를 확인해주세요");
-	    			$('#point-input').focus();
-	    			isValid = false;
-	    		};
+	    		} 
 	    		
-	    		if(isValid) $('#purchaseItemForm').submit();
+	    		
+	    		if(isValid) {
+	    			
+					const request = $.ajax({
+						url: '/market/purchaseitem',
+						method: 'post',
+						data : { pointItemKeyNum : $('#pointItemKeyNum').val(), itemPrice : $('#itemPrice').val()},
+						dataType: 'json'
+					});
+					
+					request.done(response => {
+						alert('성공');
+					})
+					
+					request.fail((jqXHR, textStatus, error)=>{
+						console.log(error);
+					})
+	    			
+	    		}
+	    		
+	    		
+	    		// if(isValid) $('#purchaseItemForm').submit();
 	    		
 	    		
 	    	})
