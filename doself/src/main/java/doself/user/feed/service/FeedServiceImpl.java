@@ -32,22 +32,5 @@ public class FeedServiceImpl implements FeedService {
 	    }
 		return feedList;
 	}
-	
-	@Override
-	public List<Feed> searchList(String searchCate, String searchValue, int listSize) {
-		switch (searchCate) {
-			case "id" 		-> searchCate = "f.mbr_id";
-			case "content" 	-> searchCate = "f.feed_content";	
-		}
-		
-		Map<String, Object> searchMap = new HashMap<String, Object>();
-		searchMap.put("searchCate", searchCate);
-		searchMap.put("searchValue", searchValue);
-		searchMap.put("listSize", listSize);
-		
-		List<Feed> feedList = feedMapper.getSearchList(searchMap);
-		
-		return feedList;
-	}
 }
 	

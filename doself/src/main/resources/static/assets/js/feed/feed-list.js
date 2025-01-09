@@ -128,3 +128,42 @@ $(document).ready(function() {
         }
     });
 });
+
+// --- analysis-table Info ---
+document.querySelectorAll('.view-details').forEach(button => {
+    button.addEventListener('click', function () {
+        const feedElement = this.closest('.feed');
+        const mealName = feedElement.dataset.mealName;
+        const mealCalories = feedElement.dataset.mealCalories;
+        const mealCarbohydrates = feedElement.dataset.mealCarbohydrates;
+        const mealProtein = feedElement.dataset.mealProtein;
+        const mealFat = feedElement.dataset.mealFat;
+
+        document.getElementById('meal-name').textContent = mealName;
+        document.getElementById('calories').textContent = `${mealCalories} kcal`;
+        document.getElementById('carb').textContent = `${mealCarbohydrates} g`;
+        document.getElementById('protein').textContent = `${mealProtein} g`;
+        document.getElementById('fat').textContent = `${mealFat} g`;
+    });
+});
+
+// 원형 그래프 데이터와 설정
+const pieCtx = document.getElementById('pieChart').getContext('2d');
+const pieChart = new Chart(pieCtx, {
+  type: 'pie',
+  data: {
+    labels: ['칼로리', '탄수화물', '단백질', '지방'],
+    datasets: [{
+      data: [554.025, 0, 289.1, 262.125], // 각각의 비율
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    }
+  }
+});

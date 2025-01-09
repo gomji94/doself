@@ -9,9 +9,6 @@ import doself.user.feed.domain.Feed;
 
 @Mapper
 public interface FeedMapper {
-	// 챌린지 피드 리스트 조회
+	// 피드 리스트 조회
 	List<Feed> getFeedList();
-	
-	// 피드 검색조회
-	List<Feed> getSearchList(Map<String, Object> searchMap);
 }

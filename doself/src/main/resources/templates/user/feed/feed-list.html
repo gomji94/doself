@@ -38,7 +38,13 @@
 		</div>
 		<!-- 피드 리스트 -->
 		<section th:if="${FeedList != null && !FeedList.isEmpty()}">
-            <div class="feed" th:each="f, iterStat : ${FeedList}" th:id="'feed-' + ${iterStat.index}" >
+            <div class="feed" th:each="f, iterStat : ${FeedList}"
+			            	  th:data-meal-name="${f.mealName}"
+						      th:data-meal-calories="${f.mealCalories}"
+						      th:data-meal-carbohydrates="${f.mealCarbohydrates}"
+						      th:data-meal-protein="${f.mealProtein}"
+						      th:data-meal-fat="${f.mealFat}"
+				              th:id="'feed-' + ${iterStat.index}" >
                 <div class="feed-header">
                     <a href="#">
                         <img th:src="${f.memberProfileImage}" alt="작성자 프로필"  onerror="this.src='/images/default-profile.png'">
@@ -52,7 +58,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="feed-main-img">                    
+                <div class="feed-main-img">                 
                     <img th:src="${f.FeedPicture}" alt="게시글 이미지">
                 </div>
                 <div class="feed-action">
@@ -85,36 +91,36 @@
 		<div class="analysis-table">
 			<p class="analysis-title">식단 영양 정보 분석표</p>
 			<div id="analysis-img">
-				<img class="img" src="https://www.fsnews.co.kr/news/photo/202206/45847_38385_3220.png" alt="분석 이미지">
-			</div>
-		</div>
-		<div class="analysis-info">
-			<table class="info-table">
-				<tr>
-					<th>구분</th>
-					<th>값</th>
-				</tr>
-				<tr>
-					<td>열량</td>
-					<td id="calories">554.025kcal</td>
-				</tr>
-				<tr>
-					<td>탄수화물</td>
-					<td id="carb">0g</td>
-				</tr>
-				<tr>
-					<td>단백질</td>
-					<td id="protein">289.1g</td>
-				</tr>
-				<tr>
-					<td>지방</td>
-					<td id="fat">262.125g</td>
-				</tr>
-			</table>
-		</div>
-		<div class="analysis-caution">
-			<p>※ 표시된 영양성분은 산출근거에 따른 표준 값으로 실제 제품과 차이가 있을 수 있습니다.</p>
-		</div>
+	            <img th:src="@{/images/} + ${FeedList[0].mealPicture}" alt="대표 음식 이미지">
+	        </div>
+	    </div>
+	    <div class="analysis-info">
+	        <table class="info-table">
+	            <tr>
+	                <th>구분</th>
+	                <th>값</th>
+	            </tr>
+	            <tr th:each="feed : ${FeedList}">
+	                <td th:text="${feed.mealName}">음식 이름</td>
+	                <td th:text="${feed.mealCalories} + ' kcal'">칼로리</td>
+	            </tr>
+	            <tr>
+	                <td>탄수화물</td>
+	                <td th:text="${FeedList[0].mealCarbohydrates} + ' g'"></td>
+	            </tr>
+	            <tr>
+	                <td>단백질</td>
+	                <td th:text="${FeedList[0].mealProtein} + ' g'"></td>
+	            </tr>
+	            <tr>
+	                <td>지방</td>
+	                <td th:text="${FeedList[0].mealFat} + ' g'"></td>
+	            </tr>
+	        </table>
+	    </div>
+	    <div class="analysis-caution">
+	        <p>※ 표시된 영양성분은 산출근거에 따른 표준 값으로 실제 제품과 차이가 있을 수 있습니다.</p>
+	    </div>
 	</div>
 </div:block>
 
