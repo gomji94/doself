@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.admin.member.domain.Member;
 import doself.admin.member.domain.MemberLog;
 import doself.admin.member.service.MemberService;
+import doself.admin.point.domain.Point;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,13 +57,39 @@ public class MemberController {
 		return "admin/member/admin-member-list";
 	}
 	
-	// 회원 정보 수정
-	@GetMapping("/modifymember")
-	public String modifyMember(Model model) {
+	// 포인트 상품 수정
+		@GetMapping("/modify")
+		public String getModifyMember(@RequestParam(name="mbrId") String mbrId, Model model) {
+
+			Member memberInfo = memberService.getMemberInfoByMbrId(mbrId);
+			var gradeList = memberService.getMemberMgCodeList();
+			var ageList = memberService.getAgeCategoryList();
+			
+			model.addAttribute("title", "회원 정보 수정");
+			model.addAttribute("memberInfo", memberInfo);
+			model.addAttribute("gradeList", gradeList);
+			model.addAttribute("ageList", ageList);
+			
+			return "admin/member/modify-member";
+		}
 		
-		model.addAttribute("title", "회원 정보 수정");
-		return "admin/member/modify-member";
-	}
+		@PostMapping("/modify")
+		public String modifyMember(Member member, RedirectAttributes reAttr) {
+
+			memberService.modifyMember(member);
+			
+			reAttr.addAttribute("mbrId",member.getMbrId());
+			
+			return "redirect:/admin/member/list";
+		}
+		
+		@GetMapping("/delete")
+		public String deleteMember(@RequestParam(value="mbrId") String mbrId) {
+			
+			memberService.deleteMember(mbrId);
+			
+			return "redirect:/admin/point/list";
+		}
 	
 	// 로그관리 조회
 	@GetMapping("/loglist")

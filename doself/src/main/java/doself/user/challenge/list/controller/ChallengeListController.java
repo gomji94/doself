@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
@@ -49,16 +50,22 @@ public class ChallengeListController {
 	
 	// 진행중인 챌린지 상세 정보 조회
 	@GetMapping("/list/view")
+	@ResponseBody
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
-	public String getChallengeListView(@RequestParam(value="challengeCode") String challengeCode, Model model) {
-		log.info("challengeCode: {}", challengeCode); 
-		
-		List<ChallengeDetailView> challengeListDetail = challengeListService.getChallengeListView(challengeCode);
-		log.info("challengeListDetail: {}", challengeListDetail);
-		
-		model.addAttribute("challengeListDetail", challengeListDetail);
-		return "user/challenge/challenge-list-view :: challenge-list-view";
-	}
+	public ChallengeDetailView getChallengeListView(@RequestParam("challengeCode") String challengeCode) {
+        log.info("Challenge Code: {}", challengeCode);
+        ChallengeDetailView challengeDetail = challengeListService.getChallengeListView(challengeCode);
+        log.info("Challenge Detail: {}", challengeDetail);
+        return challengeDetail;
+    }
+	/*
+	 * public String getChallengeListView(@RequestParam(value="challengeCode")
+	 * String challengeCode, Model model) { List<ChallengeDetailView>
+	 * challengeListDetail =
+	 * challengeListService.getChallengeListView(challengeCode);
+	 * model.addAttribute("challengeListDetail", challengeListDetail); return
+	 * "user/challenge/challenge-list-view :: challenge-list-view"; }
+	 */
 	
 	@PostMapping("/list/createchallengerequest")
 	public String addChallenge(ChallengeList challengeList) {

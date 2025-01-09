@@ -56,22 +56,21 @@ public class NutritionController {
 	}
 	
 	// 특정 영양정보 등록 요청 정보 가져오기
-	@GetMapping("/modify")
+	@GetMapping("/modifyrequest")
 	public String getModifyNutritionListByNirrNum(@RequestParam(value="nirrNum") String nirrNum, Model model) {
 		
 		Nutrition nutritionInfo = nutritionService.getNutritionByNirrNum(nirrNum);		
 		model.addAttribute("title", "영양 정보 처리");
 		model.addAttribute("nutritionInfo", nutritionInfo);
 		
-		return "admin/nutrition/modify-nutrition-list";
+		return "admin/nutrition/modify-nutrition-rejection";
 	}
 	
 	// 반려
-	@PostMapping("modify")
-	public String modifyNutritionList(Nutrition nutrition, RedirectAttributes reAttr) {
+	@PostMapping("modifyrequest")
+	public String modifyNutritionList(Nutrition nutrition) {
 		
 		nutritionService.modifyNutrition(nutrition);
-		reAttr.addAttribute("nirrNum", nutrition.getNirrNum());
 		
 		return "redirect:/admin/nutrition/list";
 	}

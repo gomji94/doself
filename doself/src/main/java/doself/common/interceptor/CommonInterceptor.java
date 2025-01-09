@@ -1,11 +1,15 @@
 package doself.common.interceptor;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.StringJoiner;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.yaml.snakeyaml.util.UriEncoder;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,6 +51,21 @@ public class CommonInterceptor implements HandlerInterceptor {
 			ModelAndView modelAndView) throws Exception {
 		// TODO Auto-generated method stub
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+		
+		Set<String> paramKeys = request.getParameterMap().keySet();
+		
+		StringJoiner param = new StringJoiner("&");
+		
+		log.info(request.getRequestURI());
+		for(String paramkey : paramKeys) {
+			if(!paramkey.equals("currentPage")) {			
+				param.add(paramkey + "="+ request.getParameter(paramkey));
+			}
+		}
+		
+		log.info("queryParam : {}", param);
+		modelAndView.addObject("queryParam", param);
+		
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.user.community.domain.Article;
 import doself.user.market.domain.MarketItem;
@@ -59,16 +60,17 @@ public class MarketController {
 	}
 	
 	@PostMapping("/purchaseitem")
-	public String createPurchaseItem(PurchaseItemInfo purchaseItemInfo, HttpSession session) {
+	@ResponseBody
+	public boolean createPurchaseItem(PurchaseItemInfo purchaseItemInfo, HttpSession session) {
 		//TODO: process POST request
 		
 		String memberId = (String) session.getAttribute("SID");
 		purchaseItemInfo.setMemberId(memberId);
 		
-		System.out.println("================> " + purchaseItemInfo.toString());
-		
-		
-		return "user/market/purchase-list";
+		boolean isReg = false;
+		int result = marketService.createPurchaseItem(purchaseItemInfo);
+		if(result > 0) isReg = true; 
+		return isReg;
 	}
 	
 	

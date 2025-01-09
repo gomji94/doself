@@ -43,11 +43,14 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 특정 챌린지 카드 조회
 	@Override
-	public List<ChallengeDetailView> getChallengeListView(String challengeCode) {
-		List<ChallengeDetailView> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
-	    log.info("challengeListDetail: {}", challengeListDetail);
-	    return challengeListDetail;
+	public ChallengeDetailView getChallengeListView(String challengeCode) {
+		return challengeListMapper.selectChallengeDetail(challengeCode);
 	}
+//	public List<ChallengeDetailView> getChallengeListView(String challengeCode) {
+//		List<ChallengeDetailView> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
+//	    log.info("challengeListDetail: {}", challengeListDetail);
+//	    return challengeListDetail;
+//	}
 
 	// 챌린지 생성(등록)
 	@Override

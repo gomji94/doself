@@ -64,7 +64,19 @@
 		USING(pepl_num)
 		WHERE mbr_id = #{memberId}
   		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
-  	
   	</select>
+  	
+  	<insert id="createPurchaseItem" parameterType="PurchaseItemInfo">
+  		INSERT INTO point_use_management_history
+		(pumh_num, pepl_num, mbr_id, pumh_code, pumh_date)
+		VALUES (#{requestTableLastPkNum}, #{pointItemKeyNum}, #{memberId}, #{purchaseItemCode}, NOW())
+  	</insert>
+  	
+  	<update id="modifyMemberPoint" parameterType="Map">
+  		UPDATE member
+		SET
+			mbr_point = ${calculatedPoint}
+		WHERE mbr_id = #{memberId}
+  	</update>
   	
 </mapper>

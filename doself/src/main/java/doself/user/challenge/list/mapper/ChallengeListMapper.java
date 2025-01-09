@@ -15,7 +15,8 @@ public interface ChallengeListMapper {
 	List<ChallengeList> getChallengeList();
 	
 	// 특정 챌린지 정보 조회(detail view)
-	List<ChallengeDetailView> getChallengeListView(@Param("challengeCode") String challengeCode);
+	ChallengeDetailView selectChallengeDetail(String challengeCode);
+	//List<ChallengeDetailView> getChallengeListView(@Param("challengeCode") String challengeCode);
 
 	// 챌린지 추가(작업중)
 	int addChallenge(ChallengeList challengeList);
