@@ -35,4 +35,6 @@ public interface DeclareMapper {
 	
 	// 부정회원추가후 처리상태 변경
 	int modifyScCode(Declare declare);
+	
+	int modifyMgCode();
 }

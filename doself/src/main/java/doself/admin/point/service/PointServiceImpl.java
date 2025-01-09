@@ -7,10 +7,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import doself.admin.nutrition.domain.Nutrition;
 import doself.admin.point.domain.Point;
 import doself.admin.point.domain.PointUserHistory;
 import doself.admin.point.mapper.PointMapper;
+import doself.common.mapper.CommonMapper;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class PointServiceImpl implements PointService {
 	
 	private final PointMapper pointMapper;
+	private final CommonMapper commonMapper;
 	
 	// 포인트 상품목록 조회
 	@Override
@@ -73,8 +74,8 @@ public class PointServiceImpl implements PointService {
 	//포인트상품 마지막번호 찾은후 다음키생성
 	@Override
 	public String pointLastNum() {
-		int lastNum = pointMapper.getPointLastNum() + 1;
-		String newKey = "pepl_" + String.format("%03d", lastNum);
+		
+		String newKey = commonMapper.getPrimaryKey("pepl_", "point_exchange_product_list", "pepl_num");
 		return newKey;
 	}
 	
