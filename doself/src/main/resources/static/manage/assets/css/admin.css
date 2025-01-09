@@ -1733,14 +1733,7 @@ textarea.form-control {
 .me-auto {
   margin-right: 2% !important;
 }
-.searchBtn {
-  position: relative;
-    width: 61px;
-    height: 29px;
-    left: 24%;
-    top: 6px;
-    background-color: white;
-}
+
 .date {
   width: 120px; /* 날짜 필드의 넓이 */
   padding: 5px; /* 여백 추가 */
@@ -4280,6 +4273,10 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
 }
 .padding-left {
 	margin-left: 5px !important;
+}
+#searchBtn{
+	margin-left:40px;
+	white-space:nowrap;
 }
 
 @media (max-width: 1200px) {

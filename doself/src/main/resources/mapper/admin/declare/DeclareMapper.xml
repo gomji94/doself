@@ -275,7 +275,7 @@
   		</update>
   		
   		<!-- 부정회원 추가후 회원등급 변경 -->
-  		<update id="modifyMgCode" parameterType="Member">
+  		<update id="modifyMgCode" parameterType="Declare">
   			UPDATE `member`
   			<trim prefix="SET" suffixOverrides=","> 	
   				mbr_id = #{mbrId},									
