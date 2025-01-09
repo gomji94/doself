@@ -30,15 +30,31 @@
 	</resultMap>
 	
 	<!-- 챌린지 댓글 리스트 조회 -->
-	<resultMap type="ChallengeFeedComment" id="ChallengeFeedCommentMap">
-		<id 	column="cgm_num" property="challengeFeedCommentCode" />
-		<id 	column="cmf_num" property="challengeFeedCode" />
-		<result column="mbr_id" property="challengeFeedCommentAuthor" />
-		<result column="cfc_content" property="challengeFeedCommentContent"/>
-		<result column="cfc_date" property="challengeFeedCommentDate"/>
-		<result column="cfc_like" 		property="challengeFeedCommentLike"/>
-		<result column="cfc_caution_check" property="challengeFeedCommentCaution"/>
-		<result column="mbr_image" property="challengeFeedImage"/>
+	<resultMap type="ChallengeFeedComment"  id="ChallengeFeedCommentMap">
+		<id 	column="cgm_num" 			property="challengeFeedCommentCode" />
+		<id 	column="cmf_num"			property="challengeFeedCode" />
+		<result column="mbr_id" 			property="challengeFeedCommentAuthor" />
+		<result column="cfc_content" 		property="challengeFeedCommentContent"/>
+		<result column="cfc_date" 			property="challengeFeedCommentDate"/>
+		<result column="cfc_like" 			property="challengeFeedCommentLike"/>
+		<result column="cfc_caution_check"  property="challengeFeedCommentCaution"/>
+		<result column="mbr_image" 			property="challengeFeedImage"/>
+	</resultMap>
+	
+	<!-- 챌린지 진행 상태 조회 -->
+	<resultMap type="ChallengeProcess" id="ChallengeProcessMap">
+		<id 	column="cg_num" 						property="challengeCode"/>
+		<result column="cg_name" 						property="challengeName"/>
+		<result column="cs_num"							property="challengeStatusCode"/>
+		<result column="mbr_id" 						property="challengeMemberId"/>
+		<result column="mbr_image" 						property="challengeMemberProfile"/>
+		<result column="cg_creation_date" 				property="challengeCreationDate"/>
+		<result column="cg_start_date" 					property="challengeStartDate"/>
+		<result column="cg_end_date" 					property="challengeEndDate"/>
+		<result column="cg_current_mbr_count"			property="challengeCurrentMember"/>
+		<result column="cg_max_mbr_count"			    property="challengeMaxMember"/>
+		<result column="cmss_today_participation_rate"  property="challengeTodayParticipationRate"/>
+		<result column="cmss_today_achievement_rate" 	property="challengeTodayAchievementRate"/>
 	</resultMap>
 	
 	<!-- 특정 챌린지 피드 조회 -->
@@ -96,6 +112,29 @@
 			LEFT JOIN `member` m USING(mbr_id)
 		WHERE
 			cfc.cmf_num = #{challengeFeedCode};
+  	</select>
+  	
+  	<!-- 챌린지 진행 상태 조회 -->
+  	<select id="getChallengeProgress" resultMap="ChallengeProcessMap">
+  		SELECT
+			cg.cg_num,
+			cg.cg_name,
+			cg.cs_num,
+			cg.mbr_id,
+			m.mbr_image,
+			cg.cg_creation_date,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			cg.cg_current_mbr_count,
+			cg.cg_max_mbr_count,
+			cmss.cmss_today_participation_rate,
+			cmss.cmss_today_achievement_rate
+		FROM
+			challenge_group cg
+			INNER JOIN `member` m USING(mbr_id)
+			INNER JOIN challenge_member_score_stats cmss USING(cg_num)
+		WHERE
+			cg_num = #{challengeCode}
   	</select>
   </mapper>
   

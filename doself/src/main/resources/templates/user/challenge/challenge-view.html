@@ -120,10 +120,10 @@
         </main>
         
         <!-- right sidebar -->
-        <div class="progress-container">
+        <div class="progress-container" th:if="${challengeProgress != null && !challengeProgress.isEmpty()}" th:each="cp : ${challengeProgress}">
             <div class="challenge">
                 <a href="#">
-                    <h3>가보자고</h3>
+                    <h3 th:text="${cp.challengeName}"></h3>
                     <h5>진행중</h5>
                     <img src="https://velog.velcdn.com/images/mekite/post/dabb0bea-be57-4f91-93ff-265cf61836f0/image.png" alt="챌린지명/진행도">
                 </a>
@@ -163,8 +163,8 @@
                     <div class="participants-list">
                         <ul>
                             <li>
-                                <img src="https://buly.kr/EdsBkqu" alt="프로필">
-                                <p>아이디</p>
+                                <img th:src="${cp.challengeMemberProfile}" alt="멤버 프로필">
+                                <p th:text="${cp.challengeMemberId}"></p>
                                 <div class="progress-bar">
                                     <div class="progress-fill" style="width: 85%;"></div>
                                 </div>
@@ -199,7 +199,7 @@
                     <div class="info-item">
                         <img src="https://velog.velcdn.com/images/mekite/post/dea50ae1-2c1a-4822-9ed3-4ae8554a54f4/image.png" alt="사용자 아이콘">
                         <p class="info-text">멤버수</p>
-                        <p>7/6</p>
+                        <p th:text="|${cp.challengeCurrentMember}/${cp.challengeMaxMember}|"></p>
                     </div>
                     <div class="separator"></div>
                     <div class="info-item">
@@ -218,7 +218,8 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     	<!-- 반드시 jquery 기능이 있는 라이브러리 파일을 연결해야 함 -->
-		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 		<!-- Popper JS -->
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 	    <!-- 반드시 jquery 기능이 있는 라이브러리 파일을 연결해야 함 -->

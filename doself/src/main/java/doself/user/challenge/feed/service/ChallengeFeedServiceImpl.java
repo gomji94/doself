@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeProcess;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +41,32 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    int offset = (page - 1) * pageSize;
 	    return challengeFeedMapper.getChallengeFeedList(offset, pageSize);
 	}
+	
+	// 챌린지 진행 상태 조회
+	@Override
+	public List<ChallengeProcess> getChallengeProgress(String challengeCode) {
+		List<ChallengeProcess> challengeProgress = challengeFeedMapper.getChallengeProgress(challengeCode);
 
+		// 챌린지 상태에 따른 화면 데이터 업데이트
+		challengeProgress.forEach(challengeInfo -> {
+	        String challengeStatus = challengeInfo.getChallengeStatusCode();
+	        if("cs_001".equals(challengeStatus)) {
+	        	log.info("challengeStatus: ", "완료");
+	        } if ("cs_002".equals(challengeStatus) || "cs_003".equals(challengeStatus)) {
+	        	log.info("challengeStatus: ", "진행중");
+			} else {
+	        	log.info("challengeStatus: ", "중단");
+	        }
+	    });
+		return challengeProgress;
+	}	
+	
 	// 챌린지 멤버 조회(참여자 번호, 챌린지 번호, 챌린지 참여 및 퇴장 일시 기록 → 추후, 유효성 검사 로직 추가)
 	@Override
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
 		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
 	    log.info("Fetched memberList from Mapper: {}", memberList); // Mapper에서 가져온 데이터 확인
 	    return memberList;
-	}	
+	}
+
 }
