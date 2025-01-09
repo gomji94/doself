@@ -129,22 +129,78 @@ $(document).ready(function() {
     });
 });
 
-// --- analysis-table Info ---
-document.querySelectorAll('.view-details').forEach(button => {
-    button.addEventListener('click', function () {
-        const feedElement = this.closest('.feed');
-        const mealName = feedElement.dataset.mealName;
-        const mealCalories = feedElement.dataset.mealCalories;
-        const mealCarbohydrates = feedElement.dataset.mealCarbohydrates;
-        const mealProtein = feedElement.dataset.mealProtein;
-        const mealFat = feedElement.dataset.mealFat;
+// Right Sidebar update
+function updateRightSidebar(feed) {
+    const mealPicture = feed.getAttribute('data-meal-picture') || '/images/default-food.png';
+    const mealCalories = feed.getAttribute('data-meal-calories') || '0';
+    const mealCarbohydrates = feed.getAttribute('data-meal-carbohydrates') || '0';
+    const mealProtein = feed.getAttribute('data-meal-protein') || '0';
+    const mealFat = feed.getAttribute('data-meal-fat') || '0';
 
-        document.getElementById('meal-name').textContent = mealName;
-        document.getElementById('calories').textContent = `${mealCalories} kcal`;
-        document.getElementById('carb').textContent = `${mealCarbohydrates} g`;
-        document.getElementById('protein').textContent = `${mealProtein} g`;
-        document.getElementById('fat').textContent = `${mealFat} g`;
-    });
+    const imgElement = document.querySelector('#analysis-img img');
+    if (imgElement) imgElement.src = mealPicture;
+
+    const caloriesElement = document.querySelector('#calories');
+    if (caloriesElement) caloriesElement.textContent = `${mealCalories} kcal`;
+
+    const carbElement = document.querySelector('#carb');
+    if (carbElement) carbElement.textContent = `${mealCarbohydrates} g`;
+
+    const proteinElement = document.querySelector('#protein');
+    if (proteinElement) proteinElement.textContent = `${mealProtein} g`;
+
+    const fatElement = document.querySelector('#fat');
+    if (fatElement) fatElement.textContent = `${mealFat} g`;
+}
+
+// 페이지 로드 시 첫 번째 피드로 초기화
+document.addEventListener('DOMContentLoaded', () => {
+    const firstFeed = document.querySelector('.feed'); // 첫 번째 피드 선택
+    if (firstFeed) {
+        updateRightSidebar(firstFeed); // Right Sidebar 업데이트
+    }
+});
+
+// --- analysis-table Info ---
+document.querySelectorAll('.feed').forEach(feed => {
+    feed.addEventListener('click', function () {
+        // 데이터 속성 읽기
+        const mealPicture = this.getAttribute('data-meal-picture') || '/images/default-food.png';
+        const mealCalories = this.getAttribute('data-meal-calories') || '0';
+        const mealCarbohydrates = this.getAttribute('data-meal-carbohydrates') || '0';
+        const mealProtein = this.getAttribute('data-meal-protein') || '0';
+        const mealFat = this.getAttribute('data-meal-fat') || '0';
+
+        // 데이터 업데이트
+        const imgElement = document.querySelector('#analysis-img img');
+        if (imgElement) imgElement.src = mealPicture;
+
+        const caloriesElement = document.querySelector('#calories');
+        if (caloriesElement) caloriesElement.textContent = `${mealCalories} kcal`;
+
+        const carbElement = document.querySelector('#carb');
+        if (carbElement) carbElement.textContent = `${mealCarbohydrates} g`;
+
+        const proteinElement = document.querySelector('#protein');
+        if (proteinElement) proteinElement.textContent = `${mealProtein} g`;
+
+        const fatElement = document.querySelector('#fat');
+        if (fatElement) fatElement.textContent = `${mealFat} g`;
+
+        // 디버깅용 콘솔 출력
+        console.log('Updated Meal Info:', { mealPicture, mealCalories, mealCarbohydrates, mealProtein, mealFat });
+    })
+});
+
+// --- 반복된 onerror 처리 최소화 ---
+document.querySelectorAll('img').forEach(img => {
+    img.onerror = function () {
+        if (this.classList.contains('profile-img')) {
+            this.src = '/images/default-profile.png';
+        } else if (this.classList.contains('meal-img')) {
+            this.src = '/images/default-food.png';
+        }
+    };
 });
 
 // 원형 그래프 데이터와 설정

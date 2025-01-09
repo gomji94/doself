@@ -32,25 +32,30 @@
 	
 	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
-		SELECT
-			f.feed_num,
-			f.mbr_id,
-			f.mni_num,
-			f.feed_food_intake,
-			f.feed_content,
-			f.feed_picture,
-			f.mc_num,
-			f.feed_date,
-			f.feed_intake_date,
-			f.feed_like,
-			f.feed_open_status,
-			m.mbr_image,
-			fc.fc_num,
-			fc.fc_content
-		FROM
-			feed f
-			INNER JOIN `member` m USING(mbr_id)
-			LEFT JOIN feed_comments fc USING(feed_num)
+	    SELECT
+	        f.feed_num,
+	        f.mbr_id,
+	        f.mni_num,
+	        f.feed_food_intake,
+	        f.feed_content,
+	        f.feed_picture,
+	        f.mc_num,
+	        f.feed_date,
+	        f.feed_intake_date,
+	        f.feed_like,
+	        f.feed_open_status,
+	        m.mbr_image,
+	        mll.mni_picture AS mealPicture,
+	        mll.mni_kcal AS mealCalories,
+	        mll.mni_carbo AS mealCarbohydrates,
+	        mll.mni_protein AS mealProtein,
+	        mll.mni_fat AS mealFat
+	    FROM
+	        feed f
+	    INNER JOIN
+	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
+	    INNER JOIN
+	        member m ON f.mbr_id = m.mbr_id;
 	</select>
 	
 	<!-- 특정 피드 영양 정보 조회 -->

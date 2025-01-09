@@ -39,15 +39,15 @@
 		<!-- 피드 리스트 -->
 		<section th:if="${FeedList != null && !FeedList.isEmpty()}">
             <div class="feed" th:each="f, iterStat : ${FeedList}"
-			            	  th:data-meal-name="${f.mealName}"
-						      th:data-meal-calories="${f.mealCalories}"
-						      th:data-meal-carbohydrates="${f.mealCarbohydrates}"
-						      th:data-meal-protein="${f.mealProtein}"
-						      th:data-meal-fat="${f.mealFat}"
+							  th:data-meal-picture="${f.mealPicture}" 
+					          th:data-meal-calories="${f.mealCalories}" 
+					          th:data-meal-carbohydrates="${f.mealCarbohydrates}" 
+					          th:data-meal-protein="${f.mealProtein}" 
+					          th:data-meal-fat="${f.mealFat}"
 				              th:id="'feed-' + ${iterStat.index}" >
                 <div class="feed-header">
                     <a href="#">
-                        <img th:src="${f.memberProfileImage}" alt="작성자 프로필"  onerror="this.src='/images/default-profile.png'">
+                        <img class="profile-img" th:src="${f.memberProfileImage}">
                     </a>
                     <div class="user-name">
                         <a href="#"><p th:text="${f.memberId}"></p></a>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="feed-main-img">                 
-                    <img th:src="${f.FeedPicture}" alt="게시글 이미지">
+                    <img class="meal-img" th:src="${f.FeedPicture}">
                 </div>
                 <div class="feed-action">
                     <div class="action-icons">
@@ -96,26 +96,22 @@
 	    </div>
 	    <div class="analysis-info">
 	        <table class="info-table">
-	            <tr>
-	                <th>구분</th>
-	                <th>값</th>
-	            </tr>
-	            <tr th:each="feed : ${FeedList}">
-	                <td th:text="${feed.mealName}">음식 이름</td>
-	                <td th:text="${feed.mealCalories} + ' kcal'">칼로리</td>
-	            </tr>
-	            <tr>
-	                <td>탄수화물</td>
-	                <td th:text="${FeedList[0].mealCarbohydrates} + ' g'"></td>
-	            </tr>
-	            <tr>
-	                <td>단백질</td>
-	                <td th:text="${FeedList[0].mealProtein} + ' g'"></td>
-	            </tr>
-	            <tr>
-	                <td>지방</td>
-	                <td th:text="${FeedList[0].mealFat} + ' g'"></td>
-	            </tr>
+				<tr>
+			        <td>칼로리</td>
+			        <td id="calories">0 kcal</td>
+			    </tr>
+			    <tr>
+			        <td>탄수화물</td>
+			        <td id="carb">0 g</td>
+			    </tr>
+			    <tr>
+			        <td>단백질</td>
+			        <td id="protein">0 g</td>
+			    </tr>
+			    <tr>
+			        <td>지방</td>
+			        <td id="fat">0 g</td>
+			    </tr>
 	        </table>
 	    </div>
 	    <div class="analysis-caution">
