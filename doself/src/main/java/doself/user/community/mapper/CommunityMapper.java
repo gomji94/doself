@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Comment;
 import doself.user.community.domain.SearchArticle;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -39,5 +40,8 @@ public interface CommunityMapper {
 	
 	// 게시글 삭제
 	void deleteArticle(String articleKeyNum);
+	
+	// 특정 글 댓글 리스트 조회
+	List<Comment> getCommentsByArticle(String articleKeyNum);
 
 }

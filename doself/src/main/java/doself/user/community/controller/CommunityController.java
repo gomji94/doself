@@ -99,7 +99,7 @@ public class CommunityController {
 	@GetMapping("/view")
 	public String getArticleDetail(@RequestParam(name = "articleNum") int articleKeyNum, Model model) {
 		
-		log.info("articleDetail : {}", communityService.getArticleDetail(articleKeyNum));
+		// log.info("================> articleDetail : {}", communityService.getArticleDetail(articleKeyNum));
 		
 		model.addAttribute("articleDetail", communityService.getArticleDetail(articleKeyNum));
 		

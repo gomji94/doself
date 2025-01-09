@@ -88,7 +88,10 @@ public class CommunityServiceImpl implements CommunityService {
 		
 		String formattedKeyNum = String.format("fb_%03d", articleKeyNum);
 		
-		return communityMapper.getArticleDetail(formattedKeyNum);
+		Article articleDetail = communityMapper.getArticleDetail(formattedKeyNum);
+		articleDetail.setCommentList(communityMapper.getCommentsByArticle(formattedKeyNum));
+		
+		return articleDetail;
 	}
 
 	@Override
