@@ -67,7 +67,7 @@
                                 			<td th:text="${l.nirrProcessingDate}"></td>
                                 			<td th:text="${l.nirrReasonContent}"></td>                                		
                                 			<td>
-                                				<a th:href="@{/admin/nutrition/createList(nirrNum=${l.nirrNum})}" th:style="${l.statusCategoryInfo.scStatus} == '반려' ? 'display:none;' : 'display:block;'" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
+                                				<a th:href="@{/admin/nutrition/createList(nirrNum=${l.nirrNum})}" th:style="${l.statusCategoryInfo.scStatus} == '반려' or ${l.statusCategoryInfo.scStatus} == '승인' ? 'display:none;' : 'display:block;'" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
                                 				추가
                                 				</a>
                                 			</td>                                		
