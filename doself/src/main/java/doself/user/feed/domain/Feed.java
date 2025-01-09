@@ -25,4 +25,15 @@ public class Feed {
 	private String  memberProfileImage;  	// 작성자 프로필 이미지
 	private String  feedCommentCode; 	 	// 피드 댓글 코드
 	private String  feedCommentContent;  	// 피드 댓글 내용
+	private String mealName;       			// 음식 이름
+    private String mealPicture;    			// 음식 사진 경로
+    private int mealCalories;      			// 칼로리
+    private int mealCarbohydrates; 			// 탄수화물
+    private int mealProtein;       			// 단백질
+    private int mealFat;           			// 지방
+    private int mealSugar;         			// 당
+    private int mealCholesterol;   			// 콜레스테롤
+    private int mealSodium;        			// 나트륨
+    private int mealCalcium;       			// 칼슘
+    private int mealIron;          			// 철분
 }

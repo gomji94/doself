@@ -18,8 +18,19 @@
 	    <result column="mbr_image" 			property="memberProfileImage" />
 	    <result column="fc_num" 			property="feedCommentCode" />
 	    <result column="fc_content" 		property="feedCommentContent" />	    
+	    <result column="f.mni_num" 	property="feedMealNutritionInfoNum" />	    
+	    <result column="mni_picture" 	property="mealNutritionInfoPicture" />	    
+	    <result column="mll.mni_kcal" 	property="mealNutritionInfoCalories" />   
+	    <result column="mll.mni_carbo" 		property="mealNutritionInfoProtein" />	    
+	    <result column="mll.mni_protein" 		property="mealNutritionInfoFat" />	    
+	    <result column="mll.mni_fat" 		property="mealNutritionInfoSugar" />	    
+	    <result column="mll.mni_picture" 		property="mealNutritionInfoCholesterol" />	    
+	    <result column="mni_sodium" 		property="mealNutritionInfoSodium" />	    
+	    <result column="mni_calcium" 		property="mealNutritionInfoCalcium" />	    
+	    <result column="mni_iron" 		property="mealNutritionInfoIron" />    
 	</resultMap>
-	<!-- 특정 피드 조회 -->
+	
+	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
 		SELECT
 			f.feed_num,
@@ -42,34 +53,20 @@
 			LEFT JOIN feed_comments fc USING(feed_num)
 	</select>
 	
-	<!-- 피드 검색조회 -->
-	<select id="getSearchList" parameterType="map" resultMap="FeedResultMap">
+	<!-- 특정 피드 영양 정보 조회 -->
+	<select id="getFeedNutritionInfo" resultMap="FeedResultMap">
 		SELECT
-			f.feed_num,
-			f.mbr_id,
-			f.mni_num,
-			f.feed_food_intake,
-			f.feed_content,
-			f.feed_picture,
-			f.mc_num,
-			f.feed_date,
-			f.feed_intake_date,
-			f.feed_like,
-			f.feed_open_status,
-			m.mbr_image,
-			fc.fc_num,
-			fc.fc_content
+		    f.mni_num,
+		    mll.mni_kcal,
+		    mll.mni_carbo,
+		    mll.mni_protein,
+		    mll.mni_fat,
+		    mll.mni_picture
 		FROM
-			feed f
-			INNER JOIN `member` m USING(mbr_id)
-			LEFT JOIN feed_comments fc USING(feed_num)
-		<where>
-			<if test="searchValue != null and searchValue != ''">
-				${searchCate} LIKE CONCAT('%', #{searchValue}, '%')
-			</if>
-		</where>
-		ORDER BY CAST(SUBSTRING_INDEX(f.mbr_id, 'ksmartid', -1) AS UNSIGNED) 
-		LIMIT #{listSize}
+		    meal_nutrition_info mll INNER JOIN feed f
+		    ON mll.mni_num = f.mni_num
+		WHERE
+		    mll.mni_num = 'mni_009';
 	</select>
   </mapper>
   

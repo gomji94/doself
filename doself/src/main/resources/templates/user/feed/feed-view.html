@@ -1,64 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>피드 상세 정보</title>
-    <link rel="stylesheet" th:href="@{/assets/css/feed/feed-common.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/feed/feed-details-view.css}">
-</head>
-<body>
-    <!-- header : 상단 고정 포지션 픽스 -->
-    <header class="header">
-        <a href="#" class="logo">
-            <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
-        </a>
-        <!-- 로고 클릭 시 링크 이동 -->
-        <nav class="nav-links">
-            <a href="#">피드</a>
-            <a href="#">음식</a>
-            <a href="#">영양제</a>
-            <a href="#">챌린지</a>
-            <a href="#">티켓</a>
-            <a href="#">마켓</a>
-            <a href="#">커뮤니티</a>
-        </nav>
-        <div class="profile">
-            <a href="#">
-            <img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
-        </div>
-        <!-- 프로필 사진 (원형) -->
-    </header>
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{user/layout/feed-default}">
     <!-- container -->
     <div class="feed-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png"	alt="검색 아이콘"/></li>
-                <li>
-                <a href="#">검색</a></li>
-            </ul>
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/wlsgus4296/post/b686331f-57cd-4151-a977-5dccac86ba5f/image.png"	alt="피드 추가 아이콘"/></li>
-                <li>
-                <a href="#">피드 추가</a></li>
-            </ul>
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/wlsgus4296/post/55cd2fc1-6375-4982-a9b3-5887ca9e14cb/image.png"	alt="영양 정보 아이콘"/></li>
-                <li>
-                <a href="#">영양 정보</a></li>
-            </ul>
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/wlsgus4296/post/6796c6f7-cca3-45ab-bda3-5fb850420929/image.png"	alt="챌린지 아이콘"/></li>
-                <li>
-                <a href="#">챌린지</a></li>
-            </ul>
-        </aside>
         <!-- Main Content -->
         <main class="main">
             <div class="feed">
@@ -76,7 +21,7 @@
                     </div>
                 </div>
                 <div class="feed-img-chart">
-                    <div class="feed-main-img">                    
+                    <div class="feed-main-img">                  
                         <img src="https://www.fsnews.co.kr/news/photo/202206/45847_38385_3220.png" alt="게시글 이미지">
                     </div>
                     <div class="nutrition-info">
@@ -117,54 +62,17 @@
             </div>
         </main>
     </div>
-    <!-- footer : 하단 고정 포지션 스테틱 -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-logo">
-                <img src="https://velog.velcdn.com/images/mekite/post/552ea3de-e88e-42f5-969e-d7c8051cd272/image.png" alt="footer_logo">
-            </div>
-            <div class="company-info">
-                <span>전주시 덕진구 기린대로 499</span>
-                <span>|</span>
-                <span>홍길동</span>
-                <span>|</span>
-                <span>사업자등록번호 418-82-10120</span>
-            </div>
-            <div class="license-info">
-                <span>© 2024 DoSelf, Inc. All rights reserved.</span>
-            </div>
-        </div>
-    </footer>
-</body>
-
+    
 <!--/* 사용자 추가 js file */-->
 <th:block layout:fragment="customJsResource">
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/assets/js/feed/feed-list.js}"></script>
 </th:block>
 
 <!--/* 사용자 추가 js script */-->
 <th:block layout:fragment="customJs">
 	<script>
-		// 원형 그래프 데이터와 설정
-		const pieCtx = document.getElementById('pieChart').getContext('2d');
-		const pieChart = new Chart(pieCtx, {
-		  type: 'pie',
-		  data: {
-		    labels: ['칼로리', '탄수화물', '단백질', '지방'],
-		    datasets: [{
-		      data: [554.025, 0, 289.1, 262.125], // 각각의 비율
-		      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
-		    }]
-		  },
-		  options: {
-		    responsive: true,
-		    plugins: {
-		      legend: {
-		        position: 'top',
-		      },
-		    }
-		  }
-		});
+		
 	</script>
 </th:block>
 </html>
