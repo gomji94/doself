@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import doself.user.community.domain.Article;
@@ -96,7 +97,7 @@ public class CommunityController {
 	}
 	
 	@GetMapping("/view")
-	public String getArticleDetail(@RequestParam(name = "articleNum") String articleKeyNum, Model model) {
+	public String getArticleDetail(@RequestParam(name = "articleNum") int articleKeyNum, Model model) {
 		
 		log.info("articleDetail : {}", communityService.getArticleDetail(articleKeyNum));
 		
@@ -104,6 +105,20 @@ public class CommunityController {
 		
 		return "user/community/view";
 	}
+	
+	@GetMapping("/create")
+	public String createArticle() {
+		return "user/community/create";
+	}
+	
+	@PostMapping("/delete")
+	public String deleteArticle(@RequestParam(name = "articleNum") int articleKeyNum) {
+		//TODO: process POST request
+		communityService.deleteArticle(articleKeyNum);
+		return "redirect:/community/list";
+	}
+	
+	
 	
 	
 	
