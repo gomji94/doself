@@ -84,7 +84,7 @@
 		                        <li th:classappend="${num == currentPage} ? 'active'">
 		                        <!-- <a class="page-link" th:href="@{/community/list(currentPage=${num})}" th:text="${num}"></a> -->
 		                        	<a class="page-link" 
-		                        	th:attr="href=${test == null} ? |/community/list?currentPage=${num}| : |/community/list?${test}currentPage=${num}|"
+		                        	th:attr="href=${test == null} ? |?currentPage=${num}| : |?${test}currentPage=${num}|"
 		                        	 th:text="${num}"></a>
 		                        </li>
 		                   	</th:block>                           

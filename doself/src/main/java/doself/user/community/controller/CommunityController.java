@@ -97,6 +97,9 @@ public class CommunityController {
 	
 	@GetMapping("/view")
 	public String getArticleDetail(@RequestParam(name = "articleNum") String articleKeyNum, Model model) {
+		
+		log.info("articleDetail : {}", communityService.getArticleDetail(articleKeyNum));
+		
 		model.addAttribute("articleDetail", communityService.getArticleDetail(articleKeyNum));
 		
 		return "user/community/view";
