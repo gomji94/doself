@@ -33,9 +33,8 @@
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
                         
                     </div>
-                    
-					<th:block th:with="imgSrc=*{articleAttachmentFile}" th:if="${!#strings.isEmpty(imgSrc)}">
-					    <img alt="" th:src="*{articleAttachmentFile}" width="300" height="300">
+					<th:block th:with="imgSrc=*{articleAttachmentFile}" >
+					    <img th:src="${imgSrc != '' ? imgSrc : ''}" width="300" height="300" th:if="${imgSrc != ''}">
 					</th:block>
 
                     <!-- 게시글 본문 내용 -->

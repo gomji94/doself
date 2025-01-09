@@ -18,7 +18,7 @@
                         <div class="row gx-3">
                             <div class="col-lg-6 col-6 col-md-3">
                                 <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
-	                                <option value="dsiName">음식이름</option>
+	                                <option value="dsiName">영양제이름</option>
 	                            </select>
                             </div>
                             <!-- 검색어 입력 -->
@@ -26,7 +26,7 @@
                                 <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
                                 <datalist id="searchSuggestions"></datalist>                                                                                             
                                 
-                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
+                                <a id="searchBtn" class="btn btn-sm font-sm rounded btn-brand"><i class="material-icons md-image_search"></i>검색</a>
                             </div>
                         </div>
                     </header>

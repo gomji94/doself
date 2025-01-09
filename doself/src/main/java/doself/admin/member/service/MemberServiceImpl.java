@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
 		searchMap.put("endDate", endDate);
 		searchMap.put("pageable", pageable);
 		
-		int rowCnt = memberMapper.getCntMemberList();		
+		int rowCnt = memberMapper.getCntMemberList(searchMap);		
 		List<Member> memberList = memberMapper.getMemberList(searchMap);
 		
 		return new PageInfo<>(memberList, pageable, rowCnt);
@@ -61,11 +61,45 @@ public class MemberServiceImpl implements MemberService {
 	searchMap.put("endDate", endDate);
 	searchMap.put("pageable", pageable);
 	
-	int rowCnt = memberMapper.getCntMemberLogList();
+	int rowCnt = memberMapper.getCntMemberLogList(searchMap);
 	List<MemberLog> memberLogList = memberMapper.getMemberLogList(searchMap);
 	
 		return new PageInfo<>(memberLogList, pageable, rowCnt);
 	}
 
+	// 특정회원정보 조회
+	@Override
+	public Member getMemberInfoByMbrId(String mbrId) {
+		
+		return memberMapper.getMemberInfoByMbrId(mbrId);
+	}
+	// 특정회원정보 수정
+	@Override
+	public void modifyMember(Member member) {
+		
+		memberMapper.modifyMember(member);
+	}
+	
+	// 회원삭제
+	@Override
+	public void deleteMember(String mbrId) {
+		
+		memberMapper.deleteMember(mbrId);
+	}
+
+
+	// 회원등급 조회
+	@Override
+	public List<Map<String, Object>> getMemberMgCodeList() {
+		
+		return memberMapper.getMemberMgCodeList();
+	}
+
+	//연령대 카테고리
+	@Override
+	public List<Map<String, Object>> getAgeCategoryList() {
+		
+		return memberMapper.getAgeCategoryList();
+	}
 	
 }

@@ -7,6 +7,8 @@ public class PurchaseItemInfo {
 	
 	private String memberId;
 	private String pointItemKeyNum;
-	private int inputPointValue;
+	private int itemPrice;
+	private String purchaseItemCode;
+	private String requestTableLastPkNum;
 	
 }

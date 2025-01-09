@@ -67,6 +67,7 @@
                     </table>
                 </div>
                 <div id="main-container-footer">
+                	<th:block th:with="test=${queryParam + '&'}">
 	                    <div id="pagination" th:if="${not #lists.isEmpty(articleList)}">
 		                   <ul>
 		                   	<li th:classappend="${currentPage eq 1} ? 'disabled'">
@@ -81,7 +82,10 @@
 		                   	</li>
 		                   	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 		                        <li th:classappend="${num == currentPage} ? 'active'">
-		                        	<a class="page-link" th:href="@{/community/list(currentPage=${num})}" th:text="${num}"></a>
+		                        <!-- <a class="page-link" th:href="@{/community/list(currentPage=${num})}" th:text="${num}"></a> -->
+		                        	<a class="page-link" 
+		                        	th:attr="href=${test == null} ? |?currentPage=${num}| : |?${test}currentPage=${num}|"
+		                        	 th:text="${num}"></a>
 		                        </li>
 		                   	</th:block>                           
 		                    <li th:classappend="${currentPage eq lastPage} ? 'disabled'">
@@ -95,7 +99,8 @@
 	                        	</a>
 		                    </li>
 		                   </ul>
-	                   	</div>	
+	                   	</div>
+                   	</th:block>	
                     <div id="article-write">
                         <a href="#">
                             <button class="article-write__button">write</button>

@@ -19,7 +19,21 @@ public interface MemberMapper {
 	
 	//페이징
 	// 멤버 총 갯수
-	int getCntMemberList();
+	int getCntMemberList(Map<String, Object> searchMap);
 	// 멤버로그 총 갯수
-	int getCntMemberLogList();
+	int getCntMemberLogList(Map<String, Object> searchMap);
+	
+	//특정 회원 조회
+	Member getMemberInfoByMbrId(String mbrId);
+	
+	//특정 회원 수정
+	int modifyMember(Member member);
+	
+	//회원 삭제
+	void deleteMember(String mbrId);
+	
+	//회원등급 조회
+	List<Map<String, Object>> getMemberMgCodeList();
+	//연령대 카테고리 조회
+	List<Map<String, Object>> getAgeCategoryList();
 }

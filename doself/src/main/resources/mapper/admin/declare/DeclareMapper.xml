@@ -196,4 +196,92 @@
 		    ORDER BY
 		    	rmm.rmm_num  
 		</select>
+		
+		<!-- 특정 신고요청 조회 -->
+		<select id="getModifyDeclareByRrNum" resultMap="declareResultMap">
+			SELECT 
+				rr_num, 
+				mbr_id, 
+				olc_code, 
+				rr_bc_num, 
+				rc_code, 
+				rr_content, 
+				rr_date, 
+				sc_code, 
+				rr_admin, 
+				rr_processing_period,
+				rr_reason_content
+			FROM report_request
+			WHERE
+				rr_num = #{rrNum}
+		</select>
+		<!-- 신고요청 반려 -->
+  		<update id="modifyDeclare" parameterType="Declare">
+  			UPDATE report_request
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				rr_num = #{rrNum},		
+				<if test="rrReasonContent != null and rrReasonContent != ''">
+					rr_reason_content = #{rrReasonContent},
+				</if>
+				rr_processing_period = now(),
+				sc_code = 'sc_002'				  			
+  			</trim>
+  			WHERE
+  				rr_num = #{rrNum};
+  		</update>
+  		
+  		<!-- 부정회원 추가 -->
+  		<insert id="createDeclareUser">
+  			INSERT INTO report_member_management (
+  			rmm_num, 
+  			rr_num, 
+  			mbr_id, 
+  			rc_code, 
+  			rmm_sanction_start_date,
+  			rmm_sanction_period, 
+  			rmm_sanction_end_date, 
+  			rmm_admin
+  			) VALUES (
+  			#{newKey}, 
+  			#{declare.rrNum}, 
+  			#{declare.mbrId}, 
+  			#{declare.rcCode}, 
+  			NOW(), 
+  			${declarePeriod}, 
+  			DATE_ADD(NOW(), INTERVAL ${declarePeriod} DAY), 
+  			''
+  			)
+  		</insert>
+  		
+  		<!-- 신고유형별 제제기간 가져오기 -->
+  		<select id="getDeclarePeriod" resultType="int">
+  			SELECT 
+  				rc_sanction_period
+			FROM report_category
+			WHERE
+				rc_code = #{rcCode}
+  		</select>
+  		
+  		<!-- 부정회원 추가후 처리상태 변경 -->
+  		<update id="modifyScCode" parameterType="Declare">
+  			UPDATE report_request
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				rr_num = #{rrNum},						
+				rr_processing_period = now(),
+				sc_code = 'sc_003'				  			
+  			</trim>
+  			WHERE
+  				rr_num = #{rrNum};
+  		</update>
+  		
+  		<!-- 부정회원 추가후 회원등급 변경 -->
+  		<update id="modifyMgCode" parameterType="Declare">
+  			UPDATE `member`
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				mbr_id = #{mbrId},									
+				mg_code = 'mg_003'				  			
+  			</trim>
+  			WHERE
+  				mbr_id = #{mbrId};
+  		</update>
   </mapper>

@@ -1,50 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="challenge-list-view">
-	<div class="overlay" id="card-modal-overlay" style="display: none;"></div>
-	    <div class="popup-container" id="card-modal" style="display: none;">
-	        <div class="popup-header">
-	            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
-	            <h2></h2>
-	            <img id="card-modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
-	        </div>
-	        <hr>
-	        <div class="popup-body" id="card-body" th:if="${challengeListDetail != null and !challengeListDetail.isEmpty()}"
-    			 th:each="cld : ${challengeListDetail}">
-	            <!-- 이미지 업로드 영역 -->
-	            <div class="image-upload">
-	                <img th:src="${cld.challengeImage}" alt="업로드된 이미지 미리보기" id="image-preview">
-	            </div>
-	            <!-- 정보 입력 영역 -->
-	            <div class="feed-info">
-	                <div class="user-block">
-	                    <span id="challenge-leader">챌린지 리더</span>
-	                    <img src="https://velog.velcdn.com/images/mekite/post/8e79bd6b-a5e7-4d06-abac-9a273fbe98df/image.png" alt="왕관" id="leader-icon">
-	                    <!-- <img th:src="${cl.challengeLeaderImage}" alt="프로필" id="profile" /> -->
-	                    <img th:src="${cld.challengeLeaderImage != null ? cld.challengeLeaderImage : 'https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png'}" alt="프로필" id="profile" />
-	                    <a href="#" class="user-link" th:text="${cld.challengeLeaderId}"></a>
-	                    <span class="comment-day-count"></span>
-	                </div>
-	                <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" id="info-section">
-	                <div class="challenge-info-content">
-	                    <span id="challenge-tag" th:text="|# ${cld.challengeCategory}|"></span>
-	                    <div id="info-content-detail">
-	                        <p>📌 챌린지 소개 📌</p>
-	                        <p th:text="|🗓 챌린지 일정 : ${#dates.format(cld.challengeStartDate, 'yy/MM/dd')}~${#dates.format(cld.challengeEndDate, 'yy/MM/dd')}|"></p>
-	                        <p th:text="|🎯 난이도 : ${cld.challengeTopicLevel}|"></p>
-							<p th:text="|📝 진행 내용 : ${cld.challengeLevelContent}|"></p>
-							<p th:text="|🤗‍ 참여 인원 : ${cld.challengeCurrentMember}/${cld.challengeMaxMember}|"></p>
-	                        <p>📢 필독 📢</p>
-	                        <p>친목질, 종교권유, 이성만남목적, 정치질 🙅‍♀️</p>
-	                        <p>※ 공지 안 지키면 경고 없이 경고합니다</p>
-	                        <p>(3회 누적 시, 자동 탈퇴 처리)</p>
-                    		<p th:text="${cld.challengeContent != null ? cld.challengeContent : ''}"></p>
-	                    </div>
-	                </div>
-	                <p th:if="${challengeListDetail == null || challengeListDetail.isEmpty()}">챌린지 정보를 불러올 수 없습니다.</p>
-	                <button type="submit" class="submit-btn">참여하기</button>
-	            </div>
-	        </div>
-	    </div>
+<head>
+<meta charset="UTF-8">
+<title>challenge list</title>
+</head>
+<body>
+	<div th:fragment="challenge-list-view">
+		<div id="card-modal-overlay" class="overlay" style="display: none;">
+			<div id="card-modal" class="popup-container" style="display: none;">
+			    <div class="popup-header">
+			        <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+			        <h2 id="challenge-name"></h2>
+			        <img id="card-modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+			    </div>
+			    <hr>
+			    <div id="card-body" class="popup-body">
+			        <div class="image-upload">
+			            <img id="image-preview" src="" alt="업로드된 이미지 미리보기">
+			        </div>
+			        <div class="feed-info">
+			            <div class="user-block">
+			                <span id="challenge-leader">챌린지 리더</span>
+			                <img src="https://velog.velcdn.com/images/mekite/post/8e79bd6b-a5e7-4d06-abac-9a273fbe98df/image.png" alt="왕관" id="leader-icon">
+			                <img id="profile" src="" alt="프로필">
+			                <a href="#" id="leader-link" class="user-link"></a>
+			            </div>
+			            <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" id="info-section">
+			            <div id="info-content-detail" class="challenge-info-content">
+			                <!-- 동적 데이터가 여기에 삽입됩니다. -->
+			            </div>
+			            <p id="error-message" style="display: none;">챌린지 정보를 불러올 수 없습니다.</p>
+			            <button type="submit" class="submit-btn">참여하기</button>
+			        </div>
+			    </div>
+			</div>
+		</div>
 	</div>
+</body>
 </html>

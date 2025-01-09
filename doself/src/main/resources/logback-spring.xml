@@ -36,7 +36,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_DIR}/application.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
-                	<!-- 파일당 최고 용량 10MB -->
+                <!-- 파일당 최고 용량 10MB -->
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             	<!-- 일자별 로그파일 최대 보관주기(일단위)만약 해당 설정일 이상된 파일은 자동으로 제거 -->

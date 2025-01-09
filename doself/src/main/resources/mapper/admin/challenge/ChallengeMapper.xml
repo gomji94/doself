@@ -566,6 +566,7 @@
 	  			<result column="rh_target" property="rhTarget" />	  				  				  			  			  			
 	  			<result column="rh_reward_type" property="rhRewardType" />	  				  				  			  			  			
 	  			<result column="rh_rank" property="rhRank" />
+	  			<result column="rh_point" property="rhPoint" />
 	  			<result column="rhName" property="rhName" />
 	  				  				  				  			  			  				  			 				  				  			  			  		
 	  		</association>   			 	
@@ -581,6 +582,7 @@
 				CONCAT_WS(' ',rh.rh_target,rh.rh_reward_type,rh.rh_rank) AS rhName,
 				rph_reward_selected_date,
 				rph_admin,
+				rh.rh_point,
 				rph_reward_payment_date 
 			FROM reward_payment_history rph INNER JOIN challenge_group cg
 				ON rph.cg_num = cg.cg_num
