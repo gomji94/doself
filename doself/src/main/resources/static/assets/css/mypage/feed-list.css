@@ -238,4 +238,10 @@
 section.content-main { /* 메인콘텐츠 영역늘림 */
     min-height: 1000px;
 }
+
+img#profil-Image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
         
