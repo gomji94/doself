@@ -12,7 +12,7 @@
   	<div class="container">
 
         <main id="main-content">
-  		<th:block th:object="${articleDetail}">
+  		<th:block th:object="${articleDetail}" th:with="test=${session.SID}">
             <div id="main-container-contents">
                 <div id="main-container-title">community</div>
                 <!-- 게시글 전체 영역 -->
@@ -39,24 +39,27 @@
 
                     <!-- 게시글 본문 내용 -->
                     <div id="post-content" th:text="*{articleContent}">
+                    						        
                     </div>
 
                     <!-- 글 버튼 -->
                     <div class="article-button-container">
-                    	<th:block th:if="${session.SID != null and session.SID eq articleDetail.articleAuthorId}">
+                    	<th:block th:if="${test != null and test eq articleDetail.articleAuthorId}">
 	                        <a href="#">
 	                            <button id="article-like__button">like</button>
 	                        </a>
                         </th:block>
                         
-						<th:block th:if="${session.SID != null and session.SID eq articleDetail.articleAuthorId}">
+						<th:block th:if="${test != null and test eq articleDetail.articleAuthorId}">
 						    <a href="#">
 						        <button id="article-modify__button">modify</button>
 						    </a>
-						    <a href="#">
-						        <button id="article-delete__button">delete</button>
-						    </a>
+						    <form id="deleteForm" th:action="@{/community/delete}" method="POST">
+							    <input type="hidden" name="articleNum" th:value="*{articleKeyNum}">
+							    <button id="article-delete__button" type="submit">delete</button>
+							</form>
 						</th:block>
+
 
                         <a th:href="@{/community/list}">
                         
@@ -96,7 +99,7 @@
 
                         <!-- 댓글 작성 폼 -->
                         <form id="comment-form" action="#">
-                            <div id="comment-userId">id015</div>
+                            <div id="comment-userId" th:text="${test}"></div>
                             <textarea id="comment-text" placeholder="댓글을 남겨보세요"></textarea>
                             <button type="submit" id="comment-submit">등록</button>
                         </form>
@@ -126,6 +129,12 @@
     	<script>
     		$('#comment-submit').click(event => {
     			event.preventDefault();
+    		})
+    		
+    		$('#article-delete__button').click(event => {
+    			event.preventDefault();
+    		 	const isDelete = confirm('게시글을 삭제하시겠습니까?');
+    			if(isDelete) $('#deleteForm').submit();
     		})
     	</script>
     </th:block> 

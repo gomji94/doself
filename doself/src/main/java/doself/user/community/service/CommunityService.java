@@ -20,9 +20,12 @@ public interface CommunityService {
 	PageInfo<Article> getArticleListByCategory(Pageable pageable, Integer categoryCode);
 	
 	// 게시글 조회
-	Article getArticleDetail(String articleKeyNum);
+	Article getArticleDetail(int articleKeyNum);
 	
 	// 게시글 검색
 	PageInfo<Article> getArticleListBySearch(Pageable pageable, SearchArticle searchArticle);
+	
+	// 게시글 삭제
+	void deleteArticle(int articleKeyNum);
 
 }

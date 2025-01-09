@@ -84,12 +84,19 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Override
-	public Article getArticleDetail(String articleKeyNum) {
+	public Article getArticleDetail(int articleKeyNum) {
 		
-		int castKeyNum = Integer.parseInt(articleKeyNum);
-		String formattedKeyNum = String.format("fb_%03d", castKeyNum);
+		String formattedKeyNum = String.format("fb_%03d", articleKeyNum);
 		
 		return communityMapper.getArticleDetail(formattedKeyNum);
+	}
+
+	@Override
+	public void deleteArticle(int articleKeyNum) {
+		// TODO Auto-generated method stub
+		String formattedKeyNum = String.format("fb_%03d", articleKeyNum);
+		communityMapper.deleteArticle(formattedKeyNum);
+		
 	}
 
 }

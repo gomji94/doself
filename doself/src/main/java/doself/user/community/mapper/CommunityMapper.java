@@ -36,5 +36,8 @@ public interface CommunityMapper {
 	
 	// 게시글 검색
 	List<Article> getArticleListBySearch(Map<String, Object> params);
+	
+	// 게시글 삭제
+	void deleteArticle(String articleKeyNum);
 
 }
