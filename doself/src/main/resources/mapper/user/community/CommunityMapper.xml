@@ -109,5 +109,10 @@
 		WHERE fb.fb_num = #{articleKeyNum}
   	</select>
   	
+  	<delete id="deleteArticle" parameterType="String">
+	  	DELETE FROM free_board 
+		WHERE fb_num=#{articleKeyNum}
+  	</delete>
+  	
   	
 </mapper>
