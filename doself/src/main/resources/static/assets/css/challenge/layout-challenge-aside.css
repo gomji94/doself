@@ -1,6 +1,7 @@
 body > .content-main {
-    flex: 1;
-    display: grid;
+    flex: 1 !important;
+    display: grid !important;
+    max-width: 1000px !important;
 }
 
 /* content-main 스타일 */
@@ -15,6 +16,7 @@ body > .content-main {
     display: flex;
     box-sizing: border-box;
     flex-wrap: nowrap; /* 컨테이너 안 요소 줄바꿈 방지 */
+    max-width: 1000px !important;
 }
 
 /* Sidebar */

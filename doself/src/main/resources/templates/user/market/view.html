@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/assets/css/market/view.css}" rel="stylesheet" type="text/css" />
+    <title>item details</title>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+	
+	<th:block th:object="${itemInfo}">
+	    <div id="container" >
+        <div id="main-title">마켓 상품 상세</div>
+        <div id="main-content" >
+            <div class="main-item-header">
+                <div id="item-title">
+                    <img class="miit__image" th:src="*{pointItemImg}" alt="">
+                    <span th:text="*{pointItemName}"></span>
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    상품명
+                </div>
+                <div id="item-name" th:text="*{pointItemName}">
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    가격
+                </div>
+                <div id="item-price" th:text="*{pointItemPrice} + ' point'">
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info" >
+                    보유 포인트
+                </div>
+                <div id="user-point" th:text="*{memberPoint} + ' point'">
+                    
+                </div>
+            </div>
+            <div class="main-items">
+                <div class="item-info">
+                    설명
+                </div>
+                <div id="item-desc" th:text="*{pointExplanation}">
+                </div>
+            </div>
+        </div>
+        <div class="market-item-button-container">
+            <a th:href="@{/market/purchase(pointItemKeyNum=*{pointItemKeyNum})}">
+                <button id="item-purchase__button" >구매</button>
+            </a>
+            <a href="#">
+                <button id="item-close__button">취소</button>
+            </a>
+        </div>
+    </div>
+    </th:block>
+    <th:block layout:fragment="customJsResource">
+	    <script>
+
+	    $(document).ready(function () {
+	        // 버튼 클릭 이벤트 핸들러
+	        $(".info-link").on("click", function (event) {
+	            event.preventDefault();
+
+	            // href 속성에서 링크 경로 가져오기
+	            var targetPage = $(this).attr("href");
+
+	            if (targetPage) {
+	                window.open(targetPage, "_blank", 'width=600, height=600, left=500, top=200');
+	            } else {
+	                alert("페이지 경로가 설정되지 않았습니다.");
+	            }
+	        });
+
+	        $("#item-close__button").on("click", function () {
+	            window.close();
+	        });
+	    });
+
+	
+	    </script>
+    </th:block>
+</body>
+</html>

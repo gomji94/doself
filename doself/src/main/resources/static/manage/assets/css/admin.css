@@ -145,6 +145,7 @@ input:focus::-moz-placeholder {
   position: relative;
 }
 
+
 .height-100vh {
   height: 100vh !important;
 }
@@ -4264,6 +4265,21 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
 .table-responsive {
   overflow-x: auto; /* 가로 스크롤 추가 */
   white-space: nowrap; /* 콘텐츠 줄바꿈 방지 */
+}
+
+.searchInput {
+	display: flex;
+}
+
+.searchLeft{
+	margin-left: 25px;
+}
+
+.align-content {
+	align-content: center !important;
+}
+.padding-left {
+	margin-left: 5px !important;
 }
 
 @media (max-width: 1200px) {

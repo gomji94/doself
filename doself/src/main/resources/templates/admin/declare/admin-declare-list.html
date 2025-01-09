@@ -18,25 +18,22 @@
                         <div class="row gx-3">
                             <div class="col-lg-6 col-6 col-md-3">
                               <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
-                                <option value="rcCode">신고 유형</option>
-                                <option value="scCode">상태</option>
+                                <option value="rcName">신고 유형</option>
+                                <option value="scStatus">처리상태</option>
                               </select>
                             </div>
                             <!-- 검색어 입력 -->
-                            <div class="col-lg-4 col-md-6 me-auto">
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
                                 <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
-                                <datalist id="searchSuggestions"></datalist>
+                                <datalist id="searchSuggestions"></datalist>                               
+                                
+                                <p class="searchLeft align-content">날짜</p>
+                                <input type="date" class="date date-container searchLeft" id="startDate" />
+                                <p class="searchLeft">~</p> 
+                                <input type="date" class="date date-container searchLeft" id="endDate" />
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
                             </div>
-
-                            <!-- 날짜 선택 -->
-                            <div class="col-lg-6 col-6 col-md-3">
-                                <div class="date-container">
-                                    <p>날짜</p>
-                                    <input type="date" class="date" id="startDate" /> ~
-                                    <input type="date" class="date" id="endDate" />
-                                </div>
-                            </div>
-                            <input class="searchBtn" type="button" value="검색" onclick="filterData()" />
                         </div>
                     </header>
                     <!-- card-header end// -->
@@ -46,19 +43,40 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">신고번호</th>
+                                        <th scope="col">아이디</th>
+                                        <th scope="col">발생위치코드</th>
+                                        <th scope="col">신고당한글/댓글번호</th>
                                         <th scope="col">신고유형</th>
-                                        <th scope="col">신고자</th>
-                                        <th scope="col">신고 당한글/댓글번호</th>
                                         <th scope="col">신고내용</th>
-                                        <th scope="col">상태</th>
-                                        <th scope="col">접수일</th>
-                                        <th scope="col">처리일</th>                                        
-                                        <th scope="col">처리자</th>
+                                        <th scope="col">신고날짜</th>
+                                        <th scope="col">처리상태</th>
+                                        <th scope="col">처리관리자</th>                                        
+                                        <th scope="col">처리기간</th>
                                         <th scope="col">반려사유</th>
+                                        <th scope="col">승인처리</th>
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
+                                <tbody>
+                                	<th:block th:if="${declareList} != null">
+                                		<tr th:each="l : ${declareList}" class="text-center">
+                                			<td><a th:href="@{/admin/declare/modifyrequest(rrNum=${l.rrNum})}" class="userIdDetails" th:text="${l.rrNum}"></a></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
+                                			<td th:text="${l.occuranceLocationInfo.olcName}"></td>
+                                			<td th:text="${l.rrBcNum}"></td>
+                                			<td th:text="${l.declareCategoryInfo.rcName}"></td>
+                                			<td th:text="${l.rrContent}"></td>
+                                			<td th:text="${l.rrDate}"></td>
+                                			<td th:text="${l.statusCategoryInfo.scStatus}"></td>
+                                			<td th:text="${l.rrAdmin}"></td>
+                                			<td th:text="${l.rrProcessingPeriod}"></td>
+                                			<td th:text="${l.rrReasonContent}"></td>
+                                			<td>
+                                				<a th:href="@{/admin/declare/createUser(rrNum=${l.rrNum})}" th:style="${l.statusCategoryInfo.scStatus} == '반려' or ${l.statusCategoryInfo.scStatus} == '승인' ? 'display:none;' : 'display:block;'" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
+                                				승인
+                                				</a>
+                                			</td>  
+                                		</tr>                                	
+                                	</th:block>
                                 </tbody>
                             </table>
                         </div>

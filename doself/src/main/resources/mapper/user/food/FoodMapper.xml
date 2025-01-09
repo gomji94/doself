@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.user.food.mapper.FoodMapper">
+  
+  	<resultMap type="Food" id="foodResultMap">
+  		<id 	column="mni_num" 			property="foodKeyNum"/>
+  		<result column="mni_name" 			property="foodName"/>
+  		<result column="mni_picture"		property="foodImg"/>
+  		<result column="mni_weight" 		property="foodWeight"/>
+  		<result column="mni_kcal" 			property="foodKcal"/>
+  		<result column="mni_carbo" 			property="foodCarbo"/>
+  		<result column="mni_protein" 		property="foodProtein"/>
+  		<result column="mni_fat" 			property="foodFat"/>
+  		<result column="mni_sugar" 			property="foodSugar"/>
+  		<result column="mni_cholesterol" 	property="foodCholesterol"/>
+  		<result column="mni_sodium" 		property="foodSodium"/>
+  		<result column="mni_calcium" 		property="foodCalcium"/>
+  		<result column="mni_iron" 			property="foodIron"/>
+  	</resultMap>
+  	
+  	<!-- 음식 목록 리스트 조회 -->
+  	<select id="getFoodList" resultMap="foodResultMap" >
+		SELECT mni_num, mni_name, mni_picture, mni_kcal
+		FROM meal_nutrition_info;
+  	</select>
+  	
+ 	<!-- 음식 상세 조회 -->
+  	<select id="getFoodDetail" resultMap="foodResultMap" resultType="Food" parameterType="String">
+  		SELECT *
+		FROM meal_nutrition_info
+		WHERE mni_num = #{foodKeyNum};
+  	</select>
+  	
+  	<!-- 음식 검색 -->
+	<select id="searchFoodByFoodName" resultMap="foodResultMap" parameterType="String" resultType="Food">
+		SELECT mni_num, mni_name, mni_picture, mni_kcal
+		FROM meal_nutrition_info
+		WHERE mni_name LIKE CONCAT('%', #{foodName}, '%');
+	</select>
+	
+	<select id="getNirrTablePkNum" resultType="int">
+		SELECT MAX(CAST(SUBSTRING_INDEX(nirr_num, '_', -1) AS UNSIGNED)) + 1 
+		FROM nutrition_info_registration_request;
+	</select>
+	
+	<!-- 음식 등록 요청 -->
+	<insert id="createNutritionRequest" parameterType="NutritionRequestInfo" >
+		INSERT INTO nutrition_info_registration_request
+		(nirr_num, mbr_id, nirr_content, nirr_date, nirr_category)
+		VALUES
+		(#{requestTableLastPkNum}, #{memberId}, #{requestItemName}, NOW(), #{requestCategory})
+	</insert>
+  	
+</mapper>

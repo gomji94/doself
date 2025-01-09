@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.admin.challenge.mapper.ChallengeMapper">    
+  		
+  		<resultMap type="Challenge" id="challengeResultMap">
+  			<id column="cg_num" property="cgNum" />
+  			<result column="ctl_num" property="ctlNum" />
+  			<result column="cg_leader_name" property="cgLeaderName" />
+  			<result column="cg_name" property="cgName" />
+  			<result column="cg_picture" property="cgPicture" />
+  			<result column="cg_content" property="cgContent" />
+  			<result column="cg_creation_date" property="cgCreationDate" />
+  			<result column="cg_current_mbr_count" property="cgCurrentMbrCount" />
+  			<result column="cg_max_mbr_count" property="cgMaxMbrCount" />
+  			<result column="cg_start_date" property="cgStartDate" />
+  			<result column="cg_end_date" property="cgEndDate" />
+  			<result column="cg_like" property="cgLike" />
+  			<result column="cs_num" property="csNum" />
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="cs_reward_check" property="csRewardCheck" />
+
+	  		<!-- 챌린지주제 카테고리 관계 -->
+	  		<association property="topicLevelInfo" javaType="TopicLevel">
+	  			<id 	column="ctl_num" property="ctlNum" />
+	  			<result column="ct_num" property="ctNum" />
+	  			<result column="ctl_level" property="ctlLevel" />
+	  			<result column="ctl_content" property="ctlContent" />
+	  			<result column="ctl_count" property="ctlCount" />
+	  		</association>
+
+	  		<!-- 챌린지상태 카테고리 관계 -->
+	  		<association property="statusInfo" javaType="Status">
+	  			<id 	column="cs_num" property="csNum" />
+	  			<result column="cs_operation_status" property="csOperationStatus" />
+	  			<result column="cs_status" property="csStatus" />	  			
+	  		</association>	  		  			  
+  		</resultMap>	
+  		
+  		<!-- 챌린지목록 조회 -->
+		<select id="getChallengeList" resultMap="challengeResultMap">
+			/* 챌린지목록 조회 */
+			
+			SELECT 
+				cg_num,
+				ctl_content,
+				cg_leader_name,
+				cg_name, 
+				cg_picture,
+				cg_content,
+				cg_creation_date,
+				cg_current_mbr_count,
+				cg_max_mbr_count,
+				cg_start_date,
+				cg_end_date,
+				cg_like,
+				cs.cs_status,
+				mbr_id,
+				cs_reward_check
+			FROM challenge_group cg	INNER JOIN challenge_topic_level ctl
+					USING(ctl_num)
+					INNER JOIN challenge_status cs
+					USING(cs_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cg_start_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cg_start_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cg.cg_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntChallengeList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_group cg	INNER JOIN challenge_topic_level ctl
+					USING(ctl_num)
+					INNER JOIN challenge_status cs
+					USING(cs_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cg_start_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cg_start_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cg.cg_num		   
+		</select>
+		
+		
+		<resultMap type="PersonalStat" id="PersonalStatResultMap">
+  			<id column="cmss_num" property="cmssNum" />
+  			<result column="cg_num" property="cgNum" />  		
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="cmss_date" property="cmssDate" />
+  			<result column="cmss_upload_feed_count" property="cmssUploadFeedCount" />
+  			<result column="cmss_today_participation_rate" property="cmssTodayParticipationRate" />
+  			<result column="cmss_participation_check" property="cmssParticipationCheck" />
+  			<result column="cmss_today_achievement_rate" property="cmssTodayAchievementRate" />
+  			
+  			<!-- 챌린지 관계 -->
+	  		<association property="challengeInfo" javaType="Challenge">
+	  			<id 	column="cg_num" property="cgNum" />  			
+	  			<result column="cg_name" property="cgName" />	  				  				  			  			
+	  		</association>
+	  		
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />
+	  			<result column="mbr_name" property="mbrName" />	  				  			  			  			  			
+	  		</association>  	 	
+  		</resultMap>
+		
+  		<!-- 챌린지내 개인기록 조회 -->
+		<select id="getPersonalStatList" resultMap="PersonalStatResultMap">
+			/* 챌린지내 개인기록 조회 */
+			
+			SELECT 
+				cmss_num,
+				cg.cg_name,
+				m.mbr_name,
+				cmss_date,
+				cmss_upload_feed_count,
+				cmss_today_participation_rate,
+				cmss_participation_check,
+				cmss_today_achievement_rate
+			FROM challenge_member_score_stats cmss INNER JOIN challenge_group cg
+				USING(cg_num)
+				INNER JOIN `member` m
+				ON cmss.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cmss_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cmss_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+			ORDER BY
+				cmss.cmss_num
+			LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+	
+		<!-- 페이징 -->
+		<select id="getCntPersonalStatList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_member_score_stats cmss INNER JOIN challenge_group cg
+				USING(cg_num)
+				INNER JOIN `member` m
+				ON cmss.mbr_id = m.mbr_id
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND cmss_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND cmss_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+			ORDER BY
+				cmss.cmss_num		   
+		</select>
+		
+		
+		<resultMap type="PersonalScore" id="PersonalScoreResultMap">
+  			<id column="cpsl_num" property="cpslNum" />
+  			<result column="cpsl_year" property="cpslYear" />  		
+  			<result column="cpsl_monthly" property="cpslMonthly" />
+  			<result column="cg_num" property="cgNum" />
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="cpsl_cumulative_performance_rate" property="cpslCumulativePerformanceRate" />
+  			<result column="cpsl_cumulative_participation_rate" property="cpslCumulativeParticipationRate" />
+  			<result column="cpsl_cumulative_performance_score" property="cpslCumulativePerformanceScore" />
+  			<result column="cpsl_cumulative_participation_score" property="cpslCumulativeParticipationScore" />
+  			<result column="cpsl_like_score" property="cpslLikeScore" />
+  			<result column="cpsl_comments_count" property="cpslCommentsCount" />
+  			<result column="cpsl_total_score" property="cpslTotalScore" />
+  			<result column="cpsl_rank" property="cpslRank" />
+  			
+  			<!-- 챌린지 관계 -->
+	  		<association property="challengeInfo" javaType="Challenge">
+	  			<id 	column="cg_num" property="cgNum" />	  			  			
+	  			<result column="cg_name" property="cgName" />	  				  			  			  			
+	  		</association>
+	  		
+	  		<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association>	  			 	
+  		</resultMap>
+  		
+  		<!-- 챌린지내 개인점수 조회 -->
+		<select id="getPersonalScoreList" resultMap="PersonalScoreResultMap">
+			/* 챌린지내 개인점수 조회 */
+			
+			SELECT 
+				cpsl_num,
+				cpsl_year,
+				cpsl_monthly,
+				cg_name,
+				m.mbr_name,
+				cpsl_cumulative_performance_rate,
+				cpsl_cumulative_participation_rate,
+				cpsl_cumulative_performance_score,
+				cpsl_cumulative_participation_score,
+				cpsl_like_score,
+				cpsl_comments_count,
+				cpsl_total_score,
+				cpsl_rank
+			FROM challenge_personal_score_list cpsl INNER JOIN challenge_group cg
+				USING(cg_num)
+				INNER JOIN `member` m
+				ON cpsl.mbr_id = m.mbr_id	
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cpsl.cpsl_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntPersonalScoreList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_personal_score_list cpsl INNER JOIN challenge_group cg
+				USING(cg_num)
+				INNER JOIN `member` m
+				ON cpsl.mbr_id = m.mbr_id	
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(cpsl_year, LPAD(cpsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	cpsl.cpsl_num	   
+		</select>
+		
+		
+		<resultMap type="Stat" id="StatResultMap">
+  			<id column="ctps_num" property="ctpsNum" />
+  			<result column="cg_num" property="cgNum" />  		
+  			<result column="ctps_date" property="ctpsDate" />
+  			<result column="ctps_participation" property="ctpsParticipation" />
+  			<result column="ctps_achievement_rate" property="ctpsAchievementRate" />
+  			
+  			<!-- 챌린지 관계 -->
+	  		<association property="challengeInfo" javaType="Challenge">
+	  			<id 	column="cg_num" property="cgNum" />	  				  			
+	  			<result column="cg_name" property="cgName" />	  				  				  			  			
+	  		</association>	  			 	
+  		</resultMap>
+  		
+  		<!-- 챌린지 기록 조회 -->
+		<select id="getStatList" resultMap="StatResultMap">
+			/* 챌린지 기록 조회 */
+			
+			SELECT 
+				ctps_num,
+				cg.cg_name,
+				ctps_date,
+				ctps_participation,
+				ctps_achievement_rate
+			FROM challenge_today_participation_stats ctps INNER JOIN challenge_group cg
+			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND ctps_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND ctps_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	ctps.ctps_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntStatList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM challenge_today_participation_stats ctps INNER JOIN challenge_group cg
+			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND ctps_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND ctps_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	ctps.ctps_num
+		</select>
+		
+		
+		<resultMap type="Score" id="ScoreResultMap">
+  			<id column="mcsl_num" property="mcslNum" />
+  			<result column="mcsl_year" property="mcslYear" />  		
+  			<result column="mcsl_monthly" property="mcslMonthly" />
+  			<result column="cg_num" property="cgNum" />
+  			<result column="mcsl_cumulative_performance_rate" property="mcslCumulativePerformanceRate" />
+  			<result column="mcsl_cumulative_participation_rate" property="mcslCumulativeParticipationRate" />
+  			<result column="mcsl_level_score" property="mcslLevelScore" />
+  			<result column="mcsl_cumulative_performance_score" property="mcslCumulativePerformanceScore" />
+  			<result column="mcsl_cumulative_participation_score" property="mcslCumulativeParticipationScore" />
+  			<result column="mcsl_like_score" property="mcslLikeScore" />
+  			<result column="mcsl_total_score" property="mcslTotalScore" />
+  			<result column="mcsl_rank" property="mcslRank" />
+  			
+  			<!-- 챌린지 관계 -->
+	  		<association property="challengeInfo" javaType="Challenge">
+	  			<id 	column="cg_num" property="cgNum" />	  				  			
+	  			<result column="cg_name" property="cgName" />	  				  			  			
+	  		</association>	  			 	
+  		</resultMap>
+  		<!-- 챌린지 점수 조회 -->
+		<select id="getScoreList" resultMap="ScoreResultMap">
+			/* 챌린지 점수 조회 */
+			
+			SELECT 
+				mcsl_num,
+				mcsl_year,
+				mcsl_monthly,
+				cg.cg_name,
+				mcsl_cumulative_performance_rate,
+				mcsl_cumulative_participation_rate,
+				mcsl_level_score,
+				mcsl_cumulative_performance_score,
+				mcsl_cumulative_participation_score,
+				mcsl_like_score,
+				mcsl_total_score,
+				mcsl_rank
+			FROM monthly_challenge_score_list mcsl INNER JOIN challenge_group cg
+			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	mcsl.mcsl_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntScoreList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM monthly_challenge_score_list mcsl INNER JOIN challenge_group cg
+			USING(cg_num)
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND STR_TO_DATE(CONCAT(mcsl_year, LPAD(mcsl_monthly, 2, '0'),'01'),'%Y%m%d') <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	mcsl.mcsl_num
+		</select>
+		
+		
+		<resultMap type="Warning" id="WarningResultMap">
+  			<id column="lcmwl_num" property="lcmwlNum" />
+  			<result column="cg_num" property="cgNum" />  		
+  			<result column="cgm_num" property="cgmNum" />
+  			<result column="cmwc_num" property="cmwcNum" />
+  			<result column="olc_code" property="olcCode" />
+  			<result column="lcmwl_bc_num" property="lcmwlBcNum" />
+  			<result column="lcmwl_date" property="lcmwlDate" />  		
+  			
+  			<!-- 챌린지 관계 -->
+	  		<association property="challengeInfo" javaType="Challenge">
+	  			<id 	column="cg_num" property="cgNum" />	  				  		
+	  			<result column="cg_name" property="cgName" />	  				  			  			  			
+	  		</association>	 
+	  		
+	  		<!-- 챌린지 멤버 관계 -->
+	  		<association property="challengeMemberInfo" javaType="ChallengeMember">
+	  			<id 	column="cgm_num" property="cgmNum" />	  				  		
+	  			<result column="mbr_id" property="mbrId" />	  				  			  			  			
+	  		</association>	
+	  		
+	  		<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association> 	
+	  		
+	  		<!-- 경고카테고리 관계 -->
+	  		<association property="warningCategoryInfo" javaType="WarningCategory">
+	  			<id 	column="cmwc_num" property="cmwcNum" />	  			
+	  			<result column="cmwc_category" property="cmwcCategory" />	  				  				  			  			  			
+	  		</association>
+	  		
+	  		<!-- 발생위치카테고리 관계 -->
+	  		<association property="occuranceLocationInfo" javaType="OccuranceLocation">
+	  			<id 	column="olc_code" property="olcCode" />	  			
+	  			<result column="olc_name" property="olcName" />	  				  				  			  			  			
+	  		</association> 		 	
+  		</resultMap>
+  		<!-- 챌린지 리더가 경고한 내역 조회 -->
+		<select id="getWarninglist" resultMap="WarningResultMap">
+			/* 챌린지 리더가 경고한 내역 조회 */
+			
+			SELECT
+				lcmwl_num,
+				cg.cg_name,
+				m.mbr_name,
+				cmwc_category,
+				olc_name,
+				lcmwl_bc_num,
+				lcmwl_date
+			FROM leader_challenge_mbr_warning_log lcmwl INNER JOIN challenge_group cg
+				ON lcmwl.cg_num = cg.cg_num
+				INNER JOIN challenge_group_member cgm
+				ON lcmwl.cgm_num = cgm.cgm_num
+				INNER JOIN `member` m
+				ON cgm.mbr_id = m.mbr_id
+				INNER JOIN challenge_mbr_warning_category cmwc
+				ON lcmwl.cmwc_num = cmwc.cmwc_num
+				INNER JOIN occurance_location_code olc
+				ON lcmwl.olc_code = olc.olc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND lcmwl_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND lcmwl_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	lcmwl.lcmwl_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntWarninglist" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM leader_challenge_mbr_warning_log lcmwl INNER JOIN challenge_group cg
+				ON lcmwl.cg_num = cg.cg_num
+				INNER JOIN challenge_group_member cgm
+				ON lcmwl.cgm_num = cgm.cgm_num
+				INNER JOIN `member` m
+				ON cgm.mbr_id = m.mbr_id
+				INNER JOIN challenge_mbr_warning_category cmwc
+				ON lcmwl.cmwc_num = cmwc.cmwc_num
+				INNER JOIN occurance_location_code olc
+				ON lcmwl.olc_code = olc.olc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND lcmwl_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND lcmwl_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	lcmwl.lcmwl_num
+		</select>
+		
+		
+		<resultMap type="Reward" id="RewardResultMap">
+  			<id column="rph_num" property="rphNum" />
+  			<result column="cg_num" property="cgNum" />  		
+  			<result column="mbr_id" property="mbrId" />
+  			<result column="rh_num" property="rhNum" />
+  			<result column="rph_reward_selected_date" property="rphRewardSelectedDate" />
+  			<result column="rph_admin" property="rphAdmin" />
+  			<result column="rph_reward_payment_date" property="rphRewardPaymentDate" />  			
+  			
+  			<!-- 챌린지 관계 -->
+	  		<association property="challengeInfo" javaType="Challenge">
+	  			<id 	column="cg_num" property="cgNum" />	  				  			
+	  			<result column="cg_name" property="cgName" />	  				  			  			
+	  		</association>	
+	  		
+	  		<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association>   			 	
+	
+	  		<!-- 보상내역 관계 -->
+	  		<association property="rewardHistoryInfo" javaType="RewardHistory">
+	  			<id 	column="rh_num" property="rhNum" />	  			
+	  			<result column="rh_target" property="rhTarget" />	  				  				  			  			  			
+	  			<result column="rh_reward_type" property="rhRewardType" />	  				  				  			  			  			
+	  			<result column="rh_rank" property="rhRank" />
+	  			<result column="rh_point" property="rhPoint" />
+	  			<result column="rhName" property="rhName" />
+	  				  				  				  			  			  				  			 				  				  			  			  		
+	  		</association>   			 	
+  		</resultMap>
+  		<!-- 챌린지 보상지급기록 조회 -->
+		<select id="getRewardList" resultMap="RewardResultMap">
+			/* 챌린지 보상지급기록 조회 */
+			
+			SELECT
+				rph_num,
+				cg.cg_name,
+				m.mbr_name,
+				CONCAT_WS(' ',rh.rh_target,rh.rh_reward_type,rh.rh_rank) AS rhName,
+				rph_reward_selected_date,
+				rph_admin,
+				rh.rh_point,
+				rph_reward_payment_date 
+			FROM reward_payment_history rph INNER JOIN challenge_group cg
+				ON rph.cg_num = cg.cg_num
+				INNER JOIN `member` m
+				ON rph.mbr_id = m.mbr_id
+				INNER JOIN reward_history rh
+				ON rph.rh_num = rh.rh_num
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rph_reward_selected_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rph_reward_selected_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	rph.rph_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntRewardList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM reward_payment_history rph INNER JOIN challenge_group cg
+				ON rph.cg_num = cg.cg_num
+				INNER JOIN `member` m
+				ON rph.mbr_id = m.mbr_id
+				INNER JOIN reward_history rh
+				ON rph.rh_num = rh.rh_num
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND rph_reward_selected_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND rph_reward_selected_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	rph.rph_num
+		</select>
+  </mapper>

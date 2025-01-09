@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+	  
 	<div class="modal-overlay" id="cl-create-modal-overlay" th:fragment="create-challenge">
         <div class="modal-container">
             <div class="modal-header">
@@ -8,94 +9,97 @@
                 <!-- <button id="modalCloseBtn">&times;</button> -->
                 <img id="modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
             </div>
-            <hr>
-            <div class="modal-body">
-                <!-- 이미지 업로드 영역 -->
-                <div class="upload-section">
-                    <div class="upload-box">
-                        <img id="cl-create-preview-image" src="https://velog.velcdn.com/images/mekite/post/da056d49-1aaa-4f12-9913-b1ddd137e7d5/image.png" alt="사진입력">
-                        <p>사진을 끌어서 이곳에 넣어주세요</p>
-                        <button class="upload-btn" id="cl-create-upload-btn">파일 불러오기</button>
-                        <!-- 파일 input 태그 -->
-                        <input type="file" id="cl-create-file-input" accept="image/*" style="display: none;">
-                    </div>
-                    <div class="preview-box" id="cl-create-preview-container" style="display: none;">
-                        <img src="" alt="업로드된 이미지 미리보기" id="cl-create-preview-image">
-                    </div>
-                </div>
-    
-                <!-- 정보 입력 영역 -->
-                <div class="feed-info">
-                    <div class="challenge-create-info">
-                        <div class="input-block">
-                            <span>챌린지 이름</span>
-                            <input type="text" placeholder="이름을 입력해주세요">
-                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
-                        </div>
-                        <div class="input-block">
-                            <span>챌린지 주제</span>
-                            <select id="select-subject">
-                                <option value="diet">다이어트</option>
-                                <option value="glutenFree">글루텐프리</option>
-                                <option value="highProtein">고단백질</option>
-                                <option value="vegan">비건</option>
-                                <option value="vegetarian">채식</option>
-                                <option value="healthyMeal">건강식단</option>
-                                <option value="lowCarbohydrate">저탄고지</option>
-                            </select>
-                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
-                        </div>
-                        <div class="input-block">
-                            <span>난이도</span>
-                            <select id="select-level">
-                                <option value="easy">쉬움</option>
-                                <option value="normal">보통</option>
-                                <option value="hard">어려움</option>
-                            </select>
-                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
-                        </div>
-                        <div class="input-block">
-                            <span>시작일</span>
-                            <input type="text">
-                            <input class="date" type="date">
-                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
-                        </div>
-                        <div class="input-block">
-                            <span>참여인원</span>
-                            <select id="select-subject" placeholder="참여인원을 선택해주세요">
-                                <option value="5">5인(최소인원)</option>
-                                <option value="6">6인</option>
-                                <option value="7">7인</option>
-                                <option value="8">8인</option>
-                                <option value="9">9인</option>
-                                <option value="10">10인</option>
-                                <option value="11">11인</option>
-                                <option value="12">12인</option>
-                                <option value="13">13인</option>
-                                <option value="14">14인</option>
-                                <option value="15">15인</option>
-                                <option value="16">16인</option>
-                                <option value="17">17인</option>
-                                <option value="18">18인</option>
-                                <option value="19">19인</option>
-                                <option value="20">20인</option>
-                            </select>
-                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
-                        </div>
-                    </div>
-                    <textarea placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
-                    <div class="text-box-under">
-                        <button type="button" id="emoji-btn">
-                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
-                        </button>
-                        <div class="text-counter">
-                            <span id="text-count">0</span>
-                            <span>/500</span>
-                        </div>
-                    </div>
-                    <button type="submit" class="submit-btn"><p>생성</p></button>
-                </div>
-            </div>
+            <hr id="header-section">
+           	<form id="addChallenge" th:action="@{/user/list/createchallengerequest}" method="post">
+	            <div class="modal-body">
+	                <!-- 이미지 업로드 영역 -->
+	                <div class="upload-section">
+	                    <div class="upload-box">
+	                        <img id="cl-create-preview-image" src="https://velog.velcdn.com/images/mekite/post/da056d49-1aaa-4f12-9913-b1ddd137e7d5/image.png" alt="사진입력">
+	                        <p>사진을 끌어서 이곳에 넣어주세요</p>
+	                        <button class="upload-btn" id="cl-create-upload-btn">파일 불러오기</button>
+	                        <!-- 파일 input 태그 -->
+	                        <input type="file" id="cl-create-file-input" accept="image/*" style="display: none;">
+	                    </div>
+	                    <div class="preview-box" id="cl-create-preview-container" style="display: none;">
+	                        <img src="" alt="업로드된 이미지 미리보기" id="cl-create-preview-image">
+	                    </div>
+	                </div>
+	    
+	                <!-- 정보 입력 영역 -->
+	                <div class="feed-info">
+	                    <div class="challenge-create-info">
+	                        <div class="input-block">
+	                            <span>챌린지 이름</span>
+	                            <input type="text" class="form-control"
+	                            id="ChallengeName" name="ChallengeName" placeholder="이름을 입력해주세요">
+	                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+	                        </div>
+	                        <div class="input-block">
+	                            <span>챌린지 주제</span>
+	                            <select id="select-subject">
+	                                <option value="diet">다이어트</option>
+	                                <option value="glutenFree">글루텐프리</option>
+	                                <option value="highProtein">고단백질</option>
+	                                <option value="vegan">비건</option>
+	                                <option value="vegetarian">채식</option>
+	                                <option value="healthyMeal">건강식단</option>
+	                                <option value="lowCarbohydrate">저탄고지</option>
+	                            </select>
+	                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+	                        </div>
+	                        <div class="input-block">
+	                            <span>난이도</span>
+	                            <select id="select-level">
+	                                <option value="easy">쉬움</option>
+	                                <option value="normal">보통</option>
+	                                <option value="hard">어려움</option>
+	                            </select>
+	                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+	                        </div>
+	                        <div class="input-block">
+	                            <span>시작일</span>
+	                            <input type="text">
+	                            <input class="date" type="date">
+	                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+	                        </div>
+	                        <div class="input-block">
+	                            <span>참여인원</span>
+	                            <select id="select-subject" placeholder="참여인원을 선택해주세요">
+	                                <option value="5">5인(최소인원)</option>
+	                                <option value="6">6인</option>
+	                                <option value="7">7인</option>
+	                                <option value="8">8인</option>
+	                                <option value="9">9인</option>
+	                                <option value="10">10인</option>
+	                                <option value="11">11인</option>
+	                                <option value="12">12인</option>
+	                                <option value="13">13인</option>
+	                                <option value="14">14인</option>
+	                                <option value="15">15인</option>
+	                                <option value="16">16인</option>
+	                                <option value="17">17인</option>
+	                                <option value="18">18인</option>
+	                                <option value="19">19인</option>
+	                                <option value="20">20인</option>
+	                            </select>
+	                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
+	                        </div>
+	                    </div>
+	                    <textarea placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
+	                    <div class="text-box-under">
+	                        <button type="button" id="emoji-btn">
+	                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+	                        </button>
+	                        <div class="text-counter">
+	                            <span id="text-count">0</span>
+	                            <span>/500</span>
+	                        </div>
+	                    </div>
+	                    <button type="submit" class="submit-btn"><p>생성</p></button>
+	                </div>
+	            </div>
+           	</form>
         </div>
     </div>
 </html>

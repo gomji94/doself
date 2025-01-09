@@ -6,84 +6,38 @@
     <link th:href="@{/assets/css/medicine/list.css}" rel="stylesheet" type="text/css" />
     <link th:href="@{/assets/css/medicine/request-modal.css}" rel="stylesheet" type="text/css" />
     <link th:href="@{/assets/css/medicine/confirm-modal.css}" rel="stylesheet" type="text/css" />
-    <title>medicine info</title>
+    <title>nutrition</title>
 </head>
 		
 	<th:block layout:fragment="content-body">
    <div class="view-container">
         <section class="tag">
-            <div class="filters">
-                <input class="text" type="text" placeholder="영양제 이름을 입력해주세요">
-                <button class="search"></button>
-            </div>
+        		<form th:action="@{/medicine/search}" method="get" id="searchForm">
+		            <div class="filters">
+		                <input class="text" type="text" placeholder="영양제 이름을 입력해주세요" id="inputmedicineName" name="medicineName">
+		                <button type="submit" class="search"></button>
+		            </div>
+		        </form>
             <div class="create-button">
                 <button>등록 요청</button>
             </div>
         </section>
         <!-- 카드 목록 -->
-        <section class="card-grid">
-            <!-- 카드 1 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/057/954/img/17954057_1.jpg?_v=20221007125357" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>루테인 지아잔틴 아스타잔틴</span>
-                        <p>고려은단</p>
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 2 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/439/814/img/4814439_1.jpg?_v=20221213133841" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>락토핏 생유산균 골드</span>
-                        <p>종근당건강</p>
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 3 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/574/219/img/4219574_1.jpg?_v=20230609105131" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>NOW Food 오메가3</span>
-                        <p>나우푸드</p>
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 4 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/557/762/img/12762557_2.jpg?_v=20230705164932" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>혈행건강 프로메가 알티지 오메가3 듀얼</span>
-                        <p>종근당건강</p>          
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 5 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://img.danawa.com/prod_img/500000/606/985/img/5985606_1.jpg" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>칼슘앤마그네슘비타민D아연</span>
-                        <p>종근당건강</p>                                 
-                    </div>
-                </div>
-            </a>
-            <!-- 카드 6 -->
-            <a th:href="@{/medicine/view}" class="info-link">
-                <div class="card">
-                    <img src="https://thumbnail9.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/6657/53e36085d559466740676d52921e39f03d116616dcea889288ff281c09a4.jpg" alt="카드 이미지">
-                    <div class="card-content">
-                        <span>글루코사민 콘드로이틴 MSM with OptiMSM</span>
-                        <p>닥터스베스트</p>                        
-                    </div>
-                </div>
-            </a>
-
-        </section>
+        <th:block th:if="${medicineList !=null}">
+	        <section class="card-grid" >
+	            <!-- 카드 1 -->
+	            <a th:each="l : ${medicineList}" th:href="@{/medicine/view(medicineKeyNum=${l.medicineKeyNum})}" class="info-link" >
+	                <div class="card">
+	                    <img th:src="${l.medicineImg}" alt="카드 이미지">
+	                    <div class="card-content">
+	                        <span th:text="${l.medicineName}"></span>
+	                        <p th:text="${l.medicineBrand}"></p>
+	                    </div>
+	                </div>
+	            </a>
+	
+	        </section>
+        </th:block>
     </div>
     
         <!-- 모달창 여기부터 복사 -->
@@ -94,17 +48,16 @@
                     <div class="body-content">
                         <div class="body-titlebox">
                             <div id="modal-request-title">등록 요청</div>
-                            <form id="modal-request-form">
+                            <form id="modal-request-form" th:action="@{/medicine/createrequest}" method="post">
                                 <div>
                                     <span>분류</span>
                                     <div id="request-cate-container">
-                                        <input type='radio' name='request-cate' value='food' />음식
-                                        <input type='radio' name='request-cate' value='nutritionalSupplements' />영양제
+                                        <input type='radio' id="requestCategory" name='requestCategory' value='nutritionalSupplements' checked="checked"/>영양제
                                     </div>
                                 </div>
                                 <div>
                                     <span>이름</span>
-                                    <input id="modal-request-form__input" type="text" />
+                                    <input id="modal-request-form__input" type="text" name="requestItemName" />
                                 </div>
                             </form>
                             <div id="modal-request-form__buttons">
@@ -146,7 +99,7 @@
     <th:block layout:fragment="customJs">
     <script th:src="@{/assets/js/layout.js}"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script th:src="@{/assets/js/medicine/modal.js}"></script>
+    <script th:src="@{/assets/js/food/modal.js}"></script>
     <script th:src="@{/assets/js/medicine/list.js}"></script>
     </th:block> 
 </html>

@@ -11,10 +11,10 @@
 	<header class="header">
         <div class="container">
             <div class="logo">
-                <a href="#">DoSelf</a>
+                <a th:href="@{/}">DoSelf</a>
             </div>
             <nav class="nav">
-                <a th:href="@{#}" class="nav-link">로그인</a>
+                <a th:href="@{/login}" class="nav-link">로그인</a>
             </nav>
         </div>
     </header>
@@ -22,7 +22,10 @@
 	
 	<!-- 메인 이미지 -->
 	<div class="">
-		
+		&nbsp&nbsp&nbsp&nbsp&nbsp<a th:href="@{/food/list}">user</a>
+		<br>
+		<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp<a th:href="@{/admin/member/list}">admin</a>
 	</div>
 	
 	<!-- 사이공백 -->

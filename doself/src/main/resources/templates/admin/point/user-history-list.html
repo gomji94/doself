@@ -16,19 +16,25 @@
 			<div class="card mb-4">
                     <header class="card-header">
                         <div class="row gx-3">
-                            
-                            <div class="col-lg-4 col-md-6 me-auto">
-                              
-                            </div>
                             <div class="col-lg-6 col-6 col-md-3">
-                              <div class="date-container">
-                                <p>날짜</p>
-                                <input type="date" class="date" id="startDate" /> ~
-                                <input type="date" class="date" id="endDate" />
-                              </div>
-                            </div>                            
-                                <input class="searchBtn" type="button" value="검색" onclick="filterData()">                            
-                          </div>
+                                <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
+	                                <option value="peplName">상품명</option>
+	                                <option value="mbrName">회원이름</option>
+	                            </select>
+                            </div>
+                           <!-- 검색어 입력 -->
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
+                                <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
+                                <datalist id="searchSuggestions"></datalist>                               
+                                
+                                <p class="searchLeft align-content">날짜</p>
+                                <input type="date" class="date date-container searchLeft" id="startDate" />
+                                <p class="searchLeft">~</p> 
+                                <input type="date" class="date date-container searchLeft" id="endDate" />
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
+                            </div>
+                        </div>
                     </header>
                     <!-- card-header end// -->
                     <div class="card-body">
@@ -42,8 +48,15 @@
                                         <th scope="col">사용날짜</th>                                                                              
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
+                                <tbody>
+                                    <th:block th:if="${pointUserHistoryList != null}">
+                                    	<tr th:each="l : ${pointUserHistoryList}" class="text-center">
+                                    		<td th:text="${l.pumhNum}"></td>
+                                    		<td th:text="${l.pointInfo.peplName}"></td>
+                                    		<td th:text="${l.memberInfo.mbrName}"></td>
+                                    		<td th:text="${l.pumhDate}"></td>
+                                    	</tr>                       
+                                    </th:block>
                                 </tbody>
                             </table>
                         </div>

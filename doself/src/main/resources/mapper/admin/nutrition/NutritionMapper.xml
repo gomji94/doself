@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.admin.nutrition.mapper.NutritionMapper">    
+  		
+  		<resultMap type="Nutrition" id="NutritionRequestResultMap">
+  			<id column="nirr_num" property="nirrNum" />
+  			<result column="mbr_id" property="mbrId" />  		
+  			<result column="nirr_content" property="nirrContent" />
+  			<result column="nirr_date" property="nirrDate" />
+  			<result column="nirr_category" property="nirrCategory" />
+  			<result column="sc_code" property="scCode" />
+  			<result column="prr_admin" property="prrAdmin" />
+  			<result column="nirr_processing_date" property="nirrProcessingDate" />
+  			<result column="nirr_reason_content" property="nirrReasonContent" />
+  			
+  			<!-- 멤버 관계 -->
+	  		<association property="memberInfo" javaType="Member">
+	  			<id 	column="mbr_id" property="mbrId" />	  			
+	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  		</association> 	
+	  		  			 	
+  			<!-- 처리상태카테고리 관계 -->
+	  		<association property="statusCategoryInfo" javaType="StatusCategory">
+	  			<id 	column="sc_code" property="scCode" />	  			
+	  			<result column="sc_status" property="scStatus" />	  				  				  			  			  			
+	  		</association> 	  			 	
+  		</resultMap>
+  		
+  		<!-- 영양정보 등록 요청 조회 -->
+		<select id="getNutritionRequestList" resultMap="NutritionRequestResultMap">
+			/* 영양정보 등록 요청 조회 */
+			
+			SELECT
+				nirr_num,
+				m.mbr_name,
+				nirr_content,
+				nirr_date,
+				nirr.nirr_category,
+				sc.sc_status,
+				prr_admin,
+				nirr_processing_date,
+				nirr_reason_content
+			FROM nutrition_info_registration_request nirr INNER JOIN `member` m
+				ON nirr.mbr_id = m.mbr_id
+				INNER JOIN status_category sc
+				ON nirr.sc_code = sc.sc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND nirr_processing_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND nirr_processing_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	nirr.nirr_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntNutritionRequestList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM nutrition_info_registration_request nirr INNER JOIN `member` m
+				ON nirr.mbr_id = m.mbr_id
+				INNER JOIN status_category sc
+				ON nirr.sc_code = sc.sc_code
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND nirr_processing_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND nirr_processing_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	nirr.nirr_num	   
+		</select>
+		
+  		<!-- 특정 영양정보 등록 조회 -->
+  		<select id="getNutritionByNirrNum" resultMap="NutritionRequestResultMap">
+  			SELECT
+	  			nirr_num,
+	  			mbr_id,
+	  			nirr_content,
+	  			nirr_date,
+	  			nirr_category,
+	  			sc_code,
+	  			prr_admin,
+	  			nirr_processing_date,
+	  			nirr_reason_content
+			FROM nutrition_info_registration_request
+			WHERE
+			 nirr_num = #{nirrNum};
+  		</select>
+  		
+  		<resultMap type="FoodNutritionInfo" id="FoodNutritionInfoResultMap">
+  			<id column="mni_num"			 	property="mniNum" />
+  			<result column="mni_name" 			property="mniName" />  		
+  			<result column="mni_picture" 		property="mniPicture" />
+  			<result column="mni_weight" 		property="mniWeight" />
+  			<result column="mni_kcal" 			property="mniKcal" />
+  			<result column="mni_carbo" 			property="mniCarbo" />
+  			<result column="mni_protein" 		property="mniProtein" />
+  			<result column="mni_fat" 			property="mniFat" />
+  			<result column="mni_sugar" 			property="mniSugar" />
+  			<result column="mni_cholesterol"	property="mniCholesterol" />
+  			<result column="mni_sodium" 		property="mniSodium" />
+  			<result column="mni_calcium" 		property="mniCalcium" />
+  			<result column="mni_iron" 			property="mniIron" />  			
+  		</resultMap>
+  		<!-- 음식 영양정보 등록 -->
+  		<insert id="createFoodNutritionList" parameterType="FoodNutritionInfo">
+			INSERT INTO meal_nutrition_info(
+				mni_num,
+				mni_name,
+				mni_picture,
+				mni_weight,
+				mni_kcal,
+				mni_carbo,
+				mni_protein,
+				mni_fat,
+				mni_sugar,
+				mni_cholesterol,
+				mni_sodium,
+				mni_calcium,
+				mni_iron
+			) VALUES (
+				#{mniNum},
+				#{mniName},
+				#{mniPicture},
+				#{mniWeight},
+				#{mniKcal},
+				#{mniCarbo},
+				#{mniProtein},
+				#{mniFat},
+				#{mniSugar},
+				#{mniCholesterol},
+				#{mniSodium},
+				#{mniCalcium},
+				#{mniIron}
+			)
+		</insert>
+		<!-- 음식영양정보 등록후 등록요청관리 업데이트 -->
+		<update id="modifyFoodNutritionList" parameterType="FoodNutritionInfo">
+			UPDATE nutrition_info_registration_request
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				nirr_num = #{nirrNum},						
+				nirr_processing_date = now(),
+				sc_code = 'sc_003'				  			
+  			</trim>
+  			WHERE
+  				nirr_num = #{nirrNum};
+		</update> 
+		
+  		<!-- 영양제 영양정보 등록 -->
+  		<insert id="createNutritionList" parameterType="NutritionInfo">
+			INSERT INTO dietary_supplement_info (
+				dsi_num,
+				dsb_num,
+				dsi_name,
+				dsi_efficacy,
+				dsi_picture,
+				dsi_daily_recommended_intake
+			) VALUES (
+				#{dsiNum},
+				#{dsbNum},
+				#{dsiName},
+				#{dsiEfficacy},
+				#{dsiPicture},
+				#{dsiDailyRecommendedIntake}
+			)
+		</insert>
+		<!-- 영양제영양정보 등록후 등록요청관리 업데이트 -->
+		<update id="modifyNutritionList" parameterType="NutritionInfo">
+			UPDATE nutrition_info_registration_request
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				nirr_num = #{nirrNum},						
+				nirr_processing_date = now(),
+				sc_code = 'sc_003'				  			
+  			</trim>
+  			WHERE
+  				nirr_num = #{nirrNum};
+		</update> 
+		
+		<!-- 음식 영양정보 조회 -->
+		<select id="getFoodNutritionList" resultMap="FoodNutritionInfoResultMap">		
+			SELECT
+				mni_num,
+				mni_name,
+				mni_picture,
+				mni_weight,
+				mni_kcal,
+				mni_carbo,
+				mni_protein,
+				mni_fat,
+				mni_sugar,
+				mni_cholesterol,
+				mni_sodium,
+				mni_calcium,
+				mni_iron
+			FROM meal_nutrition_info
+			<where>
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND pumh_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND pumh_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	mni_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntFoodNutritionList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM meal_nutrition_info
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND pumh_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND pumh_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	mni_num		      
+		</select>
+		
+		
+		<resultMap type="NutritionInfo" id="NutritionInfoResultMap">
+  			<id column="dsi_num"			 				property="dsiNum" />
+  			<result column="dsb_num" 						property="dsbNum" />  		
+  			<result column="dsi_name" 						property="dsiName" />
+  			<result column="dsi_efficacy" 					property="dsiEfficacy" />
+  			<result column="dsi_daily_recommended_intake"	property="dsiDailyRecommendedIntake" />  			 		
+  		</resultMap>
+		
+		<!-- 영양제 영양정보 조회 -->
+		<select id="getNutritionList" resultMap="NutritionInfoResultMap">
+			
+			SELECT 
+				dsi_num, 
+				dsb_num, 
+				dsi_name, 
+				dsi_efficacy, 
+				dsi_picture, 
+				dsi_daily_recommended_intake
+			FROM dietary_supplement_info
+			<where>
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND pumh_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND pumh_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	dsi_num
+		    LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+		</select>
+		
+		<!-- 페이징 -->
+		<select id="getCntNutritionList" resultType="int">
+			/* 멤버 총개수 */
+			SELECT 
+				count(*)
+			FROM dietary_supplement_info
+			<where>
+				1=1
+				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
+			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
+			    </if>
+			    <if test="startDate != null and startDate != ''">
+			        AND pumh_date > #{startDate}
+			    </if>
+			    <if test="endDate != null and endDate != ''">
+			        AND pumh_date <![CDATA[ < ]]> #{endDate}
+			    </if>			
+			</where>
+		    ORDER BY
+		    	dsi_num		      
+		</select>		
+		
+		
+		<!-- 영양정보 등록요청 반려 -->
+  		<update id="modifyNutrition" parameterType="Nutrition">
+  			UPDATE nutrition_info_registration_request
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				nirr_num = #{nirrNum},		
+				<if test="nirrReasonContent != null and nirrReasonContent != ''">
+					nirr_reason_content = #{nirrReasonContent},
+				</if>
+				nirr_processing_date = now(),
+				sc_code = 'sc_002'				  			
+  			</trim>
+  			WHERE
+  				nirr_num = #{nirrNum};
+  		</update>
+  </mapper>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+<head>
+	<link th:href="@{/assets/css/mypage/point-history.css}" rel="stylesheet" type="text/css" />
+</head>			
+		
+	
+	<th:block layout:fragment="content-body">
+        <!-- 왼쪽 사이드바 -->
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a th:href="@{/mypage/member/info}" class="menu-item">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <div>my 정보 수정</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/tickethistory}" class="menu-item">
+                        <i class="fa-solid fa-ticket"></i>
+                        <div>티켓 조회</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/pointhistory}" class="menu-item">
+                        <i class="fa-brands fa-bitcoin"></i>
+                        <div>포인트 조회</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/medicinearlam}" class="menu-item">
+                        <i class="fa-solid fa-capsules"></i>
+                        <div>영양제 알림 체크</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/feedlist}" class="menu-item">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <div>my 게시물</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 메인 콘텐츠 -->
+    <main id="main-content">
+        <div class="main-container-title">
+	        <div id="main-container-title__eng">Payment</div>
+	        <div id="main-container-title__kor">포인트조회</div>
+        </div>
+	    <th:block th:object="${memberInfo}">
+           <div id="main-user-info">
+               <div id = "profile-image">
+                   <a href="#">
+                       <img th:src="*{memberImage}" alt="프로필 이미지" class="profile-image">
+                   </a>
+               </div>   
+               <div id="profile-userId" th:text="*{memberId}"></div>
+           		<div id = "unuse-point">
+                  <div id="remaining-point"> 잔여 포인트 :
+                  <strong th:text="*{memberPoint}"></strong></div>
+	       	   </div>       
+           </div>
+               <form class="search-form" th:action="@{/mypage/pointhistory}">
+                   <label for="start-date">조회기간 설정:</label>
+                   <input type="date" id="start-date" th:value="${startDate}" name="startDate">
+                   ~
+                   <input type="date" id="end-date" th:value="${endDate}" name="endDate">
+                   <button type="submit" class="btn-search">검색</button>
+               </form>
+               <div class="ticket-table-container">
+                   <table class="ticket-table">
+	                     <thead>
+	                        <tr>
+	                          <th>날짜</th>
+	                          <th>내용</th>
+	                          <th>구분</th>
+	                          <th>포인트</th>
+	                        </tr>
+	                      </thead>
+                     	  <tbody>
+	                           <th:block th:if="${pointList != null}">
+		                       		<tr th:each="l : ${pointList}"> 
+		                       			<td th:text="${l.pointTotalDate}"></td>
+		                       			<td th:text="${l.pointDetail}"></td>
+		                       			<td th:text="${l.pointUseChk}"></td>
+		                       			<td th:text="${l.pointAmount}"></td>
+		                       		</tr>
+                                </th:block>
+                           		<th:block th:unless="${pointList}">
+									<tr>
+										<td colspan="4">구매한 티켓 이력이 없습니다.</td>
+									</tr>
+								</th:block>
+		             	   </tbody>
+                    </table>
+                    <div class="pagination">
+                    	<ul class="pagination">
+                    		<li><a th:href="@{/mypage/pointHistory}">&lt;&lt;</a></li>
+                    		<li th:classappend="${currentPage < 2} ? 'disabled'">
+                    			<a th:href="@{/mypage/pointHistory(currentPage=${currentPage-1})}">&lt;</a>
+                    		</li>
+	                    	<th:block th:each="num:${#numbers.sequence(startPageNum, endPageNum)}">
+	                    		<li th:classappend="${num == currentPage} ? 'active'">
+	                    		<a th:href="@{/mypage/pointhistory(currentPage=${num})}" th:text ="${num}"></a>    
+	                    	</th:block>
+	                      	<li th:classappend = "${currentPage eq lastPage} ? 'disabled'">
+	                      		<a th:href="@{/mypage/pointhistory(currentPage=${currentPage + 1})}">&gt;</a>
+	                    	</li>	
+	                      	<li><a th:href="@{/mypage/pointhistory(currentPage=${lastPage})}">&gt;&gt;</a></li>
+                    	</ul>
+                    </div>
+                 </div>
+                 
+			</th:block>
+		 </main>
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    <script th:src="@{/assets/js/layout.js}"></script>
+    </th:block> 
+</html>

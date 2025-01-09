@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.user.community.mapper.CommunityMapper">
+  
+  	<resultMap type="Article" id="ArticleResultMap">
+  		<id 	column="fb_num" 				property="articleKeyNum"/>
+  		<id 	column="mbr_id" 				property="articleAuthorId"/>
+  		<id 	column="fbctg_name"				property="articleCategory"/>
+  		<result column="fb_title" 				property="articleTitle"/>
+  		<result column="fb_content" 			property="articleContent"/>
+  		<result column="fb_date" 				property="articleCreationDate"/>
+ 		<result column="fb_attachment_file" 	property="articleAttachmentFile"/>
+  		<result column="fb_views" 				property="articleViewCnt"/>
+  		<result column="fb_like" 				property="articleLike"/>
+  	</resultMap>
+  	
+  	<!-- 게시글 총 갯수 행 조회 -->
+  	<select id="getCntOfArticle" resultType="int">
+  		SELECT COUNT(*)
+		FROM free_board
+		ORDER BY fb_date DESC;
+  	</select>
+  	
+  	<!-- 게시글 목록 조회 -->
+  	<select id="getArticleList" resultMap="ArticleResultMap" parameterType="Pageable">
+		SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
+		FROM free_board fb INNER JOIN free_board_category fbc
+		USING(fbctg_code)
+		ORDER BY fb_date DESC, fb_num DESC
+		LIMIT #{rowPerPage} OFFSET #{offset}; 
+  	</select>
+  	
+  	<select id="getArticleCategoryList" resultType="Map">
+  		SELECT 
+  			CAST(SUBSTRING_INDEX(fbctg_code, '_', -1) AS UNSIGNED) AS categoryCode, 
+  			fbctg_name  AS categoryName
+		FROM free_board_category
+  	</select>
+  	
+	<!-- 카테고리 별 게시글 총 갯수 행 조회 -->
+  	<select id="getCntOfArticleByCategory" resultType="int" parameterType="int">
+  		SELECT COUNT(*)
+		FROM free_board fb INNER JOIN free_board_category fbc
+		USING(fbctg_code)
+		WHERE fbc.fbctg_code = CONCAT('fbcate_00', #{categoryCode})
+		ORDER BY fb_date DESC;
+  	</select>
+  	
+  	<select id="getArticleListByCategory" resultMap="ArticleResultMap" parameterType="Map">
+  		SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
+		FROM free_board fb INNER JOIN free_board_category fbc
+		USING(fbctg_code)
+		WHERE fbc.fbctg_code = CONCAT('fbcate_00', #{categoryCode})
+		ORDER BY fb_date DESC
+		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+  	</select>
+  	
+  	 <!-- 검색 게시글 총 갯수 행 조회 -->
+	  	<select id="getCntOfArticleBySearch" parameterType="Map" resultType="int">
+	  		SELECT COUNT(*)
+			FROM free_board fb
+			<where>
+				<if test="searchArticle.days != null">
+					fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
+				</if>
+				<if test="searchArticle.searchValue != null">
+					AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
+				</if>
+			</where>
+			ORDER BY fb_date DESC;
+	  	</select>
+  	
+  	<!-- 게시글 검색 -->
+  	<select id="getArticleListBySearch" parameterType="Map" resultMap="ArticleResultMap">
+	  	SELECT 
+	  		CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, 
+	  		fb.mbr_id, fbc.fbctg_name, 
+	  		fb.fb_title, 
+	  		fb.fb_content, 
+	  		fb.fb_date, 
+	  		fb.fb_views, 
+	  		fb.fb_attachment_file, 
+	  		fb.fb_like
+		FROM 
+			free_board fb INNER JOIN free_board_category fbc
+			USING(fbctg_code)
+		<where>
+			<if test="searchArticle.days != null">
+				fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
+			</if>
+			<if test="searchArticle.searchValue != null">
+				AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY 
+			fb_date DESC, fb_num DESC
+		LIMIT 
+			#{pageable.rowPerPage} OFFSET #{pageable.offset};
+  	</select>
+  	
+  	<select id="getArticleDetail" resultMap="ArticleResultMap" parameterType="String">
+	  	SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
+		FROM free_board fb INNER JOIN free_board_category fbc
+		USING(fbctg_code)
+		WHERE fb.fb_num = #{articleKeyNum}
+  	</select>
+  	
+  	
+</mapper>

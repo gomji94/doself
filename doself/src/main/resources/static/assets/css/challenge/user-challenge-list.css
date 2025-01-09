@@ -12,12 +12,27 @@ html, body {
     flex-direction: column; /* 세로 정렬 */
 }
 
+p {
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.submit-btn {
+	padding: 0px !important;
+}
+
 section.content-main {
     display: contents !important;
 }
 
 .main-container {
 	flex: 1;
+}
+
+.page-item.active .page-link {
+	background-color: #D7E790 !important;
+	color: #618141 !important;
+	border-color: #a9bd4d !important;
 }
 
 /* 메인 컨테이너 */
@@ -47,7 +62,7 @@ section.content-main {
 
 .tag-buttons button {
     /* background-color: #D1E480; */
-    background-color: #D3D3D3;
+    background-color: #D2D2D2;
     color: #fff;
     border: none;
     border-radius: 65px;
@@ -56,6 +71,7 @@ section.content-main {
     width: 110px;
     height: 32px;
     font-weight: bold;
+    margin-bottom: -1px;
 }
 
 .tag-buttons button:hover {
@@ -89,25 +105,28 @@ section.content-main {
 /* 카드 스타일 */
 .card {
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
     overflow: hidden;
     transition: transform 0.3s;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
 .card img {
     width: 100%;
+    border-radius: 10px;
     height: 200px;
     object-fit: cover;
 }
 
 .card-content {
     /* position: relative; */
-    padding: 15px;
+    padding: 18px 15px 15px 15px;
     /* display: flex;
     flex-direction: column;
     gap: 10px; */
@@ -115,40 +134,54 @@ section.content-main {
 
 .card-content .tag-container {
     display: flex;
-    align-items: center;
     gap: 10px;
-    background: #EDEDED;
-    border-radius: 65px;
-    width: 260px;
-    margin-left: 7.9px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2px;
 }
 
 .card-content .challenge-tag {
     background: #D1E480;
     color: #618141;
     border-radius: 65px;
-    width: 120px;
+    max-width: 120px;
+    min-width: 102px;
+    width: 100%;
     height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.card-content .tag-a {
+	z-index: 5;
+    text-decoration-line: none;
+}
+
 .card-content .challenge-name {
-    background: #EDEDED;
     color: #515151;
-    border-radius: 65px;
-    width: 120px;
-    height: 30px;
+    height: auto;
     display: flex;
     box-sizing: border-box;
     justify-content: center;
-    align-items: center;
-    margin-left: -7px;
+    margin-left: 0px;
+    white-space: nowrap;
+}
+
+.challenge-name.back-ground {
+    background: #edededba;
+    width: auto;
+    min-width: 111px;
+    margin-left: -36px;
+    height: 30px;
+    border-radius: 80px;
+    padding: 0px 20px 0px 38px;
+    white-space: nowrap;
 }
 
 .card-content .challenge-level, .challenge-start-date, .challenge-people {
     display: flex;
+    align-items: center;
 }
 
 .card-content .challenge-people p {
@@ -157,17 +190,21 @@ section.content-main {
 
 .card-content .card-info {
     display: flex;
-    justify-content: space-around;
-    margin-top: 16px;
+    margin-top: 8px;
     margin-bottom: 5px;
+    min-width: 270px;
     width: 250px;
-    padding: 0 13px;
+    padding: 0 1px;
+    align-items: center;
+    gap: 13px;
+    justify-content: center;
 }
 
 .card-content .card-info img {
     width: auto;
     height: 19px;
     opacity: 0.7;
+    border-radius: 0px;
 }
 
 .card-content a {
@@ -176,7 +213,7 @@ section.content-main {
 
 .card-content h3 {
     color: #515151;
-    font-size: 15px;
+    font-size: 13.5px;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -186,22 +223,103 @@ section.content-main {
 .card-content p {
     font-size: 0.9rem;
     color: #666;
-    margin-left: 5px;
+    margin-left: 5px !important;
 }
 
+p.challenge-text {
+    justify-self: center;
+    display: none;
+}
+
+#create-challenge-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: none;
+}
+
+/* 모달 배경 오버레이 */
+#card-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* 어두운 배경 */
+    z-index: 1005; /* 모달보다 뒤에 표시 */
+    display: none; /* 기본적으로 숨김 */
+}
+
+/* 모달 본체 */
+#card-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 화면 중앙에 정렬 */
+
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    z-index: 1006; /* 오버레이보다 위에 표시 */
+    display: none; /* 기본적으로 숨김 */
+    padding: 20px;
+}
+
+/* 모달 닫기 버튼 */
+/* #card-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+} */
+
+/* 모달 내부 콘텐츠 */
+/* #card-modal .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+} */
+
+/* #card-modal .popup-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+} */
+
+
 /* 오버레이 스타일 */
-.overlay {
+/* .overlay {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
-    z-index: 1000; /* 모달 위에 표시 */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
-/* 모달 컨테이너 스타일 */
+
 .popup-container {
     display: none;
     position: fixed;
@@ -215,8 +333,8 @@ section.content-main {
     overflow-y: auto;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1001; /* 오버레이 위에 표시 */
-}
+    z-index: 1001;
+} */
 
 /* 기존 cl_challenge_feed_view.css가 영향을 받지 않도록 스타일 네임스페이스 관리 */
 .popup-container .popup-header {
@@ -225,7 +343,7 @@ section.content-main {
     justify-content: space-between;
     text-align: center;
     margin-bottom: -1px;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .popup-container .popup-header img {
@@ -235,13 +353,14 @@ section.content-main {
 }
 
 .popup-container hr {
-    opacity: 0.3;
+    opacity: 0.7;
     margin-top: 14px;
 }
 
 .popup-container .popup-header h2 {
     font-size: 17px;
     color: #333;
+    font-weight: bold;
 }
 
 .popup-body {
@@ -270,16 +389,17 @@ section.content-main {
     object-fit:cover;
     position: relative;
     border-radius: 0px 0px 0px 10px;
+    margin-top: 1px;
 }
 
-.upload-box img {
+/* .upload-box img {
     max-width: 63px;
     width: 100%;
     height: 100%;
     opacity: 0.7;
     margin-left: -2px;
     margin-bottom: 11px;
-}
+} */
 
 .preview-box img {
     width: 100%;
@@ -305,17 +425,26 @@ section.content-main {
     flex-direction: row;
 }
 
+div#info-content-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
 .feed-info .user-block #leader-icon {
     width: 21px;
     height: auto;
-    margin-left: 136px;
-    margin-bottom: 31px;
+    margin-left: 129px;
+    margin-bottom: 39px;
     position: absolute;
-    transform: rotate(34deg);
+    transform: rotate(38deg);
 }
 
 .feed-info .user-block #profile {
     margin-left: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
 }
 
 .feed-info .user-block #challenge-leader {
@@ -331,7 +460,7 @@ section.content-main {
 .feed-info img {
     width: 35px;
     height: 35px;
-    border-radius: 100px;
+    /* border-radius: 100px; */
     margin-top: 5px;
 }
 
@@ -339,7 +468,7 @@ section.content-main {
     bottom: 37px;
     width: 98%;
     height: auto;
-    margin: -30px 0px -35px 0px;
+    margin: 5px 0px 0px 0px;
     opacity: 0.6;
 }
 
@@ -364,8 +493,6 @@ section.content-main {
     margin-bottom: 13px;
 }
 
-
-
 .challenge-info-content #info-content-detail {
     font-size: 13px;
     color: #515151;
@@ -378,6 +505,15 @@ section.content-main {
     margin-left: 7px;
     color: #515151;
     text-decoration: none;
+}
+
+hr {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.form-control {
+    padding: 0px !important;
 }
 
 .user-link:hover {
@@ -395,6 +531,13 @@ section.content-main {
     font-weight: 700;
     margin-right: -4px;
     align-self: self-end;
+    white-space: nowrap;
+    padding: 0px;
+    margin-bottom: 1px;
+}
+
+#participation-challenge {
+    width: 80px;
 }
 
 .submit-btn:hover {

@@ -18,25 +18,22 @@
                         <div class="row gx-3">
                             <div class="col-lg-6 col-6 col-md-3">
                                 <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
-                                <option value="nirrCategory">접수 분류</option>
-                                <option value="scCode">처리 상태 코드</option>
-                              </select>
+	                                <option value="nirrCategory">접수 분류</option>
+	                                <option value="scStatus">처리 상태 코드</option>
+	                            </select>
                             </div>
                             <!-- 검색어 입력 -->
-                            <div class="col-lg-4 col-md-6 me-auto">
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
                                 <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
-                                <datalist id="searchSuggestions"></datalist>
+                                <datalist id="searchSuggestions"></datalist>                               
+                                
+                                <p class="searchLeft align-content">날짜</p>
+                                <input type="date" class="date date-container searchLeft" id="startDate" />
+                                <p class="searchLeft">~</p> 
+                                <input type="date" class="date date-container searchLeft" id="endDate" />
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
                             </div>
-
-                            <!-- 날짜 선택 -->
-                            <div class="col-lg-6 col-6 col-md-3">
-                                <div class="date-container">
-                                    <p>날짜</p>
-                                    <input type="date" class="date" id="startDate" /> ~
-                                    <input type="date" class="date" id="endDate" />
-                                </div>
-                            </div>
-                            <input class="searchBtn" type="button" value="검색" onclick="filterData()" />
                         </div>
                     </header>
                     <!-- card-header end// -->
@@ -46,19 +43,36 @@
                                 <thead>
                                     <tr>
                                         <th>접수 번호</th>
-                                        <th>아이디</th>
+                                        <th>이름</th>
                                         <th>접수 내용</th>
                                         <th>접수 작성일</th>
                                         <th>접수 분류</th>                                        
                                         <th>처리 상태 코드</th>
                                         <th>처리 관리자 아이디</th>                                        
                                         <th>처리 일자</th>                                        
-                                        <th>반려 사유내용</th>                                        
+                                        <th>반려 사유내용</th>                                                                               
+                                        <th>영양정보추가</th>                                                                               
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
-                                    
-                                    
+                                <tbody>
+                                	<th:block th:if="${nutritionList != null}">
+                                		<tr th:each="l : ${nutritionList}" class="text-center">
+                                			<td><a th:href="@{/admin/nutrition/modifyrequest(nirrNum=${l.nirrNum})}" class="userIdDetails" th:text="${l.nirrNum}"></a></td>
+                                			<td th:text="${l.memberInfo.mbrName}"></td>
+                                			<td th:text="${l.nirrContent}"></td>
+                                			<td th:text="${l.nirrDate}"></td>
+                                			<td th:text="${l.nirrCategory}"></td>
+                                			<td th:text="${l.statusCategoryInfo.scStatus}"></td>
+                                			<td th:text="${l.prrAdmin}"></td>
+                                			<td th:text="${l.nirrProcessingDate}"></td>
+                                			<td th:text="${l.nirrReasonContent}"></td>                                		
+                                			<td>
+                                				<a th:href="@{/admin/nutrition/createList(nirrNum=${l.nirrNum})}" th:style="${l.statusCategoryInfo.scStatus} == '반려' or ${l.statusCategoryInfo.scStatus} == '승인' ? 'display:none;' : 'display:block;'" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
+                                				추가
+                                				</a>
+                                			</td>                                		
+                                		</tr>
+                                	</th:block>                                                                    
                                 </tbody>
                             </table>
                         </div>

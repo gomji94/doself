@@ -13,74 +13,75 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="../../star_travel_bootstrap/star-3-1/Static HTML/mainpage.html">
+                        <a class="menu-link" th:href="@{/}">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">doSelf</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin' or currentURI == '/admin/member/list' or currentURI == '/admin/member/loglist' ? 'active' : ''}">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" th:href="@{/admin}">
                             <i class="fa-solid fa-user-gear"></i>
                             <span class="text">회원관리</span>
                         </a>
                         <div class="submenu">
-                            <a th:href="@{/admin/member/list}" th:classappend="${currentURI == '/admin' or currentURI == '/admin/member/list' ? 'active' : ''}">회원 관리</a>
-                            <a th:href="@{/admin/member/loglist}" th:classappend="${currentURI == '/admin/member/loglist' ? 'active' : ''}">로그 관리</a>                               
+                            <a th:href="@{/admin/member/list}">회원 관리</a>
+                            <a th:href="@{/admin/member/loglist}">로그 관리</a>                               
                         </div>
                     </li>
-                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/challenge/list' or currentURI == '/admin/challenge/personalstatlist' or currentURI == '/admin/challenge/statlist' or currentURI == '/admin/challenge/personalscorelist' or currentURI == '/admin/challenge/scorelist' or currentURI == '/admin/challenge/warninglist' or currentURI == '/admin/challenge/rewardlist' ? 'active' : ''}" >
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" th:href="@{/admin/challenge/list}">
                             <i class="fa-solid fa-users-gear"></i>
                             <span class="text">챌린지 관리</span>
                         </a>
                         <div class="submenu">
-                            <a th:href="@{/admin/challenge/list}" th:classappend="${currentURI == '/admin/challenge/list' ? 'active' : ''}">챌린지 관리</a>
-                            <a th:href="@{/admin/challenge/personalstatlist}" th:classappend="${currentURI == '/admin/challenge/personalstatlist' ? 'active' : ''}">챌린지내 개인</a>
-                            <a th:href="@{/admin/challenge/statlist}" th:classappend="${currentURI == '/admin/challenge/statlist' ? 'active' : ''}">챌린지 별 기록</a>
-                            <a th:href="@{/admin/challenge/personalscorelist}" th:classappend="${currentURI == '/admin/challenge/personalscorelist' ? 'active' : ''}">챌린지 개인 점수</a>
-                            <a th:href="@{/admin/challenge/scorelist}" th:classappend="${currentURI == '/admin/challenge/scorelist' ? 'active' : ''}">챌린지 점수</a>
-                            <a th:href="@{/admin/challenge/warninglist}" th:classappend="${currentURI == '/admin/challenge/warninglist' ? 'active' : ''}">경고내역</a>
-                            <a th:href="@{/admin/challenge/rewardlist}" th:classappend="${currentURI == '/admin/challenge/rewardlist' ? 'active' : ''}">보상 지급 기록</a>
+                            <a th:href="@{/admin/challenge/list}" >챌린지 관리</a>
+                            <a th:href="@{/admin/challenge/personalstatlist}">챌린지내 개인</a>
+                            <a th:href="@{/admin/challenge/statlist}">챌린지 별 기록</a>
+                            <a th:href="@{/admin/challenge/personalscorelist}">챌린지 개인 점수</a>
+                            <a th:href="@{/admin/challenge/scorelist}">챌린지 점수</a>
+                            <a th:href="@{/admin/challenge/warninglist}">경고내역</a>
+                            <a th:href="@{/admin/challenge/rewardlist}">보상 지급 기록</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/nutrition/list' or currentURI == '/admin/nutrition/createList' ? 'active' : ''}">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" th:href="@{/admin/nutrition/list}">
                             <i class="fa-solid fa-arrow-up-from-bracket"></i>
                             <span class="text">등록 요청 관리</span>
                         </a>
                         <div class="submenu">
-                            <a th:href="@{/admin/nutrition/list}" th:classappend="${currentURI == '/admin/nutrition/list' ? 'active' : ''}">등록 요청 관리</a>                        
-                            <a th:href="@{/admin/nutrition/createList}" th:classappend="${currentURI == '/admin/nutrition/createList' ? 'active' : ''}">영양 정보 등록</a>                        
+                            <a th:href="@{/admin/nutrition/list}">등록 요청 관리</a>                        
+                            <a th:href="@{/admin/nutrition/foodlist}">음식 영양 정보 관리</a>                        
+                            <a th:href="@{/admin/nutrition/nutritionlist}">영양제 영양 정보 관리</a>                        
                         </div>
                     </li>
-                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/payment/list' or currentURI == '/admin/payment/refund/list' ? 'active' : ''}">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" th:href="@{/admin/payment/list}">
                             <i class="fa-solid fa-file-invoice-dollar"></i>
                             <span class="text">결제 관리</span>
                         </a>
                         <div class="submenu">
-                            <a th:href="@{/admin/payment/list}" th:classappend="${currentURI == '/admin/payment/list' ? 'active' : ''}">결제 내역</a>
-                            <a th:href="@{/admin/payment/refund/list}" th:classappend="${currentURI == '/admin/payment/refund/list' ? 'active' : ''}">환불 내역</a>                            
+                            <a th:href="@{/admin/payment/list}">결제 내역</a>
+                            <a th:href="@{/admin/payment/refund/list}">환불 내역</a>                            
                         </div>
                     </li>
-                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/point/list' or currentURI == '/admin/point/userhistorylist' ? 'active' : ''}">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" th:href="@{/admin/point/list}">
                             <i class="fa-solid fa-coins"></i>
                             <span class="text">포인트 관리</span>
                         </a>
                         <div class="submenu">
-                            <a th:href="@{/admin/point/list}" th:classappend="${currentURI == '/admin/point/list' ? 'active' : ''}">포인트 상품 관리</a>
-                            <a th:href="@{/admin/point/userhistorylist}" th:classappend="${currentURI == '/admin/point/userhistorylist' ? 'active' : ''}">회원별 사용 내역</a>
+                            <a th:href="@{/admin/point/list}">포인트 상품 관리</a>
+                            <a th:href="@{/admin/point/userhistorylist}">회원별 사용 내역</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu" th:classappend="${currentURI == '/admin/declare/list' or currentURI == '/admin/declare/userlist' ? 'active' : ''}">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" th:href="@{/admin/declare/list}">
                             <i class="fa-solid fa-handcuffs"></i>
                             <span class="text">신고관리</span>
                         </a>
                         <div class="submenu">
-                            <a th:href="@{/admin/declare/list}" th:classappend="${currentURI == '/admin/declare/list' ? 'active' : ''}">신고접수</a>                    
-                            <a th:href="@{/admin/declare/userlist}" th:classappend="${currentURI == '/admin/declare/userlist' ? 'active' : ''}">부정회원관리</a>                    
+                            <a th:href="@{/admin/declare/list}">신고접수</a>                    
+                            <a th:href="@{/admin/declare/userlist}">부정회원관리</a>                    
                         </div>
                     </li>                    
                 </ul>

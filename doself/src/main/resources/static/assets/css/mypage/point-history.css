@@ -1,0 +1,281 @@
+@charset "UTF-8";
+
+        /* 전체 페이지 스타일 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            /*align-items: center;   콘텐츠 중앙 정렬 */
+            min-height: 100vh;  /*화면 높이를 기준으로 전체를 차지 */
+        }
+
+        .container {
+            display: flex;
+            flex: 1; /* 사이드바와 메인 콘텐츠가 화면 남은 공간을 차지 */
+            width: 1280px; /* header와 동일한 최소 너비 */
+            max-width: 100%; /* 화면 최대 너비 */
+            margin: 70px auto 0; /* 상단바 높이만큼 아래로, 중앙 정렬 */
+            margin-top: 70px; /* 상단바 높이만큼 아래로 */
+            display: flex;
+            box-sizing: border-box;
+            flex-wrap: nowrap; /* 컨테이너 안 요소 줄바꿈 방지 */
+        }
+
+        /* 왼쪽 사이드바 스타일 */
+        .sidebar {
+            width: 230px;
+            background-color: #f4f4f4;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: calc(100vh - 70px);  /*화면 높이에서 상단바 높이 제외 */
+            height: auto; /* 자동 높이 조정 */
+            max-height: 100%;
+            box-sizing: border-box;
+            box-shadow: 2px 0 5px rgba(51, 24, 24, 0.1);
+            min-width: 210px; /* 최소 너비 유지 */
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            padding-top : 20px;
+        }
+        .sidebar ul li {
+            position: relative;
+            white-space: nowrap; /* 줄바꿈 방지 */
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            padding: 8px 10px; /* 상위 메뉴 왼쪽 여백 */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: left;
+            padding-left: 20%;
+            padding-right: 30px;
+            height: 25px;
+        }
+        .sidebar ul li a:hover {
+            background-color: #ddd;
+        }
+        .sidebar ul li a::before {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1; /* 다른 요소보다 위에 표시 */
+            pointer-events: none; /* 클릭 이벤트 차단 */
+        }
+        .sidebar ul .sub-menu {
+            display: none;
+            margin : 0px 32px;
+            background-color: #fff;
+            position: relative;
+            padding: 0;
+            border-radius: 8px;
+        }
+        .sidebar ul .sub-menu a {
+            font-size: 12px;
+            padding: 5px 0px 5px 40px ;
+            color: #999; /* 하위 메뉴 기본 글자색: 회색 */
+            border-radius: 0; /* 둥근 모서리 제거 */
+
+        }
+        .sidebar ul .sub-menu a:hover {
+            color: #000; /* 하위 메뉴 마우스 오버 시 글자색: 검은색 */
+            background-color: transparent;
+        }
+        .sidebar ul .sub-menu a:before {
+            content: none; /* 하위 메뉴는 원형 모양 제거 */
+        }
+
+        .toggle-icon {
+            margin-left: auto; /* 남은 공간을 사용해 오른쪽으로 밀어냄 */
+            display: inline-block; /* 인라인 블록으로 설정 */
+            text-align: right; /* 텍스트 오른쪽 정렬 */
+        }
+        
+        .sub-menu {
+            display: none; /* 기본적으로 하위 메뉴는 숨김 */
+            padding-left: 20px; /* 하위 메뉴 들여쓰기 */
+            list-style: none;
+        }
+
+        #main-content {
+             width: calc(100% - 230px);
+             margin : 0;
+        }
+
+
+        @media (max-width: 1000px) {
+            .header {
+                left: 0; /* 화면 기준 왼쪽 정렬 */
+                transform: none; /* 가운데 정렬 해제 */
+                padding: 0 20px; /* 양쪽에 여백 추가 */
+            }
+            .logo {
+                font-size: 24px; /* 로고 크기 축소 */
+            }
+            .nav-links {
+                gap: 20px; /* 링크 간격 조정 */
+            }
+            .nav-links a {
+                padding: 5px 8px; /* 패딩 조정 */
+            }
+
+        }
+
+    .container {
+        min-height: 1155px;
+    }
+    
+    .main-container-title {
+        display: flex;
+        text-align: center;
+        gap: 10px;
+        margin-top: 40px;
+        margin-left: 70px;
+    }
+    
+    .main-container-title > div {
+        margin-top: auto;
+    }
+    
+    #main-container-title__eng {
+        font-size: 40px;
+        color: #d1e480;
+    }
+    
+    #main-container-title__kor {
+        font-size: 20px;
+    }
+    
+    #main-user-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 15px;
+        margin-top: 17px;
+        padding-bottom: 42px;
+        border-bottom: 1px solid #d3d3d3;
+    }
+
+    #profile-image {
+        display: flex;
+        justify-content: center; /* 가로 중앙 정렬 */
+        align-items: center;    /* 세로 중앙 정렬 */
+        /* border: 2px solid #ddd; */ 
+    }
+
+    #profile-image a img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+    }
+    
+    #profile-userId {
+        font-size: 20px;
+    }
+
+    #remaining-point strong{
+        color: red;
+    }
+
+    form.search-form {
+        margin-top: 25px;
+    }
+
+    .search-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    
+    .search-form input {
+        padding: 5px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .btn-search {
+        padding: 5px 10px;
+        font-size: 14px;
+        color: white;
+        background-color: #9ACD32;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .tab-section {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    .tab {
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        background-color: white;
+        cursor: pointer;
+    }
+    
+    .tab.active {
+        background-color: #9ACD32;
+        color: white;
+    }
+
+    .ticket-table-container {
+        display: grid;
+        width: 100%;
+        place-items: center;
+        max-width: 100%;
+        min-height: 200px;
+        justify-content: center;
+        gap: 30px;
+    }
+    
+    .ticket-table {
+        width: 700px;
+        border-collapse: collapse;
+    }
+    
+    .ticket-table th, .ticket-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    
+    .pagination {
+        text-align: center;
+        margin-top: 10px;
+        display: flex;
+        list-style: none;
+    }
+    
+    .pagination a {
+        margin: 0 5px;
+        text-decoration: none;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+    
+    .pagination a.active {
+        background-color: #9ACD32;
+        color: white;
+    } 
+    
+    /* 수정 */
+
+section.content-main { /* 메인콘텐츠 영역늘림 */
+    min-height: 1000px;
+}       

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>로그인페이지</title>
+	<link th:href="@{/manage/assets/css/admin.css?v=1.1}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<main>
+            <header class="main-header style-2 navbar">
+                <div class="col-brand">
+                    <a th:href="@{/mainpage}" class="brand-wrap">
+                        <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo" class="logo"  />
+                    </a>
+                </div>
+                <div class="col-nav">
+                    <ul class="nav">                        
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                        </li>                                                
+                    </ul>
+                </div>
+            </header>
+            <section class="content-main mt-80 mb-80">
+                <div class="card mx-auto card-login">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">로그인</h4>
+                        <form id="loginForm" th:action="@{/login/loginPro}" method="post">
+                            <div class="mb-3">
+                                <input class="form-control w-100" placeholder="사용자 이름 또는 이메일" type="text"
+                                	   id="mbrId" name="mbrId" />
+                            </div>
+                            <!-- form-group// -->
+                            <div class="mb-3">
+                                <input class="form-control w-100" placeholder="비밀번호" type="password"
+                                	   id="mbrPw" name="mbrPw"/>
+                            </div>
+                            <!-- form-group// -->
+                            <!-- <div class="mb-3">
+                                <a href="#" class="float-end font-sm text-muted">비밀번호를 잊으셨나요?</a>
+                                <label class="form-check">
+                                    <input type="checkbox" class="form-check-input" checked="" />
+                                    <span class="form-check-label">아이디 기억하기</span>
+                                </label>
+                            </div> -->
+                            <!-- form-group form-check .// -->
+                            <div class="mb-4">
+                                <button type="submit" id="loginBtn" class="btn btn-primary w-100">로그인</button>
+                            </div>
+                            <!-- form-group// -->
+                        </form>
+                        <p class="text-center small text-muted mb-15">또는 가입하세요.</p>
+                        
+                        <p class="text-center mb-4">계정이 없으신가요? <a href="register.html">회원가입</a></p>
+                    </div>
+                </div>
+            </section>
+            <footer class="main-footer text-center">
+                <p class="font-xs">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; DoSelf, Inc.
+                </p>
+                <p class="font-xs mb-30">All rights reserved</p>
+            </footer>
+        </main>
+</body>
+	<!--/* 사용자 추가 js file */-->
+	<th:block layout:fragment="customJsResource">
+		<script th:src="@{/manage/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+		<script th:src="@{/manage/assets/js/vendors/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{/manage/assets/js/vendors/jquery.fullscreen.min.js}"></script>
+		<script th:src="@{/manage/assets/js/main.js?v=1.1}" type="text/javascript"></script>
+	</th:block>
+        
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:inline="javascript">
+    		const msg = /*[[${msg}]]*/ "msg";
+    		if(msg) alert(msg);
+    		//const message = /*[[${message}]]*/ "message";
+    		//if(message) alert(message);
+    		
+    		$('#loginBtn').click(function(){
+    			$('#loginForm input').each((idx, item)=>{
+					const inputValue = $(item).val();
+					if(!inputValue){
+						$(item).focus();
+						return false;
+					}
+    			});
+    		 					
+	    		$('#loginForm').submit();    			
+    		});
+    		
+    	</script>
+    </th:block>
+</html>

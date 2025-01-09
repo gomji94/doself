@@ -19,25 +19,22 @@
                             <div class="col-lg-6 col-6 col-md-3">
                                 <select class="form-select" id="searchType" onchange="updateSearchSuggestions()">
                                     <option value="cgName">챌린지 이름</option>
-                                    <option value="mbrId">보상수령멤버</option>
-                                    <option value="rhNum">보상 내역</option>
+                                    <option value="mbrName">보상수령멤버</option>
+                                    <option value="reward">보상 내역</option>
                                 </select>
                             </div>
                             <!-- 검색어 입력 -->
-                            <div class="col-lg-4 col-md-6 me-auto">
+                            <div class="col-lg-4 col-md-6 me-auto searchInput">
                                 <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
-                                <datalist id="searchSuggestions"></datalist>
+                                <datalist id="searchSuggestions"></datalist>                               
+                                
+                                <p class="searchLeft align-content">날짜</p>
+                                <input type="date" class="date date-container searchLeft" id="startDate" />
+                                <p class="searchLeft">~</p> 
+                                <input type="date" class="date date-container searchLeft" id="endDate" />
+                                
+                                <input id="searchBtn" class="searchBtn" type="button" value="검색" />
                             </div>
-
-                            <!-- 날짜 선택 -->
-                            <div class="col-lg-6 col-6 col-md-3">
-                                <div class="date-container">
-                                    <p>날짜</p>
-                                    <input type="date" class="date" id="startDate" /> ~
-                                    <input type="date" class="date" id="endDate" />
-                                </div>
-                            </div>
-                            <input class="searchBtn" type="button" value="검색" onclick="filterData()" />
                         </div>
                     </header>
                     <!-- card-header end// -->
@@ -49,13 +46,26 @@
                                         <th scope="col">보상 지급 번호</th>                              
                                         <th scope="col">챌린지 이름</th>                              
                                         <th scope="col">보상 수령 멤버</th>
-                                        <th scope="col">보상 내역</th>
+                                        <th scope="col">보상 내역</th>                                        
+                                        <th scope="col">보상 포인트</th>                                        
                                         <th scope="col">보상 선정일</th>
                                         <th scope="col">보상 선정 관리자</th>
                                         <th scope="col">보상 지급일</th>                                       
                                     </tr>
                                 </thead>
-                                <tbody id="resultTable">
+                                <tbody>
+                                <th:block th:if="${rewardList != null}">
+                                	<tr th:each="l : ${rewardList}" class="text-center">
+                                		<td th:text="${l.rphNum}"></td>
+                                		<td th:text="${l.challengeInfo.cgName}"></td>
+                                		<td th:text="${l.memberInfo.mbrName}"></td>
+                                		<td th:text="${l.rewardHistoryInfo.rhName}"></td>
+                                		<td th:text="${l.rewardHistoryInfo.rhPoint}"></td>
+                                		<td th:text="${l.rphRewardSelectedDate}"></td>
+                                		<td th:text="${l.rphAdmin}"></td>
+                                		<td th:text="${l.rphRewardPaymentDate}"></td>                                
+                                	</tr>
+                                </th:block>
                                     
 
                                 </tbody>
@@ -65,6 +75,35 @@
                     </div>
                     <!-- card-body end// -->
                 </div>
+                
+                 <!-- 페이징 -->
+               <div class="pagination-area mt-15 mb-50">
+              		<nav>
+                   <ul class="pagination justify-content-center">
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/challenge/rewardlist}">
+                   			<i class="material-icons md-first_page"></i>
+                   		</a>
+                   	</li>
+                   	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                   		<a class="page-link" th:href="@{/admin/challenge/rewardlist(currentPage=${currentPage - 1})}">
+                   			<i class="material-icons md-chevron_left"></i>
+                   		</a>
+                   	</li>
+                   		<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+					        <li class="page-item" th:classappend="${num == currentPage} ? 'active'">
+					            <a class="page-link" th:href="@{/admin/challenge/rewardlist(currentPage=${num})}" th:text="${num}"></a>
+					        </li>
+					    </th:block>     
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/challenge/rewardlist(currentPage=${currentPage +1})}"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/challenge/rewardlist(currentPage=${lastPage})}"><i class="material-icons md-last_page"></i></a>
+                    </li>
+                   </ul>
+               </nav>
+           </div>
 		</th:block> 
 
 		<!--/* 사용자 추가 js file */-->
@@ -75,7 +114,7 @@
         <!--/* 사용자 추가 js script */-->
         <th:block layout:fragment="customJs">
         	<script>
-        	
+	        	
         	</script>
         </th:block> 
 </html>

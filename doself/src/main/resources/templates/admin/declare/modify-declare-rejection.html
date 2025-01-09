@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">신고요청 반려 처리</h2>                        
+                    </div>
+                </div>
+            </div>    
+		</th:block>
+		
+		<th:block layout:fragment="content-body">					
+			<div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form id="modifyDeclareForm" th:action="@{/admin/declare/modifyrequest}" method="post" th:object="${declareInfo}">
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">1. 반려 사유 내용</label>
+                                        <input type="hidden" id="rrNum" name="rrNum" class="form-control" th:value="*{rrNum}">
+                                        <input type="text" id="rrReasonContent" name="rrReasonContent" class="form-control">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->                            
+                            
+                            <div class="row">                                
+                                <div class="col-md-9 addBtn">
+                                    <button type="submit" id="modifyDeclareBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">수정하기</button>
+                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/declare/list}">취소</a>
+                                </div> <!-- col.// -->
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>             
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">        	
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>
