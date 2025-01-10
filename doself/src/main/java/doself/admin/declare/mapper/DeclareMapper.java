@@ -43,5 +43,5 @@ public interface DeclareMapper {
 	List<DeclareUser> getSanctionEndList();
 	
 	// 제제기간 지난 멤버 회원등급 변경
-	int everydayCheck(List<DeclareUser> SanctionEndList);
+	int everydayCheck(String mbrId);
 }
