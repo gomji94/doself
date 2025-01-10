@@ -264,4 +264,37 @@
   			FROM
   				age_category
   		</select>
+  		
+  		<!-- 모든멤버조회 -->
+  		<select id="getAllMemberList" resultMap="memberResultMap">
+	  		SELECT
+	  			m.mbr_id,
+				m.mbr_pw,
+				m.mbr_name, 
+				mg.mg_name,
+				m.mg_code,
+				m.mbr_email,
+				m.mbr_birth_date, 
+				m.mbr_phone_num, 
+				m.mbr_gender,
+				ac.ac_name,
+				m.opening_ticket_count,
+				m.participation_ticket_count,
+				m.mbr_point,
+				m.is_deleted
+	  		FROM
+	  			`member`
+			WHERE
+				is_deleted = 'active'
+  		</select>
+  		
+  		<!-- 매년 1월 1일 나이값 체크하여 연령대 변경 -->
+  		<update id="updateAcNum" parameterType="Member">
+  			UPDATE `member`
+  			<set>
+  				ac_num = #{acNum}
+  			</set>
+  			WHERE
+  				mbr_id= #{mbrId}
+  		</update>
   </mapper>

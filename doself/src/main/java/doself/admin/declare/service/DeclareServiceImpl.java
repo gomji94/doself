@@ -107,7 +107,10 @@ public class DeclareServiceImpl implements DeclareService{
 	public void everydayCheck() {
 		
 		List<DeclareUser> SanctionEndList = declareMapper.getSanctionEndList();
-		declareMapper.everydayCheck(SanctionEndList);
+		
+		for(DeclareUser ele : SanctionEndList) {
+			declareMapper.everydayCheck(ele.getMbrId());		
+		}
 	}
 	
 	

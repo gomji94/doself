@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.admin.member.domain.Member;
-import doself.admin.member.mapper.MemberMapper;
 import doself.user.login.mapper.LoginMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -17,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 public class LoginServiceImpl implements LoginService {
 	
 	private final LoginMapper loginMapper;
-	private final MemberMapper memberMapper;
 
+	// 로그인
 	@Override
 	public Map<String, Object> matchedMember(String mbrId, String mbrPw) {
 		
@@ -40,6 +39,42 @@ public class LoginServiceImpl implements LoginService {
 		resultMap.put("isMatched", isMatched);
 		
 		return resultMap;
-	} 
+	}
+	
+	//회원가입
+		@Override
+		public void createMember(Member member) {
+			String birthDate = member.getMbrBirthDate();
+			
+			int age = loginMapper.getAgeByBirthDate(birthDate);
+			String acNum="";
+			
+			if(age <= 6) {
+				acNum = "ac_001";
+			}
+			else if(age <= 13) {
+				acNum = "ac_002";
+			}
+			else if(age <= 18) {
+				acNum = "ac_003";
+			}
+			else if(age <= 34) {
+				acNum = "ac_004";
+			}
+			else if(age <= 49) {
+				acNum = "ac_005";
+			}
+			else if(age <= 64) {
+				acNum = "ac_006";
+			}
+			else {
+				acNum = "ac_007";
+			}
+			
+			member.setAcNum(acNum);
+			loginMapper.createMember(member);
+		} 
 
+
+	
 }

@@ -121,4 +121,10 @@ public class MemberController {
 		
 		return "admin/member/log-list";
 	}
+	
+	//매년 나이계산하여 연령대 값 변경
+	public void everyYearCheck() {
+		
+		memberService.everyYearCheck();
+	}
 }
