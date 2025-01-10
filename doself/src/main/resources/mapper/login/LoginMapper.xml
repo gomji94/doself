@@ -13,6 +13,7 @@
 		<result column="mbr_phone_num" 				property="mbrPhoneNum" />
 		<result column="mbr_gender" 				property="mbrGender" />
 		<result column="ac_num" 					property="acNum" />
+		<result column="mbr_image" 					property="mbrImage" />
 		<result column="opening_ticket_count" 		property="openingTicketCount" />
 		<result column="participation_ticket_count" property="participationTicketCount" />
 		<result column="mbr_point" 					property="mbrPoint" />
@@ -32,6 +33,7 @@
 			mbr_phone_num,
 			mbr_gender,
 			ac_num,
+			mbr_image,
 			opening_ticket_count,
 			participation_ticket_count,
 			mbr_point,

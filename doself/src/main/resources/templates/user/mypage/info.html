@@ -11,7 +11,7 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a th:href="@{/mypage/member/info(memberId=*{memberId})}" class="menu-item">
+                    <a th:href="@{/mypage/modify(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-user-gear"></i>
                         <div>my 정보 수정</div>
                     </a>
@@ -78,38 +78,25 @@
                     <input type="text" id="birth-date" th:value="*{memberBrith}" name="memberBrith" disabled="disabled">
                 </div>
                 <div class="form-group">
-                    <label for="current-password">현재 비밀번호</label>
-                    <div class="input-wrapper">
-                    	<input class="width-fit" type="password" id="oldMemberPw" name="oldMemberPw" >
-                    	<br />
-                 	    <span id="currentPasswordError" class="error-message" style= "display: none;">현재 비밀번호가 틀렸습니다.</span>
-                    </div> 
-                </div>
-                <div class="form-group">
                     <label for="new-password">새 비밀번호</label>
                     <div class="input-wrapper">
-                   		<input class="width-fit" type="password" id="newMemberPw" name="newMemberPw" disabled="disabled">
+                   		<input class="width-fit" type="password" id="memberPw" name="memberPw">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">새 비밀번호 확인</label>
                     <div class="input-wrapper">
-                   		 <input class="width-fit" type="password" id="confirmMemberPw" name="confirmMemberPw" disabled="disabled">
-                   		 <br />
-                	     <span id="passwordMatchError" class="error-message" style= "display: none;">새 비밀번호가 일치하지 않습니다.</span>
-                	     <br />
-                	     <span id="passwordLengthError" class="error-message" style= "display: none;">비밀번호는 8자 이상 16자 이하로 입력해야 합니다.</span>
-                	     <span id="samePasswordError" class="error-message" style= "display: none;">현재 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.</span>
+                   		 <input class="width-fit" type="password" id="" name="" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
                     <div class="phone-input">
-                        <input type="text" id="phone-number-part1" th:value="${memberTel[0]}" name="memberPhoneNum" maxlength="3" 
+                        <input type="text" id="phone-number-part1" th:value="${memberTel}" name="memberPhoneNum" maxlength="3" 
                         	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part2" th:value="${memberTel[1]}" name="memberPhoneNum" maxlength="4" 
+                        <input type="text" id="phone-number-part2" th:value="${memberTel}" name="memberPhoneNum" maxlength="4" 
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part3" th:value="${memberTel[2]}" name="memberPhoneNum" maxlength="4" 
+                        <input type="text" id="phone-number-part3" th:value="${memberTel}" name="memberPhoneNum" maxlength="4" 
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     </div>
                 </div>
@@ -125,9 +112,10 @@
                             </select>
                         </div>
                     </div>
-                    <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
+                    <a th:href="@{/mypage/feedlist(memberId=*{memberId})}" 
+                       id="modifyMemberBtn" class="btn-submit">수정</a>
                 </form>
-                <form action="/mypage/member/delete" method="post">
+                <form action="/mypage/delete" method="post">
                 <input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
                     <div id="withdrawa">
           	          <button type="submit" id="removeBtn">회원탈퇴</button>
@@ -157,90 +145,7 @@
 			return regExp.test(asValue);
 		}
 		
-		$('#oldMemberPw').on('input', function () {
-		    const oldMemberPw = $(this).val();
-		    if (oldMemberPw) {
-		        $('#newMemberPw').prop('disabled', false);
-		        $('#confirmMemberPw').prop('disabled', false);
-		    } else {
-		        $('#newMemberPw').prop('disabled', true);
-		        $('#confirmMemberPw').prop('disabled', true);
-		    }
-		});
-		
-	    $('#modifyMemberBtn').click(function (e) {
-	        e.preventDefault();
-       
-	        const memberId = $('#memberId').val();
-	        const oldMemberPw = $('#oldMemberPw').val();
-	        const newMemberPw = $('#newMemberPw').val();
-	        const confirmMemberPw = $('#confirmMemberPw').val();
-	        const memberPhoneNum = $('#phone-number-part1').val() + '-' + $('#phone-number-part2').val() + '-' + $('#phone-number-part3').val();
-	        const memberEmail = $('#memberEmail').val() + '@' + $('select[name="memberEmail"]').val();
-       
-	        $('#currentPasswordError').hide();
-	        $('#passwordMatchError').hide();
-	        $('#passwordLengthError').hide();
-	        $('#samePasswordError').hide();
-	        
-	        // 현재 비밀번호 확인 Ajax 요청
-	        $.ajax({
-	            url: '/mypage/pwCheck',
-	            method: 'POST',
-	            data: { 'memberId': memberId, 'oldMemberPw': oldMemberPw },
-	            dataType: 'json'
-	        })
-	            .done(function (isValid) {
-	                if (!isValid) {
-	                    $('#currentPasswordError').show(); 
-	                    return;
-	                }
-	                $('#currentPasswordError').hide();
-       
-	   		     // 비밀번호 길이 유효성 검사
-	   		       if (!isPassword(newMemberPw)) {
-	   		    	 $('#passwordLengthError').show();
-	   		         return; 
-	   		     }
-       
-	   		     // 새 비밀번호와 확인 비밀번호 비교
-	   		     if (newMemberPw !== confirmMemberPw) {
-	   		         $('#passwordMatchError').show(); 
-	   		         return; 
-	   		     }
-
-	   		     // 새 비밀번호와 현재 비밀번호 비교
-	   		     if (oldMemberPw === newMemberPw) {
-	   		    	 $('#samePasswordError').show();
-	   		         return; 
-	   		     }
-	                // 비밀번호 변경 Ajax 요청
-	                $.ajax({
-	                    url: '/mypage/pwUpdate',
-	                    method: 'POST',
-	                    data: {
-	                        'memberId': memberId,
-	                        'oldMemberPw': oldMemberPw,
-	                        'newMemberPw': newMemberPw,
-	                        'confirmMemberPw': confirmMemberPw
-	                    },
-	                    dataType: 'json'
-	                })
-	                    .done(function (response) {
-	                        if (response) {
-	                            alert('정보가 변경되었습니다.');
-	                        } else {
-	                            alert('정보변경에 실패했습니다.');
-	                        }
-	                    })
-	                    .fail(function () {
-	                        alert('정보변경 요청 중 오류가 발생했습니다.');
-	                    });
-	            })
-	            .fail(function () {
-	                alert('현재 정보확인 요청 중 오류가 발생했습니다.');
-	            });
-		   });
+	
 	</script>
     </th:block> 
 </html>

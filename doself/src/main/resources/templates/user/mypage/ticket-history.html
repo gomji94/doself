@@ -12,7 +12,7 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a th:href="@{/mypage/member/info(memberId=*{memberId})}" class="menu-item">
+                    <a th:href="@{/mypage/modify(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-user-gear"></i>
                         <div>my 정보 수정</div>
                     </a>
@@ -79,7 +79,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <th:block th:if="${ticketList != null}">
+                            <th:block th:if="${not #lists.isEmpty(ticketList)}">
                         		<tr th:each="l : ${ticketList}"> 
                         			<td th:text="${l.ticketBuyDate}"></td>
                         			<td th:text="${l.ticketName}"></td>
@@ -87,7 +87,7 @@
                         			<td th:text="${l.ticketUseChk eq null} ? '사용 안함' : '사용'"></td>
                         		</tr>
                             </th:block>
-                            <th:block th:unless="${ticketList}">
+                            <th:block th:unless="${not #lists.isEmpty(ticketList)}">
 								<tr>
 									<td colspan="4">구매한 티켓 이력이 없습니다.</td>
 								</tr>

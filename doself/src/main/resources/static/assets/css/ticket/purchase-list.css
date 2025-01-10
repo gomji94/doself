@@ -294,3 +294,7 @@
 #ticket-list {
     margin-top : 30px;
 }        
+
+section.content-main {
+    min-height: 1000px;
+}

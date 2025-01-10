@@ -13,6 +13,7 @@ public class Member {
 	private String mbrPhoneNum;
 	private String mbrGender;
 	private String acNum;
+	private String mbrImage;
 	private int openingTicketCount;
 	private int participationTicketCount;
 	private int mbrPoint;

@@ -6,7 +6,7 @@
   <mapper namespace="doself.user.members.mapper.MembersMapper">
     <resultMap type="Members" id="membersResultMap">
 		<id 	column="mbr_id" 			         property="memberId"/>
-		<result column="mbr_pw" 			         property="oldMemberPw" />
+		<result column="mbr_pw" 			         property="memberPw" />
 		<result column="mbr_name" 			         property="memberName" />
 		<result column="mg_code" 			         property="memberGrdCode" />
 		<result column="mbr_email"			         property="memberEmail" />
@@ -75,38 +75,28 @@
 				f.feed_num,
 				f.feed_picture
         FROM 
-            member m  INNER JOIN feed f USING(mbr_id)
+            member m left JOIN feed f USING(mbr_id)
         WHERE
             m.mbr_id = #{memberId};
     </select>
     
-	<!-- 현재 비밀번호 확인 -->
-	<select id="passwordChk" parameterType="map" resultType="int">
-	    SELECT COUNT(*)
-	    FROM member
-	    WHERE 
-	    mbr_id = #{memberId} AND mbr_pw = #{oldMemberPw}
-	</select>
-	
-	<!-- 새 비밀번호 업데이트 -->
-	<update id="updatePassword" parameterType="map">
-	    UPDATE member
-	    SET mbr_pw = #{newMemberPw}
-	    WHERE mbr_id = #{memberId}
-	</update>
-	
-	<update id="modifyMember" parameterType="Members">
+	<!-- 회원수정 -->
+    <update id="modifyMemberById" parameterType="Members">
        UPDATE member 
-    <set>
-        <if test="oldMemberPw != null and oldMemberPw !='' and newMemberPw != null and newMemberPw">
-         mbr_pw = #{newMemberPw},</if>
-        <if test="memberPhoneNum != null">
-         mbr_phone_num = #{memberPhoneNum},</if>
-        <if test="memberEmail != null">
-         mbr_email = #{memberEmail}</if>
-    </set>
-       WHERE mbr_id = #{memberId};
-</update>    
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberPw != null and memberPw !=''">
+                mbr_pw=#{memberPw},
+            </if>
+            <if test="memberPhoneNum != null and memberPhoneNum != ''">
+                mbr_phone_num=#{memberPhoneNum},
+            </if>
+            <if test="memberEmail != null and memberEmail != ''">
+                mbr_email=#{memberEmail}
+            </if>
+        </trim>
+        WHERE 
+            mbr_id=#{memberId};
+    </update>  
 
     <!-- 회원 티켓내역 조회 -->
     <!-- /* <![CDATA[<= ]]> 꺽쇠 텍스트인식 */ -->
@@ -166,7 +156,7 @@
 			reward_payment_history rph INNER JOIN	
 			reward_history rh ON rh.rh_num = rph.rh_num
 		WHERE
-			mbr_id = 'id008'
+			mbr_id = #{memberId}
 			<if test="startDate!= null">
 			AND rph.rph_reward_payment_date >= #{startDate}
 			</if>
@@ -185,7 +175,7 @@
 		INNER JOIN	
 			point_exchange_product_list pepl ON pepl.pepl_num = pumh.pepl_num
 		WHERE
-			mbr_id = 'id008'
+			mbr_id = #{memberId}
 			<if test="startDate!= null">
 			AND pumh.pumh_date >= #{startDate}
 			</if>
@@ -227,12 +217,6 @@
 				</if> 
 		)
 		SELECT COUNT(*) FROM reward_point;
-   	</select>
-	
-	<select id="getFeedList">
 		
-	
-	</select>
-
-    
+   	</select>
   </mapper>
