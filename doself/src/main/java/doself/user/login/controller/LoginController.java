@@ -47,11 +47,13 @@ public class LoginController {
 		  if(isMatched) { 
 			  Member memberInfo = (Member) resultMap.get("memberInfo");
 			  String membergrade = memberInfo.getMgCode(); 
-			  String memberName = memberInfo.getMbrName();
+			  String memberName = memberInfo.getMbrName(); 
+			  String memberImage = memberInfo.getMbrImage();
 		  
 			  session.setAttribute("SID", mbrId);
 			  session.setAttribute("SNAME", memberName);
 			  session.setAttribute("SGRD", membergrade);
+			  session.setAttribute("IMAGE", memberImage);
 			  
 			  if(membergrade.equals("mg_001")) {
 				  viewName = "redirect:/admin/member/list";
