@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -71,6 +72,21 @@ public class LoginController {
 		if(msg != null) model.addAttribute("msg", msg);
 		return "loginpage";
 	}
+	
+	@GetMapping("/register")
+	public String postMethodName() {		
+		
+		return "register";
+	}
+	
+	@PostMapping("/register")
+	public String postMethodName(Member member) {
+		
+		loginService.createMember(member);
+		
+		return "redirect:/login";
+	}
+	
 	
 	
 }

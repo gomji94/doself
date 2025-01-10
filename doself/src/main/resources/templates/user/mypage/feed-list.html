@@ -64,15 +64,15 @@
         </div>
         <div id="main-content-feedList">
             <ul class="main-container-feedList__items">
-	          <th:block th:if="${memberInfo.feedList != null}"
-	          		    th:each="l: ${memberInfo.feedList}">    
+	          <th:block th:if="*{feedList != null }"
+	          		    th:each="l: *{feedList}">    
 				<li class="main-container-feedList__item">
 					<input type="hidden" name="feedNum" th:value="${l.feedNum}"/>
 				    <img class="mcfi__image" th:src="@{|${l.feedImage}|}" alt="피드">  
 				</li>
 	          </th:block>
             </ul>
-          <th:block th:unless="*{feedList}">
+          <th:block th:unless="*{feedList != null}">
            		<a>피드 없음</a>
           </th:block>
           
@@ -97,6 +97,7 @@
 		</div>
       </th:block> 
     </main>
+    </th:block>
 
 
 	<!--/* 사용자 추가 js file */-->

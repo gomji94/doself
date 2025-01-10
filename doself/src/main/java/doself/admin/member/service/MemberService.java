@@ -28,4 +28,6 @@ public interface MemberService {
 	//연령대 카테고리 검색
 	List<Map<String, Object>> getAgeCategoryList();
 
+	//매년 1월1일 나이 체크하여 연령대 값 변경
+	void everyYearCheck();
 }
