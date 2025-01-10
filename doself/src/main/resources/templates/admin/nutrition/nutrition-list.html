@@ -41,16 +41,20 @@
                                         <th>영양제명</th>
                                         <th>영양제 효능</th>                                                                                                                    
                                         <th>일일 권장 섭취량</th>                                                                                                                     
+                                        <th>비고</th>                                                                                                                     
                                     </tr>
                                 </thead>
                                 <tbody>
                                 	<th:block th:if="${nutritionList != null}">
                                 		<tr th:each="l : ${nutritionList}" class="text-center">
                                 			<td th:text="${l.dsiNum}"></td>
-                                			<td th:text="${l.dsbNum}"></td>
+                                			<td th:text="${l.brandInfo.dsbName}"></td>
                                 			<td th:text="${l.dsiName}"></td>
                                 			<td th:text="${l.dsiEfficacy}"></td>
-                                			<td th:text="${l.dsiDailyRecommendedIntake}"></td>                                			                       		                                			                                	
+                                			<td th:text="${l.dsiDailyRecommendedIntake}"></td>  
+                                			<td>
+	                                			<a th:href="@{/admin/nutrition/nutritionmodify(dsiNum=${l.dsiNum})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>		                                    
+                                			</td>                                			                       		                                			                                	
                                 		</tr>
                                 	</th:block>                                                                    
                                 </tbody>

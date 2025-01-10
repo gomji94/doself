@@ -38,4 +38,10 @@ public interface DeclareMapper {
 	
 	// 부정회원 추가후 회원관리 등급 변경
 	int modifyMgCode(Declare declare);
+	
+	// 제제기간 지난 멤버리스트 가져오기
+	List<DeclareUser> getSanctionEndList();
+	
+	// 제제기간 지난 멤버 회원등급 변경
+	int everydayCheck(List<DeclareUser> SanctionEndList);
 }

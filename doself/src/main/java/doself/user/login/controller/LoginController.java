@@ -58,7 +58,7 @@ public class LoginController {
 				  viewName = "redirect:/food/list";				 
 			  }
 		  }else { 
-			  reAttr.addAttribute("msg", "회원의 정보가 일치하지 않습니다."); 
+			  reAttr.addAttribute("msg", "회원의 정보가 일치하지 않거나 탈퇴한 계정입니다."); 
 		  }
 
 		return viewName;		

@@ -129,6 +129,7 @@
 	  		<association property="memberInfo" javaType="Member">
 	  			<id 	column="mbr_id" property="mbrId" />	  			
 	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
+	  			<result column="mg_code" property="mgCode" />	  				  				  			  			  			
 	  		</association>	
 	  			  		   		  		  			 	   		
 	  		<!-- 신고유형카테고리 관계 -->
@@ -283,5 +284,34 @@
   			</trim>
   			WHERE
   				mbr_id = #{mbrId};
+  		</update>
+  		
+  		<!-- 제제기간 지난 유저리스트 가져오기 -->
+  		<select id="getSanctionEndList" resultMap="declareUserResultMap">
+  			SELECT 
+	  			rmm.rmm_num, 
+	  			rmm.rr_num, 
+	  			rmm.mbr_id, 
+	  			rmm.rc_code, 
+	  			rmm.rmm_sanction_start_date, 
+	  			rmm.rmm_sanction_period, 
+	  			rmm.rmm_sanction_end_date, 
+	  			rmm.rmm_admin
+			FROM report_member_management rmm INNER JOIN `member` m
+			ON rmm.mbr_id = m.mbr_id
+			WHERE
+				rmm_sanction_end_date <![CDATA[ <= ]]> NOW()
+				AND m.mg_code = 'mg_003'
+  		</select>
+  		
+  		<!-- 제제기간 지난 멤버 회원등급 변경 -->
+  		<update id="everydayCheck" parameterType="DeclareUser">
+  			UPDATE
+  				`member`
+  			<set>
+  				mg_code = 'mg_002'
+  			</set>
+  			WHERE
+  				mbr_id = #{mbr_id}
   		</update>
   </mapper>

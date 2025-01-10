@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import doself.admin.member.domain.Member;
 import doself.admin.nutrition.domain.FoodNutritionInfo;
 import doself.admin.nutrition.domain.Nutrition;
 import doself.admin.nutrition.domain.NutritionInfo;
@@ -164,5 +165,49 @@ public class NutritionController {
 		model.addAttribute("lastPage", lastPage);
 		return "admin/nutrition/nutrition-list";
 	}
+	
+	// 음식영양정보 수정
+	@GetMapping("/foodmodify")
+	public String getModifyFood(@RequestParam(name="mniNum") String mniNum, Model model) {
+
+		FoodNutritionInfo foodNutritionrInfo = nutritionService.getFoodInfoByMniNum(mniNum);
+		
+		model.addAttribute("title", "음식 영양정보 수정");
+		model.addAttribute("foodNutritionrInfo", foodNutritionrInfo);
+		
+		return "admin/nutrition/modify-food-nutrition";
+	}
+	// 음식영양정보 수정
+	@PostMapping("/foodmodify")
+	public String modifyFoodNutrition(FoodNutritionInfo foodNutritionrInfo) {
+
+		nutritionService.modifyFoodNutrition(foodNutritionrInfo);
+		
+		return "redirect:/admin/nutrition/foodlist";
+	}
+	
+	// 영양제 영양정보 수정
+	@GetMapping("/nutritionmodify")
+	public String getModifyNutrition(@RequestParam(name="dsiNum") String dsiNum, Model model) {
+		
+		NutritionInfo NutritionInfo = nutritionService.getNutritionInfoByDsiNum(dsiNum);
+		
+		var dsbList = nutritionService.getDsbList();
+		
+		model.addAttribute("title", "영양제 영양정보 수정");
+		model.addAttribute("NutritionInfo", NutritionInfo);
+		model.addAttribute("dsbList", dsbList);
+		
+		return "admin/nutrition/modify-nutrition";
+	}
+	// 영양제 영양정보 수정
+	@PostMapping("/nutritionmodify")
+	public String modifyNutrition(NutritionInfo NutritionrInfo) {
+		
+		nutritionService.modifyNutrition(NutritionrInfo);
+		
+		return "redirect:/admin/nutrition/nutritionlist";
+	}	
+	
 	
 }
