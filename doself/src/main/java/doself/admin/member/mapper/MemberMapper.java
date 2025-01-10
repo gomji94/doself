@@ -36,4 +36,10 @@ public interface MemberMapper {
 	List<Map<String, Object>> getMemberMgCodeList();
 	//연령대 카테고리 조회
 	List<Map<String, Object>> getAgeCategoryList();
+	
+	//모든멤버 조회
+	List<Member> getAllMemberList();
+	
+	// 매년 1월1일 나이값 체크하여 연령대 변경
+	void updateAcNum(Member member);
 }
