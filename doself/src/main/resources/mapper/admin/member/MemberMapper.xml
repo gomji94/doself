@@ -37,6 +37,7 @@
   			<result column="opening_ticket_count" 		property="openingTicketCount" />
   			<result column="participation_ticket_count" property="participationTicketCount" />
   			<result column="mbr_point" 					property="mbrPoint" />
+  			<result column="is_deleted" 				property="isDeleted" />
 
 	  		<!-- 연령대 카테고리 관계 -->
 	  		<association property="ageInfo" javaType="Age">
@@ -68,13 +69,14 @@
 				ac.ac_name,
 				m.opening_ticket_count,
 				m.participation_ticket_count,
-				m.mbr_point			
+				m.mbr_point,
+				m.is_deleted
 			FROM member m INNER JOIN age_category ac
 				USING(ac_num)
 				INNER JOIN member_grade mg
 				ON m.mg_code = mg.mg_code
 			<where>
-				1=1
+				is_deleted ='active'
 				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
 		        	AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
 			    </if>
@@ -195,7 +197,8 @@
 			m.ac_num,
 			m.opening_ticket_count,
 			m.participation_ticket_count,
-			m.mbr_point	
+			m.mbr_point,
+			m.is_deleted
 		FROM `member` m
 		WHERE
 			mbr_id = #{mbrId};		
@@ -233,13 +236,14 @@
   		</update>
   		
   		<!-- 회원 제거 -->
-  		<delete id="deleteMember">
-  			DELETE
-  			FROM
-  				`member`
+  		<update id="deleteMember">
+  			UPDATE `member`
+  			<set>
+  				is_deleted = 'delete'
+  			</set>
   			WHERE
   				mbr_id=#{mbrId};
-  		</delete>
+  		</update>
   		
   		<!-- 회원등급 조회 -->
   		<select id="getMemberMgCodeList" resultType="map">

@@ -49,6 +49,7 @@
                                         <th>나트륨</th>                                                                               
                                         <th>칼슘</th>                                                                               
                                         <th>철분</th>                                                                               
+                                        <th>비고</th>                                                                               
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,7 +67,10 @@
                                 			<td th:text="${l.mniCholesterol}"></td>                                		
                                 			<td th:text="${l.mniSodium}"></td>                                		
                                 			<td th:text="${l.mniCalcium}"></td>                                		
-                                			<td th:text="${l.mniIron}"></td>                                		                                			                                	
+                                			<td th:text="${l.mniIron}"></td> 
+                                			<td>
+	                                			<a th:href="@{/admin/nutrition/foodmodify(mniNum=${l.mniNum})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>		                                    
+                                			</td>                               		                                			                                	
                                 		</tr>
                                 	</th:block>                                                                    
                                 </tbody>

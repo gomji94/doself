@@ -27,10 +27,14 @@ public class LoginServiceImpl implements LoginService {
 		
 		Member memberInfo = loginMapper.getMemberInfoById(mbrId);
 		if(memberInfo != null) {
+			String checkDeleted = memberInfo.getIsDeleted();
 			String checkPw = memberInfo.getMbrPw();
-			if(checkPw.equals(mbrPw)) {
-				isMatched = true;
-				resultMap.put("memberInfo", memberInfo);
+			
+			if(checkDeleted.equals("active")) {
+				if(checkPw.equals(mbrPw)) {
+					isMatched = true;
+					resultMap.put("memberInfo", memberInfo);
+				}			
 			}
 		}
 		resultMap.put("isMatched", isMatched);

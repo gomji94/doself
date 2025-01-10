@@ -101,6 +101,14 @@ public class DeclareServiceImpl implements DeclareService{
 		
 		return declareMapper.getDeclarePeriod(rcCode);
 	}
+
+	// 매일자정 제제만료일 확인하여 부정회원 > 일반회원 처리
+	@Override
+	public void everydayCheck() {
+		
+		List<DeclareUser> SanctionEndList = declareMapper.getSanctionEndList();
+		declareMapper.everydayCheck(SanctionEndList);
+	}
 	
 	
 }

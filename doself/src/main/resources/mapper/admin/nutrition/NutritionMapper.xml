@@ -255,21 +255,30 @@
   			<id column="dsi_num"			 				property="dsiNum" />
   			<result column="dsb_num" 						property="dsbNum" />  		
   			<result column="dsi_name" 						property="dsiName" />
+  			<result column="dsi_picture" 						property="dsiPicture" />
   			<result column="dsi_efficacy" 					property="dsiEfficacy" />
-  			<result column="dsi_daily_recommended_intake"	property="dsiDailyRecommendedIntake" />  			 		
+  			<result column="dsi_daily_recommended_intake"	property="dsiDailyRecommendedIntake" /> 
+  			
+			<!-- 브랜드카테고리 관계 -->
+	  		<association property="brandInfo" javaType="BrandDietarySupplement">
+	  			<id 	column="dsb_num" property="dsbNum" />	  			
+	  			<result column="dsb_name" property="dsbName" />	  				  				  			  			  			
+	  		</association>  			 		
   		</resultMap>
 		
 		<!-- 영양제 영양정보 조회 -->
 		<select id="getNutritionList" resultMap="NutritionInfoResultMap">
 			
 			SELECT 
-				dsi_num, 
-				dsb_num, 
-				dsi_name, 
-				dsi_efficacy, 
-				dsi_picture, 
-				dsi_daily_recommended_intake
-			FROM dietary_supplement_info
+				dsi.dsi_num, 
+				dsi.dsb_num, 
+				dsb.dsb_name,
+				dsi.dsi_name,			
+				dsi.dsi_efficacy, 
+				dsi.dsi_picture, 
+				dsi.dsi_daily_recommended_intake
+			FROM dietary_supplement_info dsi INNER JOIN dietary_supplement_brand dsb
+			ON dsi.dsb_num = dsb.dsb_num
 			<where>
 				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
 			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
@@ -310,7 +319,7 @@
 		
 		
 		<!-- 영양정보 등록요청 반려 -->
-  		<update id="modifyNutrition" parameterType="Nutrition">
+  		<update id="modifyNutritionRejection" parameterType="Nutrition">
   			UPDATE nutrition_info_registration_request
   			<trim prefix="SET" suffixOverrides=","> 	
   				nirr_num = #{nirrNum},		
@@ -323,4 +332,87 @@
   			WHERE
   				nirr_num = #{nirrNum};
   		</update>
+  		
+  		<!-- 특정 음식 영양정보 조회 -->
+  		<select id="getFoodInfoByMniNum" resultMap="FoodNutritionInfoResultMap">
+  			SELECT 
+	  			mni_num, 
+	  			mni_name, 
+	  			mni_picture, 
+	  			mni_weight, 
+	  			mni_kcal, 
+	  			mni_carbo, 
+	  			mni_protein, 
+	  			mni_fat, 
+	  			mni_sugar, 
+	  			mni_cholesterol, 
+	  			mni_sodium, 
+	  			mni_calcium, 
+	  			mni_iron
+			FROM 
+				meal_nutrition_info  			
+  			WHERE
+  				mni_num = #{mniNum}
+  		</select>
+  		
+  		<!-- 특정 음식 영양정보 수정 -->
+  		<update id="modifyFoodNutrition" parameterType="FoodNutritionInfo">
+  			UPDATE meal_nutrition_info
+  			<set>
+  				mni_num=#{mniNum},
+				mni_name=#{mniName},
+				mni_picture=#{mniPicture},
+				mni_weight=#{mniWeight},
+				mni_kcal=${mniKcal},
+				mni_carbo=${mniCarbo},
+				mni_protein=${mniProtein},
+				mni_fat=${mniFat},
+				mni_sugar=${mniSugar},
+				mni_cholesterol=${mniCholesterol},
+				mni_sodium=${mniSodium},
+				mni_calcium=${mniCalcium},
+				mni_iron=${mniIron}
+  			</set>
+  			WHERE
+  				mni_num = #{mniNum}
+  		</update>
+  		
+  		<!-- 특정 영양제 영양정보 조회 -->
+  		<select id="getNutritionInfoByDsiNum" resultMap="NutritionInfoResultMap">
+  			SELECT 
+	  			dsi_num, 
+	  			dsb_num, 
+	  			dsi_name, 
+	  			dsi_efficacy, 
+	  			dsi_picture, 
+	  			dsi_daily_recommended_intake
+			FROM 
+				dietary_supplement_info
+			WHERE
+				dsi_num = #{dsiNum}
+  		</select>
+  		
+  		<!-- 특정 영양제 영양정보 수정 -->
+  		<update id="modifyNutrition" parameterType="NutritionInfo">
+  			UPDATE
+  				dietary_supplement_info
+  			<set>
+  				dsi_num=#{dsiNum},
+				dsb_num=#{dsbNum},
+				dsi_name=#{dsiName},
+				dsi_efficacy=#{dsiEfficacy},
+				dsi_picture=#{dsiPicture},
+				dsi_daily_recommended_intake=#{dsiDailyRecommendedIntake}
+  			</set>
+  			WHERE
+  				dsi_num = #{dsiNum};
+  		</update>
+  		
+  		<!-- 브랜드 이름 조회 -->
+  		<select id="getDsbList" resultType="Map">
+  		SELECT 
+	  		dsb_num AS dsbNum, 
+	  		dsb_name AS dsbName
+		FROM dietary_supplement_brand
+  		</select>
   </mapper>

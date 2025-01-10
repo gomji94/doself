@@ -30,7 +30,7 @@ public interface MemberMapper {
 	int modifyMember(Member member);
 	
 	//회원 삭제
-	void deleteMember(String mbrId);
+	int deleteMember(String mbrId);
 	
 	//회원등급 조회
 	List<Map<String, Object>> getMemberMgCodeList();

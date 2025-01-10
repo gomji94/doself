@@ -16,6 +16,7 @@
 		<result column="opening_ticket_count" 		property="openingTicketCount" />
 		<result column="participation_ticket_count" property="participationTicketCount" />
 		<result column="mbr_point" 					property="mbrPoint" />
+		<result column="is_deleted" 				property="isDeleted" />
 	</resultMap>
 	
 	
@@ -33,7 +34,8 @@
 			ac_num,
 			opening_ticket_count,
 			participation_ticket_count,
-			mbr_point
+			mbr_point,
+			is_deleted
 		FROM `member`
 		WHERE 
 			mbr_id = #{mbrId}
