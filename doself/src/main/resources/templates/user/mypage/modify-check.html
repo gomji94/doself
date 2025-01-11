@@ -37,7 +37,7 @@
                             </div>
                             <div class="mb-4" style="display: flex; justify-content: space-around;">
                                 <button type="submit" id="modifyBtn" class="btn btn-primary w-40">확인</button>
-                                <a th:href="@{/mypage/feedlist(memberId=*{memberId})}" class="btn btn-primary w-40">취소</a>
+                                <a class="btn btn-primary w-40" id="backBtn">취소</a>
                             </div>
                             <!-- form-group// -->
                         </form>
@@ -66,18 +66,20 @@
     			let isSubmit = true;
     			$('#modifyMemberForm input').each((idx, item)=>{
 					const inputValue = $(item).val();
+					console.log(inputValue);
 					if(!inputValue){
 						$(item).focus();
 						return false;
 					}
     			});
-    			
     			if(isSubmit) {  
-    				if(confirm('비밀번호가 확인되었습니다.')){
 	    		        $('#modifyMemberForm').submit();   
-    				}
     			}
     		});
+    		
+	    	$('#backBtn').click(event => {
+	    		history.back();
+	    	})
     		
     	</script>
     </th:block>
