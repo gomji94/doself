@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Comment;
 import doself.user.community.domain.Like;
 import doself.user.community.domain.SearchArticle;
 import doself.util.PageInfo;
@@ -37,5 +38,8 @@ public interface CommunityService {
 	
 	// 좋아요 취소 update
 	boolean modifyLikeToArticle(Like like);
+	
+	// 댓글 작성
+	void createComment(Comment comment);
 
 }

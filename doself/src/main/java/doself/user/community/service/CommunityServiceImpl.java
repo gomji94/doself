@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import doself.common.mapper.CommonMapper;
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Comment;
 import doself.user.community.domain.Like;
 import doself.user.community.domain.SearchArticle;
 import doself.user.community.mapper.CommunityMapper;
@@ -173,6 +174,19 @@ public class CommunityServiceImpl implements CommunityService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public void createComment(Comment comment) {
+		// TODO Auto-generated method stub
+		
+		String commentKeyValue = commonMapper.getPrimaryKey("fbc_", "free_board_comments", "fbc_num");
+		comment.setCommentKeyNum(commentKeyValue);
+		String formattedArticleKeyValue = String.format("fb_%03d", comment.getArticleNum());
+		comment.setArticleKeyValue(formattedArticleKeyValue);
+		
+		communityMapper.createComment(comment);
+		
 	}
 
 

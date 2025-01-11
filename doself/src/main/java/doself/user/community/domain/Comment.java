@@ -8,4 +8,6 @@ public class Comment {
 	private String commentAuthorId;
 	private String commentContent;
 	private String commentDate;
+	private int articleNum;
+	private String articleKeyValue;
 }
