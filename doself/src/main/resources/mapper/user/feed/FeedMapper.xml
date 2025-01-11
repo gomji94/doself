@@ -16,6 +16,7 @@
 	    <result column="feed_like" property="feedLike" />
 	    <result column="feed_open_status" property="feedOpenStatus" />
 	    <result column="mbr_image" property="memberProfileImage" />
+	    <result column="fc_content" property="feedCommentContent" />
 	    <result column="mni_picture" property="mealPicture" />
 	    <result column="mni_weight" property="mealWeight" />
 	    <result column="mni_kcal" property="mealCalories" />
@@ -44,13 +45,16 @@
 	        mll.mni_kcal,
 	        mll.mni_carbo,
 	        mll.mni_protein,
-	        mll.mni_fat
+	        mll.mni_fat,
+	        fc.fc_content
 	    FROM
 	        feed f
 	    INNER JOIN
 	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
 	    INNER JOIN
-	        member m ON f.mbr_id = m.mbr_id;
+	        member m ON f.mbr_id = m.mbr_id
+	    LEFT JOIN
+    		feed_comments fc ON f.feed_num = fc.feed_num;;
 	</select>
 	
 	<!-- 특정 피드 영양 정보 조회 -->
@@ -67,5 +71,39 @@
 		    meal_nutrition_info mll INNER JOIN feed f
 		    ON mll.mni_num = f.mni_num
 	</select>
-  </mapper>
+	
+	<!-- 특정 피드 상세 조회 -->
+	<select id="getFeedDetail" parameterType="String" resultMap="FeedResultMap">
+	    SELECT
+	        f.feed_num,
+	        f.mbr_id,
+	        f.mni_num,
+	        f.feed_food_intake,
+	        f.feed_content,
+	        f.feed_picture,
+	        f.mc_num,
+	        f.feed_date,
+	        f.feed_intake_date,
+	        f.feed_like,
+	        f.feed_open_status,
+	        m.mbr_image,
+	        fc.fc_content,
+	        mll.mni_picture,
+	        mll.mni_weight,
+	        mll.mni_kcal,
+	        mll.mni_carbo,
+	        mll.mni_protein,
+	        mll.mni_fat
+	    FROM
+	        feed f
+	    INNER JOIN
+	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
+	    INNER JOIN
+	        member m ON f.mbr_id = m.mbr_id
+	    LEFT JOIN
+	        feed_comments fc ON f.feed_num = fc.feed_num
+	    WHERE
+	        f.feed_num = #{feedCode};
+	</select>
+ </mapper>
   
