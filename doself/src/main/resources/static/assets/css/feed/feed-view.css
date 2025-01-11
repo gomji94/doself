@@ -171,6 +171,7 @@ html, body {
     border-width: 0.5px;
     border-color: #f2f2f2;
     margin-bottom: 20px;
+	scroll-margin-top: 100px; /* 스크롤 중 요소가 뷰포트에 적절히 위치하도록 설정 */
 }
 
 .feed a {
@@ -1449,6 +1450,7 @@ select #meal-type option:checked {
     text-align: center;
     font-size: 14px;
     border: 1px solid #ddd;
+	transition: all 0.3s ease; /* 텍스트 변경 시 부드럽게 표시 */
 }
 
 .analysis-table .analysis-title {
@@ -1482,8 +1484,10 @@ select #meal-type option:checked {
 
 #analysis-img img {
     width: 100%;
+	height: 200px;
 	padding: 5px 5px;
-	border-radius: 5px;
+	border-radius: 20px;
+	transition: all 0.3s ease; /* 이미지가 부드럽게 변경되도록 설정 */
 }
 
 .progress-container .analysis-info {
@@ -1507,6 +1511,301 @@ select #meal-type option:checked {
     margin-top: 10px;
     color: #777;
     font-size: 11px;
+}
+
+/* 상세 피드 */
+.df-feed-container {
+	flex: 1;
+    display: grid;
+    grid-template-columns: 272px 800px;
+    height: 100%;
+    max-width: 1280px;
+    width: 100%;
+    margin-bottom: 0px;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+}
+
+.df-feed {
+    background: #ffffff;
+    width: 100%;
+    max-width: 740px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(51, 24, 24, 0.1);
+}
+
+.df-feed a {
+    text-decoration: none;
+    color: #515151;
+}
+
+.df-feed img {
+    width: 450px;
+    height: 425px;
+}
+
+.df-feed-header {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.df-feed-header img {
+    width: auto;
+    height: 40px;
+    border-radius: 100px;
+    margin-top: 5px;
+}
+
+.df-feed-header .df-user-name {
+    font-weight: bold;
+    font-size: 15px;
+    padding: 0px 17px;
+    position: relative;
+    margin-right: auto;
+}
+
+.df-feed-header .df-feed-option {
+    position: relative;
+    float: right;
+    color: #EAEAEA;
+}
+
+.df-feed-header .df-feed-option img {
+    width: 19px;
+    height: auto;
+    opacity: 0.7;
+    padding-left: 5px;
+}
+
+.df-feed-content {
+    display: flex;
+    align-items: center;
+}
+
+.df-feed-main-img {
+    width: 450px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.df-analysis-table .img {
+    width: 100%;
+    padding: 5px 5px;
+    border-radius: 5px;
+}
+
+#df-analysis-img img {
+	width: 100%;
+	height: auto;
+	padding: 5px 5px;
+	border-radius: 5px;
+}
+
+.df-feed .df-feed-img-chart {
+    display: flex;
+}
+
+.df-feed .df-feed-img-chart .df-feed-chart {
+    display: grid;
+}
+
+.df-feed .df-feed-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px 7px 18px;
+}
+
+.df-feed .df-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.df-feed .df-action-btn img {
+    width: auto;
+    height: 25px;
+    margin-top: 4px;
+}
+
+.df-feed .df-action-icons {
+    display: flex;
+    gap: 13px;
+}
+
+.df-feed .df-feed-time {
+    color: #777;
+    font-size: 12px;
+    padding-bottom: 16px;
+    display: flex;
+    margin-right: 2px;
+    float: inline-end;
+}
+
+.df-feed .df-feed-description {
+    margin-left: 11px;
+    margin-bottom: 12px;
+}
+
+.df-feed .df-feed-description #df-feed-likes {
+    font-size: 13px;
+}
+
+.df-feed-description p {
+    padding: 6.5px 7px;
+    font-size: 15px;
+}
+
+.df-feed hr {
+    opacity: 0.2;
+}
+
+.df-feed .df-add-comment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 18px;
+    margin-top: 20px;
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.df-feed .df-comments-link {
+    color: #aaa; /* 댓글 링크 색상 */
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.df-feed .df-add-comment img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+}
+
+.df-feed .df-add-comment input {
+    flex: 1;
+    padding: 11px 10px 4px 6px;
+    font-size: 14px;
+    border-style: none;
+    outline: none;
+}
+
+.df-feed .df-comment-submit {
+    background: none;
+    border: none;
+    color: #9EB92A;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.df-feed .df-input[type="text"] {
+    border: none;
+    width: 73%;
+}
+
+.df-nutrition-info {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-right: 20px;
+    margin-bottom: 2%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.df-nutrition-info .df-p {
+    margin-bottom: 10%;
+
+}
+
+.df-nutrition-info .df-list-group {
+    margin-top: 20px;
+    width: 70%;
+    transform: scale(1.05);
+    list-style-type: none;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 10px 25px;
+}
+
+/* Right Sidebar */
+.df-progress-container {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 320px;
+    height: 500px;
+}
+
+.df-progress-container {
+    flex: 1; 
+    max-width: 300px;
+    position: sticky; 
+    top: 10px; 
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+	margin-right: 15px;
+	height: auto;
+} 
+
+.df-analysis-table .df-analysis-title {
+    font-weight: bold;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px 10px;
+    position: relative;
+    margin-right: auto;
+    border-radius: 15px;
+    background-color: #ddd;
+}
+
+.df-analysis-table .df-food-name {
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px 10px;
+    position: relative;
+    margin-right: auto;
+    margin-top: 0 10px;
+}
+
+#df-analysis-img {
+    width: 220px;
+    padding: 1px 0px;
+}
+
+.df-progress-container .df-analysis-info {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 0px 25px;
+}
+
+.df-info-table,
+.df-info-table table th,
+.df-info-table table td {
+    font-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+.df-info-table {
+    width: 100%;
+    height: 150px;
+}
+
+.df-analysis-caution {
+    margin-top: 10px;
+    color: #777;
+    font-size: 10px;
 }
 
 .footer {

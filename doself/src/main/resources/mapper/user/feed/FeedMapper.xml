@@ -4,30 +4,24 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="doself.user.feed.mapper.FeedMapper">
   	<resultMap type="Feed" id="FeedResultMap">
-	    <id column="feed_num" 				property="feedCode" />
-	    <id column="mbr_id" 				property="memberId" />
-	    <id column="mni_num" 				property="mealNutritionInfoCode" />
-	    <id column="mc_num" 				property="mealCategoryCode" />
-	    <result column="feed_food_intake" 	property="feedFoodIntake" />
-	    <result column="feed_content" 		property="feedContent" />
-	    <result column="feed_picture" 		property="feedPicture" />
-	    <result column="feed_date" 			property="feedDate" />
-	    <result column="feed_intake_date" 	property="feedIntakeDate" />
-	    <result column="feed_like" 			property="feedLike" />
-	    <result column="feed_open_status" 	property="feedOpenStatus" />
-	    <result column="mbr_image" 			property="memberProfileImage" />
-	    <result column="fc_num" 			property="feedCommentCode" />
-	    <result column="fc_content" 		property="feedCommentContent" />	    
-	    <result column="f.mni_num" 	property="feedMealNutritionInfoNum" />	    
-	    <result column="mni_picture" 	property="mealNutritionInfoPicture" />	    
-	    <result column="mll.mni_kcal" 	property="mealNutritionInfoCalories" />   
-	    <result column="mll.mni_carbo" 		property="mealNutritionInfoProtein" />	    
-	    <result column="mll.mni_protein" 		property="mealNutritionInfoFat" />	    
-	    <result column="mll.mni_fat" 		property="mealNutritionInfoSugar" />	    
-	    <result column="mll.mni_picture" 		property="mealNutritionInfoCholesterol" />	    
-	    <result column="mni_sodium" 		property="mealNutritionInfoSodium" />	    
-	    <result column="mni_calcium" 		property="mealNutritionInfoCalcium" />	    
-	    <result column="mni_iron" 		property="mealNutritionInfoIron" />    
+	    <id column="feed_num" property="feedCode" />
+	    <id column="mbr_id" property="memberId" />
+	    <id column="mni_num" property="mealNutritionInfoCode" />
+	    <id column="mc_num" property="mealCategoryCode" />
+	    <result column="feed_food_intake" property="feedFoodIntake" />
+	    <result column="feed_content" property="feedContent" />
+	    <result column="feed_picture" property="feedPicture" />
+	    <result column="feed_date" property="feedDate" />
+	    <result column="feed_intake_date" property="feedIntakeDate" />
+	    <result column="feed_like" property="feedLike" />
+	    <result column="feed_open_status" property="feedOpenStatus" />
+	    <result column="mbr_image" property="memberProfileImage" />
+	    <result column="mni_picture" property="mealPicture" />
+	    <result column="mni_weight" property="mealWeight" />
+	    <result column="mni_kcal" property="mealCalories" />
+	    <result column="mni_carbo" property="mealCarbohydrates" />
+	    <result column="mni_protein" property="mealProtein" />
+	    <result column="mni_fat" property="mealFat" />
 	</resultMap>
 	
 	<!-- 피드 조회 -->
@@ -45,11 +39,12 @@
 	        f.feed_like,
 	        f.feed_open_status,
 	        m.mbr_image,
-	        mll.mni_picture AS mealPicture,
-	        mll.mni_kcal AS mealCalories,
-	        mll.mni_carbo AS mealCarbohydrates,
-	        mll.mni_protein AS mealProtein,
-	        mll.mni_fat AS mealFat
+	        mll.mni_picture,
+	        mll.mni_weight,
+	        mll.mni_kcal,
+	        mll.mni_carbo,
+	        mll.mni_protein,
+	        mll.mni_fat
 	    FROM
 	        feed f
 	    INNER JOIN
@@ -62,6 +57,7 @@
 	<select id="getFeedNutritionInfo" resultMap="FeedResultMap">
 		SELECT
 		    f.mni_num,
+		    mll.mni_weight,
 		    mll.mni_kcal,
 		    mll.mni_carbo,
 		    mll.mni_protein,
@@ -70,8 +66,6 @@
 		FROM
 		    meal_nutrition_info mll INNER JOIN feed f
 		    ON mll.mni_num = f.mni_num
-		WHERE
-		    mll.mni_num = 'mni_009';
 	</select>
   </mapper>
   
