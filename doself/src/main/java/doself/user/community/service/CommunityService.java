@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Like;
 import doself.user.community.domain.SearchArticle;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -27,5 +28,14 @@ public interface CommunityService {
 	
 	// 게시글 삭제
 	void deleteArticle(int articleKeyNum);
+	
+	// 좋아요 여부 확인
+	Like isLiked(Like like);
+	
+	// 좋아요 insert
+	boolean createLikeToArticle(Like like);
+	
+	// 좋아요 취소 update
+	boolean modifyLikeToArticle(Like like);
 
 }
