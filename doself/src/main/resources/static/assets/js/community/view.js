@@ -1,7 +1,3 @@
-$('#comment-submit').click(event => {
-	event.preventDefault();
-})
-
 $('#article-delete__button').click(event => {
 	event.preventDefault();
  	const isDelete = confirm('게시글을 삭제하시겠습니까?');

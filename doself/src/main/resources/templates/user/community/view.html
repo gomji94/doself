@@ -32,7 +32,6 @@
                         <span id="post-like">like</span>
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
                         <input type="hidden" id="currentArticleLikeCnt" name="currentArticleLikeCnt" th:value="*{articleLike}">
-                        
                     </div>
 					<th:block th:with="imgSrc=*{articleAttachmentFile}" >
 					    <img th:src="${imgSrc != '' ? imgSrc : ''}" width="300" height="300" th:if="${imgSrc != ''}">
@@ -78,7 +77,7 @@
 	                                    <p class="comment-content" th:text="${l.commentContent}"></p>
 	                                </div>
 	                                <div class="comment-info__right">
-	                                    <p class="comment-date" th:text="${commentDate}">2024.11.18 09:32</p>
+	                                    <p class="comment-date" th:text="${l.commentDate}"></p>
 	                                    <button class="comment-button">
 	                                        <i class="fa-solid fa-ellipsis-vertical"></i>
 	                                    </button>
@@ -88,9 +87,10 @@
                         </th:block>
 
                         <!-- 댓글 작성 폼 -->
-                        <form id="comment-form" action="#">
+                        <form id="comment-form" th:action="@{/community/createcomment}" method="post">
+                        	<input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
                             <div id="comment-userId" th:text="${test}"></div>
-                            <textarea id="comment-text" placeholder="댓글을 남겨보세요"></textarea>
+                            <textarea id="comment-text" name="commentContent" placeholder="댓글을 남겨보세요"></textarea>
                             <button type="submit" id="comment-submit">등록</button>
                         </form>
                     </div>
