@@ -73,17 +73,18 @@ public class MypageController {
 	}	
 	
 	@PostMapping("/member/info")
-	public String modifyMemberById(@RequestParam(name="memberId") String memberId, 
+	public String modifyMemberById(Members member,
+									@RequestParam(name="memberId") String memberId, 
 								   @RequestParam(name="memberEmail") List<String> memberEmail,
 								   @RequestParam(name="memberPhone") List<String> memberPhone,
 								   Model model) {
 		
-		log.info("memberPhone {}",memberPhone);
+		log.info("member : {}",member);
 		System.out.println("---------" + memberEmail + "--" +memberPhone);
-		Members memberInfo = membersService.getMemberInfoById(memberId);
-		membersService.modifyMemberById(memberId,memberEmail,memberPhone,memberInfo);
-		memberInfo = membersService.getMemberInfoById(memberId);
-		model.addAttribute("memberInfo", memberInfo);
+		// Members memberInfo = membersService.getMemberInfoById(memberId);
+		// membersService.modifyMemberById(memberId,memberEmail,memberPhone,memberInfo);
+		// memberInfo = membersService.getMemberInfoById(memberId);
+		// model.addAttribute("memberInfo", memberInfo);
 		
 		return "user/mypage/info";
 	}
