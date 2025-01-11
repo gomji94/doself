@@ -21,19 +21,21 @@ public class Feed {
 	private Date  feedDate;	  				// 피드 등록 날짜
 	private Date  feedIntakeDate;			// 섭취 날짜
 	private Integer	feedLike;			  	// 챌린지 피드 좋아요(null과 비교 후 카운트)
-	private Integer  feedOpenStatus;	  	// 공개여부
+	private Integer feedOpenStatus;	  		// 공개여부
 	private String  memberProfileImage;  	// 작성자 프로필 이미지
 	private String  feedCommentCode; 	 	// 피드 댓글 코드
 	private String  feedCommentContent;  	// 피드 댓글 내용
+	private String  mealNum;  				// 음식 영양 정보 코드
 	private String mealName;       			// 음식 이름
     private String mealPicture;    			// 음식 사진 경로
-    private int mealCalories;      			// 칼로리
-    private int mealCarbohydrates; 			// 탄수화물
-    private int mealProtein;       			// 단백질
-    private int mealFat;           			// 지방
-    private int mealSugar;         			// 당
-    private int mealCholesterol;   			// 콜레스테롤
-    private int mealSodium;        			// 나트륨
-    private int mealCalcium;       			// 칼슘
-    private int mealIron;          			// 철분
+    private Integer mealWeight;    			// 1인분 중량
+    private Integer mealCalories;      		// 칼로리
+    private Integer mealCarbohydrates; 		// 탄수화물
+    private Integer mealProtein;       		// 단백질
+    private Integer mealFat;           		// 지방
+    private Integer mealSugar;         		// 당
+    private Integer mealCholesterol;   		// 콜레스테롤
+    private Integer mealSodium;        		// 나트륨
+    private Integer mealCalcium;       		// 칼슘
+    private Integer mealIron;          		// 철분
 }

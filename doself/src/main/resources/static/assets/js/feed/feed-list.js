@@ -129,10 +129,11 @@ $(document).ready(function() {
     });
 });
 
-// Right Sidebar update
+// 오른쪽 사이드바 업데이트
 function updateRightSidebar(feed) {
     const mealPicture = feed.getAttribute('data-meal-picture') || '/images/default-food.png';
-    const mealCalories = feed.getAttribute('data-meal-calories') || '0';
+	const mealWeight = feed.getAttribute('data-meal-weight') || '0';
+	const mealCalories = feed.getAttribute('data-meal-calories') || '0';
     const mealCarbohydrates = feed.getAttribute('data-meal-carbohydrates') || '0';
     const mealProtein = feed.getAttribute('data-meal-protein') || '0';
     const mealFat = feed.getAttribute('data-meal-fat') || '0';
@@ -140,7 +141,10 @@ function updateRightSidebar(feed) {
     const imgElement = document.querySelector('#analysis-img img');
     if (imgElement) imgElement.src = mealPicture;
 
-    const caloriesElement = document.querySelector('#calories');
+	const weightElement = document.querySelector('#weight');
+	if (weightElement) weightElement.textContent = `${mealWeight} kcal`;
+    
+	const caloriesElement = document.querySelector('#calories');
     if (caloriesElement) caloriesElement.textContent = `${mealCalories} kcal`;
 
     const carbElement = document.querySelector('#carb');
@@ -153,19 +157,32 @@ function updateRightSidebar(feed) {
     if (fatElement) fatElement.textContent = `${mealFat} g`;
 }
 
-// 페이지 로드 시 첫 번째 피드로 초기화
+// Intersection Observer 설정
 document.addEventListener('DOMContentLoaded', () => {
-    const firstFeed = document.querySelector('.feed'); // 첫 번째 피드 선택
-    if (firstFeed) {
-        updateRightSidebar(firstFeed); // Right Sidebar 업데이트
-    }
+    const feeds = document.querySelectorAll('.feed'); // 모든 피드 요소 선택
+    const observerOptions = {
+        root: null, // 뷰포트를 기준으로 감지
+        threshold: 0.5 // 피드가 50% 이상 보일 때 감지
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                updateRightSidebar(entry.target); // 피드가 뷰포트 안에 들어오면 Right Sidebar 업데이트
+            }
+        });
+    }, observerOptions);
+
+    // 각 피드 요소에 Observer 연결
+    feeds.forEach(feed => observer.observe(feed));
 });
 
-// --- analysis-table Info ---
+// --- 오른쪽 사이드바 영양 정보 테이블 업데이트 ---
 document.querySelectorAll('.feed').forEach(feed => {
     feed.addEventListener('click', function () {
         // 데이터 속성 읽기
         const mealPicture = this.getAttribute('data-meal-picture') || '/images/default-food.png';
+        const mealWeight = this.getAttribute('data-meal-weight') || '0';
         const mealCalories = this.getAttribute('data-meal-calories') || '0';
         const mealCarbohydrates = this.getAttribute('data-meal-carbohydrates') || '0';
         const mealProtein = this.getAttribute('data-meal-protein') || '0';
@@ -175,6 +192,9 @@ document.querySelectorAll('.feed').forEach(feed => {
         const imgElement = document.querySelector('#analysis-img img');
         if (imgElement) imgElement.src = mealPicture;
 
+		const weightElement = document.querySelector('#weight');
+		if (weightElement) weightElement.textContent = `${mealWeight} kcal`;
+		
         const caloriesElement = document.querySelector('#calories');
         if (caloriesElement) caloriesElement.textContent = `${mealCalories} kcal`;
 
@@ -188,23 +208,12 @@ document.querySelectorAll('.feed').forEach(feed => {
         if (fatElement) fatElement.textContent = `${mealFat} g`;
 
         // 디버깅용 콘솔 출력
-        console.log('Updated Meal Info:', { mealPicture, mealCalories, mealCarbohydrates, mealProtein, mealFat });
+        console.log('Updated Meal Info:', { mealPicture, mealWeight, mealCalories, mealCarbohydrates, mealProtein, mealFat });
     })
 });
 
-// --- 반복된 onerror 처리 최소화 ---
-document.querySelectorAll('img').forEach(img => {
-    img.onerror = function () {
-        if (this.classList.contains('profile-img')) {
-            this.src = '/images/default-profile.png';
-        } else if (this.classList.contains('meal-img')) {
-            this.src = '/images/default-food.png';
-        }
-    };
-});
-
 // 원형 그래프 데이터와 설정
-const pieCtx = document.getElementById('pieChart').getContext('2d');
+/*const pieCtx = document.getElementById('pieChart').getContext('2d');
 const pieChart = new Chart(pieCtx, {
   type: 'pie',
   data: {
@@ -222,4 +231,4 @@ const pieChart = new Chart(pieCtx, {
       },
     }
   }
-});
+});*/
