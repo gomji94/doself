@@ -112,8 +112,7 @@
                             </select>     
                         </div>
                     </div>
-                    <a th:href="@{/mypage/feedlist(memberId=*{memberId})}" 
-                       id="modifyMemberBtn" class="btn-submit">수정</a>
+                    <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
                 </form>
                 <form action="/mypage/delete" method="post">
                 <input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
