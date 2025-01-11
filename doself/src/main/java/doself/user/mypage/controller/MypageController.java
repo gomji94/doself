@@ -28,39 +28,20 @@ public class MypageController {
 
 	private final MembersService membersService;
 
-	//회원정보 수정전 검증
+	//회원정보 수정전 검증 화면이동
 	@GetMapping("/modify")
-	public String getPwCheck (@RequestParam(name="memberId") String memberId,
+	public String getPwCheck(@RequestParam(name="memberId") String memberId,
 							  Model model) {
 		model.addAttribute("memberId", memberId);
 		return "user/mypage/modify-check";
 	}
 	
-	// 회원정보수정
-	@GetMapping("/member/info")   
-	public String getMemberInfoView(@RequestParam(name="memberId") String memberId,
-									@RequestParam(name="msg", required = false) String msg, 
-									@ModelAttribute("message") String message, 
-									Model model){
-		Members memberInfo = membersService.getMemberInfoById(memberId);
-        String[] memberTel = memberInfo.getMemberPhoneNum().split("-");
-		String Email = memberInfo.getMemberEmail();
-		int atIndex = Email.indexOf("@");
-		String memberEmail = Email.substring(0, atIndex);
-		
-		
-		model.addAttribute("memberInfo", memberInfo);
-		if(msg !=null) model.addAttribute("msg", msg);
-		
-		return "user/mypage/info";
-		}	
-
-	// 회원정보수정
+	// 회원정보 수정전 검증
 	@PostMapping("/modify")
 	public String modifyMember(@RequestParam(name="memberId") String memberId,  
-	                           @RequestParam(name="memberPw") String memberPw,  
-	                           RedirectAttributes reAttr,
-	                           Model model) {						
+			                   @RequestParam(name="memberPw") String memberPw,  
+			                   RedirectAttributes reAttr,
+			                   Model model) {						
 		//member.setMemberEmail(removeCommas(member.getMemberEmail())); 
 		//member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum())); 		
 		String viewName = "redirect:/mypage/modify";
@@ -71,12 +52,42 @@ public class MypageController {
 			model.addAttribute("memberInfo", memberInfo);
 			viewName = "user/mypage/info";
 		} else {
-				reAttr.addAttribute("memberId", memberId);
-				reAttr.addFlashAttribute("message", "회원의 정보가 일치하지 않습니다.");
-		  }
-		  return viewName;
+			reAttr.addAttribute("memberId", memberId);
+			reAttr.addFlashAttribute("message", "회원의 정보가 일치하지 않습니다.");
 		}
+		return viewName;
+	}
+	
+	// 회원정보수정
+	@GetMapping("/member/info")   
+	public String getMemberInfoView(@RequestParam(name="memberId") String memberId,
+			                        @RequestParam(name="msg", required = false) String msg, 
+			                        @ModelAttribute("message") String message, 
+			                        Model model){
 		
+		Members memberInfo = membersService.getMemberInfoById(memberId);
+		model.addAttribute("memberInfo", memberInfo);
+		if(msg !=null) model.addAttribute("msg", msg);
+		
+		return "user/mypage/info";
+	}	
+	
+	@PostMapping("/member/info")
+	public String modifyMemberById(@RequestParam(name="memberId") String memberId, 
+								   @RequestParam(name="memberEmail") List<String> memberEmail,
+								   @RequestParam(name="memberPhone") List<String> memberPhone,
+								   Model model) {
+		
+		log.info("memberPhone {}",memberPhone);
+		System.out.println("---------" + memberEmail + "--" +memberPhone);
+		Members memberInfo = membersService.getMemberInfoById(memberId);
+		membersService.modifyMemberById(memberId,memberEmail,memberPhone,memberInfo);
+		memberInfo = membersService.getMemberInfoById(memberId);
+		model.addAttribute("memberInfo", memberInfo);
+		
+		return "user/mypage/info";
+	}
+	
 	// 공통 메소드 static common 에 작성 할 것.
 	// 유효성검사 js 로 검증 후 데이터 넘겨받기
 	public static String removeCommas(String input) {
@@ -96,7 +107,6 @@ public class MypageController {
 	// 회원탈퇴
 	@PostMapping("/delete" )
 	public String deleteMember(@RequestParam(name="memberId") String memberId) {
-		
 		
 		membersService.removeMemberById(memberId);
 		return "redirect:/login";
@@ -134,7 +144,6 @@ public class MypageController {
 		return "user/mypage/ticket-history";
 	}
 	
-
 	// 회원포인트내역조회
 	@GetMapping("/pointhistory" )
 	public String getPointHistory(@RequestParam(name = "memberId") String memberId,

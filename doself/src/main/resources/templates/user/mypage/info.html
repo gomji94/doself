@@ -86,30 +86,30 @@
                 <div class="form-group">
                     <label for="confirm-password">새 비밀번호 확인</label>
                     <div class="input-wrapper">
-                   		 <input class="width-fit" type="password" id="" name="" >
+                   		 <input class="width-fit" type="password" id="memberPw" name="memberPw" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
                     <div class="phone-input">
-                        <input type="text" id="phone-number-part1" th:value="${memberTel}" name="memberPhoneNum" maxlength="3" 
+                        <input type="text" id="phone-number-part1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
                         	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part2" th:value="${memberTel}" name="memberPhoneNum" maxlength="4" 
+                        <input type="text" id="phone-number-part2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part3" th:value="${memberTel}" name="memberPhoneNum" maxlength="4" 
+                        <input type="text" id="phone-number-part3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                    </div>
+                    </div>     
                 </div>
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <div class="email-input">
-                            <input type="text" id="memberEmail" th:value="${memberEmail}" name="memberEmail" maxlength="20">
+                            <input type="text" name="memberEmail" id="memberEmail" th:value="${#strings.arraySplit(memberInfo.memberEmail,'@')[0]}" maxlength="20">
                             <input type="text" name="memberEmail" value="@" readonly="readonly" style="border:none; width: 35px; ">
-                            <select name="memberEmail">
-                                <option value="gmail.com">gmail.com</option>
-                                <option value="naver.com">naver.com</option>
-                                <option value="daum.net">daum.net</option>
-                            </select>
+                            <select name="memberEmail"> 
+                                <option value="gmail.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'gmail.com'">gmail.com</option>
+                                <option value="naver.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'naver.com'">naver.com</option>
+                                <option value="daum.net"  th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'daum.net'">daum.net</option>
+                            </select>     
                         </div>
                     </div>
                     <a th:href="@{/mypage/feedlist(memberId=*{memberId})}" 
