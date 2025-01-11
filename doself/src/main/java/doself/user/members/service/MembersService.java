@@ -1,6 +1,5 @@
 package doself.user.members.service;
 
-import java.util.List;
 import java.util.Map;
 
 import doself.user.members.domain.Members;
@@ -15,7 +14,7 @@ public interface MembersService {
 	public Members getMemberInfoById(String memberId);
 	
 	// 회원수정
-	public void modifyMemberById(String memberId, List<String> memberEmail, List<String> memberPhone, Members memberInfo);
+	public void modifyMember(Members member);
 	
 	//회원 검증
 	public Map<String, Object> matchedMember(String memberId, String memberPw);
