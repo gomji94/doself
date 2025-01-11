@@ -5,6 +5,7 @@
       
 <head>
 	<link th:href="@{/assets/css/community/view.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/css/community/request-modal.css}" rel="stylesheet" type="text/css" />
 </head>
 	
 	<th:block layout:fragment="content-body">
@@ -32,7 +33,6 @@
                         <span id="post-like">like</span>
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
                         <input type="hidden" id="currentArticleLikeCnt" name="currentArticleLikeCnt" th:value="*{articleLike}">
-                        
                     </div>
 					<th:block th:with="imgSrc=*{articleAttachmentFile}" >
 					    <img th:src="${imgSrc != '' ? imgSrc : ''}" width="300" height="300" th:if="${imgSrc != ''}">
@@ -47,6 +47,7 @@
                     <div class="article-button-container">
                     	<th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
                             <button id="article-like__button">like</button>
+                            <button id="article-report__button">신고</button>
                             <input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
                         </th:block>
                         
@@ -78,19 +79,35 @@
 	                                    <p class="comment-content" th:text="${l.commentContent}"></p>
 	                                </div>
 	                                <div class="comment-info__right">
-	                                    <p class="comment-date" th:text="${commentDate}">2024.11.18 09:32</p>
+	                                    <p class="comment-date" th:text="${l.commentDate}"></p>
 	                                    <button class="comment-button">
 	                                        <i class="fa-solid fa-ellipsis-vertical"></i>
 	                                    </button>
+										<div class="comment-menu"> 
+											<ul>
+										        <li class="comment-menu-item" th:unless="${test != null and test != articleDetail.articleAuthorId}">
+										        	<a href="#" id="report-comment-btn">신고</a>
+										        </li>
+										        <th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
+											        <li class="comment-menu-item" >
+											        	<a href="#" id="modify-comment-btn">수정</a>
+											        </li>
+											        <li class="comment-menu-item">
+											        	<a href="#" id="delete-comment-btn">삭제</a>
+											        </li>
+										        </th:block>
+											</ul>
+									    </div>
 	                                </div>
 	                            </li>
 	                        </ul>
                         </th:block>
 
                         <!-- 댓글 작성 폼 -->
-                        <form id="comment-form" action="#">
+                        <form id="comment-form" th:action="@{/community/createcomment}" method="post">
+                        	<input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
                             <div id="comment-userId" th:text="${test}"></div>
-                            <textarea id="comment-text" placeholder="댓글을 남겨보세요"></textarea>
+                            <textarea id="comment-text" name="commentContent" placeholder="댓글을 남겨보세요"></textarea>
                             <button type="submit" id="comment-submit">등록</button>
                         </form>
                     </div>
@@ -106,6 +123,37 @@
             </div>
         </div>
     </div>
+    
+        <div class="modal-container">
+        <div class="popup-wrap" style="display: none;">
+            <div class="popup">
+                <div class="popup-body">
+                    <div class="body-content">
+                        <div class="body-titlebox">
+                            <div id="modal-request-title">신고 요청</div>
+                            <form id="modal-request-form" th:action="@{community/createreport}" method="post">
+							    <label for="cars"></label>
+							    <select id="reports-code" name="reports-code">
+							        <option value="1">불법 컨텐츠</option>
+							        <option value="2">사기 및 사칭</option>
+							        <option value="3">폭력적 및 유해 콘텐츠</option>
+							        <option value="4">욕설 및 비방</option>
+							        <option value="5">스팸 및 광고</option>
+							        <option value="6">허위 사실 유포</option>
+							    </select>
+							    <input type="text" placeholder="신고 내용을 입력해주세요" />
+                            </form>
+                            <div id="modal-request-form__buttons">
+                                <button type="button" id="modal-request-form__submitButton" data-target="confirm-message.html">접수</button>
+                                <button type="button" id="modal-request-form__cancelButton">취소</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
@@ -117,5 +165,9 @@
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
+    	<script type="text/javascript">
+    	
+
+		</script>
     </th:block> 
 </html>

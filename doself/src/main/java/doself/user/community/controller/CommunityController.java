@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Comment;
 import doself.user.community.domain.Like;
 import doself.user.community.domain.SearchArticle;
 import doself.user.community.mapper.CommunityMapper;
@@ -19,6 +21,8 @@ import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -143,11 +147,20 @@ public class CommunityController {
 			communityService.modifyLikeToArticle(like);
 		}
 		
-		
-		
 		return true;
 	}
 	
+	@PostMapping("/createcomment")
+	public String postMethodName(Comment comment, @RequestParam(name = "articleNum") String articleNum,HttpSession session, RedirectAttributes reAttr) {
+		//TODO: process POST request
+		comment.setCommentAuthorId((String) session.getAttribute("SID"));
+		
+		communityService.createComment(comment);
+		
+		reAttr.addAttribute("articleNum", articleNum);
+		
+		return "redirect:/community/view";
+	}
 	
 	
 	

@@ -177,6 +177,12 @@
 		WHERE lh_num = #{likeKeyNum}
   	</update>
   	
+  	<!-- comment insert -->
+  	<insert id="createComment" parameterType="Comment">
+	  	INSERT INTO free_board_comments
+		(fbc_num, fb_num, mbr_id, fbc_content, fbc_date)
+		VALUES (#{commentKeyNum}, #{articleKeyValue}, #{commentAuthorId}, #{commentContent}, NOW())
+  	</insert>
 
   	
 </mapper>
