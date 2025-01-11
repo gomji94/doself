@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 @Slf4j
 public class MembersServiceImpl implements MembersService {
@@ -30,14 +32,8 @@ public class MembersServiceImpl implements MembersService {
 	
 	// 회원 수정
 	@Override
-	public void modifyMemberById(String memberId, List<String> memberEmail, List<String> memberPhone, Members memberInfo) {
-		log.info("memberPhone {}",memberPhone);
-		String membersEmail = memberEmail.get(0) + memberEmail.get(1) + memberEmail.get(2);
-		memberInfo.setMemberEmail(membersEmail);
-		String membersPhone = memberPhone.get(0) + "-" + memberPhone.get(1) + "-" + memberPhone.get(2);
-		memberInfo.setMemberPhoneNum(membersPhone);
-		
-		membersMapper.modifyMemberById(memberInfo);
+	public void modifyMember(Members member) {
+		membersMapper.modifyMember(member);
 	}
 	
 	//회원 검증

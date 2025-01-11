@@ -60,7 +60,7 @@
 	                <div id="profile-info">
 	                    <div id="profile-edit">
 	                        <input type="file" id="btnChangeUplode" style="display:none">
-	                        <button type="button" id="btnChangeProfile" style="">프로필 변경</button>
+	                        <button type="button" id="btnChangeProfile" >프로필 변경</button>
 	                    </div>
 	                    <div id="profile-userId" th:text="*{memberId}"></div>
 	                </div>
@@ -80,13 +80,15 @@
                 <div class="form-group">
                     <label for="new-password">새 비밀번호</label>
                     <div class="input-wrapper">
-                   		<input class="width-fit" type="password" id="memberPw" name="memberPw">
+                   		<input class="width-fit" type="password" id="memberPw" name="memberPw" autocomplete="new-password">
+                   		<div></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">새 비밀번호 확인</label>
                     <div class="input-wrapper">
-                   		 <input class="width-fit" type="password" id="memberPw" name="memberPw" >
+                   		 <input class="width-fit" type="password" id="memberPwChk" autocomplete="new-password">
+                   		 <div></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -98,6 +100,7 @@
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
                         <input type="text" id="phone-number-part3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <div></div>
                     </div>     
                 </div>
                     <div class="form-group">
@@ -109,13 +112,14 @@
                                 <option value="gmail.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'gmail.com'">gmail.com</option>
                                 <option value="naver.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'naver.com'">naver.com</option>
                                 <option value="daum.net"  th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'daum.net'">daum.net</option>
-                            </select>     
+                            </select>
+                            <div></div>     
                         </div>
                     </div>
                     <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
                 </form>
                 <form action="/mypage/delete" method="post">
-                <input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
+                <input type="hidden" name="memberId" th:value="*{memberId}">
                     <div id="withdrawa">
           	          <button type="submit" id="removeBtn">회원탈퇴</button>
                     </div>
@@ -139,12 +143,125 @@
 			$('#btnChangeUplode').click();
 		});	
 		
-		function isPassword(asValue) {
-			let regExp = /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
-			return regExp.test(asValue);
-		}
+		//유효성 검사 함수 : 빈값여부체크
+		const emptyFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
 		
-	
+		//유효성 검사 함수 : 8~16자 여부확인  
+		const isPassword = (element) => {
+			const memberPW = element.value 
+			let msg = '';
+			let isDuplicate = false;
+			var regExp =  /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
+				if(!regExp.test(memberPW)){
+					msg = '8 ~ 16자 조합';
+					isDuplicate = true;
+				}
+			element.nextElementSibling.textContent = msg;
+	        return isDuplicate;
+		 }
+		
+		//유효성 검사 함수 : 비밀번호일치 여부 확인 
+		 const checkPwFn = (element) => {
+			 const memberPw = document.querySelector('#memberPw').value;
+			 const checkPw = element.value;
+			 let msg = '';
+			 let isEqual = false;
+		        if(memberPw !=checkPw) { 
+		        	msg = '비밀번호가 일치하지 않습니다.';
+		        	isEqual = true;
+		        }			 
+		        element.nextElementSibling.textContent = msg;
+		        return isEqual;		 
+		 }
+		 
+		 const checkPhoneFn = (element) => {
+			 const phone1 = document.querySelector('#phone-number-part1').value;
+			 const phone2 = document.querySelector('#phone-number-part2').value;
+			 const phone3 = document.querySelector('#phone-number-part3').value;
+			 let msg = '';
+			 let isEqual = false;
+			 	if(phone1.length !==3 || phone2.length !=4 || phone3.length !=4) {
+			 		msg = '올바른 전화번호 형식이 아닙니다.';
+			 		 isEqual = true;
+			 	}	
+			 	element.nextElementSibling.textContent = msg;
+			 	return isEqual;	
+		 } 
+			
+		    //입력값
+		    const $memberPw = document.getElementById('memberPw').value; 
+		    const $checkPw = document.getElementById('memberPwChk').value;
+		    const $email = document.getElementById('memberEmail').value;
+		 
+		    //값이비어있으면 유효성검사 함수종료
+		    $memberPw.addEventListener('blur', e => {
+		    	if(emptyFn(e.target)) return;
+		    	isPassword(e.target);
+		    });
+		    
+		    $checkPw.addEventListener('blur', e => {
+		    	if(emptyFn(e.target)) return; 
+		    	checkPwFn(e.target);
+		    });
+		    
+		    $email.addEventListener('blur', e => {
+		    	if(emptyFn(e.target)) return;
+		    });
+		 
+		    ['phone-number-part1', 'phone-number-part2', 'phone-number-part3'].forEach(id => {
+		        document.querySelector(`#${id}`).addEventListener('input', function() {
+		            checkPhoneFn(this);
+		        });
+		    });
+		        
+		 // 수정버튼 클릭시 유효성검사 후 폼 제출   
+		   document.getElementById('modifyMemberForm').addEventListener('submit', function(e) {
+		        
+			   e.preventDefault();
+			   
+		        if(emptyFn($memberPw)){
+		        	 $memberPw.focus();
+		        	 return;
+		        }
+				
+		        if(isPassword($memberPw)){ 
+		        	$memberPw.focus();
+		        	return;
+		        }
+		        
+		        if(emptyFn($checkPw)){                         
+		            $checkPw.focus();
+		            return;
+		        }
+
+		        if(checkPwFn($checkPw)){                                       
+		            $checkPw.focus();
+		            return;
+		        }
+		        
+		        if(emptyFn($memberEmail)){
+		        	$memberEamil.focus();
+		        	return;
+		        }
+		        
+		        this.submit();
+		        arert('제출')
+		   });
+
+		    
+		 
+		 
 	</script>
     </th:block> 
 </html>

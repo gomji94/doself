@@ -83,7 +83,7 @@
     </select>
     
 	<!-- 회원수정 -->
-    <update id="modifyMemberById" parameterType="Members">
+    <update id="modifyMember" parameterType="Members">
        UPDATE member 
         <trim prefix="SET" suffixOverrides=",">
             <if test="memberPw != null and memberPw !=''">
