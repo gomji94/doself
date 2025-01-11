@@ -3,11 +3,14 @@ package doself.user.community.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import doself.common.mapper.CommonMapper;
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Like;
 import doself.user.community.domain.SearchArticle;
 import doself.user.community.mapper.CommunityMapper;
 import doself.util.PageInfo;
@@ -22,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CommunityServiceImpl implements CommunityService {
 	
 	private final CommunityMapper communityMapper;
+	private final CommonMapper commonMapper;
 
 	@Override
 	public PageInfo<Article> getArticleList(Pageable pageable) {
@@ -101,5 +105,75 @@ public class CommunityServiceImpl implements CommunityService {
 		communityMapper.deleteArticle(formattedKeyNum);
 		
 	}
+	
+	@Override
+	public Like isLiked(Like like) {
+		// TODO Auto-generated method stub
+		Like likeInfo = communityMapper.isLikedByUser(like);
+		
+		if(likeInfo != null) return likeInfo;
+		
+		return null;
+	}
+
+	@Override
+	public boolean createLikeToArticle(Like like) {
+		// TODO Auto-generated method stub
+		
+		boolean result = false;
+		
+		String formattedKeyNum = commonMapper.getPrimaryKey("lh_", "like_history", "lh_num");
+		like.setLikeKeyNum(formattedKeyNum);
+		int insertResult = communityMapper.createLikeToArticle(like);
+		
+		if (insertResult > 0) {
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("likeOccurArticleNumValue", like.getLikeOccurArticleNumValue());
+			Integer calcLikeCnt = like.getCurrentArticleLikeCnt() + 1;
+			params.put("calcLikeCnt", calcLikeCnt);
+			
+			communityMapper.modifyArticleLikeCnt(params);
+			
+			result = true;
+			
+			return result;
+		}
+		
+		
+		return result;
+	}
+
+	@Override
+	public boolean modifyLikeToArticle(Like like) {
+		// TODO Auto-generated method stub
+		boolean result = false;
+		
+		communityMapper.modifyisLiked(like);
+		boolean isLiked = Boolean.parseBoolean(like.getIsLiked());
+		
+		if (isLiked) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("likeOccurArticleNumValue", like.getLikeOccurArticleNumValue());
+			Integer calcLikeCnt = like.getCurrentArticleLikeCnt() - 1;
+			params.put("calcLikeCnt", calcLikeCnt);
+			
+			communityMapper.modifyArticleLikeCnt(params);
+			result =  true;
+			
+			
+		} else {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("likeOccurArticleNumValue", like.getLikeOccurArticleNumValue());
+			Integer calcLikeCnt = like.getCurrentArticleLikeCnt() + 1;
+			params.put("calcLikeCnt", calcLikeCnt);
+			
+			communityMapper.modifyArticleLikeCnt(params);
+			result =  true;
+		}
+		
+		return result;
+	}
+
 
 }
