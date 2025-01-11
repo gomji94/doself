@@ -57,5 +57,8 @@ public interface CommunityMapper {
 	// 좋아요 기록 update
 	int modifyisLiked(Like like);
 	
+	// 댓글 작성
+	void createComment(Comment comment);
+	
 
 }
