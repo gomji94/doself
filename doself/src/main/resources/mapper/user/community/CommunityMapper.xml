@@ -24,7 +24,12 @@
 		<result column="fbc_content" property="commentContent"/>
 		<result column="fbc_date" property="commentDate"/>
 	</resultMap>
-  	
+	
+	<resultMap type="Like" id="likeResultMap">
+		<id column="lh_num" property="likeKeyNum"/>
+		<result column="lh_is_liked" property="isLiked"/>
+	</resultMap>
+	
   	<!-- 게시글 총 갯수 행 조회 -->
   	<select id="getCntOfArticle" resultType="int">
   		SELECT COUNT(*)
@@ -68,19 +73,19 @@
   	</select>
   	
   	 <!-- 검색 게시글 총 갯수 행 조회 -->
-	  	<select id="getCntOfArticleBySearch" parameterType="Map" resultType="int">
-	  		SELECT COUNT(*)
-			FROM free_board fb
-			<where>
-				<if test="searchArticle.days != null">
-					fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
-				</if>
-				<if test="searchArticle.searchValue != null">
-					AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
-				</if>
-			</where>
-			ORDER BY fb_date DESC;
-	  	</select>
+  	<select id="getCntOfArticleBySearch" parameterType="Map" resultType="int">
+  		SELECT COUNT(*)
+		FROM free_board fb
+		<where>
+			<if test="searchArticle.days != null">
+				fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
+			</if>
+			<if test="searchArticle.searchValue != null">
+				AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY fb_date DESC;
+  	</select>
   	
   	<!-- 게시글 검색 -->
   	<select id="getArticleListBySearch" parameterType="Map" resultMap="articleResultMap">
@@ -133,5 +138,45 @@
 		FROM free_board_comments
 		WHERE fb_num=#{articleKeyNum}
   	</select>
+  	
+  	<!-- 좋아요 기록 가져오기 -->
+  	<select id="isLikedByUser" parameterType="Like" resultMap="likeResultMap">
+  		SELECT 
+  			lh_num, 
+ 			lh_is_liked
+		FROM like_history
+		WHERE mbr_id = #{likeMemberId} AND olc_code = 'olc_001' AND lh_occurs_topic_num = #{likeOccurArticleNumValue};
+  	</select>
+  	
+  	<!-- 좋아요 insert -->
+  	<insert id="createLikeToArticle" parameterType="Like" >
+  	  	INSERT INTO like_history
+		(lh_num, olc_code, mbr_id, lh_occurs_topic_num, lh_date)
+		VALUES (#{likeKeyNum}, 'olc_001', #{likeMemberId}, #{likeOccurArticleNumValue}, NOW())
+  	</insert>
+  	
+  	<!-- 게시글 좋아요 update +1 -->
+  	<update id="modifyArticleLikeCnt" parameterType="Map">
+	  	UPDATE free_board
+		SET fb_like=${calcLikeCnt}
+		WHERE fb_num =#{likeOccurArticleNumValue}
+  	</update>
+  	
+  	<!-- 좋아요 기록 update -->
+  	<update id="modifyisLiked" parameterType="Like">
+  		UPDATE like_history
+		SET lh_is_liked=
+		  <choose>
+		    <when test="isLiked == 'true'">
+		      'false'
+		    </when>
+		    <otherwise>
+		      'true'
+		    </otherwise>
+		  </choose>
+		WHERE lh_num = #{likeKeyNum}
+  	</update>
+  	
+
   	
 </mapper>
