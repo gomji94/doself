@@ -57,39 +57,39 @@ public class MemberController {
 		return "admin/member/admin-member-list";
 	}
 	
-	// 포인트 상품 수정
-		@GetMapping("/modify")
-		public String getModifyMember(@RequestParam(name="mbrId") String mbrId, Model model) {
+	// 회원 정보 수정
+	@GetMapping("/modify")
+	public String getModifyMember(@RequestParam(name="mbrId") String mbrId, Model model) {
 
-			Member memberInfo = memberService.getMemberInfoByMbrId(mbrId);
-			var gradeList = memberService.getMemberMgCodeList();
-			var ageList = memberService.getAgeCategoryList();
-			
-			model.addAttribute("title", "회원 정보 수정");
-			model.addAttribute("memberInfo", memberInfo);
-			model.addAttribute("gradeList", gradeList);
-			model.addAttribute("ageList", ageList);
-			
-			return "admin/member/modify-member";
-		}
+		Member memberInfo = memberService.getMemberInfoByMbrId(mbrId);
+		var gradeList = memberService.getMemberMgCodeList();
+		var ageList = memberService.getAgeCategoryList();
 		
-		@PostMapping("/modify")
-		public String modifyMember(Member member, RedirectAttributes reAttr) {
+		model.addAttribute("title", "회원 정보 수정");
+		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("gradeList", gradeList);
+		model.addAttribute("ageList", ageList);
+		
+		return "admin/member/modify-member";
+	}
+	// 회원 정보 수정
+	@PostMapping("/modify")
+	public String modifyMember(Member member, RedirectAttributes reAttr) {
 
-			memberService.modifyMember(member);
-			
-			reAttr.addAttribute("mbrId",member.getMbrId());
-			
-			return "redirect:/admin/member/list";
-		}
+		memberService.modifyMember(member);
 		
-		@GetMapping("/delete")
-		public String deleteMember(@RequestParam(value="mbrId") String mbrId) {
-			
-			memberService.deleteMember(mbrId);
-			
-			return "redirect:/admin/point/list";
-		}
+		reAttr.addAttribute("mbrId",member.getMbrId());
+		
+		return "redirect:/admin/member/list";
+	}
+	// 회원 정보 삭제(is_deleted = deleted로 업데이트)
+	@GetMapping("/delete")
+	public String deleteMember(@RequestParam(value="mbrId") String mbrId) {
+		
+		memberService.deleteMember(mbrId);
+		
+		return "redirect:/admin/member/list";
+	}
 	
 	// 로그관리 조회
 	@GetMapping("/loglist")
@@ -120,5 +120,11 @@ public class MemberController {
 		model.addAttribute("lastPage", lastPage);
 		
 		return "admin/member/log-list";
+	}
+	
+	//매년 나이계산하여 연령대 값 변경
+	public void everyYearCheck() {
+		
+		memberService.everyYearCheck();
 	}
 }

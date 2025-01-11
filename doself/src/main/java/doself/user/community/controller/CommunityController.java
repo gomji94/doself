@@ -7,15 +7,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Like;
 import doself.user.community.domain.SearchArticle;
+import doself.user.community.mapper.CommunityMapper;
 import doself.user.community.service.CommunityService;
 import doself.util.Pageable;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -99,7 +103,7 @@ public class CommunityController {
 	@GetMapping("/view")
 	public String getArticleDetail(@RequestParam(name = "articleNum") int articleKeyNum, Model model) {
 		
-		log.info("articleDetail : {}", communityService.getArticleDetail(articleKeyNum));
+		// log.info("================> articleDetail : {}", communityService.getArticleDetail(articleKeyNum));
 		
 		model.addAttribute("articleDetail", communityService.getArticleDetail(articleKeyNum));
 		
@@ -117,6 +121,33 @@ public class CommunityController {
 		communityService.deleteArticle(articleKeyNum);
 		return "redirect:/community/list";
 	}
+	
+	@PostMapping("/like")
+	@ResponseBody
+	public boolean createLikeToArticle(Like like, HttpSession session) {
+		//TODO: process POST request
+		
+		like.setLikeMemberId((String) session.getAttribute("SID"));
+		// 발생위치 게시글 넘버
+		String formattedArticleNum = String.format("fb_%03d", like.getLikeOccurArticleNum());
+		like.setLikeOccurArticleNumValue(formattedArticleNum);
+		
+		// 좋아요 여부 객체
+		Like isLikedResult = communityService.isLiked(like);
+		
+		if (isLikedResult == null) {
+			communityService.createLikeToArticle(like);
+		} else {
+			like.setIsLiked(isLikedResult.getIsLiked());
+			like.setLikeKeyNum(isLikedResult.getLikeKeyNum());
+			communityService.modifyLikeToArticle(like);
+		}
+		
+		
+		
+		return true;
+	}
+	
 	
 	
 	

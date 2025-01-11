@@ -12,7 +12,7 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a th:href="@{/mypage/member/info(memberId=*{memberId})}" class="menu-item">
+                    <a th:href="@{/mypage/modify(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-user-gear"></i>
                         <div>my 정보 수정</div>
                     </a>
@@ -64,18 +64,17 @@
         </div>
         <div id="main-content-feedList">
             <ul class="main-container-feedList__items">
-	          <th:block th:if="${memberInfo.feedList != null}"
-	          		    th:each="l: ${memberInfo.feedList}">    
+	          <th:block th:if="*{not #lists.isEmpty(feedList)}"
+	          		    th:each="l: *{feedList}">    
 				<li class="main-container-feedList__item">
 					<input type="hidden" name="feedNum" th:value="${l.feedNum}"/>
 				    <img class="mcfi__image" th:src="@{|${l.feedImage}|}" alt="피드">  
 				</li>
 	          </th:block>
+	          <th:block th:unless="*{not #lists.isEmpty(feedList)}">
+	           		<a>피드 없음</a>
+	          </th:block>
             </ul>
-          <th:block th:unless="*{feedList}">
-           		<a>피드 없음</a>
-          </th:block>
-          
         </div>
         <!-- 모달창 여기부터 복사 -->
 		<div class="modal-confirm-container">
@@ -95,8 +94,9 @@
 		        </div>
 		    </div>
 		</div>
-      </th:block> 
+     </th:block>  
     </main>
+  </th:block>
 
 
 	<!--/* 사용자 추가 js file */-->

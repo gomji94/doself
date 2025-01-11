@@ -12,12 +12,12 @@ import doself.admin.nutrition.domain.NutritionInfo;
 @Mapper
 public interface NutritionMapper {
 	
-	//등록요청 조회
+	// 등록요청 조회
 	List<Nutrition> getNutritionRequestList(Map<String, Object> searchMap);
 	
-	//등록요청 갯수
+	// 등록요청 갯수
 	int getCntNutritionRequestList(Map<String, Object> searchMap);
-	//특정 등록 조회
+	// 특정 등록 조회
 	Nutrition getNutritionByNirrNum(String nirrNum);
 	
 	// 음식 영양정보 등록
@@ -30,17 +30,29 @@ public interface NutritionMapper {
 	// 영양제 영양정보 등록후 상태 수정
 	int modifyNutritionList(NutritionInfo nutritionInfo);
 	
-	//음식 영양정보 조회
+	// 음식 영양정보 조회
 	List<FoodNutritionInfo> getFoodNutritionList(Map<String, Object> searchMap);
-	//음식 영양정보 개수 조회
+	// 음식 영양정보 개수 조회
 	int getCntFoodNutritionList(Map<String, Object> searchMap);
 	
-	//영양제 영양정보 조회
+	// 영양제 영양정보 조회
 	List<NutritionInfo> getNutritionList(Map<String, Object> searchMap);
 	//영양제 영양정보 개수 조회
 	int getCntNutritionList(Map<String, Object> searchMap);
 	
-	//영양정보 등록요청 반려
-	int modifyNutrition(Nutrition nutrition);
+	// 영양정보 등록요청 반려
+	int modifyNutritionRejection(Nutrition nutrition);
 	
+	// 특정 음식 영양정보 조회
+	FoodNutritionInfo getFoodInfoByMniNum(String mniNum);
+	// 특정 음식 영양정보 수정
+	int modifyFoodNutrition(FoodNutritionInfo foodNutritionInfo);
+	
+	// 특정 영양제 영양정보 조회
+	NutritionInfo getNutritionInfoByDsiNum(String dsiNum);
+	// 특정 영양제 영양정보 수정
+	int modifyNutrition(NutritionInfo nutritionInfo);
+	
+	// 브랜드 이름 조회
+	List<Map<String, Object>> getDsbList();
 }

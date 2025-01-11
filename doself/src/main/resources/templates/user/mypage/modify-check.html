@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원수정 비밀번호 체크</title>
+	<link th:href="@{/manage/assets/css/admin.css?v=1.1}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<main>
+            <header class="main-header style-2 navbar">
+                <div class="col-brand">
+                    <a th:href="@{/mypage/modify(memberId=*{memberId})}" class="brand-wrap">
+                        <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo" class="logo"  />
+                    </a>
+                </div>
+                <div class="col-nav">
+                    <ul class="nav">                        
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                        </li>                                                
+                    </ul>
+                </div>
+            </header>
+            <section class="content-main mt-80 mb-80">
+                <div class="card mx-auto card-login">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">비밀번호 확인</h4>
+                        <form id="modifyMemberForm" th:action="@{/mypage/modify}"  method="post">
+                        	<input type="hidden" name="memberId" th:value="${memberId}" />
+
+                            <div class="mb-3">
+                                <input class="form-control w-100" placeholder="회원비밀번호를 입력해주세요" type="password" 
+                                        id = "memberPw" name = "memberPw" />
+                            </div>
+                            <div class="mb-4" style="display: flex; justify-content: space-around;">
+                                <button type="submit" id="modifyBtn" class="btn btn-primary w-40">확인</button>
+                                <a class="btn btn-primary w-40" id="backBtn">취소</a>
+                            </div>
+                            <!-- form-group// -->
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+</body>
+	<!--/* 사용자 추가 js file */-->
+	<th:block layout:fragment="customJsResource">
+		<script th:src="@{/manage/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+		<script th:src="@{/manage/assets/js/vendors/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{/manage/assets/js/vendors/jquery.fullscreen.min.js}"></script>
+		<script th:src="@{/manage/assets/js/main.js?v=1.1}" type="text/javascript"></script>
+	</th:block>
+        
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:inline="javascript">
+    		const msg = /*[[${msg}]]*/ "msg";
+    		if(msg) alert(msg);
+    		const message = /*[[${message}]]*/ "message";
+    		if(message) alert(message);
+    		
+    		$('#modifyBtn').click(function(){
+    			let isSubmit = true;
+    			$('#modifyMemberForm input').each((idx, item)=>{
+					const inputValue = $(item).val();
+					console.log(inputValue);
+					if(!inputValue){
+						$(item).focus();
+						return false;
+					}
+    			});
+    			if(isSubmit) {  
+	    		        $('#modifyMemberForm').submit();   
+    			}
+    		});
+    		
+	    	$('#backBtn').click(event => {
+	    		history.back();
+	    	})
+    		
+    	</script>
+    </th:block>
+</html>

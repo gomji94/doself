@@ -31,6 +31,7 @@
                         <span  th:text="*{articleCreationDate}"></span>
                         <span id="post-like">like</span>
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
+                        <input type="hidden" id="currentArticleLikeCnt" name="currentArticleLikeCnt" th:value="*{articleLike}">
                         
                     </div>
 					<th:block th:with="imgSrc=*{articleAttachmentFile}" >
@@ -44,10 +45,9 @@
 
                     <!-- 글 버튼 -->
                     <div class="article-button-container">
-                    	<th:block th:if="${test != null and test eq articleDetail.articleAuthorId}">
-	                        <a href="#">
-	                            <button id="article-like__button">like</button>
-	                        </a>
+                    	<th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
+                            <button id="article-like__button">like</button>
+                            <input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
                         </th:block>
                         
 						<th:block th:if="${test != null and test eq articleDetail.articleAuthorId}">
@@ -55,7 +55,7 @@
 						        <button id="article-modify__button">modify</button>
 						    </a>
 						    <form id="deleteForm" th:action="@{/community/delete}" method="POST">
-							    <input type="hidden" name="articleNum" th:value="*{articleKeyNum}">
+							    <input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
 							    <button id="article-delete__button" type="submit">delete</button>
 							</form>
 						</th:block>
@@ -70,32 +70,22 @@
                     <!-- 댓글 영역 -->
                     <div id="comments-container">
                         <!-- 댓글 목록 -->
-                        <ul id="comment-list">
-                            <li class="comment">
-                                <div class="comment-info__left">
-                                    <p class="comment-author" >id001</p>
-                                    <p class="comment-content">이 글에 대한 댓글 내용입니다.</p>
-                                </div>
-                                <div class="comment-info__right">
-                                    <p class="comment-date">2024.11.18 09:32</p>
-                                    <button class="comment-button">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                </div>
-                            </li>
-                            <li class="comment">
-                                <div class="comment-info__left">
-                                    <p class="comment-author">id001</p>
-                                    <p class="comment-content">이 글에 대한 댓글 내용입니다.</p>
-                                </div>
-                                <div class="comment-info__right">
-                                    <p class="comment-date">2024.11.18 09:32</p>
-                                    <button class="comment-button">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
+                        <th:block th:if="${articleDetail.commentList != null}">
+	                        <ul id="comment-list">
+	                            <li class="comment" th:each="l : ${articleDetail.commentList}">
+	                                <div class="comment-info__left">
+	                                    <p class="comment-author" th:text="${l.commentAuthorId}"></p>
+	                                    <p class="comment-content" th:text="${l.commentContent}"></p>
+	                                </div>
+	                                <div class="comment-info__right">
+	                                    <p class="comment-date" th:text="${commentDate}">2024.11.18 09:32</p>
+	                                    <button class="comment-button">
+	                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+	                                    </button>
+	                                </div>
+	                            </li>
+	                        </ul>
+                        </th:block>
 
                         <!-- 댓글 작성 폼 -->
                         <form id="comment-form" action="#">
@@ -120,22 +110,12 @@
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
-    	<script th:src="@{/assets/js/layout.js}"></script>
     	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    	<script th:src="@{/assets/js/layout.js}"></script>
+    	<script th:src="@{/assets/js/community/view.js}"></script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    	<script>
-    		$('#comment-submit').click(event => {
-    			event.preventDefault();
-    		})
-    		
-    		$('#article-delete__button').click(event => {
-    			event.preventDefault();
-    		 	const isDelete = confirm('게시글을 삭제하시겠습니까?');
-    			if(isDelete) $('#deleteForm').submit();
-    		})
-    	</script>
     </th:block> 
 </html>

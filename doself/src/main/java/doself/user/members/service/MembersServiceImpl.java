@@ -22,36 +22,49 @@ public class MembersServiceImpl implements MembersService {
 
 	private final MembersMapper membersMapper;
 	
+	// 회원 정보 조회
+	@Override
+	public Members getMemberInfoById(String memberId) {
+		return membersMapper.getMemberInfoById(memberId);
+	}
+	
+	// 회원 수정
+	@Override
+	public void modifyMemberById(String memberId, List<String> memberEmail, List<String> memberPhone, Members memberInfo) {
+		log.info("memberPhone {}",memberPhone);
+		String membersEmail = memberEmail.get(0) + memberEmail.get(1) + memberEmail.get(2);
+		memberInfo.setMemberEmail(membersEmail);
+		String membersPhone = memberPhone.get(0) + "-" + memberPhone.get(1) + "-" + memberPhone.get(2);
+		memberInfo.setMemberPhoneNum(membersPhone);
+		
+		membersMapper.modifyMemberById(memberInfo);
+	}
+	
+	//회원 검증
+	@Override
+	public Map<String, Object> matchedMember(String memberId, String memberPw) {
+		
+		boolean isMatched = false;
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		Members memberInfo = membersMapper.getMemberInfoById(memberId);
+		if(memberInfo != null) {
+			String checkPw = memberInfo.getMemberPw();
+			if(checkPw.equals(memberPw)) {
+				isMatched = true;
+				resultMap.put("memberInfo", memberInfo);
+			}
+		}
+		resultMap.put("isMatched", isMatched);
+		return resultMap;
+	}
+	
 	// 회원삭제
 	@Override
 	public void removeMemberById(String memberId) {
 		membersMapper.removeMemberById(memberId);
 	}
 	
-	// 회원 정보 조회
-	@Override
-	public Members getMemberInfoById(String memberId) {
-		
-		return membersMapper.getMemberInfoById(memberId);
-	}
-	
-	// 회원 수정
-	@Override
-	public void modifyMember(Members member) {
-		
-		membersMapper.modifyMember(member);
-	}
-
-	@Override
-	public boolean passwordChk(String memberId, String oldMemberPw) {
-	    return membersMapper.passwordChk(memberId, oldMemberPw);
-	}
-		 
-	@Override
-	public boolean updatePassword(String memberId, String newMemberPw) {
-		return membersMapper.updatePassword(memberId, newMemberPw);
-	}
-
 	//회원 티켓정보 조회
 	@Override
 	public PageInfo<TicketList> getTicketHistory(String memberId, Pageable pageable,String startDate, String endDate) {
@@ -79,6 +92,8 @@ public class MembersServiceImpl implements MembersService {
 
 		return new PageInfo<>(pointList, pageable, rowCnt);
 	}
+
+
 	
 	
 		
