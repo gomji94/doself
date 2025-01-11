@@ -1,8 +1,6 @@
 package doself.user.feed.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,5 +30,15 @@ public class FeedServiceImpl implements FeedService {
 	    }
 		return feedList;
 	}
+	
+	@Override
+    public Feed getFeedDetail(String feedCode) {
+        Feed feed = feedMapper.getFeedDetail(feedCode);
+        if (feed == null) {
+            log.warn("해당 피드가 존재하지 않습니다. feedCode: {}", feedCode);
+            throw new RuntimeException("피드 정보를 찾을 수 없습니다.");
+        }
+        return feed;
+    }
 }
 	

@@ -29,11 +29,26 @@
 							</div>
 							<div class="df-analysis-info">
 								<table class="df-info-table">
-									<tr><td>구분(1인분)</td><td th:text="${feed.mealWeight} + ' g'"></td></tr>
-									<tr><td>칼로리</td><td th:text="${feed.mealCalories} + ' kcal'"></td></tr>
-									<tr><td>탄수화물</td><td th:text="${feed.mealCarbohydrates} + ' g'"></td></tr>
-									<tr><td>단백질</td><td th:text="${feed.mealProtein} + ' g'"></td></tr>
-									<tr><td>지방</td><td th:text="${feed.mealFat} + ' g'"></td></tr>
+									<tr>
+										<td>구분(1인분)</td>
+										<td th:text="${feed.mealWeight} + ' kcal'"></td>
+									</tr>
+									<tr>
+										<td>칼로리</td>
+										<td th:text="${feed.mealCalories} + ' kcal'"></td>
+									</tr>
+									<tr>
+										<td>탄수화물</td>
+										<td th:text="${feed.mealCarbohydrates} + ' g'"></td>
+									</tr>
+									<tr>
+										<td>단백질</td>
+										<td th:text="${feed.mealProtein} + ' g'"></td>
+									</tr>
+									<tr>
+										<td>지방</td>
+										<td th:text="${feed.mealFat} + ' g'"></td>
+									</tr>
 								</table>
 							</div>
 							<div class="df-analysis-caution">
@@ -41,17 +56,17 @@
 							</div>
 						</div>
 					</div>
-					<!--<div class="feed-description">
-	                    <p id="feed-likes" th:text="|좋아요 ${f.FeedLike}개|"></p>
-	                    <p th:text="${f.FeedContent}"></p>
-	                    <p class="comments-link" th:text="${f.FeedCommentContent}"></p>
-	                </div>
-	                <hr>
-	                <div class="add-comment">
-	                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-	                    <input type="text" placeholder="댓글 달기...">
-	                    <button class="comment-submit">게시</button>
-	                </div>-->
+					<div class="df-feed-description">
+					    <p id="feed-likes" th:text="|좋아요 ${feed.feedLike != null ? feed.feedLike : 0}개|"></p>
+					    <p th:text="${feed.feedContent}"></p>
+					    <p class="df-comments-link" th:text="${feed.feedCommentContent}"></p>
+					</div>
+					<hr>
+					<div class="df-add-comment">
+					    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+					    <input type="text" placeholder="댓글 달기...">
+					    <button class="df-comment-submit">게시</button>
+					</div>
 				</div>
 			</section>
 		</div>
