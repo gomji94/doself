@@ -30,8 +30,14 @@ public class MembersServiceImpl implements MembersService {
 	
 	// 회원 수정
 	@Override
-	public void modifyMemberById(String memberId) {
-		membersMapper.modifyMemberById(memberId);
+	public void modifyMemberById(String memberId, List<String> memberEmail, List<String> memberPhone, Members memberInfo) {
+		log.info("memberPhone {}",memberPhone);
+		String membersEmail = memberEmail.get(0) + memberEmail.get(1) + memberEmail.get(2);
+		memberInfo.setMemberEmail(membersEmail);
+		String membersPhone = memberPhone.get(0) + "-" + memberPhone.get(1) + "-" + memberPhone.get(2);
+		memberInfo.setMemberPhoneNum(membersPhone);
+		
+		membersMapper.modifyMemberById(memberInfo);
 	}
 	
 	//회원 검증

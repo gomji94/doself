@@ -16,7 +16,7 @@ public interface MembersMapper {
 	public Members getMemberInfoById(String memberId);
 	
 	//회원 수정
-	public int modifyMemberById(String member);
+	public int modifyMemberById(Members memberInfo);
 
 	// 회원탈퇴
 	public int removeMemberById(String memberId);
