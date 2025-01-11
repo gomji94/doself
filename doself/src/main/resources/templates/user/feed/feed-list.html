@@ -40,6 +40,7 @@
 		<section th:if="${FeedList != null && !FeedList.isEmpty()}">
             <div class="feed" th:each="f, iterStat : ${FeedList}"
 							  th:data-meal-picture="${f.mealPicture}" 
+							  th:data-meal-weight="${f.mealWeight}" 
 					          th:data-meal-calories="${f.mealCalories}" 
 					          th:data-meal-carbohydrates="${f.mealCarbohydrates}" 
 					          th:data-meal-protein="${f.mealProtein}" 
@@ -96,6 +97,10 @@
 	    </div>
 	    <div class="analysis-info">
 	        <table class="info-table">
+				<tr>
+                    <td>구분(1인분)</td>
+                    <td id="weight">0 kcal</td>
+                </tr>
 				<tr>
 			        <td>칼로리</td>
 			        <td id="calories">0 kcal</td>
