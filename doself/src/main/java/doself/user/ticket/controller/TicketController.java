@@ -21,7 +21,6 @@ public class TicketController {
 	public String getItemList(Model model) {
 			
 		model.addAttribute("ticketList", ticketService.getTicketList());
-		
 		return "user/ticket/item-list";
 	}
 	

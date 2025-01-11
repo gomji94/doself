@@ -35,28 +35,17 @@
         <div class="content-section">
             <!-- 티켓 선택 섹션 -->
             <div class="ticket-options">
-                <div class="ticketBox">
-                    <input type="radio" class="ticketCheck">
-                    <div class="ticketInfo">
-                        <div class="ticketName">
-                            챌린지 개설 티켓
-                        </div>
-                        <div class="ticketDesc">
-                            설명 : 챌린지 개설 가능 9,800원 (VAT 별도)
-                        </div>
-                    </div>
+              <th:block th:if="${ticketList !=null}">
+                <div class="ticketBox" th:each="l:${ticketList}">
+                    <input type="radio" name="check" class="ticketCheck" value="${l.ticketCategory}"
+                    data-price="${l.ticketPrice}" data-desc="${l.ticketExplanation}" onchange="updatePaymentResult(this)">
+                    	<div class="ticketInfo" >
+	                        <div class="ticketName" th:text="${l.ticketCategory}" > </div>
+	                        <div class="ticketDesc" th:text="${l.ticketExplanation}"></div>
+	                        <div class="ticketprice" th:text="${#numbers.formatInteger(l.ticketPrice,3,'COMMA')+'원'}"></div>
+                    	</div>
                 </div>
-                <div class="ticketBox">
-                    <input type="radio" class="ticketCheck">
-                    <div class="ticketInfo">
-                        <div class="ticketName">
-                            챌린지 참여 티켓
-                        </div>
-                        <div class="ticketDesc">
-                            설명 : 챌린지 참여 가능 3,800원 (VAT 별도)
-                        </div>
-                    </div>
-                </div>
+              </th:block>
             </div>
 
             <!-- 결제 내역 섹션 -->
@@ -65,18 +54,18 @@
                     <h2>결제 내역</h2>
                     <div class="payment-info">
                         <span>티켓 종류:</span> 
-                        <span>챌린지 개설 티켓</span>
+                        <span></span>
                     </div>
                     <div class="payment-info">
                         <span>가격:</span> 
-                        <span>9,800원</span>
+                        <span></span>
                     </div>
                     <div class="payment-info">
                         <span>부가세:</span>
-                        <span>980원</span> 
+                        <span></span> 
                     </div>
                     <hr>
-                    <div class="total payment-info"><span>합계:</span> 10,780원</div>
+                    <div class="total payment-info"><span>합계:</span></div>
                 </div>
 
                 <!-- 결제 버튼 -->
@@ -111,6 +100,23 @@
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"></script>
+    <script th:src="@{/assets/js/layout.js}">
+    
+    	function updatePaymentResult(selectRadio){
+    		const ticketCategory = selectedRadio.val();
+    		const ticketPrice = parseInt(selectedRadio.getAttribute('data-price'));
+    		const vat = Math.floor(ticketPrice*0.1);
+    		const total = ticketPrice + vat;
+    	
+    	
+    	//결제 내역 섹션
+    	document.querySelector("#payment-result .payment-info span:nth-child(2)").textContent = ticketCategory;
+    	document.querySelector("#payment-result .payment-info span:nth-child(4)").textContent = ticketPrice.toLocaleString();
+    	document.querySelector("#payment-result .payment-info span:nth-child(6)").textContent = vat.toLocaleString();
+    	document.querySelector("#payment-result .total span:nth-child(2)").textContent = total.toLocaleString();
+    	
+    	}    
+    
+    </script>
     </th:block> 
 </html>

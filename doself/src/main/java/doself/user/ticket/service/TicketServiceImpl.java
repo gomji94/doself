@@ -21,8 +21,6 @@ public class TicketServiceImpl implements TicketService{
 	
 	@Override
 	public List<TicketItem> getTicketList() {
-		
-		
 		return ticketMapper.getTicketList();
 	}
 	
