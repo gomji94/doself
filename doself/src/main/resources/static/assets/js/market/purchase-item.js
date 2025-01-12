@@ -22,15 +22,14 @@ $('#item-purchase__button').click(event => {
 		});
 		
 		request.done(response => {
-			alert('성공');
+			console.log('성공');
 		})
 		
 		request.fail((jqXHR, textStatus, error)=>{
-			console.log(error);
+			console.log(textStatus);
 		})
 		
 	}
-	
 	
 	// if(isValid) $('#purchaseItemForm').submit();
 	
