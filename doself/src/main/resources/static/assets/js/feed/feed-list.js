@@ -47,21 +47,35 @@ $(document).ready(function () {
 
 // --- feed comment modal ---
 $(document).ready(function () {
-    // 댓글 버튼 클릭 이벤트
+    // 댓글 버튼 클릭 시
     $('.commentBtn').on('click', function () {
-        // feed-comment.html 모달 표시
-        const commentModal = $('.feed-comment-modal-overlay'); // 댓글 모달 오버레이
-        commentModal.fadeIn(300); // 부드럽게 모달 표시
+        // 클릭한 피드 요소 가져오기
+        const feedElement = $(this).closest('.feed');
+
+        // 피드 데이터 가져오기
+        const mealImage = feedElement.data('meal-picture'); // 피드 이미지
+        const profileImage = feedElement.find('.profile-img').attr('src'); // 작성자 프로필 이미지
+        const userName = feedElement.find('.user-name p').text(); // 작성자 이름
+        const commentContent = feedElement.find('.comments-link').text(); // 댓글 내용
+
+        // 데이터를 댓글 모달에 삽입
+        $('#comment-meal-image').attr('src', mealImage);
+        $('#comment-profile-image').attr('src', profileImage);
+        $('#comment-user-name').text(userName);
+        $('#comment-content').text(commentContent);
+
+        // 모달 열기
+        $('#feed-comment-modalOverlay').fadeIn(300);
     });
 
-    // 모달 닫기 버튼 클릭 이벤트
+    // 모달 닫기 버튼
     $('.feed-comment-modalCloseBtn').on('click', function () {
-        $('.feed-comment-modal-overlay').fadeOut(300); // 부드럽게 모달 숨기기
+        $('#feed-comment-modalOverlay').fadeOut(300);
     });
 
-    // 모달 오버레이 클릭 시 모달 닫기
-    $('.feed-comment-modal-overlay').on('click', function (e) {
-        if ($(e.target).is('.feed-comment-modal-overlay')) {
+    // 모달 외부 클릭 시 닫기
+    $('#feed-comment-modalOverlay').on('click', function (e) {
+        if ($(e.target).is('#feed-comment-modalOverlay')) {
             $(this).fadeOut(300);
         }
     });
@@ -90,49 +104,63 @@ $(document).ready(function () {
 
 // --- modify feed modal ---
 $(document).ready(function () {
-    // 모달 열기
+    // 수정 버튼 클릭 시
     $('#feed-modify-modal').on('click', function () {
-      $('#feed-modify-modal-overlay').fadeIn(200);
+        // 클릭된 피드 데이터 가져오기
+        const feedElement = $(this).closest('.feed');
+
+        // 피드 데이터 추출
+        const feedImage = feedElement.data('meal-picture'); // 이미지 URL
+        const feedContent = feedElement.find('.feed-description p:nth-child(2)').text(); // 내용
+        const feedServing = feedElement.find('.add-comment input[type="number"]').val(); // 섭취 인분
+        const feedMealType = feedElement.find('.input-group select').val(); // 식사 분류
+        const feedVisibility = feedElement.find('.radio-group input[name="visibility"]:checked').val(); // 공개 여부
+
+        // 수정 모달에 데이터 삽입
+        $('#feed-modify-image-preview').attr('src', feedImage);
+        $('#feed-modify-content').val(feedContent);
+        $('#feed-modify-serving').val(feedServing);
+        $('#feed-modify-meal-type').val(feedMealType);
+        $(`.radio-group input[name="visibility"][value="${feedVisibility}"]`).prop('checked', true);
+
+        // 글자수 카운터 업데이트
+        const textLength = feedContent.length;
+        $('#feed-modify-text-count').text(textLength);
+
+        // 모달 열기
+        $('#feed-modify-modal-overlay').fadeIn(300);
     });
-  
-    // 모달 닫기 (닫기 버튼 클릭 시)
+
+    // 모달 닫기
     $('#feed-modify-modal-closeBtn').on('click', function () {
-      $('#feed-modify-modal-overlay').fadeOut(200);
+        $('#feed-modify-modal-overlay').fadeOut(300);
     });
-  
-    // 모달 닫기 (오버레이 클릭 시)
+
+    // 모달 외부 클릭 시 닫기
     $('#feed-modify-modal-overlay').on('click', function (e) {
-      if ($(e.target).is('#feed-modify-modal-overlay')) {
-        $(this).fadeOut(200);
-      }
-    });
-  });
-
-// --- modify feed ---
-$(document).ready(function() {
-    // 이미지 업로드 및 미리보기
-    const uploadBtn = $('#feed-modify-upload-btn');
-    const fileInput = $('#feed-modify-file-input');
-    const imagePreview = $('#image-preview');
-    const previewContainer = $('#feed-modify-preview-container');
-
-    uploadBtn.on('click', function() {
-        fileInput.trigger('click'); // 파일 선택 창 열기
+        if ($(e.target).is('#feed-modify-modal-overlay')) {
+            $(this).fadeOut(300);
+        }
     });
 
-    fileInput.on('change', function(event) {
-        const file = event.target.files[0];
+    // 파일 업로드 버튼
+    $('#feed-modify-upload-btn').on('click', function () {
+        $('#feed-modify-file-input').trigger('click');
+    });
+
+    // 파일 업로드 시 이미지 미리보기
+    $('#feed-modify-file-input').on('change', function (e) {
+        const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.attr('src', e.target.result); // 미리보기 설정
-                previewContainer.show(); // 미리보기 보이기
+            reader.onload = function (e) {
+                $('#feed-modify-image-preview').attr('src', e.target.result).show();
             };
             reader.readAsDataURL(file);
         }
     });
-
-    // 글자수 카운터
+	
+	// 글자수 카운터
     const content = $('#feed-modify-content');
     const textCount = $('#feed-modify-text-count');
     const maxLength = 2000;
