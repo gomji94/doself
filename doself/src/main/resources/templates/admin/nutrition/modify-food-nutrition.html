@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">음식영양정보 수정</h2>
+                        <div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>   
+		</th:block>
+		
+		<th:block layout:fragment="content-body">
+			<form id="modifyFoodForm" th:action="@{/admin/nutrition/foodmodify}" method="post" th:object="${foodNutritionrInfo}">
+			<div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniName" class="form-label">1. 음식 이름</label>
+                                        <input type="hidden"id="peplNum" name="mniNum" th:value="*{mniNum}">
+                                        <input type="text" placeholder="Type here" class="form-control" id="mniName" name="mniName" th:value="*{mniName}">
+                                    </div>                
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniPicture" class="form-label">2. 음식 사진</label>
+                                        <input type="text" placeholder="0p" class="form-control" id="mniPicture" name="mniPicture" th:value="*{mniPicture}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniWeight" class="form-label">3. 1인분 중량</label>
+                                        <input class="form-control" type="number" id="mniWeight" name="mniWeight" th:value="*{mniWeight}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniKcal" class="form-label">4. 에너지</label>
+                                        <input class="form-control" type="number" id="mniKcal" name="mniKcal" th:value="*{mniKcal}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniCarbo" class="form-label">5. 탄수화물</label>
+                                        <input class="form-control" type="number" id="mniCarbo" name="mniCarbo" th:value="*{mniCarbo}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniProtein" class="form-label">6. 단백질</label>
+                                        <input class="form-control" type="number" id="mniProtein" name="mniProtein" th:value="*{mniProtein}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniFat" class="form-label">7. 지방</label>
+                                        <input class="form-control" type="number" id="mniFat" name="mniFat" th:value="*{mniFat}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniSugar" class="form-label">8. 당류</label>
+                                        <input class="form-control" type="number" id="mniSugar" name="mniSugar" th:value="*{mniSugar}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniCholesterol" class="form-label">9. 콜레스테롤</label>
+                                        <input class="form-control" type="number" id="peplImg" name="mniCholesterol" th:value="*{mniCholesterol}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniSodium" class="form-label">10. 나트륨</label>
+                                        <input class="form-control" type="number" id="mniSodium" name="mniSodium" th:value="*{mniSodium}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniCalcium" class="form-label">11. 칼슘</label>
+                                        <input class="form-control" type="number" id="mniCalcium" name="mniCalcium" th:value="*{mniCalcium}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniIron" class="form-label">12. 철분</label>
+                                        <input class="form-control" type="number" id="mniIron" name="mniIron" th:value="*{mniIron}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <div class="row">                                
+                                <div class="col-md-9 addBtn">
+                                    <button type="submit" id="modifyFoodBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">수정하기</button>
+                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/nutrition/foodlist}">취소</a>
+                                </div> <!-- col.// -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">        	
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>

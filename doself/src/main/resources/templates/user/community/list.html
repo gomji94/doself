@@ -24,7 +24,7 @@
 				    </div>
 				    <!-- 카테고리 버튼 -->
 				    <div th:if="${categoryList}" th:each="l : ${categoryList}">
-				        <a th:href="@{/community/list/category(cateNum=${l.categoryCode})}">
+				        <a th:href="@{/community/list/category(cateNum=${l.categoryCode})}" >
 				            <button type="button" class="category-button"
 				                th:classappend="${currentCategory == l.categoryCode} ? 'active'"
 				                th:text="${l.categoryName}">
@@ -102,7 +102,7 @@
 	                   	</div>
                    	</th:block>	
                     <div id="article-write">
-                        <a href="#">
+                        <a th:href="@{/community/create}">
                             <button class="article-write__button">write</button>
                         </a>
                     </div>
@@ -150,6 +150,5 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     	<script th:src="@{/assets/js/layout.js}"></script>
-    	
     </th:block> 
 </html>

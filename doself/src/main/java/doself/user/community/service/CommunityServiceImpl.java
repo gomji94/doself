@@ -3,11 +3,15 @@ package doself.user.community.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import doself.common.mapper.CommonMapper;
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Comment;
+import doself.user.community.domain.Like;
 import doself.user.community.domain.SearchArticle;
 import doself.user.community.mapper.CommunityMapper;
 import doself.util.PageInfo;
@@ -22,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CommunityServiceImpl implements CommunityService {
 	
 	private final CommunityMapper communityMapper;
+	private final CommonMapper commonMapper;
 
 	@Override
 	public PageInfo<Article> getArticleList(Pageable pageable) {
@@ -84,12 +89,123 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Override
-	public Article getArticleDetail(String articleKeyNum) {
+	public Article getArticleDetail(int articleKeyNum) {
 		
-		int castKeyNum = Integer.parseInt(articleKeyNum);
-		String formattedKeyNum = String.format("fb_%03d", castKeyNum);
+		String formattedKeyNum = String.format("fb_%03d", articleKeyNum);
 		
-		return communityMapper.getArticleDetail(formattedKeyNum);
+		Article articleDetail = communityMapper.getArticleDetail(formattedKeyNum);
+		articleDetail.setCommentList(communityMapper.getCommentsByArticle(formattedKeyNum));
+		
+		return articleDetail;
 	}
+	
+	@Override
+	public void createArticle(Article article) {
+		// TODO Auto-generated method stub
+		
+		String formattedKeyNum = commonMapper.getPrimaryKey("fb_", "free_board", "fb_num");
+		article.setArticleKeyValue(formattedKeyNum);
+		
+		String formattedArticleCategory = String.format("fbcate_%03d", article.getArticleCategoryKeyNum());
+		article.setArticleCategory(formattedArticleCategory);
+		
+		if (article.getArticleAttachmentFile() == null) {
+			article.setArticleAttachmentFile("https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG");
+		}
+		
+		communityMapper.createArticle(article);
+		
+	}
+
+	@Override
+	public void deleteArticle(int articleKeyNum) {
+		// TODO Auto-generated method stub
+		String formattedKeyNum = String.format("fb_%03d", articleKeyNum);
+		communityMapper.deleteArticle(formattedKeyNum);
+		
+	}
+	
+	@Override
+	public Like isLiked(Like like) {
+		// TODO Auto-generated method stub
+		Like likeInfo = communityMapper.isLikedByUser(like);
+		
+		if(likeInfo != null) return likeInfo;
+		
+		return null;
+	}
+
+	@Override
+	public boolean createLikeToArticle(Like like) {
+		// TODO Auto-generated method stub
+		
+		boolean result = false;
+		
+		String formattedKeyNum = commonMapper.getPrimaryKey("lh_", "like_history", "lh_num");
+		like.setLikeKeyNum(formattedKeyNum);
+		int insertResult = communityMapper.createLikeToArticle(like);
+		
+		if (insertResult > 0) {
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("likeOccurArticleNumValue", like.getLikeOccurArticleNumValue());
+			Integer calcLikeCnt = like.getCurrentArticleLikeCnt() + 1;
+			params.put("calcLikeCnt", calcLikeCnt);
+			
+			communityMapper.modifyArticleLikeCnt(params);
+			
+			result = true;
+			
+			return result;
+		}
+		
+		
+		return result;
+	}
+
+	@Override
+	public boolean modifyLikeToArticle(Like like) {
+		// TODO Auto-generated method stub
+		boolean result = false;
+		
+		communityMapper.modifyisLiked(like);
+		boolean isLiked = Boolean.parseBoolean(like.getIsLiked());
+		
+		if (isLiked) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("likeOccurArticleNumValue", like.getLikeOccurArticleNumValue());
+			Integer calcLikeCnt = like.getCurrentArticleLikeCnt() - 1;
+			params.put("calcLikeCnt", calcLikeCnt);
+			
+			communityMapper.modifyArticleLikeCnt(params);
+			result =  true;
+			
+			
+		} else {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("likeOccurArticleNumValue", like.getLikeOccurArticleNumValue());
+			Integer calcLikeCnt = like.getCurrentArticleLikeCnt() + 1;
+			params.put("calcLikeCnt", calcLikeCnt);
+			
+			communityMapper.modifyArticleLikeCnt(params);
+			result =  true;
+		}
+		
+		return result;
+	}
+
+	@Override
+	public void createComment(Comment comment) {
+		// TODO Auto-generated method stub
+		
+		String commentKeyValue = commonMapper.getPrimaryKey("fbc_", "free_board_comments", "fbc_num");
+		comment.setCommentKeyNum(commentKeyValue);
+		String formattedArticleKeyValue = String.format("fb_%03d", comment.getArticleNum());
+		comment.setArticleKeyValue(formattedArticleKeyValue);
+		
+		communityMapper.createComment(comment);
+		
+	}
+
 
 }

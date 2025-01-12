@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	
+		
+		<th:block layout:fragment="content-header">
+          <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">음식영양정보 수정</h2>
+                        <div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>   
+		</th:block>
+		
+		<th:block layout:fragment="content-body">
+			<form id="modifyNutritionForm" th:action="@{/admin/nutrition/nutritionmodify}" method="post" th:object="${NutritionInfo}">
+			<div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">                                        
+                                        <input type="hidden"id="dsiNum" name="dsiNum" th:value="*{dsiNum}">
+                                        <label for="dsbNum" class="form-label">1. 브랜드 번호</label>
+										<select name="dsbNum" id="dsbNum" class="form-control text-center">
+											<option value="">브랜드를 선택해주세요</option>
+											<th:block th:if="${dsbList}"
+													  th:each="l, status : ${dsbList}">
+												<option th:value="${l.dsbNum}" 
+														th:text="${l.dsbName}"
+														th:selected="${status.count} == *{dsbNum}">
+												</option>
+											</th:block>
+										</select>
+                                    </div>                
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniPicture" class="form-label">2. 영양제명</label>
+                                        <input type="text" placeholder="0p" class="form-control" id="dsiName" name="dsiName" th:value="*{dsiName}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniWeight" class="form-label">3. 영양제 효능</label>
+                                        <input class="form-control" type="text" id="dsiEfficacy" name="dsiEfficacy" th:value="*{dsiEfficacy}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniKcal" class="form-label">4. 영양제 사진</label>
+                                        <input class="form-control" type="text" id="dsiPicture" name="dsiPicture" th:value="*{dsiPicture}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mniCarbo" class="form-label">5. 일일 권장 섭취량</label>
+                                        <input class="form-control" type="text" id="dsiDailyRecommendedIntake" name="dsiDailyRecommendedIntake" th:value="*{dsiDailyRecommendedIntake}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <div class="row">                                
+                                <div class="col-md-9 addBtn">
+                                    <button type="submit" id="modifyFoodBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">수정하기</button>
+                            		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/nutrition/foodlist}">취소</a>
+                                </div> <!-- col.// -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+		</th:block> 
+
+		<!--/* 사용자 추가 js file */-->
+        <th:block layout:fragment="customJsResource">        	
+        </th:block>
+         
+        <!--/* 사용자 추가 js script */-->
+        <th:block layout:fragment="customJs">
+        	<script>
+        	
+        	</script>
+        </th:block> 
+</html>

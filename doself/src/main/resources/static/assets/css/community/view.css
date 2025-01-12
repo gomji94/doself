@@ -144,7 +144,6 @@
     border-bottom: 1px solid black;
 }
 .comment div {
-    display: flex;
     align-items: center;
     text-align: center;
     gap: 30px;
@@ -152,9 +151,11 @@
 
 .comment-info__left {
     margin-left: 42px;
+    display: flex;
 }
 
 .comment-info__right {
+    display: flex;
     margin-right: 10px;
 }
 
@@ -182,14 +183,14 @@
     border: solid 1px #606060;
     border-radius: 5px;
     margin: 0 5px;
-    padding: 15px 0px;
+    padding: 15px 30px;
 }
 
 #comment-text {
     width: 792px;
     height: 58px;
     font-size: 11px;
-    color: #d3d3d3;
+    color: black;
     resize: none;
 }
 

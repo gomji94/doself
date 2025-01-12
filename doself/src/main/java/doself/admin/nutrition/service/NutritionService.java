@@ -1,5 +1,8 @@
 package doself.admin.nutrition.service;
 
+import java.util.List;
+import java.util.Map;
+
 import doself.admin.nutrition.domain.FoodNutritionInfo;
 import doself.admin.nutrition.domain.Nutrition;
 import doself.admin.nutrition.domain.NutritionInfo;
@@ -30,4 +33,19 @@ public interface NutritionService {
 	
 	//반려
 	void modifyNutrition(Nutrition nutrition);
+	
+	//특정 음식영양정보 조회
+	FoodNutritionInfo getFoodInfoByMniNum(String mniNum);
+	
+	//특정 음식영양정보 수정
+	void modifyFoodNutrition(FoodNutritionInfo foodNutritionInfo);
+	
+	//특정 양양제 영양정보 조회
+	NutritionInfo getNutritionInfoByDsiNum(String dsiNum);
+	
+	//특정 영양제 영양정보 수정
+	void modifyNutrition(NutritionInfo nutritionInfo);
+	
+	// 브랜드이름 조회
+	List<Map<String, Object>> getDsbList();
 }

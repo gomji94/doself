@@ -11,7 +11,7 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a th:href="@{/mypage/member/info(memberId=*{memberId})}" class="menu-item">
+                    <a th:href="@{/mypage/modify(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-user-gear"></i>
                         <div>my 정보 수정</div>
                     </a>
@@ -80,7 +80,7 @@
 	                        </tr>
 	                      </thead>
                      	  <tbody>
-	                           <th:block th:if="${pointList != null}">
+	                           <th:block th:if="${not #lists.isEmpty(pointList)}">
 		                       		<tr th:each="l : ${pointList}"> 
 		                       			<td th:text="${l.pointTotalDate}"></td>
 		                       			<td th:text="${l.pointDetail}"></td>
@@ -88,12 +88,13 @@
 		                       			<td th:text="${l.pointAmount}"></td>
 		                       		</tr>
                                 </th:block>
-                           		<th:block th:unless="${pointList}">
+                           		<th:block th:unless="${not #lists.isEmpty(pointList)}">
 									<tr>
 										<td colspan="4">구매한 티켓 이력이 없습니다.</td>
 									</tr>
 								</th:block>
 		             	   </tbody>
+		             	  
                     </table>
                     <div class="pagination">
                     	<ul class="pagination">

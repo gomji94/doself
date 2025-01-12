@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import doself.user.feed.domain.Feed;
@@ -33,12 +34,18 @@ public class FeedController {
 	}
 	
 	// 특정 피드 상세 조회
-	@GetMapping("/view")
-	public String getDetailsFeed(Model model) {
-		model.addAttribute("title", "상세 피드");
-		
-		return "user/feed/feed-view";
-	}
+    @GetMapping("/{feedCode}")
+    public String getFeedDetail(@PathVariable String feedCode, Model model) {
+        log.info("Fetching feed detail for feedCode: {}", feedCode);
+
+        Feed feed = feedService.getFeedDetail(feedCode);
+        if (feed == null) {
+            throw new RuntimeException("피드 정보를 찾을 수 없습니다.");
+        }
+
+        model.addAttribute("feed", feed); // 모델에 피드 데이터를 추가
+        return "user/feed/feed-view"; // 상세 정보 페이지로 이동
+    }
 	
 	// 피드 수정
 	@GetMapping("/modifyfeed")
@@ -50,7 +57,7 @@ public class FeedController {
 	}
 	
 	// 피드 댓글 조회
-	@GetMapping("/comments")
+	@GetMapping("/{feedCode}/comments")
     public String getFeedComments(Model model) {
         model.addAttribute("title", "피드 댓글");
         

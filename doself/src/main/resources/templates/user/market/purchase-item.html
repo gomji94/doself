@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link th:href="@{/assets/css/market/purchase-item.css}" rel="stylesheet" type="text/css" />
     <title>item purchase</title>
-    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
     <div id="container">
@@ -40,6 +39,7 @@
                 <div id="user-point" th:text="*{memberPoint} + ' point'">
                 </div>
             </div>
+            
         </div>
         <div class="market-item-button-container">
             <div id="pay-agreement">
@@ -54,50 +54,9 @@
 
     <th:block layout:fragment="customJsResource">
    		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+   		<script th:src="@{/assets/js/market/purchase-item.js}"></script>
     </th:block>
     
     <th:block layout:fragment="customJs">
-    	<script>
-	    	$('#item-purchase__button').click(event => {
-
-	    		event.preventDefault();
-	    		
-	    		let isValid = true; 
-	    		const isAgreeChecked = $('#pay-agree-checkbox').prop('checked');
-	    		
-	    		if(!isAgreeChecked) {
-	    			alert("결제 서비스 동의 체크를 확인해주세요");
-	    			$('#pay-agree-checkbox').focus();
-	    			isValid = false;
-	    			return;
-	    		} 
-	    		
-	    		
-	    		if(isValid) {
-	    			
-					const request = $.ajax({
-						url: '/market/purchaseitem',
-						method: 'post',
-						data : { pointItemKeyNum : $('#pointItemKeyNum').val(), itemPrice : $('#itemPrice').val()},
-						dataType: 'json'
-					});
-					
-					request.done(response => {
-						alert('성공');
-					})
-					
-					request.fail((jqXHR, textStatus, error)=>{
-						console.log(error);
-					})
-	    			
-	    		}
-	    		
-	    		
-	    		// if(isValid) $('#purchaseItemForm').submit();
-	    		
-	    		
-	    	})
-    	
-    	</script>
     </th:block> 
 </html>

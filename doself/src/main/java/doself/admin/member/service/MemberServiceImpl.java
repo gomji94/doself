@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import doself.admin.member.domain.Member;
 import doself.admin.member.domain.MemberLog;
 import doself.admin.member.mapper.MemberMapper;
+import doself.user.login.mapper.LoginMapper;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberMapper memberMapper;
+	private final LoginMapper loginMapper;
 
 	
 	//멤버 검색 조회
@@ -100,6 +102,42 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, Object>> getAgeCategoryList() {
 		
 		return memberMapper.getAgeCategoryList();
+	}
+
+	//매년 1월1일에 나이 체크하여 연령대값 변경
+	@Override
+	public void everyYearCheck() {
+		
+		List<Member> allMemberList = memberMapper.getAllMemberList();
+		for(Member member : allMemberList) {
+			int age = loginMapper.getAgeByBirthDate(member.getMbrBirthDate());
+			String acNum ="";
+			
+			if(age <= 6) {
+				acNum = "ac_001";
+			}
+			else if(age <= 13) {
+				acNum = "ac_002";
+			}
+			else if(age <= 18) {
+				acNum = "ac_003";
+			}
+			else if(age <= 34) {
+				acNum = "ac_004";
+			}
+			else if(age <= 49) {
+				acNum = "ac_005";
+			}
+			else if(age <= 64) {
+				acNum = "ac_006";
+			}
+			else {
+				acNum = "ac_007";
+			}
+			member.setAcNum(acNum);
+			memberMapper.updateAcNum(member);
+		}
+		
 	}
 	
 }

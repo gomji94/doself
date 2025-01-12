@@ -13,8 +13,8 @@
         <a th:href="@{/market/itemlist}">마켓</a>
         <a th:href="@{/community/list}">커뮤니티</a>
     </nav>
-    <div class="profile">
-        <a th:href="@{/mypage/member/info(memberId=${session.SID})}"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
-    </div>
+	    <div class="profile">
+	        <a th:href="@{/mypage/feedlist(memberId=${session.SID})}"><img th:src="${session.IMAGE}" alt="프로필"></a>
+	    </div>
 </header>
 </html>
