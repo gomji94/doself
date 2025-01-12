@@ -39,7 +39,9 @@
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
                         <input type="hidden" id="currentArticleLikeCnt" name="currentArticleLikeCnt" th:value="*{articleLike}">
                     </div>
-					    <img th:src="*{articleAttachmentFile}" width="400" height="300">
+                    	<th:block th:with="imgSrc=*{articleAttachmentFile}">
+						    <img th:src="${imgSrc != '' ? imgSrc : ''}" width="300" height="300" th:if="${imgSrc != ''}">
+                    	</th:block>
 
                     <!-- 게시글 본문 내용 -->
                     <div id="post-content" th:text="*{articleContent}">
