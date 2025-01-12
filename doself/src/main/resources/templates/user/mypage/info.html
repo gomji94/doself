@@ -93,19 +93,22 @@
                 </div>
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
-                    <div class="phone-input">
-                        <input type="text" id="phone-number1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
-                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
-                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
-                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                        <div></div>
-                    </div>     
+                    <div class="phone-group">
+	                    <div class="phone-input">
+	                        <input type="text" id="phone-number1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
+	                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+	                        <input type="text" id="phone-number2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
+	                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+	                        <input type="text" id="phone-number3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
+	                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+	                    </div>     
+	                    <div class= "phone-error"></div>
+                    </div>
                 </div>
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <div class="email-input">
+                          <div class="email-gr">
                             <input type="text" name="memberEmail" id="memberEmail" th:value="${#strings.arraySplit(memberInfo.memberEmail,'@')[0]}" maxlength="20">
                             <input type="text" name="memberEmail" value="@" readonly="readonly" style="border:none; width: 35px; ">
                             <select name="memberEmail"> 
@@ -113,7 +116,8 @@
                                 <option value="naver.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'naver.com'">naver.com</option>
                                 <option value="daum.net"  th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'daum.net'">daum.net</option>
                             </select>
-                            <div></div>     
+                          </div>
+                         <div class= "email-error"></div>     
                         </div>
                     </div>
                     <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
@@ -156,6 +160,30 @@
 			element.nextElementSibling.textContent = msg;
 			return isEmpty;
 		}	
+		const emptyPhoneFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.parentNode.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
+		const emptyEmailFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.parentNode.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
 		
 		//유효성 검사 함수 : 8~16자 여부확인  
 		const isPassword = (element) => {
@@ -184,29 +212,14 @@
 		        element.nextElementSibling.textContent = msg;
 		        return isEqual;		 
 		 }
-		 
-		 const checkPhoneFn = (element) => {
-				const phone1 = document.querySelector('#phone-number1');
-				const phone2 = document.querySelector('#phone-number2');
-				const phone3 = document.querySelector('#phone-number3');
-				let msg = '';
-			 	let isEqual = false;
-			 	if(!phone1.value.trim() || !phone2.value.trim() || !phone3.value.trim()) {
-			 		msg = '핸드폰 번호를 모두 입력해주세요.';
-			 	    isEqual = true;
-			 	}				 	
-			 	if(phone1.value.length !==3 || phone2.value.length !=4 || phone3.value.length !=4) {
-			 		msg = '올바른 전화번호 형식이 아닙니다.';
-			 		 isEqual = true;
-			 	}	
-			 	element.nextElementSibling.textContent = msg;
-			 	return isEqual;	
-		 } 
-			
+
 		    //입력값
 		    const $memberPw = document.getElementById('memberPw')
 		    const $checkPw = document.getElementById('memberPwChk')
 		    const $email = document.getElementById('memberEmail')
+		    const $phone1 = document.getElementById('phone-number1')
+		    const $phone2 = document.getElementById('phone-number2')
+		    const $phone3 = document.getElementById('phone-number3')
 		 
 		   	$memberPw.addEventListener('input', e => {
 		   		const memberPw = e.target.value.trim();
@@ -223,15 +236,23 @@
 		    });
 		    
 		    $checkPw.addEventListener('blur', e => {
-		    	checkPwFn(e.target);
+		    	checkPwFn(e.target); return;
 		    });
 		    
 		    $email.addEventListener('blur', e => {
-		    	if(!emptyFn(e.target)) return;
+		    	if(!emptyEmailFn(e.target)) return;
 		    });
-		 	
-		    document.querySelectorAll('#phone-number1, #phone-number2, #phone-number3').forEach(field => {
-		        field.addEventListener('blur', checkPhoneFn);
+		    
+		    $phone1.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
+		    
+		    $phone2.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
+		    
+		    $phone3.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
 		    });
 
 		        
@@ -254,12 +275,21 @@
 		            return;
 		        }
 		        
-		        if(emptyFn($email)){
+		        if(emptyEmailFn($email)){
 		        	$email.focus();
 		        	return;
 		        }
 		        
-		        if (!checkPhoneFn()) {
+		        if (emptyPhoneFn($phone1)) {
+		        	$phone1.focus();
+		            return; 
+		        }
+		        if (emptyPhoneFn($phone2)) {
+		        	$phone2.focus();
+		            return; 
+		        }
+		        if (emptyPhoneFn($phone3)) {
+		        	$phone3.focus();
 		            return; 
 		        }
 		        
