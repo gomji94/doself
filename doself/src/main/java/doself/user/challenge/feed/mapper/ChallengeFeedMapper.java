@@ -1,22 +1,46 @@
 package doself.user.challenge.feed.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
-import doself.user.challenge.feed.domain.ChallengeProcess;
+import doself.user.challenge.feed.domain.ChallengeProgress;
+import doself.util.Pageable;
 
 @Mapper
 public interface ChallengeFeedMapper {
-	// 챌린지 피드 리스트 조회
-	List<ChallengeFeed> getChallengeFeedList(@Param("offset") int offset, @Param("pageSize") int pageSize);
+	// 로그인된 챌린지 멤버 아이디
+	String getChallengeCodeByMemberId(String memberId);
+	//String getChallengeCodeByMemberId(@Param("challengeMemberId") String challengeMemberId);
+
+	// 챌린지 피드
+	List<ChallengeFeed> getChallengeFeed(@Param("params") Map<String, Object> params);
+
+	// 피드 갯수 카운트
+	int getChallengeFeedCount(@Param("challengeCode") String challengeCode);
 	
-	// 챌린지 진행 상태 조회
-	List<ChallengeProcess> getChallengeProgress(@Param("challengeCode") String challengeCode);
-	
-	// 챌린지 참여 멤버 리스트 조회
-	List<ChallengeMemberList> getMemberList(@Param("challengeCode") String challengeCode);
+    // 챌린지 진행 상태 조회
+    List<ChallengeProgress> getChallengeProgress(@Param("challengeCode") String challengeCode);
+    
+	// 총 업로드 데이터 합계
+	int getTodayProgressSum(@Param("challengeCode") String challengeCode);
+
+	// 참여 멤버 상위 3명 표시
+	List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
+    
+//    // D+ 계산
+//    String calculateDPlus(@Param("challengeCode") String challengeCode);
+//
+//    // D- 계산
+//    String calculateDMinus(@Param("challengeCode") String challengeCode);
+    
+    // 참여 멤버 점수
+    //List<ChallengeMemberList> getParticipantsWithScore(@Param("challengeCode")String challengeCode);
+
+    // 챌린지 멤버 리스트 조회
+    List<ChallengeMemberList> getMemberList(@Param("challengeCode") String challengeCode);
 }
