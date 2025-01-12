@@ -57,7 +57,7 @@
     		feed_comments fc ON f.feed_num = fc.feed_num;;
 	</select>
 	
-	<!-- 특정 피드 영양 정보 조회 -->
+	<!-- 피드 영양 정보 조회 -->
 	<select id="getFeedNutritionInfo" resultMap="FeedResultMap">
 		SELECT
 		    f.mni_num,

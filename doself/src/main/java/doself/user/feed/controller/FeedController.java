@@ -57,7 +57,7 @@ public class FeedController {
 	}
 	
 	// 피드 댓글 조회
-	@GetMapping("/comments")
+	@GetMapping("/{feedCode}/comments")
     public String getFeedComments(Model model) {
         model.addAttribute("title", "피드 댓글");
         
