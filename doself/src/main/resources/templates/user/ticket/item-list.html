@@ -32,21 +32,20 @@
             <div id="main-container-title__kor">티켓 결제</div>
         </div>
         <!-- 메인 콘텐츠 -->
-        <div class="content-section">
+        <div class="content-section" id="ticketContainer">
             <!-- 티켓 선택 섹션 -->
-            <div class="ticket-options">
-              <th:block th:if="${ticketList !=null}">
-                <div class="ticketBox" th:each="l:${ticketList}">
-                    <input type="radio" name="check" class="ticketCheck" value="${l.ticketCategory}"
-                    data-price="${l.ticketPrice}" data-desc="${l.ticketExplanation}" onchange="updatePaymentResult(this)">
-                    	<div class="ticketInfo" >
-	                        <div class="ticketName" th:text="${l.ticketCategory}" > </div>
-	                        <div class="ticketDesc" th:text="${l.ticketExplanation}"></div>
-	                        <div class="ticketprice" th:text="${#numbers.formatInteger(l.ticketPrice,3,'COMMA')+'원'}"></div>
-                    	</div>
+          <th:block th:if="${ticketList !=null}">
+            <div class="ticket-options" id="ticket-options">
+                <div class="ticketBox" th:each="l:${ticketList}" id="ticketBox" >
+                    <input type="radio" name="check" class="ticketCheck" value="${l.ticketCategory}" id="ticketchk" >
+                   	<div class="ticketInfo" >
+                        <div class="ticketName" th:text="${l.ticketCategory}" > </div>
+                        <div class="ticketDesc" th:text="${l.ticketExplanation}"></div>
+                        <div class="ticketprice" th:text="${#numbers.formatInteger(l.ticketPrice,3,'COMMA')+'원'}"></div>
+                   	</div>
                 </div>
-              </th:block>
             </div>
+          </th:block>
 
             <!-- 결제 내역 섹션 -->
             <div id="payment-result">
@@ -101,8 +100,18 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     <script th:src="@{/assets/js/layout.js}">
-    
-    	function updatePaymentResult(selectRadio){
+     
+	    document.querySelectorAll('.ticketBox').forEach(function(box) {
+	        box.addEventListener('click', function() {
+	            const radio = box.querySelector('input[type="radio"]');
+	            if (radio) {
+	                radio.click();
+	            }
+	        });
+	    });
+     
+
+/*     	function updatePaymentResult(selectRadio){
     		const ticketCategory = selectedRadio.val();
     		const ticketPrice = parseInt(selectedRadio.getAttribute('data-price'));
     		const vat = Math.floor(ticketPrice*0.1);
@@ -115,7 +124,7 @@
     	document.querySelector("#payment-result .payment-info span:nth-child(6)").textContent = vat.toLocaleString();
     	document.querySelector("#payment-result .total span:nth-child(2)").textContent = total.toLocaleString();
     	
-    	}    
+    	}    */ 
     
     </script>
     </th:block> 

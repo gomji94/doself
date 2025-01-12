@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MypageController {
 
 	private final MembersService membersService;
+	//private final BCryptPasswordEncoder passwordEncoder;    //비밀번호암호화의존성추가
 
 	//회원정보 수정전 검증 화면이동
 	@GetMapping("/modify")
@@ -42,8 +43,7 @@ public class MypageController {
 			                   @RequestParam(name="memberPw") String memberPw,  
 			                   RedirectAttributes reAttr,
 			                   Model model) {						
-		//member.setMemberEmail(removeCommas(member.getMemberEmail())); 
-		//member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum())); 		
+	
 		String viewName = "redirect:/mypage/modify";
 		Map<String, Object> resultMap = membersService.matchedMember(memberId, memberPw);
 		boolean isMatched = (boolean)resultMap.get("isMatched");
@@ -73,20 +73,20 @@ public class MypageController {
 	}	
 	
 	@PostMapping("/member/info")
-	public String modifyMemberById(Members member,
-									@RequestParam(name="memberId") String memberId, 
-								   @RequestParam(name="memberEmail") List<String> memberEmail,
-								   @RequestParam(name="memberPhone") List<String> memberPhone,
-								   Model model) {
+	public String modifyMemberById(Members member, RedirectAttributes reAttr) {
+								   //@RequestParam(name="memberId") String memberId, 
+								   //@RequestParam(name="memberEmail") List<String> memberEmail,
+								   //@RequestParam(name="memberPhoneNum") List<String> memberPhone,
+									
+		member.setMemberEmail(removeCommas(member.getMemberEmail())); 
+		member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum()));
+		membersService.modifyMember(member);
 		
-		log.info("member : {}",member);
-		System.out.println("---------" + memberEmail + "--" +memberPhone);
-		// Members memberInfo = membersService.getMemberInfoById(memberId);
-		// membersService.modifyMemberById(memberId,memberEmail,memberPhone,memberInfo);
-		// memberInfo = membersService.getMemberInfoById(memberId);
-		// model.addAttribute("memberInfo", memberInfo);
+		reAttr.addAttribute("memberId", member.getMemberId());
 		
-		return "user/mypage/info";
+		
+		
+		return "redirect:/mypage/member/info";
 	}
 	
 	// 공통 메소드 static common 에 작성 할 것.

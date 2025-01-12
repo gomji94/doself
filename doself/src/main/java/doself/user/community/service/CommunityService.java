@@ -27,6 +27,9 @@ public interface CommunityService {
 	// 게시글 검색
 	PageInfo<Article> getArticleListBySearch(Pageable pageable, SearchArticle searchArticle);
 	
+	// 게시글 작성
+	void createArticle(Article article);
+	
 	// 게시글 삭제
 	void deleteArticle(int articleKeyNum);
 	

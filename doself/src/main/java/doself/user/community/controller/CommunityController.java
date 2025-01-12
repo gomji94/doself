@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import doself.user.community.domain.Article;
 import doself.user.community.domain.Comment;
 import doself.user.community.domain.Like;
+import doself.user.community.domain.Report;
 import doself.user.community.domain.SearchArticle;
 import doself.user.community.mapper.CommunityMapper;
 import doself.user.community.service.CommunityService;
@@ -22,10 +23,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
-
-
 
 @Controller
 @RequestMapping("/community")
@@ -119,12 +116,25 @@ public class CommunityController {
 		return "user/community/create";
 	}
 	
+	@PostMapping("/create")
+	public String createArticle(Article article, HttpSession session) {
+		//TODO: process POST request
+		
+		article.setArticleAuthorId((String) session.getAttribute("SID"));
+		
+		communityService.createArticle(article);
+		
+		return "user/community/list";
+	}
+	
+	
 	@PostMapping("/delete")
 	public String deleteArticle(@RequestParam(name = "articleNum") int articleKeyNum) {
 		//TODO: process POST request
 		communityService.deleteArticle(articleKeyNum);
 		return "redirect:/community/list";
 	}
+	
 	
 	@PostMapping("/like")
 	@ResponseBody
@@ -139,9 +149,12 @@ public class CommunityController {
 		// 좋아요 여부 객체
 		Like isLikedResult = communityService.isLiked(like);
 		
+		// 좋아요 객체가 null 일시
 		if (isLikedResult == null) {
+			// 좋아요 데이터 생성
 			communityService.createLikeToArticle(like);
 		} else {
+			// 좋아요 +1 or 좋아요 취소
 			like.setIsLiked(isLikedResult.getIsLiked());
 			like.setLikeKeyNum(isLikedResult.getLikeKeyNum());
 			communityService.modifyLikeToArticle(like);
@@ -151,7 +164,7 @@ public class CommunityController {
 	}
 	
 	@PostMapping("/createcomment")
-	public String postMethodName(Comment comment, @RequestParam(name = "articleNum") String articleNum,HttpSession session, RedirectAttributes reAttr) {
+	public String postMethodName(Comment comment, @RequestParam(name = "articleNum") String articleNum, HttpSession session, RedirectAttributes reAttr) {
 		//TODO: process POST request
 		comment.setCommentAuthorId((String) session.getAttribute("SID"));
 		
@@ -162,7 +175,14 @@ public class CommunityController {
 		return "redirect:/community/view";
 	}
 	
-	
+	@PostMapping("/createreport")
+	public String postMethodName(Report report, HttpSession session) {
+		//TODO: process POST request
+		
+		report.setReporterId((String) session.getAttribute("SID"));
+
+		return "";
+	}
 	
 	
 	

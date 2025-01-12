@@ -98,6 +98,24 @@ public class CommunityServiceImpl implements CommunityService {
 		
 		return articleDetail;
 	}
+	
+	@Override
+	public void createArticle(Article article) {
+		// TODO Auto-generated method stub
+		
+		String formattedKeyNum = commonMapper.getPrimaryKey("fb_", "free_board", "fb_num");
+		article.setArticleKeyValue(formattedKeyNum);
+		
+		String formattedArticleCategory = String.format("fbcate_%03d", article.getArticleCategoryKeyNum());
+		article.setArticleCategory(formattedArticleCategory);
+		
+		if (article.getArticleAttachmentFile() == null) {
+			article.setArticleAttachmentFile("https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG");
+		}
+		
+		communityMapper.createArticle(article);
+		
+	}
 
 	@Override
 	public void deleteArticle(int articleKeyNum) {

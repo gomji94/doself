@@ -144,7 +144,6 @@
     border-bottom: 1px solid black;
 }
 .comment div {
-    display: flex;
     align-items: center;
     text-align: center;
     gap: 30px;
@@ -152,9 +151,11 @@
 
 .comment-info__left {
     margin-left: 42px;
+    display: flex;
 }
 
 .comment-info__right {
+    display: flex;
     margin-right: 10px;
 }
 
@@ -173,48 +174,6 @@
     margin: 16px 0;
 }
 
-/* 전체 메뉴 컨테이너 스타일 */
-.comment-menu {
-    position: absolute; /* 다른 요소 위로 띄우기 위해 절대 위치 */
-    background-color: white; /* 배경색 */
-    border: 1px solid #ccc; /* 테두리 */
-    border-radius: 8px; /* 둥근 모서리 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 */
-    width: 80px; /* 메뉴의 폭 */
-    display: none; /* 기본적으로 숨김 */
-    z-index: 1000; /* 다른 요소 위로 배치 */
-}
-
-/* 메뉴 리스트 스타일 */
-.comment-menu ul {
-    list-style: none; /* 기본 리스트 스타일 제거 */
-    margin: 0;
-    padding: 0;
-}
-
-/* 각 메뉴 항목 스타일 */
-.comment-menu-item {
-    padding: 10px 15px; /* 항목 내부 여백 */
-    cursor: pointer;
-}
-
-/* 링크 스타일 */
-.comment-menu-item a {
-    color: black; /* 텍스트 색상 */
-    text-decoration: none; /* 밑줄 제거 */
-    display: block; /* 클릭 가능한 전체 블록 처리 */
-}
-
-/* 호버 효과 */
-.comment-menu-item:hover {
-    background-color: #f0f0f0; /* 항목 위에 마우스를 올리면 배경 변경 */
-}
-
-/* 활성화 시 메뉴 보이기 */
-.comment-menu.show {
-    display: block;
-}
-
 #comment-form {
     display: flex;
     align-items: center;
@@ -224,7 +183,7 @@
     border: solid 1px #606060;
     border-radius: 5px;
     margin: 0 5px;
-    padding: 15px 0px;
+    padding: 15px 30px;
 }
 
 #comment-text {

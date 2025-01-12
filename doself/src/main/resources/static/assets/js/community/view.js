@@ -45,7 +45,7 @@ $(document).ready(function () {
 });
 
 
-
+/*
 // 댓글 메뉴 토글
 $('.comment-button').on('click', function (event) {
     const $button = $(this); // 클릭한 버튼
@@ -65,6 +65,10 @@ $('.comment-button').on('click', function (event) {
 
     event.stopPropagation(); // 이벤트 전파 방지
 });
+
+*/
+
+
 
 // 외부 클릭 시 모든 메뉴 닫기
 $(document).on('click', function () {

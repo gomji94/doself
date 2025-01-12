@@ -17,20 +17,19 @@ $('#item-purchase__button').click(event => {
 		const request = $.ajax({
 			url: '/market/purchaseitem',
 			method: 'post',
-			data : { pointItemKeyNum : $('#pointItemKeyNum').val(), itemPrice : $('#itemPrice').val()},
+			data : { pointItemKeyNum : $('#pointItemKeyNum').val(), itemPrice : $('#itemPrice').val() },
 			dataType: 'json'
 		});
 		
 		request.done(response => {
-			alert('성공');
+			console.log('성공');
 		})
 		
 		request.fail((jqXHR, textStatus, error)=>{
-			console.log(error);
+			console.log(textStatus);
 		})
 		
 	}
-	
 	
 	// if(isValid) $('#purchaseItemForm').submit();
 	

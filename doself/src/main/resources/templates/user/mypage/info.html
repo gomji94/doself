@@ -60,7 +60,7 @@
 	                <div id="profile-info">
 	                    <div id="profile-edit">
 	                        <input type="file" id="btnChangeUplode" style="display:none">
-	                        <button type="button" id="btnChangeProfile" style="">프로필 변경</button>
+	                        <button type="button" id="btnChangeProfile" >프로필 변경</button>
 	                    </div>
 	                    <div id="profile-userId" th:text="*{memberId}"></div>
 	                </div>
@@ -80,42 +80,50 @@
                 <div class="form-group">
                     <label for="new-password">새 비밀번호</label>
                     <div class="input-wrapper">
-                   		<input class="width-fit" type="password" id="memberPw" name="memberPw">
+                   		<input class="width-fit" type="password" id="memberPw" name="memberPw" autocomplete="new-password">
+                   		<div></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">새 비밀번호 확인</label>
                     <div class="input-wrapper">
-                   		 <input class="width-fit" type="password" id="memberPw" name="memberPw" >
+                   		 <input class="width-fit" type="password" id="memberPwChk" autocomplete="new-password">
+                   		 <div></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
-                    <div class="phone-input">
-                        <input type="text" id="phone-number-part1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
-                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
-                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
-                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                    </div>     
+                    <div class="phone-group">
+	                    <div class="phone-input">
+	                        <input type="text" id="phone-number1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
+	                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+	                        <input type="text" id="phone-number2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
+	                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+	                        <input type="text" id="phone-number3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
+	                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+	                    </div>     
+	                    <div class= "phone-error"></div>
+                    </div>
                 </div>
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <div class="email-input">
+                          <div class="email-gr">
                             <input type="text" name="memberEmail" id="memberEmail" th:value="${#strings.arraySplit(memberInfo.memberEmail,'@')[0]}" maxlength="20">
                             <input type="text" name="memberEmail" value="@" readonly="readonly" style="border:none; width: 35px; ">
                             <select name="memberEmail"> 
                                 <option value="gmail.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'gmail.com'">gmail.com</option>
                                 <option value="naver.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'naver.com'">naver.com</option>
                                 <option value="daum.net"  th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'daum.net'">daum.net</option>
-                            </select>     
+                            </select>
+                          </div>
+                         <div class= "email-error"></div>     
                         </div>
                     </div>
                     <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
                 </form>
-                <form action="/mypage/delete" method="post">
-                <input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
+                <form action="/mypage/delete" method="post" id="deleteMemberForm">
+                <input type="hidden" name="memberId" th:value="*{memberId}">
                     <div id="withdrawa">
           	          <button type="submit" id="removeBtn">회원탈퇴</button>
                     </div>
@@ -139,12 +147,162 @@
 			$('#btnChangeUplode').click();
 		});	
 		
-		function isPassword(asValue) {
-			let regExp = /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
-			return regExp.test(asValue);
-		}
+		//유효성 검사 함수 : 빈값여부체크
+		const emptyFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
+		const emptyPhoneFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.parentNode.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
+		const emptyEmailFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.parentNode.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
 		
-	
+		//유효성 검사 함수 : 8~16자 여부확인  
+		const isPassword = (element) => {
+			const memberPw = element.value.trim(); 
+			let msg = '';
+			let isDuplicate = false;
+			var regExp =  /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
+				if(memberPw && !regExp.test(memberPw)){
+					msg = '8 ~ 16자 조합';
+					isDuplicate = true;
+				}
+			element.nextElementSibling.textContent = msg;
+	        return isDuplicate;
+		 }
+		
+		//유효성 검사 함수 : 비밀번호일치 여부 확인 
+		 const checkPwFn = (element) => {
+			 const memberPw = document.querySelector('#memberPw').value.trim();
+			 const checkPw = element.value;
+			 let msg = '';
+			 let isEqual = false;
+		        if(memberPw && memberPw !=checkPw) { 
+		        	msg = '비밀번호가 일치하지 않습니다.';
+		        	isEqual = true;
+		        }			 
+		        element.nextElementSibling.textContent = msg;
+		        return isEqual;		 
+		 }
+
+		    //입력값
+		    const $memberPw = document.getElementById('memberPw')
+		    const $checkPw = document.getElementById('memberPwChk')
+		    const $email = document.getElementById('memberEmail')
+		    const $phone1 = document.getElementById('phone-number1')
+		    const $phone2 = document.getElementById('phone-number2')
+		    const $phone3 = document.getElementById('phone-number3')
+		 
+		   	$memberPw.addEventListener('input', e => {
+		   		const memberPw = e.target.value.trim();
+		   		if(memberPw === '') {
+		   			$checkPw.value = '';
+		   			$checkPw.nextElementSibling.textContent = '';
+		   		}
+		   	});
+		    
+		    //값이비어있으면 유효성검사 함수종료 값있으면 유효성검사
+		    $memberPw.addEventListener('blur', e => {
+		    	if(e.target.value.trim() === '') return;
+		    	isPassword(e.target);
+		    });
+		    
+		    $checkPw.addEventListener('blur', e => {
+		    	checkPwFn(e.target); return;
+		    });
+		    
+		    $email.addEventListener('blur', e => {
+		    	if(!emptyEmailFn(e.target)) return;
+		    });
+		    
+		    $phone1.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
+		    
+		    $phone2.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
+		    
+		    $phone3.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
+
+		        
+		 // 수정버튼 클릭시 유효성검사 후 폼 제출   
+		   document.getElementById('modifyMemberForm').addEventListener('submit', function(e) {
+			   e.preventDefault();
+
+		        if($memberPw.value.trim() !== '' && isPassword($memberPw)){ 
+		        	$memberPw.focus();
+		        	return;
+		        }
+		        
+		        if ($memberPw.value.trim() !== '' && checkPwFn($checkPw)) {
+		            $checkPw.focus();
+		            return; 
+		        }
+		        
+		        if($checkPw.value.trim() !== '' && checkPwFn($checkPw)){                                       
+		            $checkPw.focus();
+		            return;
+		        }
+		        
+		        if(emptyEmailFn($email)){
+		        	$email.focus();
+		        	return;
+		        }
+		        
+		        if (emptyPhoneFn($phone1)) {
+		        	$phone1.focus();
+		            return; 
+		        }
+		        if (emptyPhoneFn($phone2)) {
+		        	$phone2.focus();
+		            return; 
+		        }
+		        if (emptyPhoneFn($phone3)) {
+		        	$phone3.focus();
+		            return; 
+		        }
+		        
+		        this.submit();
+		        alert('수정되었습니다.')
+		   });
+ 
+		   document.getElementById('deleteMemberForm').addEventListener('submit', function(e) {
+		        this.submit();
+		        alert('탈퇴가 완료되었습니다.')
+		   });
+		 
+		 
 	</script>
     </th:block> 
 </html>
