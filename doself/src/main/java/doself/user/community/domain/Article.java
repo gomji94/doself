@@ -8,7 +8,9 @@ import lombok.Data;
 public class Article {
 	
 	private int articleKeyNum;
+	private String articleKeyValue;;
 	private String articleAuthorId;
+	private int articleCategoryKeyNum;
 	private String articleCategory;
 	private String articleTitle;
 	private String articleContent;

@@ -23,39 +23,38 @@
 	
 	<th:block layout:fragment="content-body">
    <div class="container">
-        <main id="main-content">
+        <main id="main-content" th:with="test=${session.SGRD}">
             <div id="main-container-contents">
                 <div id="main-container-title">community</div>
                 <form th:action="${articleForm}" method="post">
 	                <div id="post-editor">
 	                    <div id="category-select">
-	                        <div>
-	                            <button type="button" class="category-button" >전체</button>
-	                        </div>
-	                        <div>
-	                            <button type="button" class="category-button">공지사항</button>
-	                        </div>
-	                        <div>
-	                            <button type="button" class="category-button">자유</button>
-	                        </div>
-	                        <div>
-	                            <button type="button" class="category-button">정보</button>
-	                        </div>
-	                        <div>
-	                            <button type="button" class="category-button">질문</button>
-	                        </div>
-	                        <div>
-	                            <button type="button" class="category-button">유머</button>
-	                        </div>
+       	                    <div class="form-check">
+							  <label class="form-check-label" th:if="${test eq 'mg_001'}">
+							    <input type="radio" class="form-check-input " name="articleCategoryKeyNum" value="1">공지사항
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="2">자유
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="3">정보
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="4">질문
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="5">유머
+							  </label>
+							</div>
 	                    </div>
+
 	
 	                    <div id="title-container">
 	                        <label for="post-title">제목</label>
 	                        <input type="text" id="post-title" name="articleTitle"/>
 	                    </div>
 	                    
-	                    <div id="summernote"></div>
-	
+	                    <textarea id="summernote" name="articleContent"></textarea>
 	
 	                    <div class="article-button-container">
 	                            <button type="submit" id="article-write__button">등록</button>

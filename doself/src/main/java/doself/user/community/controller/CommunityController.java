@@ -116,12 +116,25 @@ public class CommunityController {
 		return "user/community/create";
 	}
 	
+	@PostMapping("/create")
+	public String createArticle(Article article, HttpSession session) {
+		//TODO: process POST request
+		
+		article.setArticleAuthorId((String) session.getAttribute("SID"));
+		
+		communityService.createArticle(article);
+		
+		return "user/community/list";
+	}
+	
+	
 	@PostMapping("/delete")
 	public String deleteArticle(@RequestParam(name = "articleNum") int articleKeyNum) {
 		//TODO: process POST request
 		communityService.deleteArticle(articleKeyNum);
 		return "redirect:/community/list";
 	}
+	
 	
 	@PostMapping("/like")
 	@ResponseBody

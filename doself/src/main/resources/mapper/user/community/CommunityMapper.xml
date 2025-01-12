@@ -124,6 +124,13 @@
 		WHERE fb.fb_num = #{articleKeyNum}
   	</select>
   	
+  	<!-- 게시글 create -->
+  	<insert id="createArticle" parameterType="Article">
+  		INSERT INTO free_board
+		(fb_num, mbr_id, fbctg_code, fb_title, fb_content, fb_date, fb_attachment_file)
+		VALUES (#{articleKeyValue}, #{articleAuthorId}, #{articleCategory}, #{articleTitle}, #{articleContent}, NOW(), #{articleAttachmentFile})
+  	</insert>
+  	
   	<!-- 게시글 삭제(soft delete) -->
   	<update id="deleteArticle" parameterType="String">
 	  	UPDATE free_board

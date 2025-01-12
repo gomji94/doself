@@ -17,7 +17,7 @@ $('#item-purchase__button').click(event => {
 		const request = $.ajax({
 			url: '/market/purchaseitem',
 			method: 'post',
-			data : { pointItemKeyNum : $('#pointItemKeyNum').val(), itemPrice : $('#itemPrice').val()},
+			data : { pointItemKeyNum : $('#pointItemKeyNum').val(), itemPrice : $('#itemPrice').val() },
 			dataType: 'json'
 		});
 		

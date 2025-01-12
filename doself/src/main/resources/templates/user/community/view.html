@@ -6,6 +6,11 @@
 <head>
 	<link th:href="@{/assets/css/community/view.css}" rel="stylesheet" type="text/css" />
 	<link th:href="@{/assets/css/community/request-modal.css}" rel="stylesheet" type="text/css" />
+	<script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 	
 	<th:block layout:fragment="content-body">
@@ -34,9 +39,7 @@
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
                         <input type="hidden" id="currentArticleLikeCnt" name="currentArticleLikeCnt" th:value="*{articleLike}">
                     </div>
-					<th:block th:with="imgSrc=*{articleAttachmentFile}" >
-					    <img th:src="${imgSrc != '' ? imgSrc : ''}" width="300" height="300" th:if="${imgSrc != ''}">
-					</th:block>
+					    <img th:src="*{articleAttachmentFile}" width="400" height="300">
 
                     <!-- 게시글 본문 내용 -->
                     <div id="post-content" th:text="*{articleContent}">
@@ -80,24 +83,18 @@
 	                                </div>
 	                                <div class="comment-info__right">
 	                                    <p class="comment-date" th:text="${l.commentDate}"></p>
-	                                    <button class="comment-button">
-	                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-	                                    </button>
-										<div class="comment-menu"> 
-											<ul>
-										        <li class="comment-menu-item" th:unless="${test != null and test != articleDetail.articleAuthorId}">
-										        	<a href="#" id="report-comment-btn">신고</a>
-										        </li>
+	                                    <div class="dropup">
+		                                    <button type="button" class="comment-button " data-toggle="dropdown">
+		                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+		                                    </button>
+	                                        <div class="dropdown-menu">
+												<a class="dropdown-item" href="#" id="report-comment-btn" th:unless="${test != null and test != articleDetail.articleAuthorId}">신고</a>
 										        <th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
-											        <li class="comment-menu-item" >
-											        	<a href="#" id="modify-comment-btn">수정</a>
-											        </li>
-											        <li class="comment-menu-item">
-											        	<a href="#" id="delete-comment-btn">삭제</a>
-											        </li>
+											      <a class="dropdown-item" href="#" id="modify-comment-btn">수정</a>
+											      <a class="dropdown-item" href="#" id="delete-comment-btn">삭제</a>
 										        </th:block>
-											</ul>
-									    </div>
+										    </div>
+	                                    </div>
 	                                </div>
 	                            </li>
 	                        </ul>
