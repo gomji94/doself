@@ -67,6 +67,27 @@ $(document).ready(function () {
     });
 });
 
+// --- feed carete modal ---
+$(document).ready(function () {
+    // 피드 추가 버튼 클릭 이벤트
+    $('#feed-create').on('click', function () {
+        // 모달 표시
+        $('#feed-create-modal-overlay').fadeIn(300); // 모달 오버레이 표시
+    });
+
+    // 모달 닫기 버튼 클릭 이벤트
+    $('#feed-create-modal-closeBtn').on('click', function () {
+        $('#feed-create-modal-overlay').fadeOut(300); // 모달 오버레이 숨기기
+    });
+
+    // 모달 오버레이 클릭 시 모달 닫기
+    $('#feed-create-modal-overlay').on('click', function (e) {
+        if ($(e.target).is('#feed-create-modal-overlay')) {
+            $(this).fadeOut(300);
+        }
+    });
+});
+
 // --- modify feed modal ---
 $(document).ready(function () {
     // 모달 열기
