@@ -94,11 +94,11 @@
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
                     <div class="phone-input">
-                        <input type="text" id="phone-number-part1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
+                        <input type="text" id="phone-number1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
                         	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
+                        <input type="text" id="phone-number2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
+                        <input type="text" id="phone-number3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                         <div></div>
                     </div>     
@@ -159,11 +159,11 @@
 		
 		//유효성 검사 함수 : 8~16자 여부확인  
 		const isPassword = (element) => {
-			const memberPW = element.value 
+			const memberPw = element.value.trim(); 
 			let msg = '';
 			let isDuplicate = false;
 			var regExp =  /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
-				if(!regExp.test(memberPW)){
+				if(memberPw && !regExp.test(memberPw)){
 					msg = '8 ~ 16자 조합';
 					isDuplicate = true;
 				}
@@ -173,11 +173,11 @@
 		
 		//유효성 검사 함수 : 비밀번호일치 여부 확인 
 		 const checkPwFn = (element) => {
-			 const memberPw = document.querySelector('#memberPw').value;
+			 const memberPw = document.querySelector('#memberPw').value.trim();
 			 const checkPw = element.value;
 			 let msg = '';
 			 let isEqual = false;
-		        if(memberPw !=checkPw) { 
+		        if(memberPw && memberPw !=checkPw) { 
 		        	msg = '비밀번호가 일치하지 않습니다.';
 		        	isEqual = true;
 		        }			 
@@ -186,12 +186,16 @@
 		 }
 		 
 		 const checkPhoneFn = (element) => {
-			 const phone1 = document.querySelector('#phone-number-part1').value;
-			 const phone2 = document.querySelector('#phone-number-part2').value;
-			 const phone3 = document.querySelector('#phone-number-part3').value;
-			 let msg = '';
-			 let isEqual = false;
-			 	if(phone1.length !==3 || phone2.length !=4 || phone3.length !=4) {
+				const phone1 = document.querySelector('#phone-number1');
+				const phone2 = document.querySelector('#phone-number2');
+				const phone3 = document.querySelector('#phone-number3');
+				let msg = '';
+			 	let isEqual = false;
+			 	if(!phone1.value.trim() || !phone2.value.trim() || !phone3.value.trim()) {
+			 		msg = '핸드폰 번호를 모두 입력해주세요.';
+			 	    isEqual = true;
+			 	}				 	
+			 	if(phone1.value.length !==3 || phone2.value.length !=4 || phone3.value.length !=4) {
 			 		msg = '올바른 전화번호 형식이 아닙니다.';
 			 		 isEqual = true;
 			 	}	
@@ -200,63 +204,67 @@
 		 } 
 			
 		    //입력값
-		    const $memberPw = document.getElementById('memberPw').value; 
-		    const $checkPw = document.getElementById('memberPwChk').value;
-		    const $email = document.getElementById('memberEmail').value;
+		    const $memberPw = document.getElementById('memberPw')
+		    const $checkPw = document.getElementById('memberPwChk')
+		    const $email = document.getElementById('memberEmail')
 		 
-		    //값이비어있으면 유효성검사 함수종료
+		   	$memberPw.addEventListener('input', e => {
+		   		const memberPw = e.target.value.trim();
+		   		if(memberPw === '') {
+		   			$checkPw.value = '';
+		   			$checkPw.nextElementSibling.textContent = '';
+		   		}
+		   	});
+		    
+		    //값이비어있으면 유효성검사 함수종료 값있으면 유효성검사
 		    $memberPw.addEventListener('blur', e => {
-		    	if(emptyFn(e.target)) return;
+		    	if(e.target.value.trim() === '') return;
 		    	isPassword(e.target);
 		    });
 		    
 		    $checkPw.addEventListener('blur', e => {
-		    	if(emptyFn(e.target)) return; 
 		    	checkPwFn(e.target);
 		    });
 		    
 		    $email.addEventListener('blur', e => {
-		    	if(emptyFn(e.target)) return;
+		    	if(!emptyFn(e.target)) return;
 		    });
-		 
-		    ['phone-number-part1', 'phone-number-part2', 'phone-number-part3'].forEach(id => {
-		        document.querySelector(`#${id}`).addEventListener('input', function() {
-		            checkPhoneFn(this);
-		        });
+		 	
+		    document.querySelectorAll('#phone-number1, #phone-number2, #phone-number3').forEach(field => {
+		        field.addEventListener('blur', checkPhoneFn);
 		    });
+
 		        
 		 // 수정버튼 클릭시 유효성검사 후 폼 제출   
 		   document.getElementById('modifyMemberForm').addEventListener('submit', function(e) {
-		        
 			   e.preventDefault();
-			   
-		        if(emptyFn($memberPw)){
-		        	 $memberPw.focus();
-		        	 return;
-		        }
-				
-		        if(isPassword($memberPw)){ 
+
+		        if($memberPw.value.trim() !== '' && isPassword($memberPw)){ 
 		        	$memberPw.focus();
 		        	return;
 		        }
 		        
-		        if(emptyFn($checkPw)){                         
+		        if ($memberPw.value.trim() !== '' && checkPwFn($checkPw)) {
 		            $checkPw.focus();
-		            return;
+		            return; 
 		        }
-
-		        if(checkPwFn($checkPw)){                                       
+		        
+		        if($checkPw.value.trim() !== '' && checkPwFn($checkPw)){                                       
 		            $checkPw.focus();
 		            return;
 		        }
 		        
-		        if(emptyFn($memberEmail)){
-		        	$memberEamil.focus();
+		        if(emptyFn($email)){
+		        	$email.focus();
 		        	return;
 		        }
 		        
+		        if (!checkPhoneFn()) {
+		            return; 
+		        }
+		        
 		        this.submit();
-		        arert('제출')
+		        alert('수정되었습니다.')
 		   });
 
 		    
