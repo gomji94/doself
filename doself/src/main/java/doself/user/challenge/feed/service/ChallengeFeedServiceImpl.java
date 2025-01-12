@@ -1,14 +1,20 @@
 package doself.user.challenge.feed.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
-import doself.user.challenge.feed.domain.ChallengeProcess;
+import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
+import doself.util.FeedPageInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,44 +28,63 @@ import lombok.extern.slf4j.Slf4j;
 public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	private final ChallengeFeedMapper challengeFeedMapper;
+	// 요청 데이터 한번만 가져오도록 캐싱 적용
+	private final ConcurrentMap<String, List<ChallengeProgress>> challengeProgressCache = new ConcurrentHashMap<>();
 	
-	// 챌린지 피드 조회(로직 검토 필요)
+	// 로그인된 챌린지 멤버 아이디
 	@Override
-	public List<ChallengeFeed> getChallengeFeedList(int page, int pageSize) {
-		List<ChallengeFeed> challengeFeed = challengeFeedMapper.getChallengeFeedList(page, pageSize);
-		if (challengeFeed == null || challengeFeed.isEmpty()) {
-	        log.warn("챌린지 피드 정보가 없습니다.");
-	        return challengeFeed;
-	    }
-		
-		// 챌린지 번호와 챌린지 피드 번호가 일치하는 것만 조회되게 함
-		challengeFeed.forEach(challengeFeedInfo -> {
-			String feedMatched = challengeFeedInfo.getChallengeCode();
-			if(feedMatched == challengeFeedInfo.getChallengeFeedCode());
-		});
-		
-	    int offset = (page - 1) * pageSize;
-	    return challengeFeedMapper.getChallengeFeedList(offset, pageSize);
+	public String getChallengeCodeByMemberId(String challengeMemberId) {
+	    return challengeFeedMapper.getChallengeCodeByMemberId(challengeMemberId);
 	}
 	
-	// 챌린지 진행 상태 조회
+	// 챌린지 피드
 	@Override
-	public List<ChallengeProcess> getChallengeProgress(String challengeCode) {
-		List<ChallengeProcess> challengeProgress = challengeFeedMapper.getChallengeProgress(challengeCode);
+	public FeedPageInfo<ChallengeFeed> getChallengeFeed(Map<String, Object> params) {
+		// 데이터 가져오기
+		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeFeed(params);
+		int totalCount = challengeFeedMapper.getChallengeFeedCount((String) params.get("challengeCode"));
 
-		// 챌린지 상태에 따른 화면 데이터 업데이트
-		challengeProgress.forEach(challengeInfo -> {
-	        String challengeStatus = challengeInfo.getChallengeStatusCode();
-	        if("cs_001".equals(challengeStatus)) {
-	        	log.info("challengeStatus: ", "완료");
-	        } if ("cs_002".equals(challengeStatus) || "cs_003".equals(challengeStatus)) {
-	        	log.info("challengeStatus: ", "진행중");
-			} else {
-	        	log.info("challengeStatus: ", "중단");
-	        }
-	    });
-		return challengeProgress;
-	}	
+        // 페이징 정보 생성
+		int currentPage = (int) params.getOrDefault("currentPage", 1);
+		int pageSize = (int) params.getOrDefault("pageSize", 10);
+	    
+	    if (currentPage < 0) {
+	        params.put("offset", 0); // offset이 음수일 경우 0으로 설정
+	    }
+
+	    if (pageSize <= 0) {
+	        params.put("pageSize", 10); // pageSize가 유효하지 않을 경우 기본값 설정
+	    }
+	    
+	    return new FeedPageInfo<>(challengeFeedList, totalCount, currentPage, pageSize);
+	}
+
+	// 챌린지 진행 상태 조회
+	
+	
+	// 총 업로드 데이터 합계
+	@Override
+	public int calculateTotalProgress(String challengeCode) {
+		return challengeFeedMapper.getTodayProgressSum(challengeCode) / 14;
+	}
+
+	// 참여 멤버 상위 3명 표시
+	@Override
+    public List<ChallengeMemberList> getTopParticipants(String challengeCode) {
+        return challengeFeedMapper.getTopParticipants(challengeCode);
+    }
+
+//	// D+ 계산
+//	@Override
+//	public String calculateDPlus(String challengeCode) {
+//		return challengeFeedMapper.findDPlus(challengeCode);
+//    }
+//
+//	// D- 계산
+//	@Override
+//	public String calculateDMinus(String challengeCode) {
+//		return challengeFeedMapper.findDMinus(challengeCode);
+//    }
 	
 	// 챌린지 멤버 조회(참여자 번호, 챌린지 번호, 챌린지 참여 및 퇴장 일시 기록 → 추후, 유효성 검사 로직 추가)
 	@Override
@@ -69,4 +94,30 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    return memberList;
 	}
 
+	@Override
+	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatus) {
+		// 캐시 내 데이터 여부 확인
+		if (challengeProgressCache.containsKey(challengeCode)) {
+	        return challengeProgressCache.get(challengeCode); // 캐시된 데이터 반환
+	    }
+		
+        // 데이터 가져오기
+		List<ChallengeProgress> challengeProgress = challengeFeedMapper.getChallengeProgress(challengeCode);
+
+	    // 중복 제거 후 캐시에 저장
+		List<ChallengeProgress> distinctProgress = challengeProgress.stream()
+		        .distinct() // 중복 제거
+		        .collect(Collectors.toList());
+//	    List<ChallengeProgress> distinctProgress = challengeProgress.stream()
+//	        .distinct()
+//	        .collect(Collectors.toList());
+//	    challengeProgressCache.put(challengeCode, distinctProgress);
+
+	    return distinctProgress;
+	}
+	
+	// 불필요한 캐시 초기화
+	public void clearChallengeProgressCache(String challengeCode) {
+	    challengeProgressCache.remove(challengeCode);
+	}
 }

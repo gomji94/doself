@@ -58,14 +58,6 @@ public class ChallengeListController {
         log.info("Challenge Detail: {}", challengeDetail);
         return challengeDetail;
     }
-	/*
-	 * public String getChallengeListView(@RequestParam(value="challengeCode")
-	 * String challengeCode, Model model) { List<ChallengeDetailView>
-	 * challengeListDetail =
-	 * challengeListService.getChallengeListView(challengeCode);
-	 * model.addAttribute("challengeListDetail", challengeListDetail); return
-	 * "user/challenge/challenge-list-view :: challenge-list-view"; }
-	 */
 	
 	@PostMapping("/list/createchallengerequest")
 	public String addChallenge(ChallengeList challengeList) {

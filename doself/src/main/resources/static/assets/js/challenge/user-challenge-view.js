@@ -1,9 +1,258 @@
+// --- feed infinite scroll(10 limit) ---
+document.getElementById("loadMore").addEventListener("click", function () {
+	const pageInfoDiv = tempDiv.querySelector('[data-current-page]');
+    const currentPage = parseInt(this.dataset.currentPage || "1", 10);
+    const lastPage = parseInt(this.dataset.lastPage || "1", 10);
+    const challengeCode = document.getElementById("challengeCode").value;
+	
+	if (pageInfoDiv) {
+	    this.dataset.currentPage = pageInfoDiv.dataset.currentPage;
+	    this.dataset.lastPage = pageInfoDiv.dataset.lastPage;
+	}
+
+    fetch(`/challenge/feed/view?challengeCodeValue=${challengeCode}&currentPage=${currentPage + 1}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "text/html",
+        },
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("서버 응답 오류");
+            return response.text(); // html Fragment 반환
+        })
+        .then(html => {
+            const container = document.querySelector(".feed-container .container");
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = html;
+
+            // html Fragment에서 새 피드 추가
+            const newFeeds = tempDiv.querySelectorAll(".feed");
+            newFeeds.forEach(feed => container.appendChild(feed));
+
+            // 페이지 정보 업데이트
+            this.dataset.currentPage = currentPage + 1;
+
+            // 마지막 페이지인 경우 버튼 숨기기
+            if (currentPage + 1 >= lastPage) {
+                this.style.display = "none";
+            }
+        })
+        .catch(err => console.error("로딩 중 오류:", err));
+});
+
+/*document.getElementById("loadMore").addEventListener("click", function () {
+	const currentPage = parseInt(this.dataset.currentPage || "1", 10);
+	// const currentPage = parseInt(this.dataset.currentPage, 10) || 1;
+    const challengeCode = document.getElementById("challengeCode").value;
+
+    fetch(`/challenge/feed/view?challengeCodeValue=${challengeCode}&currentPage=${currentPage + 1}`)
+        .then(response	=> {
+	       // 응답의 Content-Type 확인
+	       const contentType = response.headers.get("content-type");
+	       if (contentType && contentType.includes("application/json")) {
+	           return response.json(); // JSON이면 파싱
+	       } else {
+	           console.error("JSON이 아닌 응답:", response);
+	           throw new Error("서버에서 JSON이 아닌 응답을 반환했습니다.");
+	       }
+	   })
+        .then(data => {
+            const container = document.querySelector(".feed-container .container");
+            data.contents.forEach((feed) => {
+				console.log("받은 데이터:", data); // 받은 데이터 로그 확인
+				
+                const feedHTML = `
+					<div class="feed">
+	                   <div class="feed-header">
+	                       <a href="#">
+	                           <img src="${feed.memberProfileImage}" alt="작성자 프로필">
+	                       </a>
+	                       <div class="user-name">
+	                           <a href="#"><p>${feed.challengeMemberId}</p></a>
+	                       </div>
+	                       <div class="feed-option">
+	                           <button class="option-button">
+	                               <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+	                           </button>
+	                       </div>
+	                   </div>
+	                   <div class="feed-main-img">                    
+	                       <img src="${feed.challengeFeedPicture}" class="feed-upload-img" alt="게시글 이미지">
+	                   </div>
+	                   <div class="feed-action">
+	                       <div class="action-icons">
+	                           <button type="button" class="action-btn likeBtn" data-liked="false">
+	                               <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
+	                           </button>
+	                           <button type="button" class="action-btn commentBtn">
+	                               <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+	                           </button>
+	                       </div>
+	                       <p class="feed-upload-date">${feed.challengeFeedDate ? new Date(feed.challengeFeedDate).toLocaleDateString('ko-KR') : '날짜 없음'}</p>
+	                   </div>
+	                   <div class="feed-description">
+	                       <p id="feed-likes">좋아요 ${feed.challengeFeedLike || 0}개</p>
+	                       <p>${feed.challengeFeedContent || '내용 없음'}</p>
+	                       <p class="comments-link">${feed.challengeFeedCommentContent || ''}</p>
+	                   </div>
+	                   <hr>
+	                   <div class="add-comment">
+	                       <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+	                       <input type="text" placeholder="댓글 달기...">
+	                       <button class="comment-submit">게시</button>
+	                   </div>
+	               </div>
+                `;
+                container.insertAdjacentHTML("beforeend", feedHTML);
+            });
+
+            // 현재 페이지 업데이트
+			this.dataset.currentPage = data.pageable.currentPage || currentPage + 1;
+            //this.dataset.currentPage = data.pageable.currentPage;
+
+            // 마지막 페이지면 더보기 버튼 숨기기
+            if (data.pageable.currentPage >= data.pageable.lastPage) {
+                this.style.display = "none";
+            }
+        })
+        .catch(err => console.error(err));
+});*/
+
+/*
+<div class="feed">
+                        <div class="feed-header">
+                            <img src="${feed.memberProfileImage}" alt="작성자 프로필">
+                            <div class="user-name">
+                                <p>${feed.challengeFeedAuthor}</p>
+                            </div>
+                        </div>
+                        <div class="feed-main-img">
+                            <img src="${feed.challengeFeedPicture}" alt="피드 이미지">
+                        </div>
+                        <div class="feed-description">
+                            <p>${feed.challengeFeedContent}</p>
+                        </div>
+                    </div>
+*/
+/*$(document).ready(function () {
+    let currentPage = 1; // 현재 페이지
+    const pageSize = 10; // 페이지 크기
+    const challengeCode = $("#challengeCode").val(); // 챌린지 코드
+
+    if (!challengeCode) {
+        console.error("챌린지 코드가 없습니다.");
+        return;
+    }
+
+    function loadFeeds() {
+        $.ajax({
+            url: "/challenge/feed/view",
+            type: "GET",
+            data: {
+                challengeCodeValue: challengeCode, // 서버에서 요구하는 파라미터 이름으로 변경
+                currentPage: currentPage,
+                pageSize: pageSize
+            },
+			success: function (response) {
+			    console.log("Ajax Response: ", response); // 데이터 구조 확인
+			    const { contents, currentPage, lastPage } = response;
+
+			    if (!contents || contents.length === 0) {
+			        console.log("더 이상 데이터가 없습니다.");
+			        return;
+			    }
+			    
+			    // HTML 추가 로직
+			    const container = $(".feed-container .container");
+			    if (!container.length) {
+			        console.error("컨테이너가 없습니다. HTML 구조를 확인하세요.");
+			        return;
+			    }
+
+			    contents.forEach((feed, index) => {
+			        const feedHTML = `
+                        <div class="feed" id="feed-${currentPage * pageSize + index}">
+                            <div class="feed-header">
+                                <a href="#">
+                                    <img src="${feed.memberProfileImage}" alt="작성자 프로필" onerror="this.src='/images/default-profile.png'">
+                                </a>
+                                <div class="user-name">
+                                    <a href="#"><p>${feed.challengeFeedAuthor}</p></a>
+                                </div>
+                                <div class="feed-option">
+                                    <button class="option-button">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="feed-main-img">
+                                <img src="${feed.challengeFeedPicture}" class="feed-upload-img" alt="게시글 이미지">
+                            </div>
+                            <div class="feed-action">
+                                <div class="action-icons">
+                                    <button type="button" class="action-btn likeBtn" data-liked="false">
+                                        <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
+                                    </button>
+                                    <button type="button" class="action-btn commentBtn">
+                                        <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
+                                    </button>
+                                </div>
+                                <p class="feed-upload-date">${feed.challengeFeedDate ? new Date(feed.challengeFeedDate).toLocaleDateString("ko-KR") : "날짜 없음"}</p>
+                            </div>
+                            <div class="feed-description">
+                                <p id="feed-likes">좋아요 ${feed.challengeFeedLike}개</p>
+                                <p>${feed.challengeFeedContent}</p>
+                                <p class="comments-link">${feed.challengeFeedCommentContent || ""}</p>
+                            </div>
+                            <hr>
+                            <div class="add-comment">
+                                <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+                                <input type="text" placeholder="댓글 달기...">
+                                <button class="comment-submit">게시</button>
+                            </div>
+                        </div>
+                    `;
+					container.append(feedHTML);
+			    });
+
+			    currentPage++;
+
+                if (currentPage > lastPage) {
+                    console.log("모든 페이지를 로드했습니다.");
+                    $(window).off("scroll");
+                }
+            },
+            error: function (error) {
+                console.error("피드 로드 실패:", error);
+            }
+        });
+    }
+
+    // 초기 피드 로드
+    loadFeeds();
+
+    // 스크롤 이벤트 추가
+    $(window).on("scroll", function () {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+            loadFeeds();
+        }
+    });
+});*/
+
+
+
 // --- aside member list modal ---
 $(document).ready(function () {
-	// 챌린지 멤버 조회 클릭 이벤트
+    // 챌린지 멤버 조회 클릭 이벤트
     $('#cf_mbr_search-panel').on('click', '.open-memberlist-modal', function () {
         const challengeCode = $(this).data('challenge-code'); // 챌린지 코드 가져오기
         console.log("Challenge Code:", challengeCode); // 디버깅용 로그
+
+        if (!challengeCode) {
+            console.error("Challenge Code is undefined or empty.");
+            alert("챌린지 코드를 가져올 수 없습니다. 관리자에게 문의하세요.");
+            return;
+        }
 
         // Ajax 요청으로 데이터 가져오기
         $.ajax({
@@ -12,12 +261,14 @@ $(document).ready(function () {
             data: { challengeCode: challengeCode },
             success: function (response) {
                 console.log("Response received:", response); // 응답 데이터 확인
-				// 기존 내용을 지운 후 업데이트
+                // 기존 내용을 지운 후 업데이트
                 $('.cf-mbr-modal-overlay').empty().html(response);
                 // 오버레이와 모달 표시
-                $('.cf-mbr-modal-overlay').css('display', 'block');
-                //$('#cf-mbr-modal-overlay').fadeIn(); // 오버레이 활성화
-                $('#cf-mbr-modal').fadeIn(); // 모달 활성화
+                $('.cf-mbr-modal-overlay').fadeIn();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching member list:", error);
+                alert("멤버 데이터를 가져오는 데 실패했습니다.");
             }
         });
     });
@@ -324,7 +575,7 @@ $(document).ready(function() {
     function updateProgress() {
         if (currentProgress < targetProgress) {
             currentProgress++;
-            const offset = 314 - (314 * currentProgress) / 100; // 계산된 stroke-dashoffset
+            const offset = 314 - (314 * currentProgress) / 100;
             progressCircle.css('stroke-dashoffset', offset);
             progressPercent.text(`${currentProgress}%`);
             requestAnimationFrame(updateProgress); // 부드러운 애니메이션
@@ -362,6 +613,66 @@ $(document).ready(function() {
         }, 10); // 애니메이션 속도 조정
     }
 
-    // 테스트용 목표 달성률 설정 (83%)
-    updateProgress(83);
+    updateProgress();
 });
+
+
+// --- participants top3 member update ---
+let isUpdatingParticipants = false; // 상태 변수 추가
+
+function updateTopParticipants(challengeCode) {
+    if (isRequestInProgress) return; // 이미 요청 중이면 실행 안 함
+    isRequestInProgress = true;
+
+    $.ajax({
+        url: '/challenge/feed/top-participants',
+        type: 'GET',
+        data: { challengeCode },
+        success: function (response) {
+            const participantsList = $('.participants-list ul');
+            participantsList.empty();
+            response.forEach(member => {
+                participantsList.append(`
+                    <li>
+                        <img src="${member.memberProfile}" alt="멤버 프로필">
+                        <p>${member.memberId}</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${member.score}%"></div>
+                        </div>
+                        <span>${member.score}%</span>
+                    </li>
+                `);
+            });
+        },
+        error: function (error) {
+            console.error('Error updating participants:', error);
+        },
+        complete: function () {
+            isRequestInProgress = false; // 요청 완료 후 플래그 초기화
+        }
+    });
+}
+
+
+
+// --- D+, D- calculate ---
+/*
+function updateDates(challengeCode) {
+	if (isUpdatingParticipants) return; // 중복 호출 방지
+    $.ajax({
+        url: '/challenge/feed/dates',
+        type: 'GET',
+        data: { challengeCode },
+        success: function (response) {
+            $('.info-box .info-item:nth-child(1) p:last-child').text(response.dPlus);  // 투데이
+            $('.info-box .info-item:nth-child(3) p:last-child').text(response.dMinus); // 남은기간
+        },
+        error: function (error) {
+            console.error('Error updating dates:', error);
+        },
+		complete: function () {
+            isUpdatingParticipants = false; // 요청 완료 후 상태 초기화
+        }
+    });
+}
+*/
