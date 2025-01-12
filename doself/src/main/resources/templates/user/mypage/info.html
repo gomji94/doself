@@ -122,7 +122,7 @@
                     </div>
                     <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
                 </form>
-                <form action="/mypage/delete" method="post">
+                <form action="/mypage/delete" method="post" id="deleteMemberForm">
                 <input type="hidden" name="memberId" th:value="*{memberId}">
                     <div id="withdrawa">
           	          <button type="submit" id="removeBtn">회원탈퇴</button>
@@ -296,8 +296,11 @@
 		        this.submit();
 		        alert('수정되었습니다.')
 		   });
-
-		    
+ 
+		   document.getElementById('deleteMemberForm').addEventListener('submit', function(e) {
+		        this.submit();
+		        alert('탈퇴가 완료되었습니다.')
+		   });
 		 
 		 
 	</script>
