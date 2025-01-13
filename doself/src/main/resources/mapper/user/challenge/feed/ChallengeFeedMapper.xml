@@ -41,7 +41,8 @@
 		<result column="cfc_date" 			property="challengeFeedCommentDate"/>
 		<result column="cfc_like" 			property="challengeFeedCommentLike"/>
 		<result column="cfc_caution_check"  property="challengeFeedCommentCaution"/>
-		<result column="mbr_image" 			property="challengeFeedImage"/>
+		<result column="cmf_picture" 		property="challengeFeedImage"/>
+		<result column="mbr_image" 			property="challengeCommentAuthorImage"/>
 	</resultMap>
 	
 	<!-- 챌린지 진행 상태 조회 -->
@@ -155,7 +156,7 @@
   	</select>
   	
   	<!-- 챌린지 댓글 리스트 조회 -->
-  	<select id="getFeedComment" resultMap="ChallengeFeedCommentMap">
+  	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
   		SELECT
 			cfc.cfc_num,
 			cfc.cmf_num,
@@ -164,14 +165,14 @@
 			cfc.cfc_date,
 			cfc.cfc_like,
 			cfc.cfc_caution_check,
+			cmf.cmf_picture,
 			m.mbr_image
 		FROM
 			challenge_feed_comments cfc
 			LEFT JOIN `member` m USING(mbr_id)
+			INNER JOIN challenge_member_feed cmf USING(cmf_num)
 		WHERE
-			cfc.cmf_num = #{challengeFeedCode};
-		ORDER BY cfc_date DESC
-		LIMIT 1
+			cfc.cmf_num = #{challengeFeedCode}
   	</select>
   	
   	<!-- 챌린지 진행 상태 조회 -->
