@@ -112,8 +112,14 @@
     
     .email-input {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 5px;
+        flex-direction: column;
+    }
+    
+    .email-gr {
+   	    display: flex;
+   		flex-direction: row;
     }
     
     .btn-password-change {

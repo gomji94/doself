@@ -1,56 +1,124 @@
-// --- aside member list modal ---
+// --- feed infinite scroll(10 limit) ---
+document.getElementById("loadMore").addEventListener("click", function () {
+    const loadMoreBtn = this;
+    const currentPage = parseInt(loadMoreBtn.dataset.currentPage, 10);
+    const challengeCode = document.getElementById("challengeCode").value;
+
+    // 다음 페이지 요청
+    fetch(`/challenge/feed/view?challengeCodeValue=${challengeCode}&currentPage=${currentPage + 1}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "text/html",
+        },
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("서버 응답 오류");
+            return response.text(); // 서버에서 HTML Fragment를 반환
+        })
+        .then(html => {
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = html;
+
+            // 새로 받은 피드 데이터 추가
+            const newFeeds = tempDiv.querySelectorAll(".feed");
+            if (newFeeds.length === 0) {
+                console.log("더 이상 불러올 피드가 없습니다.");
+                loadMoreBtn.style.display = "none"; // 더보기 버튼 숨김
+                return;
+            }
+
+            const feedContainer = document.getElementById("feedContainer");
+            newFeeds.forEach(feed => feedContainer.appendChild(feed));
+
+            // 페이지 정보 업데이트
+            loadMoreBtn.dataset.currentPage = currentPage + 1;
+            console.log(`현재 페이지: ${currentPage + 1}`);
+
+            // 마지막 페이지인지 확인
+            const isLastPage = newFeeds.length < 10; // 추가된 피드가 10개 미만이면 마지막 페이지로 간주
+            if (isLastPage) {
+                loadMoreBtn.style.display = "none"; // 더보기 버튼 비활성화
+                console.log("마지막 페이지에 도달했습니다.");
+            }
+        })
+        .catch(err => console.error("로딩 중 오류:", err));
+});
+
+
+// --- aside member list modal(+warning madal) ---
 $(document).ready(function () {
-	// 챌린지 멤버 조회 클릭 이벤트
+    // 챌린지 멤버 조회 클릭 이벤트
     $('#cf_mbr_search-panel').on('click', '.open-memberlist-modal', function () {
-        const challengeCode = $(this).data('challenge-code'); // 챌린지 코드 가져오기
+        const challengeCode = $(this).data('challengeCode'); // 챌린지 코드 가져오기
         console.log("Challenge Code:", challengeCode); // 디버깅용 로그
 
+        if (!challengeCode) {
+            console.error("챌린지 코드가 비어있습니다.");
+            return;
+        }
+
         // Ajax 요청으로 데이터 가져오기
-        $.ajax({
-            url: '/challenge/feed/memberlist', // 서버 URL
-            type: 'GET',
-            data: { challengeCode: challengeCode },
-            success: function (response) {
-                console.log("Response received:", response); // 응답 데이터 확인
-				// 기존 내용을 지운 후 업데이트
-                $('.cf-mbr-modal-overlay').empty().html(response);
-                // 오버레이와 모달 표시
-                $('.cf-mbr-modal-overlay').css('display', 'block');
-                //$('#cf-mbr-modal-overlay').fadeIn(); // 오버레이 활성화
-                $('#cf-mbr-modal').fadeIn(); // 모달 활성화
-            }
+		$.ajax({
+		    url: '/challenge/feed/memberlist',
+		    type: 'GET',
+		    data: { challengeCode: challengeCode },
+		    success: function (response) {
+		        console.log("Response received:", response); // JSON 데이터 확인
+		        const memberListContainer = $('#cf-mbr-modal .challenge-mbr-list');
+		        memberListContainer.empty(); // 기존 내용을 제거
+
+		        if (response && response.length > 0) {
+		            response.forEach(member => {
+		                const memberHtml = `
+		                    <div class="mbr-id">
+		                        <img src="${member.memberProfileImage || '/images/default-profile.png'}" alt="프로필">
+		                        <p class="user-icon">${member.memberId}</p>
+		                        <span class="mbr-warning">경고</span>
+		                        <button type="button">강퇴</button>
+		                    </div>
+		                `;
+		                memberListContainer.append(memberHtml);
+		            });
+		        } else {
+		            memberListContainer.html('<p>참여중인 멤버가 없습니다.</p>');
+		        }
+				// 오버레이와 모달 표시
+		        $('#cf-mbr-modal-overlay').fadeIn();
+		    },
         });
     });
 
-    // 모달 닫기 이벤트
+    // 멤버 경고 클릭 이벤트
+    $(document).on('click', '.mbr-warning', function () {
+        // 열려 있는 모달 숨기기
+        $('#cf-mbr-modal-overlay').fadeOut();
+
+        // 경고 모달 표시
+        $('#cf-warning-modal-overlay').fadeIn();
+    });
+
+    // 오버레이 바깥쪽 클릭 시 모달 닫기
+    $(document).on('click', function (e) {
+        if ($(e.target).is('#cf-mbr-modal-overlay') || $(e.target).is('#cf-warning-modal-overlay')) {
+            $(e.target).fadeOut();
+        }
+    });
+
+    // 모달 닫기 버튼 클릭 시
     $('#cf-mbr-modal-overlay').on('click', '#cf-mbr-modal-close', function () {
-        $('#cf-mbr-modal-overlay').fadeOut(); // 오버레이 닫기
+        $('#cf-mbr-modal-overlay').fadeOut();
     });
 
-    // 오버레이 클릭 시 닫기
-    $('#cf-mbr-modal-overlay').on('click', function (e) {
-        if ($(e.target).is('#cf-mbr-modal-overlay')) {
-            $(this).fadeOut(); // 오버레이 닫기
-        }
-    });
-
-    // feed-warning-modal-overlay 열기
-    $('.mbr-warning').on('click', function () {
-        // 다른 모달 숨기기
-        $('.modal-overlay').addClass('modal-hidden');
-        $('#cf-warning-modal-overlay').removeClass('modal-hidden').fadeIn();
-    });
-
-    // 모달창 바깥을 클릭하면 모달창 닫기
-    $('#cf-warning-modal-overlay').on('click', function (e) {
-        if ($(e.target).is('#cf-warning-modal-overlay')) {
-            $(this).fadeOut();
-        }
-    });
-
-    // cf-warning-modal-overlay 닫기
-    $('#cf-warning-modal-close').on('click', function () {
+    $('#cf-warning-modal-overlay').on('click', '#cf-warning-modal-overlay', function () {
         $('#cf-warning-modal-overlay').fadeOut();
+    });
+
+    // ESC 키를 눌렀을 때 모달 닫기
+    $(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
+        }
     });
 });
 
@@ -95,6 +163,13 @@ $(document).ready(function() {
             textCount.css('color', ''); // 기본 색상
         }
     });
+	
+	$(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
+        }
+    });
 });
 
 
@@ -114,6 +189,12 @@ $(document).ready(function () {
     $("#cl-create-modal-overlay").on("click", function (e) {
         if ($(e.target).is("#cl-create-modal-overlay")) { // 오버레이 클릭 시만 닫기
             $(this).fadeOut(300);
+        }
+    });
+	$(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
         }
     });
 });
@@ -172,6 +253,12 @@ $(document).ready(function () {
     $("#cf-modal-overlay").on("click", function (e) {
         if ($(e.target).is("#cf-modal-overlay")) {
             $(this).fadeOut(300); // 오버레이 배경 클릭 시 닫기
+        }
+    });
+	$(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
         }
     });
 });
@@ -238,7 +325,13 @@ $(document).ready(function () {
         $(this).fadeOut(200);
       }
     });
-  });
+	$(document).on('keydown', function (e) {
+	    if (e.key === "Escape") {
+	        $('#cf-mbr-modal-overlay').fadeOut();
+	        $('#cf-warning-modal-overlay').fadeOut();
+	    }
+	});
+});
 
 
 // --- feed option button ---
@@ -257,6 +350,12 @@ $(document).ready(function () {
     $('.feed-option-modal-wrap').on('click', function (e) {
         if ($(e.target).is('.feed-option-modal-wrap')) {
             $(this).fadeOut();
+        }
+    });
+	$(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
         }
     });
 });
@@ -294,6 +393,110 @@ $(document).ready(function () {
 $(document).ready(function () {
     // 댓글 버튼 클릭 이벤트
     $('.commentBtn').on('click', function () {
+        const challengeFeedCode = $(this).data('challenge-code'); // 데이터 코드 가져오기
+        console.log("Challenge Feed Code:", challengeFeedCode);
+
+        if (!challengeFeedCode) {
+            alert("해당 피드의 댓글이 없습니다.");
+            return;
+        }
+
+        // Ajax 요청으로 댓글 데이터 가져오기
+        $.ajax({
+            url: '/challenge/feedcomment', // 컨트롤러 URL
+            type: 'GET',
+            data: { challengeFeedCode: challengeFeedCode },
+            success: function (response) {
+                console.log("댓글 데이터:", response);
+
+                // 댓글 모달 HTML 생성
+                const commentModalHtml = `
+                    <div class="cf-comment-modal-body">
+                        <!-- 이미지 업로드 영역 -->
+                        <div class="cf-comment-modal-image-upload">
+                            <img src="${response[0]?.challengeFeedImage}" alt="업로드된 이미지 미리보기" id="image-preview">
+                        </div>
+    
+                        <!-- 정보 입력 영역 -->
+                        <div class="cf-comment-feed-info">
+                            <div class="cf-user-comment-container">
+                                ${
+                                    response.map(comment => `
+                                        <section>
+                                            <div class="cf-comment-user-block">
+                                                <div class="cf-comment-content-block">
+                                                    <img class="comment-profile" src="${comment.challengeCommentAuthorImage || '/images/default-profile.png'}" alt="프로필">
+                                                    <a href="#" class="cf-comment-user-link">${comment.challengeFeedCommentAuthor}</a>
+                                                    <span class="comment-day-count">${new Date(comment.challengeFeedCommentDate).toLocaleDateString()}</span>
+                                                    <div class="cf-comment-feed-comment">
+                                                        <span>${comment.challengeFeedCommentContent}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="action-icons">
+                                                    <button class="action-btn likeBtn" data-liked="false">
+                                                        <img class="likeImg" src="/path/to/like-icon.png" alt="좋아요">
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <img src="/path/to/divider-icon.png" alt="댓글구분" class="comment-section">
+                                        </section>
+                                    `).join('') // 댓글 데이터 반복 생성
+                                }
+                            </div>
+                            <div class="cf-comment-feed-info-under">
+                                <img src="/path/to/divider-icon.png" alt="댓글구분" class="comment-section-under">
+                                <div class="cf-comment-under-input">
+                                    <button type="button" class="emoji-btn">
+                                        <img class="emoji-btn-img" src="/path/to/emoji-icon.png" alt="이모지">
+                                    </button>
+                                    <input type="text" placeholder="댓글 달기...">
+                                    <button type="button" class="cf-comment-comment-btn">게시</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // 댓글 모달 컨테이너에 추가
+                const commentModalContainer = $('.cf-comment-modal-container');
+                commentModalContainer.empty(); // 기존 내용 초기화
+                commentModalContainer.append(commentModalHtml);
+
+                // 댓글 모달 오버레이 표시
+                $('#feedCommentModalOverlay').fadeIn(300);
+            },
+            error: function (xhr, status, error) {
+                console.error("댓글 데이터 로드 오류:", error);
+                alert("댓글 데이터를 불러오는 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
+    // 모달 닫기 버튼 클릭 이벤트
+    $(document).on('click', '.feedCommentModalCloseBtn', function () {
+        $('#feedCommentModalOverlay').fadeOut(300);
+    });
+
+    // 모달 오버레이 클릭 시 닫기
+    $(document).on('click', '#feedCommentModalOverlay', function (e) {
+        if ($(e.target).is('#feedCommentModalOverlay')) {
+            $(this).fadeOut(300);
+        }
+    });
+
+    // ESC 키 누를 시 모달 닫기
+    $(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#feedCommentModalOverlay').fadeOut(300);
+        }
+    });
+});
+
+
+/*
+$(document).ready(function () {
+    // 댓글 버튼 클릭 이벤트
+    $('.commentBtn').on('click', function () {
         // feed-comment.html 모달 표시
         const commentModal = $('.cf-comment-modal-overlay'); // 댓글 모달 오버레이
         commentModal.fadeIn(300); // 부드럽게 모달 표시
@@ -310,13 +513,20 @@ $(document).ready(function () {
             $(this).fadeOut(300);
         }
     });
+	$(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
+        }
+    });
 });
+*/
 
 
 // --- challenge progress circle ---
 $(document).ready(function() {
     let currentProgress = 0;
-    const targetProgress = 83; // 목표 값
+    const targetProgress = 0; // 목표 값
     const progressCircle = $('.foreground-circle');
     const progressPercent = $('#progress-percent-txt');
 
@@ -324,7 +534,7 @@ $(document).ready(function() {
     function updateProgress() {
         if (currentProgress < targetProgress) {
             currentProgress++;
-            const offset = 314 - (314 * currentProgress) / 100; // 계산된 stroke-dashoffset
+            const offset = 314 - (314 * currentProgress) / 100;
             progressCircle.css('stroke-dashoffset', offset);
             progressPercent.text(`${currentProgress}%`);
             requestAnimationFrame(updateProgress); // 부드러운 애니메이션
@@ -361,7 +571,64 @@ $(document).ready(function() {
             }
         }, 10); // 애니메이션 속도 조정
     }
-
-    // 테스트용 목표 달성률 설정 (83%)
-    updateProgress(83);
+    updateProgress();
 });
+
+
+// --- participants top3 member update ---
+let isUpdatingParticipants = false; // 상태 변수 추가
+
+function updateTopParticipants(challengeCode) {
+    if (isRequestInProgress) return; // 이미 요청 중이면 실행 안 함
+    isRequestInProgress = true;
+
+    $.ajax({
+        url: '/challenge/feed/top-participants',
+        type: 'GET',
+        data: { challengeCode },
+        success: function (response) {
+            const participantsList = $('.participants-list ul');
+            participantsList.empty();
+            response.forEach(member => {
+                participantsList.append(`
+                    <li>
+                        <img src="${member.memberProfile}" alt="멤버 프로필">
+                        <p>${member.memberId}</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${member.score}%"></div>
+                        </div>
+                        <span>${member.score}%</span>
+                    </li>
+                `);
+            });
+        },
+        error: function (error) {
+            console.error('Error updating participants:', error);
+        },
+        complete: function () {
+            isRequestInProgress = false; // 요청 완료 후 플래그 초기화
+        }
+    });
+}
+
+
+
+// --- D+, D- calculate ---
+function updateDates(challengeCode) {
+	if (isUpdatingParticipants) return; // 중복 호출 방지
+    $.ajax({
+        url: '/challenge/feed/dates',
+        type: 'GET',
+        data: { challengeCode },
+        success: function (response) {
+            $('.info-box .info-item:nth-child(1) p:last-child').text(response.dPlus);  // 투데이
+            $('.info-box .info-item:nth-child(3) p:last-child').text(response.dMinus); // 남은기간
+        },
+        error: function (error) {
+            console.error('Error updating dates:', error);
+        },
+		complete: function () {
+            isUpdatingParticipants = false; // 요청 완료 후 상태 초기화
+        }
+    });
+}

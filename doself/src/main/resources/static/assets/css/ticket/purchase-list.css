@@ -203,7 +203,9 @@
     .pagination {
         text-align: center;
         margin-top: 10px;
-        
+        display: flex;
+    	list-style: none;
+    	justify-content: space-around;
     }
     
     .pagination a {
@@ -294,3 +296,7 @@
 #ticket-list {
     margin-top : 30px;
 }        
+
+section.content-main {
+    min-height: 1000px;
+}

@@ -1,21 +1,25 @@
 package doself.user.challenge.feed.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
+import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.service.ChallengeFeedService;
+import doself.util.Pageable;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-
 @Controller
 @RequestMapping("challenge/feed")
 @RequiredArgsConstructor
@@ -26,39 +30,85 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 조회
 	@GetMapping("/view")
-	public String getChallengeView(@RequestParam(defaultValue = "1") int page, Model model) {
-		int pageSize = 10;
-		List<ChallengeFeed> challengeFeedList = challengeFeedService.getChallengeFeedList(page, pageSize);
-		log.info("Fetched challenge feed list: {}", challengeFeedList); // 로그 추가
-		model.addAttribute("challengeFeedList", challengeFeedList);
-		return "user/challenge/challenge-view";
+	public String viewChallengeFeed(
+	        @RequestParam(value = "challengeCodeValue", required = false) String challengeCode,
+	        @RequestParam(value = "challengeStatus", required = false) String challengeStatus,
+	        Pageable pageable, HttpSession session, Model model) {
+	    
+	    // 로그인된 사용자 정보 확인
+	    String loggedInMemberId = (String) session.getAttribute("SID");
+
+	    // 참여 중인 챌린지 코드 가져오기
+	    if (challengeCode == null) {
+            challengeCode = challengeFeedService.getChallengeCodeByMemberId(loggedInMemberId);
+            if (challengeCode == null) {
+            	return "redirect:user/food/list";
+            }
+        }
+	    
+	    // 추가 페이징 처리
+	    var pageInfo = challengeFeedService.getChallengeFeedPage(challengeCode,pageable);
+
+	    List<ChallengeFeed> challengeFeedList = pageInfo.getContents();
+	    int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lastPage = pageInfo.getLastPage();
+		
+        // 챌린지 진행률 및 상태 처리(원형 그래프, 이미지 그래프) → 처음 호출 시에만 실행(캐싱 로직 추가)
+        List<ChallengeProgress> challengeProgress = (List<ChallengeProgress>) session.getAttribute("challengeProgress");
+        if (challengeProgress == null) { // 세션에 저장된 값이 없을 경우에만 실행
+            challengeProgress = challengeFeedService.getProcessChallengeStatus(challengeCode, challengeStatus);
+            session.setAttribute("challengeProgress", challengeProgress); // 결과를 세션에 저장
+        }
+
+        // 진행률 합계 계산 (최소화된 호출)
+        Integer totalProgress = (Integer) session.getAttribute("totalProgress");
+        if (totalProgress == null) { // 캐시된 값이 없을 때만 호출
+            totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
+            session.setAttribute("totalProgress", totalProgress); // 계산 결과를 세션에 저장
+        }
+        
+	    // 챌린지 참여율 상위 3명
+        List<ChallengeMemberList> topParticipants = challengeFeedService.getTopParticipants(challengeCode);
+        
+        // 투데이 디데이
+        Map<String, String> dateCalculations = challengeFeedService.calculateDPlusAndDMinus(challengeCode);
+        
+        model.addAttribute("challengeCode", challengeCode);
+        model.addAttribute("challengeFeedList", challengeFeedList);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("startPageNum", startPageNum);
+        model.addAttribute("endPageNum", endPageNum);
+        model.addAttribute("lastPage", lastPage);
+        model.addAttribute("challengeProgress", challengeProgress);
+        model.addAttribute("totalProgress", totalProgress);
+        model.addAttribute("topParticipants", topParticipants);
+        model.addAttribute("dPlus", dateCalculations.get("dPlus"));
+        model.addAttribute("dMinus", dateCalculations.get("dMinus"));
+
+	    //log.info("Challenge Feed List: {}", pageInfo.getContents());
+	    //log.info("Page Info: {}", pageInfo);
+	    //log.info("challengeProgress: {}", challengeProgress);
+	    //log.info("challengeCode: {}", challengeCode);
+        //log.info("challengeStatus: {}", challengeStatus);
+        //log.info("challengeFeedList: {}", challengeFeedList);
+
+	    return "user/challenge/challenge-view";
 	}
 	
 	// 챌린지 멤버 리스트 조회
 	@GetMapping("/memberlist")
-	public String getMemberList(@RequestParam(value = "challengeCode") String challengeCode, Model model) {
-	    log.info("Received challengeCode: {}", challengeCode);
-
+	@ResponseBody
+	public List<ChallengeMemberList> getMemberList(@RequestParam(value = "challengeCode") String challengeCode, Model model) {
 	    // 데이터 가져오기
-	    List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
-	    log.info("Fetched memberList: {}", memberList);
-
-	    model.addAttribute("memberList", memberList);
-
-	    // Thymeleaf fragment 반환
-	    return "user/challenge/member-list :: member-list";
+		List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
+		//log.info("Member List: {}", memberList);
+		
+	    return memberList;
 	}
-	/*
-	 * public String getMemberList(@RequestParam(value = "challengeCode") String
-	 * challengeCode, Model model) { log.info("Received challengeCode: {}",
-	 * challengeCode); // 입력 확인 List<ChallengeMemberList> memberList =
-	 * challengeFeedService.getMemberList(challengeCode);
-	 * log.info("Fetched memberList from Service: {}", memberList);
-	 * model.addAttribute("memberList", memberList); return
-	 * "user/challenge/member-list"; }
-	 */
 	
-	// 챌린지 멤버 경고 사유 선택 조회(지금은 스킵하고 나중에 작업)
+	// 챌린지 멤버 경고 사유 선택 조회
 	@GetMapping("/warning")
 	public String getMemberWarnig(HttpServletRequest request, Model model) {
 		
@@ -67,12 +117,15 @@ public class ChallengeFeedController {
 		return "user/challenge/challenge-member-warning";
 	}
 	
-	// 챌린지 피드 댓글 조회
+	// 챌린지 피드 댓글 조회(모달 안 열림/추후 수정필요)
 	@GetMapping("/feedcomment")
-	public String getFeedComment(Model model) {
+	@ResponseBody
+	public List<ChallengeFeedComment> getFeedComment(@RequestParam(value = "challengeFeedCode") String challengeFeedCode, Model model) {
+		List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
 		
-		model.addAttribute("title", "챌린지 피드 댓글");
-		return "user/challenge/feed-comment";
+		log.info("Feed Comment List: {}", feedCommentList);
+		
+		return feedCommentList;
 	}
 	
 	// 챌린지 생성 화면 조회

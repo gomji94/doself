@@ -1,14 +1,14 @@
 package doself.user.members.domain;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
 public class Members {
 	
 	private String memberId;
-	private String oldMemberPw;
-	private String newMemberPw;
-	private String confirmMemberPw;
+	private String memberPw;
 	private String memberEmail;
 	private String memberName;
 	private String memberBrith;
@@ -20,6 +20,6 @@ public class Members {
 	private Integer partTicketCnt; //챌린지참여 티켓 갯수
 	private Integer memberPoint;
 	private String memberImage;
-	private String memberFeed;
 	
+	private List<FeedList> feedList;   
 }

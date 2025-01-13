@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<div class="modal-overlay" id="feed-modify-modal-overlay" style="display: none;" th:fragment="feed-modify">
+	<div class="feed-modify-modal-overlay" id="feed-modify-modal-overlay" style="display: none;" th:fragment="feed-modify">
        <div class="feed-modify-modal-container">
            <div class="feed-modify-modal-header feed-modify-header-display">
 	            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
@@ -9,54 +9,42 @@
         	</div>
 	        <hr>
 	        <div class="feed-modify-modal-body">
-	            <!-- 이미지 업로드 영역 -->
+				<!-- 이미지 업로드 영역 -->
 	            <div class="feed-modify-image-upload">
-	                <div class="feed-modify-preview-box" id="feed-modify-preview-container" style="display: none;">
-	                    <input type="file" id="feed-modify-file-input" accept="image/*" style="display: none;">
-	                    <!-- 업로드된 이미지가 표시될 컨테이너 -->
-	                    <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+	                <div class="feed-modify-preview-box" id="feed-modify-preview-container">
+	                    <img src="" alt="업로드된 이미지 미리보기" id="feed-modify-image-preview">
 	                </div>
 	                <div class="feed-modify-upload-box">
-	                    <!-- 기본 메시지(사진 삽입 전) -->
+						<!-- 기본 메시지(사진 삽입 전) -->
 	                    <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="빈 접시">
 	                    <p>사진을 이곳에 넣어</p>
 	                    <p>빈 그릇을 채워주세요!</p>
-	                    <button id="feed-modify-upload-bt">파일 불러오기</button>
+	                    <button id="feed-modify-upload-btn">파일 불러오기</button>
 	                </div>
 	            </div>
 	
 	            <!-- 정보 입력 영역 -->
-	            <div class="feed-modify-feed-info">
-	                <div class="feed-modify-user-block">
-	                    <img src="https://buly.kr/EdsBkqu" alt="프로필">
-	                    <a href="#" class="feed-modify-user-link">아이디</a>
-	                </div>
+				<div class="feed-modify-feed-info">
 	                <textarea id="feed-modify-content" placeholder="내용을 입력해주세요" maxlength="2000"></textarea>
 	                <div class="feed-modify-text-box-under">
-	                    <button type="button" id="emoji-btn">
-	                        <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
-	                    </button>
 	                    <div class="feed-modify-text-counter">
 	                        <span id="feed-modify-text-count">0</span>
 	                        <span>/2000</span>
 	                    </div>
 	                </div>
-	
 	                <div class="input-group">
 	                    <label for="serving">섭취 인분</label>
-	                    <input type="number" id="serving" min="1" max="100" value="1">
+	                    <input type="number" id="feed-modify-serving" min="1" max="100">
 	                </div>
-	
 	                <div class="input-group">
 	                    <label for="meal-type">식사 분류</label>
-	                    <select id="meal-type">
+	                    <select id="feed-modify-meal-type">
 	                        <option value="breakfast">아침</option>
 	                        <option value="lunch">점심</option>
 	                        <option value="dinner">저녁</option>
 	                        <option value="snack">간식</option>
 	                    </select>
 	                </div>
-	
 	                <div class="radio-group">
 	                    <label>
 	                        <input type="radio" name="visibility" value="public">
@@ -66,10 +54,10 @@
 	                        <input type="radio" name="visibility" value="private">
 	                        <span>비공개</span>
 	                    </label>
-	                    <button type="submit" class="feed-modify-submit-btn">수정</button>
 	                </div>
+	                <button type="submit" class="feed-modify-submit-btn">수정</button>
 	            </div>
 	        </div>
 	    </div>
-    </div>
+	</div>
 </html>

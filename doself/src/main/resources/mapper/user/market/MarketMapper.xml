@@ -25,7 +25,8 @@
   	<!-- 마켓 아이템 리스트 조회 -->
   	<select id="getMarketItemList" resultMap="marketItemResultMap" >
 		SELECT *
-		FROM point_exchange_product_list;
+		FROM point_exchange_product_list
+		WHERE pepl_is_deleted = 'active';
   	</select>
   	
   	<!-- 회원 포인트 조회 -->
@@ -63,6 +64,7 @@
 			INNER JOIN point_exchange_product_list pepl
 		USING(pepl_num)
 		WHERE mbr_id = #{memberId}
+		ORDER BY pumh.pumh_date DESC
   		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
   	</select>
   	

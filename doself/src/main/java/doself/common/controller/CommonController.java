@@ -11,7 +11,7 @@ public class CommonController {
 	
 	@GetMapping("/")
 	public String getMethodName() {
-		return "mainpage";
+		return "loginpage";
 	}	
 	
 }

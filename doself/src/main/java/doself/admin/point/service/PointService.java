@@ -24,9 +24,9 @@ public interface PointService {
 	//특정 포인트 상품 정보 수정
 	void modifyPoint(Point point);
 	
+	//포인트상품 삭제
+	void deletePointList(String peplNum);
 	//포인트상품 마지막번호 찾은후 다음키생성
 	String pointLastNum();
 	
-	//포인트상품 삭제
-	void deletePointList(String peplNum);
 }

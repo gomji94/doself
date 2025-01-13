@@ -13,4 +13,5 @@ public class NutritionInfo {
 	private String dsiDailyRecommendedIntake;
 	
 	private String nirrNum;
+	private BrandDietarySupplement brandInfo;
 }

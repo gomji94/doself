@@ -12,9 +12,17 @@ html, body {
     flex-direction: column; /* 세로 정렬 */
 }
 
+a:hover {
+	color: #a9bd4d !important;
+}
+
 p {
 	padding: 0px !important;
 	margin: 0px !important;
+}
+
+ul.pagination.pagination-sm.justify-content-center.text-muted {
+    padding-bottom: 25px !important;
 }
 
 .submit-btn {

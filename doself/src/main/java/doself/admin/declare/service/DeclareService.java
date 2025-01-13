@@ -24,4 +24,7 @@ public interface DeclareService {
 	void createDeclareUser(Declare declare, int declarePeriod);
 	//신고유형별 제제기간 가져오기
 	int getDeclarePeriod(String rcCode);
+	
+	// 매일자정 제제만료일 확인하여 부정회원 > 일반회원 처리
+	void everydayCheck();
 }

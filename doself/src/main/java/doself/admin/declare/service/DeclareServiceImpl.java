@@ -92,7 +92,7 @@ public class DeclareServiceImpl implements DeclareService{
 		
 		declareMapper.createDeclareUser(searchMap);
 		declareMapper.modifyScCode(declare);
-		
+		declareMapper.modifyMgCode(declare);		
 	}
 
 	//신고유형별 제제기간 가져오기
@@ -100,6 +100,17 @@ public class DeclareServiceImpl implements DeclareService{
 	public int getDeclarePeriod(String rcCode) {
 		
 		return declareMapper.getDeclarePeriod(rcCode);
+	}
+
+	// 매일자정 제제만료일 확인하여 부정회원 > 일반회원 처리
+	@Override
+	public void everydayCheck() {
+		
+		List<DeclareUser> SanctionEndList = declareMapper.getSanctionEndList();
+		
+		for(DeclareUser ele : SanctionEndList) {
+			declareMapper.everydayCheck(ele.getMbrId());		
+		}
 	}
 	
 	

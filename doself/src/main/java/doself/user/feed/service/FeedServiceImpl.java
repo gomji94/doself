@@ -1,9 +1,8 @@
 package doself.user.feed.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 //log.이 가능한 이유는 아래의 어노테이션 때문
-
 @Slf4j
 public class FeedServiceImpl implements FeedService {
 
 	private final FeedMapper feedMapper;
 	
+	// 피드 조회
 	@Override
 	public List<Feed> getFeedList() {
 		List<Feed> feedList = feedMapper.getFeedList();
@@ -33,21 +32,47 @@ public class FeedServiceImpl implements FeedService {
 		return feedList;
 	}
 	
+	// 특정 피드 조회
 	@Override
-	public List<Feed> searchList(String searchCate, String searchValue, int listSize) {
-		switch (searchCate) {
-			case "id" 		-> searchCate = "f.mbr_id";
-			case "content" 	-> searchCate = "f.feed_content";	
-		}
-		
-		Map<String, Object> searchMap = new HashMap<String, Object>();
-		searchMap.put("searchCate", searchCate);
-		searchMap.put("searchValue", searchValue);
-		searchMap.put("listSize", listSize);
-		
-		List<Feed> feedList = feedMapper.getSearchList(searchMap);
-		
-		return feedList;
+    public Feed getFeedDetail(String feedCode) {
+        Feed feed = feedMapper.getFeedDetail(feedCode);
+        if (feed == null) {
+            log.warn("해당 피드가 존재하지 않습니다. feedCode: {}", feedCode);
+            throw new RuntimeException("피드 정보를 찾을 수 없습니다.");
+        }
+        return feed;
+    }
+	
+	// 피드 추가
+	@Override
+	public void addFeed(Feed feed) {
+	    // 유효성 검사
+	    if (feed.getFeedPicture() == null || feed.getFeedPicture().isEmpty()) {
+	        throw new IllegalArgumentException("사진을 업로드해주세요.");
+	    }
+
+	    if (feed.getFeedContent() == null || feed.getFeedContent().trim().isEmpty()) {
+	        throw new IllegalArgumentException("내용을 작성해주세요.");
+	    }
+
+	    if (feed.getFeedFoodIntake() == null || feed.getFeedFoodIntake() <= 0) {
+	        throw new IllegalArgumentException("섭취 인분을 선택해주세요.");
+	    }
+
+	    if (feed.getMealCategoryCode() == null || feed.getMealCategoryCode().trim().isEmpty()) {
+	        throw new IllegalArgumentException("식사 분류를 선택해주세요.");
+	    }
+
+	    if (feed.getFeedOpenStatus() == null) {
+	        throw new IllegalArgumentException("공개 여부를 선택해주세요.");
+	    }
+
+	    feedMapper.addFeed(feed);
 	}
+	
+	// 자동완성 검색
+	public List<String> getKeywords(String query) {
+        return feedMapper.findKeywords(query);
+    }
 }
 	

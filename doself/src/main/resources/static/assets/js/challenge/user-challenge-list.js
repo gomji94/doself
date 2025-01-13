@@ -69,6 +69,39 @@ $(document).ready(function () {
             $(this).fadeOut(300);
         }
     });
+	$(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
+        }
+    });
+});
+
+
+// --- create challenge submit ---
+$("#create-challenge-form").on("submit", function (e) {
+    e.preventDefault(); // 기본 제출 동작 막기
+
+    const formData = {
+        challengeName: $("#challengeName").val(),
+        challengeStartDate: $("#challengeStartDate").val(),
+        challengeContent: $("#challengeContent").val(),
+    };
+
+    $.ajax({
+        url: "/challenge/list/createchallengerequest",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(formData),
+        success: function () {
+            alert("챌린지가 성공적으로 생성되었습니다.");
+            $("#create-challenge-modal").hide();
+            location.reload(); // 페이지 새로고침
+        },
+        error: function () {
+            alert("챌린지 생성 중 오류가 발생했습니다.");
+        },
+    });
 });
 
 
@@ -84,17 +117,17 @@ $(document).on("click", ".card", function () {
         success: function (data) {
             if (data) {
                 // 동적으로 HTML 요소 업데이트
-                $("#challenge-name").text(data.challengeName || "챌린지 이름 없음");
-                $("#image-preview").attr("src", data.challengeImage || "default-image-url.png");
-                $("#profile").attr("src", data.challengeLeaderImage || "default-profile-url.png");
-                $("#leader-link").text(data.challengeLeaderId || "리더 정보 없음");
+                $("#challenge-name").text(data.challengeName);
+                $("#image-preview").attr("src", data.challengeImage);
+                $("#profile").attr("src", data.challengeLeaderImage);
+                $("#leader-link").text(data.challengeLeaderId);
 
                 $("#info-content-detail").html(`
                     <p>📌 챌린지 소개 📌</p>
                     <p>🗓 챌린지 일정 : ${formatDate(data.challengeStartDate)} ~ ${formatDate(data.challengeEndDate)}</p>
-                    <p>🎯 난이도 : ${data.challengeTopicLevel || "난이도 정보 없음"}</p>
-                    <p>📝 진행 내용 : ${data.challengeLevelContent || "진행 내용 없음"}</p>
-                    <p>🤗‍ 참여 인원 : ${data.challengeCurrentMember || 0} / ${data.challengeMaxMember || 0}</p>
+                    <p>🎯 난이도 : ${data.challengeTopicLevel}</p>
+                    <p>📝 진행 내용 : ${data.challengeLevelContent}</p>
+                    <p>🤗‍ 참여 인원 : ${data.challengeCurrentMember} / ${data.challengeMaxMember}</p>
                     <p>📢 필독 📢</p>
                     <p>친목질, 종교권유, 이성만남목적, 정치질 🙅‍♀️</p>
                     <p>※ 공지 안 지키면 경고 없이 경고합니다</p>
@@ -128,6 +161,13 @@ $(document).on("click", "#card-modal-close, #card-modal-overlay", function () {
     // 해당 모달 닫기
     $("#card-modal-overlay").css("display", "none");
     $("#card-modal").css("display", "none");
+});
+
+$(document).on('keydown', function (e) {
+    if (e.key === "Escape") {
+        $('#cf-mbr-modal-overlay').fadeOut();
+        $('#cf-warning-modal-overlay').fadeOut();
+    }
 });
 
 // 날짜 형식 변환 함수

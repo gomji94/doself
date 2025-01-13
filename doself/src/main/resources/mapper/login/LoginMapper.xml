@@ -13,9 +13,11 @@
 		<result column="mbr_phone_num" 				property="mbrPhoneNum" />
 		<result column="mbr_gender" 				property="mbrGender" />
 		<result column="ac_num" 					property="acNum" />
+		<result column="mbr_image" 					property="mbrImage" />
 		<result column="opening_ticket_count" 		property="openingTicketCount" />
 		<result column="participation_ticket_count" property="participationTicketCount" />
 		<result column="mbr_point" 					property="mbrPoint" />
+		<result column="is_deleted" 				property="isDeleted" />
 	</resultMap>
 	
 	
@@ -31,43 +33,59 @@
 			mbr_phone_num,
 			mbr_gender,
 			ac_num,
+			mbr_image,
 			opening_ticket_count,
 			participation_ticket_count,
-			mbr_point
+			mbr_point,
+			is_deleted
 		FROM `member`
 		WHERE 
 			mbr_id = #{mbrId}
 		
 	</select>
+	
+	<!-- 생년월일로 나이 받아오기 -->
+	<select id="getAgeByBirthDate" resultType="int">
+		SELECT
+			TIMESTAMPDIFF(YEAR,#{birthDate},CURDATE())		
+	</select>
 
 	<!-- 회원등록 -->
-	<!-- <insert id="addMember" parameterType="Member">
+	 <insert id="createMember" parameterType="Member">
 		/* 회원등록 */
-		INSERT INTO members(
-			mbr_id, 
-		 	mbr_pw, 
-		 	mbr_name, 
-		 	mbr_grd, 
-		 	mbr_addr, 
-		 	mbr_daddr, 
-		 	mbr_zip, 
-		 	mbr_telno, 
-		 	mbr_email, 
-		 	mbr_reg_date
+		INSERT INTO `member` (
+		mbr_id, 
+		mbr_pw, 
+		mbr_name, 
+		mg_code, 
+		mbr_email, 
+		mbr_birth_date, 
+		mbr_phone_num, 
+		mbr_gender, 
+		ac_num, 
+		opening_ticket_count, 
+		participation_ticket_count, 
+		mbr_point, 
+		mbr_image, 
+		is_deleted
 		) VALUES (
-			#{memberId},
-			#{memberPw}, 
-			#{memberName}, 
-			CONCAT('mbr_grd_', #{memberGrade}), 
-			#{memberAddr}, 
-			#{memberDetailAddr}, 
-			#{memberZip}, 
-			#{memberTelNo}, 
-			#{memberEmail}, 
-			CURDATE()
-		);
+		#{mbrId}, 
+		#{mbrPw}, 
+		#{mbrName}, 
+		'mg_002', 
+		#{mbrEmail}, 
+		#{mbrBirthDate}, 
+		#{mbrPhoneNum}, 
+		#{mbrGender}, 
+		#{acNum}, 
+		0, 
+		0, 
+		0, 
+		'', 
+		'active'
+		)
 	</insert>
-
+<!--
 	중복아이디 회원조회
 	<select id="isMemberById" parameterType="string" resultType="boolean">
 		/* 중복아이디 회원조회 */

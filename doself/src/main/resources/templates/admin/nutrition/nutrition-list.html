@@ -26,7 +26,7 @@
                                 <input list="searchSuggestions" type="text" placeholder="검색어를 입력하세요" class="form-control" id="searchKeyword" autocomplete=off />
                                 <datalist id="searchSuggestions"></datalist>                                                                                             
                                 
-                                <input id="searchBtn" class="btn btn-primary ml-2 padding-left" type="button" value="검색">
+                                <a id="searchBtn" class="btn btn-sm font-sm rounded btn-brand"><i class="material-icons md-image_search"></i>검색</a>
                             </div>
                         </div>
                     </header>
@@ -41,16 +41,20 @@
                                         <th>영양제명</th>
                                         <th>영양제 효능</th>                                                                                                                    
                                         <th>일일 권장 섭취량</th>                                                                                                                     
+                                        <th>비고</th>                                                                                                                     
                                     </tr>
                                 </thead>
                                 <tbody>
                                 	<th:block th:if="${nutritionList != null}">
                                 		<tr th:each="l : ${nutritionList}" class="text-center">
                                 			<td th:text="${l.dsiNum}"></td>
-                                			<td th:text="${l.dsbNum}"></td>
+                                			<td th:text="${l.brandInfo.dsbName}"></td>
                                 			<td th:text="${l.dsiName}"></td>
                                 			<td th:text="${l.dsiEfficacy}"></td>
-                                			<td th:text="${l.dsiDailyRecommendedIntake}"></td>                                			                       		                                			                                	
+                                			<td th:text="${l.dsiDailyRecommendedIntake}"></td>  
+                                			<td>
+	                                			<a th:href="@{/admin/nutrition/nutritionmodify(dsiNum=${l.dsiNum})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>		                                    
+                                			</td>                                			                       		                                			                                	
                                 		</tr>
                                 	</th:block>                                                                    
                                 </tbody>
@@ -66,25 +70,25 @@
               		<nav>
                    <ul class="pagination justify-content-center">
                    	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist}">
+                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=1, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}">
                    			<i class="material-icons md-first_page"></i>
                    		</a>
                    	</li>
                    	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage - 1})}">
+                   		<a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage - 1}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}">
                    			<i class="material-icons md-chevron_left"></i>
                    		</a>
                    	</li>
                    		<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 					        <li class="page-item" th:classappend="${num == currentPage} ? 'active'">
-					            <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${num})}" th:text="${num}"></a>
+					            <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${num}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}" th:text="${num}"></a>
 					        </li>
 					    </th:block>     
                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage +1})}"><i class="material-icons md-chevron_right"></i></a>
+                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${currentPage +1}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}"><i class="material-icons md-chevron_right"></i></a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${lastPage})}"><i class="material-icons md-last_page"></i></a>
+                        <a class="page-link" th:href="@{/admin/nutrition/foodlist(currentPage=${lastPage}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}"><i class="material-icons md-last_page"></i></a>
                     </li>
                    </ul>
                </nav>

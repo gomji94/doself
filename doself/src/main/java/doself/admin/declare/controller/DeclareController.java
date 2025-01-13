@@ -38,7 +38,7 @@ public class DeclareController {
 		int currentPage = pageInfo.getCurrentPage();
 		int startPageNum = pageInfo.getStartPageNum();
 		int endPageNum = pageInfo.getEndPageNum();
-		int lastPage = pageInfo.getLastPage();
+		int lastPage = pageInfo.getLastPage();	
 		
 		model.addAttribute("title", "신고접수");
 		model.addAttribute("declareList", declareList);
@@ -100,6 +100,7 @@ public class DeclareController {
 		int endPageNum = pageInfo.getEndPageNum();
 		int lastPage = pageInfo.getLastPage();
 		
+		
 		model.addAttribute("title", "부정회원관리");
 		model.addAttribute("declareUserList", declareUserList);
 		model.addAttribute("searchType", searchType);
@@ -114,4 +115,10 @@ public class DeclareController {
 		
 		return "admin/declare/user-list";
 	}	
+	
+	// 매일자정 제제만료일 확인하여 부정회원 > 일반회원 처리
+	public void everydayCheck() {
+				
+		declareService.everydayCheck();
+	}
 }

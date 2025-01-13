@@ -17,10 +17,6 @@ public interface MembersMapper {
 	
 	//회원 수정
 	public int modifyMember(Members member);
-	
-	public boolean passwordChk(String memberId, String oldMemberPw);
-	
-	public boolean updatePassword(String memberId, String newMemberPw);
 
 	// 회원탈퇴
 	public int removeMemberById(String memberId);
@@ -37,6 +33,5 @@ public interface MembersMapper {
 	//회원 포인트이력 총 갯수
 	int getCntPointHistory(String memberId, String startDate, String endDate);
 	
-	//회원 피드내역 조회
 	
 }

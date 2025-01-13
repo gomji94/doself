@@ -24,7 +24,7 @@ public class NutritionServiceImpl implements NutritionService{
 	private final NutritionMapper nutritionMapper;
 	private final CommonMapper commonMapper;
 	
-	//영양정보 요청 검색
+	// 영양정보 요청 검색
 	@Override
 	public PageInfo<Nutrition> getNutritionRequestList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
@@ -46,28 +46,28 @@ public class NutritionServiceImpl implements NutritionService{
 		return new PageInfo<>(nutritionList, pageable, rowCnt);
 	}
 
-	//특정 영양정보 조회
+	// 특정 영양정보 조회
 	@Override
 	public Nutrition getNutritionByNirrNum(String nirrNum) {
 		
 		return nutritionMapper.getNutritionByNirrNum(nirrNum);
 	}
 
-	//영양정보 음식 새로운키생성
+	// 영양정보 음식 새로운키생성
 	@Override
 	public String foodNutritionNewKey() {
 		String newKey = commonMapper.getPrimaryKey("mni_","meal_nutrition_info","mni_num");
 		return newKey;
 	}
 	
-	//영양정보 영양제 새로운키생성
+	// 영양정보 영양제 새로운키생성
 	@Override
 	public String NutritionNewKey() {
 		String newKey = commonMapper.getPrimaryKey("dsi_","dietary_supplement_info","dsi_num");
 		return newKey;
 	}
 
-	//음식 영양정보 등록
+	// 음식 영양정보 등록
 	@Override
 	public void createFoodNutritionList(FoodNutritionInfo nutiritionInfo) {
 		
@@ -75,7 +75,7 @@ public class NutritionServiceImpl implements NutritionService{
 		nutritionMapper.modifyFoodNutritionList(nutiritionInfo);
 	}
 	
-	//영양제 영양정보 등록
+	// 영양제 영양정보 등록
 	@Override
 	public void createNutritionList(NutritionInfo nutiritionInfo) {
 		
@@ -83,7 +83,7 @@ public class NutritionServiceImpl implements NutritionService{
 		nutritionMapper.modifyNutritionList(nutiritionInfo);
 	}
 
-	//음식 영양정보 조회
+	// 음식 영양정보 조회
 	@Override
 	public PageInfo<FoodNutritionInfo> getFoodNutritionList(String searchType, String searchKeyword, Pageable pageable) {
 		
@@ -102,7 +102,7 @@ public class NutritionServiceImpl implements NutritionService{
 		return new PageInfo<>(nutritionList, pageable, rowCnt);
 	}
 	
-	//영양제 영양정보 조회
+	// 영양제 영양정보 조회
 	@Override
 	public PageInfo<NutritionInfo> getNutritionList(String searchType, String searchKeyword, Pageable pageable) {
 		
@@ -121,11 +121,47 @@ public class NutritionServiceImpl implements NutritionService{
 		return new PageInfo<>(nutritionList, pageable, rowCnt);
 	}
 
-	//영양정보 반려 등록
+	// 영양정보 반려 등록
 	@Override
 	public void modifyNutrition(Nutrition nutrition) {
 		
-		nutritionMapper.modifyNutrition(nutrition);
+		nutritionMapper.modifyNutritionRejection(nutrition);
+	}
+
+	// 특정 음식 영양정보 조회
+	@Override
+	public FoodNutritionInfo getFoodInfoByMniNum(String mniNum) {
+
+		return nutritionMapper.getFoodInfoByMniNum(mniNum);
+	}
+
+	// 특정 음식 영양정보 수정
+	@Override
+	public void modifyFoodNutrition(FoodNutritionInfo foodNutritionInfo) {
+		
+		nutritionMapper.modifyFoodNutrition(foodNutritionInfo);
+	}
+
+	// 특정 영양제 영양정보 조회
+	@Override
+	public NutritionInfo getNutritionInfoByDsiNum(String dsiNum) {
+		
+		return nutritionMapper.getNutritionInfoByDsiNum(dsiNum);
+	}
+
+	// 특정 영양제 영양정보 수정
+	@Override
+	public void modifyNutrition(NutritionInfo nutritionInfo) {
+		
+		nutritionMapper.modifyNutrition(nutritionInfo);
+	}
+
+	// 브랜드 이름 조회
+	@Override
+	public List<Map<String, Object>> getDsbList() {
+		
+		
+		return nutritionMapper.getDsbList();
 	}
 
 	
