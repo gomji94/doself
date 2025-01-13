@@ -190,6 +190,13 @@
 		(fbc_num, fb_num, mbr_id, fbc_content, fbc_date)
 		VALUES (#{commentKeyNum}, #{articleKeyValue}, #{commentAuthorId}, #{commentContent}, NOW())
   	</insert>
+  	
+  	<!-- 신고 insert -->
+  	<insert id="createReport" parameterType="Report">
+	  	INSERT INTO report_request
+		(rr_num, mbr_id, olc_code, rr_bc_num, rc_code, rr_content, rr_date)
+		VALUES (#{reportKeyValue}, #{reporterId}, #{occurLocationCode}, #{reportedKeyValue}, #{reportCateValue}, #{reportContent}, NOW())
+  	</insert>
 
   	
 </mapper>

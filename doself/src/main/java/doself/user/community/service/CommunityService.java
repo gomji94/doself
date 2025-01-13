@@ -6,6 +6,7 @@ import java.util.Map;
 import doself.user.community.domain.Article;
 import doself.user.community.domain.Comment;
 import doself.user.community.domain.Like;
+import doself.user.community.domain.Report;
 import doself.user.community.domain.SearchArticle;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -44,5 +45,8 @@ public interface CommunityService {
 	
 	// 댓글 작성
 	void createComment(Comment comment);
+	
+	// 게시글 및 댓글 신고
+	int createReport(Report report);
 
 }

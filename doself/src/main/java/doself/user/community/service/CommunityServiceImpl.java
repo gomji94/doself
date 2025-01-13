@@ -12,6 +12,7 @@ import doself.common.mapper.CommonMapper;
 import doself.user.community.domain.Article;
 import doself.user.community.domain.Comment;
 import doself.user.community.domain.Like;
+import doself.user.community.domain.Report;
 import doself.user.community.domain.SearchArticle;
 import doself.user.community.mapper.CommunityMapper;
 import doself.util.PageInfo;
@@ -159,7 +160,6 @@ public class CommunityServiceImpl implements CommunityService {
 			return result;
 		}
 		
-		
 		return result;
 	}
 
@@ -205,6 +205,34 @@ public class CommunityServiceImpl implements CommunityService {
 		
 		communityMapper.createComment(comment);
 		
+	}
+
+	@Override
+	public int createReport(Report report) {
+		// TODO Auto-generated method stub
+		
+		String reportKeyValue = commonMapper.getPrimaryKey("rr_", "report_request", "rr_num");
+		report.setReportKeyValue(reportKeyValue);
+		
+		String formattedReportedCateValue = String.format("rc_%03d", report.getReportCateNum());
+		report.setReportCateValue(formattedReportedCateValue);
+		
+		switch (report.getOccurType()) {
+			case 1 -> {
+				report.setOccurLocationCode("olc_001");
+				// 게시글 키값으로 변경
+				String formattedReportedKeyValue = String.format("fb_%03d", report.getReportedKeyNum());
+				report.setReportedKeyValue(formattedReportedKeyValue);
+			}
+			case 2 -> {
+				report.setOccurLocationCode("olc_002");
+				// 댓글 키값으로 변경
+				String formattedReportedKeyValue = String.format("fbㅊ_%03d", report.getReportedKeyNum());
+				report.setReportedKeyValue(formattedReportedKeyValue);
+			}
+		}
+		
+		return communityMapper.createReport(report);
 	}
 
 
