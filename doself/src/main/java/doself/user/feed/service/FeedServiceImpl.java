@@ -2,6 +2,7 @@ package doself.user.feed.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 //log.이 가능한 이유는 아래의 어노테이션 때문
-
 @Slf4j
 public class FeedServiceImpl implements FeedService {
 
 	private final FeedMapper feedMapper;
 	
+	// 피드 조회
 	@Override
 	public List<Feed> getFeedList() {
 		List<Feed> feedList = feedMapper.getFeedList();
@@ -31,6 +32,7 @@ public class FeedServiceImpl implements FeedService {
 		return feedList;
 	}
 	
+	// 특정 피드 조회
 	@Override
     public Feed getFeedDetail(String feedCode) {
         Feed feed = feedMapper.getFeedDetail(feedCode);
@@ -39,6 +41,23 @@ public class FeedServiceImpl implements FeedService {
             throw new RuntimeException("피드 정보를 찾을 수 없습니다.");
         }
         return feed;
+    }
+	
+	// 피드 추가
+	@Override
+	public void addFeed(Feed feed) {
+	    try {
+	        feedMapper.addFeed(feed);
+	        log.info("피드가 성공적으로 생성되었습니다. {}", feed);
+	    } catch (Exception e) {
+	        log.error("피드 생성 중 오류 발생: {}", e.getMessage());
+	        throw new RuntimeException("피드 생성 중 오류 발생");
+	    }
+	}
+	
+	// 자동완성 검색
+	public List<String> getKeywords(String query) {
+        return feedMapper.findKeywords(query);
     }
 }
 	

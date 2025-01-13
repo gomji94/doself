@@ -26,7 +26,11 @@ $(document).ready(function () {
         const likeImg = $(this).find('.likeImg'); // 버튼 내부의 likeImg 요소 선택
         const likedSrc = 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png'; // "좋아요" 이미지 경로
         const defaultSrc = 'https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png'; // 기본 이미지 경로
-
+		
+		// 현재 피드 요소를 기준으로 feedDescription 선택
+        const feedElement = $(this).closest('.feed'); // 현재 버튼이 포함된 피드 요소
+        const feedDescription = feedElement.find('#feed-likes'); // 피드의 좋아요 수 표시 요소
+		
         // 현재 상태 확인 및 업데이트
         const isLiked = $(this).attr('data-liked') === 'true';
 
@@ -34,14 +38,18 @@ $(document).ready(function () {
             likeImg.attr('src', likedSrc)
 					.css({ 'width': '24.5px', 'height': 'auto' }); // "좋아요" 이미지로 변경
             $(this).attr('data-liked', 'true'); // 상태 업데이트
+			
+			let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10); // 좋아요 수 파싱
+            currentLikes++;
+            feedDescription.text(`좋아요 ${currentLikes}개`);
         } else {
             likeImg.attr('src', defaultSrc); // 기본 이미지로 복원
             $(this).attr('data-liked', 'false'); // 상태 복원
+			
+			let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10); // 좋아요 수 파싱
+            currentLikes--;
+            feedDescription.text(`좋아요 ${currentLikes}개`);
         }
-
-        // 디버깅용 로그 출력
-        console.log(`현재 상태: ${$(this).attr('data-liked')}`);
-        console.log(`현재 이미지 경로: ${likeImg.attr('src')}`);
     });
 });
 
@@ -101,6 +109,59 @@ $(document).ready(function () {
         }
     });
 });
+
+// --- 자동완성 검색 ---
+document.addEventListener("DOMContentLoaded", () => {
+    const autoCompleteJS = new autoComplete({
+        selector: "#search-input",
+        data: {
+            src: async () => {
+                const query = document.querySelector("#search-input").value;
+                const response = await fetch(`/api/search/keywords?query=${query}`);
+                const data = await response.json();
+                return data;
+            },
+            key: ["keyword"]
+        },
+        threshold: 2,
+        debounce: 300,
+        resultsList: {
+            render: true,
+            container: (source) => {
+                source.setAttribute("id", "autoCompleteList");
+            },
+            destination: document.querySelector("#search-input"),
+            position: "afterend",
+            element: "div"
+        },
+        resultItem: {
+            content: (data, source) => {
+                source.innerHTML = data.match;
+            },
+            element: "div"
+        },
+        onSelection: (feedback) => {
+            document.querySelector("#search-input").value = feedback.selection.value;
+        }
+    });
+});
+
+const observer = new MutationObserver(() => {
+    const searchInput = document.querySelector("#search-input");
+    if (searchInput) {
+        observer.disconnect(); // 감시 중지
+        const autoCompleteJS = new autoComplete({
+            selector: "#search-input",
+            data: { /* 데이터 설정 */ },
+            // 나머지 옵션...
+        });
+    }
+});
+
+// 감시할 대상 설정
+observer.observe(document.body, { childList: true, subtree: true });
+
+// --- feed carete ---
 
 // --- modify feed modal ---
 $(document).ready(function () {
@@ -191,19 +252,19 @@ function updateRightSidebar(feed) {
     if (imgElement) imgElement.src = mealPicture;
 
 	const weightElement = document.querySelector('#weight');
-	if (weightElement) weightElement.textContent = `${mealWeight} kcal`;
+	if (weightElement) weightElement.textContent = `${mealWeight} g`;
     
 	const caloriesElement = document.querySelector('#calories');
     if (caloriesElement) caloriesElement.textContent = `${mealCalories} kcal`;
 
     const carbElement = document.querySelector('#carb');
-    if (carbElement) carbElement.textContent = `${mealCarbohydrates} g`;
+    if (carbElement) carbElement.textContent = `${mealCarbohydrates} kcal`;
 
     const proteinElement = document.querySelector('#protein');
-    if (proteinElement) proteinElement.textContent = `${mealProtein} g`;
+    if (proteinElement) proteinElement.textContent = `${mealProtein} kcal`;
 
     const fatElement = document.querySelector('#fat');
-    if (fatElement) fatElement.textContent = `${mealFat} g`;
+    if (fatElement) fatElement.textContent = `${mealFat} kcal`;
 }
 
 // Intersection Observer 설정
@@ -242,22 +303,19 @@ document.querySelectorAll('.feed').forEach(feed => {
         if (imgElement) imgElement.src = mealPicture;
 
 		const weightElement = document.querySelector('#weight');
-		if (weightElement) weightElement.textContent = `${mealWeight} kcal`;
+		if (weightElement) weightElement.textContent = `${mealWeight} g`;
 		
         const caloriesElement = document.querySelector('#calories');
         if (caloriesElement) caloriesElement.textContent = `${mealCalories} kcal`;
 
         const carbElement = document.querySelector('#carb');
-        if (carbElement) carbElement.textContent = `${mealCarbohydrates} g`;
+        if (carbElement) carbElement.textContent = `${mealCarbohydrates} kcal`;
 
         const proteinElement = document.querySelector('#protein');
-        if (proteinElement) proteinElement.textContent = `${mealProtein} g`;
+        if (proteinElement) proteinElement.textContent = `${mealProtein} kcal`;
 
         const fatElement = document.querySelector('#fat');
-        if (fatElement) fatElement.textContent = `${mealFat} g`;
-
-        // 디버깅용 콘솔 출력
-        console.log('Updated Meal Info:', { mealPicture, mealWeight, mealCalories, mealCarbohydrates, mealProtein, mealFat });
+        if (fatElement) fatElement.textContent = `${mealFat} kcal`;
     })
 });
 
