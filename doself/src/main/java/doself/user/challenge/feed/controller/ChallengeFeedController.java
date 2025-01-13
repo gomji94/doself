@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
+import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.service.ChallengeFeedService;
@@ -31,7 +32,6 @@ public class ChallengeFeedController {
 	@GetMapping("/view")
 	public String viewChallengeFeed(
 	        @RequestParam(value = "challengeCodeValue", required = false) String challengeCode,
-	        //@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
 	        @RequestParam(value = "challengeStatus", required = false) String challengeStatus,
 	        Pageable pageable, HttpSession session, Model model) {
 	    
@@ -55,8 +55,6 @@ public class ChallengeFeedController {
 		int endPageNum = pageInfo.getEndPageNum();
 		int lastPage = pageInfo.getLastPage();
 		
-		log.info("challengeFeedList: {}", challengeFeedList);
-	    
         // 챌린지 진행률 및 상태 처리(원형 그래프, 이미지 그래프) → 처음 호출 시에만 실행(캐싱 로직 추가)
         List<ChallengeProgress> challengeProgress = (List<ChallengeProgress>) session.getAttribute("challengeProgress");
         if (challengeProgress == null) { // 세션에 저장된 값이 없을 경우에만 실행
@@ -70,11 +68,6 @@ public class ChallengeFeedController {
             totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
             session.setAttribute("totalProgress", totalProgress); // 계산 결과를 세션에 저장
         }
-        
-        //int totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
-	    
-        log.info("Challenge Progress: {}", challengeProgress);
-        log.info("challengeStatus: {}", challengeStatus);
         
 	    // 챌린지 참여율 상위 3명
         List<ChallengeMemberList> topParticipants = challengeFeedService.getTopParticipants(challengeCode);
@@ -98,10 +91,10 @@ public class ChallengeFeedController {
 	    //log.info("Page Info: {}", pageInfo);
 	    //log.info("challengeProgress: {}", challengeProgress);
 	    //log.info("challengeCode: {}", challengeCode);
+        //log.info("challengeStatus: {}", challengeStatus);
+        //log.info("challengeFeedList: {}", challengeFeedList);
 
 	    return "user/challenge/challenge-view";
-	    // "더보기"를 위한 요청인지 확인 후 처리 ? HTML fragment 반환 : 기본 페이지 반환
-	    //return currentPage > 1 ? "user/challenge/challenge-feed-fragment :: feedFragment" : "user/challenge/challenge-view";
 	}
 	
 	// 챌린지 멤버 리스트 조회
@@ -109,12 +102,13 @@ public class ChallengeFeedController {
 	@ResponseBody
 	public List<ChallengeMemberList> getMemberList(@RequestParam(value = "challengeCode") String challengeCode, Model model) {
 	    // 데이터 가져오기
-	    List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
-
+		List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
+		//log.info("Member List: {}", memberList);
+		
 	    return memberList;
 	}
 	
-	// 챌린지 멤버 경고 사유 선택 조회(지금은 스킵하고 나중에 작업)
+	// 챌린지 멤버 경고 사유 선택 조회
 	@GetMapping("/warning")
 	public String getMemberWarnig(HttpServletRequest request, Model model) {
 		
@@ -123,12 +117,15 @@ public class ChallengeFeedController {
 		return "user/challenge/challenge-member-warning";
 	}
 	
-	// 챌린지 피드 댓글 조회
+	// 챌린지 피드 댓글 조회(모달 안 열림/추후 수정필요)
 	@GetMapping("/feedcomment")
-	public String getFeedComment(Model model) {
+	@ResponseBody
+	public List<ChallengeFeedComment> getFeedComment(@RequestParam(value = "challengeFeedCode") String challengeFeedCode, Model model) {
+		List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
 		
-		model.addAttribute("title", "챌린지 피드 댓글");
-		return "user/challenge/feed-comment";
+		log.info("Feed Comment List: {}", feedCommentList);
+		
+		return feedCommentList;
 	}
 	
 	// 챌린지 생성 화면 조회

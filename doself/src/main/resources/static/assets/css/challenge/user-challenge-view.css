@@ -201,6 +201,7 @@ img#scf-mbr-modal-close {
 
 .challenge-mbr-list {
     display: grid;
+    margin-top: 10px;
 }
 
 img#section-bar {
@@ -234,6 +235,7 @@ img#section-bar {
     border: none;
     background-color: unset;
     opacity: 0.3;
+    font-size: 14px;
 }
 
 .mbr-warning {
@@ -600,7 +602,7 @@ button#loadMore {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .cf-comment-modal-header img {
@@ -615,7 +617,7 @@ button#loadMore {
     color: #333;
 }
 
-.cf-comment-modal-header #cf-comment-modalCloseBtn {
+.cf-comment-modal-header #feedCommentModalCloseBtn {
     background: none;
     border: none;
     color: #666;
@@ -1614,7 +1616,7 @@ select #meal-type option:checked {
     justify-content: space-between;
     text-align: center;
     margin-bottom: -1px;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .cf-modify-modal-header #cf-modify-modal-closeBtn {

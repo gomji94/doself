@@ -26,7 +26,7 @@
 				    </ul>
 				    <ul id="cf_mbr_search-panel">
 				        <li><img src="https://velog.velcdn.com/images/mekite/post/b5bc9a31-0da4-4e17-825d-0e2a15d7d554/image.png" alt="검색 아이콘"></li>
-				        <li class="open-memberlist-modal" id="challengeMemberList" data-challenge-code="${challengeCode}">
+				        <li class="open-memberlist-modal" id="challengeMemberList" th:data-challenge-code="${challengeCode}">
 					        <a href="#">챌린지 멤버 조회</a>
 					    </li>
 				    </ul>
@@ -48,7 +48,7 @@
 						        <div class="mbr-id" th:each="cml : ${memberList}">
 			                        <img th:src="${cml.memberProfileImage}" alt="프로필" onerror="this.src='/images/default-profile.png'">
 			                        <p class="user-icon" th:text="${cml.memberId}"></p>
-			                        <span class="mbr-warning">경고</span>
+			                        <button type="button" class="mbr-warning">경고</button>
 			                        <button type="button">강퇴</button>
 			                    </div>
 						    </section>
@@ -346,31 +346,29 @@
 				   <!-- challenge feed modify modal end -->
 	                
 	                <!-- challenge feed comment modal 챌린지 피드 댓글 모달 -->
-					<div class="cf-comment-modal-overlay" id="cf-comment-modalOverlay" style="display: none;">
+					<div class="cf-comment-modal-overlay" id="feedCommentModalOverlay" style="display: none;">
 				       <div class="cf-comment-modal-container">
 				           <div class="cf-comment-modal-header">
 				               <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
 				               <h2>피드 댓글</h2>
-				               <img class="cf-comment-modalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+				               <img class="feedCommentModalCloseBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
 				           </div>
 				           <hr>
 				           <div class="cf-comment-modal-body">
-				               <!-- 이미지 업로드 영역 -->
-				               <div class="cf-comment-modal-image-upload">
-				                   <img src="https://velog.velcdn.com/images/mekite/post/3fb90300-352c-4764-bd26-8aed93be3a9a/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+				               <!-- <div class="cf-comment-modal-image-upload">
+				                   <img th:src="${fc.challengeFeedImage}" alt="업로드된 이미지 미리보기" id="image-preview">
 				               </div>
 				   
-				               <!-- 정보 입력 영역 -->
 				               <div class="cf-comment-feed-info">
 				                   <div class="cf-user-comment-container">
 				                   	   <section>
 					                       <div class="cf-comment-user-block">
 					                       	   <div class="cf-comment-content-block">
-						                           <img class="comment-profile" src="https://buly.kr/EdsBkqu" alt="프로필">
-						                           <a href="#" class="cf-comment-user-link">아이디</a>
+						                           <img class="comment-profile" th:src="${fc.challengeCommentAuthorImage}" alt="프로필">
+						                           <a href="#" class="cf-comment-user-link" th:text="${fc.challengeFeedCommentAuthor}"></a>
 						                           <span class="comment-day-count"></span>
 						                           <div class="cf-comment-feed-comment">
-						                               <span>맛있겠네요</span>
+						                               <span th:text="${fc.challengeFeedCommentContent}"></span>
 						                           </div>
 					                       	   </div>
 						                       <div class="action-icons">
@@ -392,7 +390,7 @@
 				                           <button type="button" class="cf-comment-comment-btn">게시</button>
 				                       </div>
 				                   </div>
-				               </div>
+				               </div> -->
 				           </div>
 				       </div>
 				   </div>
@@ -432,7 +430,7 @@
 							            <button type="button" class="action-btn likeBtn" data-liked="false">
 							                <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
 							            </button>
-							            <button type="button" class="action-btn commentBtn">
+							            <button type="button" class="action-btn commentBtn" id="feedCommentBtn" th:data-challenge-code="${challengeFeedCode}">
 							                <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
 							            </button>
 							        </div>

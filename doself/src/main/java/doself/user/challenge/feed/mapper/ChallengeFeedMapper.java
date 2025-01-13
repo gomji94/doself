@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
+import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.util.Pageable;
@@ -40,4 +41,7 @@ public interface ChallengeFeedMapper {
 
     // 챌린지 멤버 리스트 조회
     List<ChallengeMemberList> getMemberList(@Param("challengeCode") String challengeCode);
+    
+    // 챌린지 피드 댓글 조회
+    List<ChallengeFeedComment> getFeedCommentList(@Param("challengeFeedCode") String challengeFeedCode);
 }
