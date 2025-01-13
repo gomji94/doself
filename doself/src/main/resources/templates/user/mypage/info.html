@@ -80,14 +80,16 @@
                 <div class="form-group">
                     <label for="new-password">새 비밀번호</label>
                     <div class="input-wrapper">
-                   		<input class="width-fit" type="password" id="memberPw" name="memberPw" autocomplete="new-password">
+                   		<input class="width-fit" type="password" id="memberPw" name="memberPw" autocomplete="new-password" 
+                   			   oninput="this.value=this.value.replace(/[^a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]/g,'');" >
                    		<div></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">새 비밀번호 확인</label>
                     <div class="input-wrapper">
-                   		 <input class="width-fit" type="password" id="memberPwChk" autocomplete="new-password">
+                   		 <input class="width-fit" type="password" id="memberPwChk" autocomplete="new-password"
+                   		        oninput="this.value=this.value.replace(/[^a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]/g,'');">
                    		 <div></div>
                     </div>
                 </div>
