@@ -164,7 +164,7 @@ public class CommunityController {
 	}
 	
 	@PostMapping("/createcomment")
-	public String postMethodName(Comment comment, @RequestParam(name = "articleNum") String articleNum, HttpSession session, RedirectAttributes reAttr) {
+	public String createComment(Comment comment, @RequestParam(name = "articleNum") String articleNum, HttpSession session, RedirectAttributes reAttr) {
 		//TODO: process POST request
 		comment.setCommentAuthorId((String) session.getAttribute("SID"));
 		
@@ -176,12 +176,17 @@ public class CommunityController {
 	}
 	
 	@PostMapping("/createreport")
-	public String postMethodName(Report report, HttpSession session) {
+	@ResponseBody
+	public boolean createReport(Report report, HttpSession session) {
 		//TODO: process POST request
 		
 		report.setReporterId((String) session.getAttribute("SID"));
-
-		return "";
+		
+		boolean isReg = false;
+		int result = communityService.createReport(report);
+		if(result > 0) isReg = true; 
+		
+		return isReg;
 	}
 	
 	

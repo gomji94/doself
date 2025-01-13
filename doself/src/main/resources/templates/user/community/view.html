@@ -52,7 +52,7 @@
                     <div class="article-button-container">
                     	<th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
                             <button id="article-like__button">like</button>
-                            <button id="article-report__button">신고</button>
+                            <button id="article-report__button" data-occurType="1">신고</button>
                             <input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
                         </th:block>
                         
@@ -78,8 +78,9 @@
                         <!-- 댓글 목록 -->
                         <th:block th:if="${articleDetail.commentList != null}">
 	                        <ul id="comment-list">
-	                            <li class="comment" th:each="l : ${articleDetail.commentList}">
+	                            <li class="comment" th:each="l : ${articleDetail.commentList}" th:with="commentAuhorId=${l.commentAuthorId}">
 	                                <div class="comment-info__left">
+	                                    <input type="hidden" name="commentKeyNum" th:value="${l.commentKeyNum}">
 	                                    <p class="comment-author" th:text="${l.commentAuthorId}"></p>
 	                                    <p class="comment-content" th:text="${l.commentContent}"></p>
 	                                </div>
@@ -90,8 +91,8 @@
 		                                        <i class="fa-solid fa-ellipsis-vertical"></i>
 		                                    </button>
 	                                        <div class="dropdown-menu">
-												<a class="dropdown-item" href="#" id="report-comment-btn" th:unless="${test != null and test != articleDetail.articleAuthorId}">신고</a>
-										        <th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
+												<a class="dropdown-item" href="#" id="report-comment-btn" th:if="${test != null and test != commentAuhorId}" data-occurType="2">신고</a>
+										        <th:block th:if="${test != null and test == commentAuhorId}">
 											      <a class="dropdown-item" href="#" id="modify-comment-btn">수정</a>
 											      <a class="dropdown-item" href="#" id="delete-comment-btn">삭제</a>
 										        </th:block>
@@ -131,7 +132,6 @@
                         <div class="body-titlebox">
                             <div id="modal-request-title">신고 요청</div>
                             <form id="modal-request-form" th:action="@{community/createreport}" method="post">
-							    <label for="cars"></label>
 							    <select id="reports-code" name="reports-code">
 							        <option value="1">불법 컨텐츠</option>
 							        <option value="2">사기 및 사칭</option>
@@ -140,7 +140,7 @@
 							        <option value="5">스팸 및 광고</option>
 							        <option value="6">허위 사실 유포</option>
 							    </select>
-							    <input type="text" placeholder="신고 내용을 입력해주세요" />
+							    <input type="text" id="reportContent" name="reportContent" placeholder="신고 사유를 입력해주세요" />
                             </form>
                             <div id="modal-request-form__buttons">
                                 <button type="button" id="modal-request-form__submitButton" data-target="confirm-message.html">접수</button>
@@ -152,6 +152,24 @@
             </div>
         </div>
     </div>
+    
+            <!-- 모달창 여기부터 복사 -->
+        <div class="modal-confirm-container">
+            <div class="confirm-popup-wrap" style="display: none;">
+                <div class="confirm-popup">
+                    <div class="confirm-popup-body">
+                        <div class="confirm-body-content">
+                            <div class="confirm-body-titlebox">
+                                <div id="modal-request-title">DoSelf</div>
+                                <div id="confirm-message">
+                                    성공적으로 제출 되었습니다.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     
 	</th:block> 
 
