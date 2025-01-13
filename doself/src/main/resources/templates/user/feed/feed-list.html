@@ -104,7 +104,7 @@
 	        <table class="info-table">
 				<tr>
                     <td>구분(1인분)</td>
-                    <td id="weight">0 kcal</td>
+                    <td id="weight">0 g</td>
                 </tr>
 				<tr>
 			        <td>칼로리</td>
@@ -112,15 +112,15 @@
 			    </tr>
 			    <tr>
 			        <td>탄수화물</td>
-			        <td id="carb">0 g</td>
+			        <td id="carb">0 kcal</td>
 			    </tr>
 			    <tr>
 			        <td>단백질</td>
-			        <td id="protein">0 g</td>
+			        <td id="protein">0 kcal</td>
 			    </tr>
 			    <tr>
 			        <td>지방</td>
-			        <td id="fat">0 g</td>
+			        <td id="fat">0 kcal</td>
 			    </tr>
 	        </table>
 	    </div>
@@ -134,6 +134,7 @@
 <!--/* 사용자 추가 js file */-->
 <th:block layout:fragment="customJsResource">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
 	<script th:src="@{/assets/js/feed/feed-list.js}"></script>
 </th:block>
 

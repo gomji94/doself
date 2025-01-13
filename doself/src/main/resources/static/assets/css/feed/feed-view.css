@@ -198,8 +198,10 @@ html, body {
 }
 
 .feed-header img {
-    width: auto;
-    height: 40px;
+    width: 35px;
+    height: 35px;
+    max-width: 35px;
+    max-height: 35px;
     border-radius: 100px;
     margin-top: 5px;
 }
@@ -712,8 +714,7 @@ button.feed-comment-comment-btn {
 
 textarea {
     max-width: 310px;
-    min-width: 310px;
-    min-height: 100px;
+    min-height: 180px;
     border-radius: 5px;
     padding: 10px;
     font-size: 13px;
@@ -1359,7 +1360,7 @@ select #meal-type option:checked {
     display: flex;
     flex-direction: column;
     width: 84%;
-    gap: 15px;
+    gap: 18px;
 }
 
 .feed-modify-user-block {
@@ -1404,6 +1405,7 @@ textarea#feed-modify-content {
     background-color: #f3f3f3;
     opacity: 0.8;
     resize: none;
+    margin-top: 10px;
 }
 
 .feed-modify-text-box-under {
@@ -1877,10 +1879,49 @@ select #meal-type option:checked {
     padding: 1px 0px;
 }
 
+.df-analysis-table .img {
+    width: 100%;
+    padding: 5px 5px;
+    border-radius: 5px;
+}
+
+#df-analysis-img img {
+    width: 100%;
+	height: 200px;
+	padding: 5px 5px;
+	border-radius: 20px;
+}
+
+.info-table,
+.info-table table th,
+.info-table table td {
+    font-size: 13px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+.df-info-table td {
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #ddd;
+	transition: all 0.3s ease; /* 텍스트 변경 시 부드럽게 표시 */
+}
+
+.info-table {
+    width: 100%;
+    height: 150px;
+}
+
+.analysis-caution {
+    margin-top: 10px;
+    color: #777;
+    font-size: 11px;
+}
+
 .df-progress-container .df-analysis-info {
     width: 100%;
     border-collapse: collapse;
-    padding: 0px 25px;
 }
 
 .df-info-table,

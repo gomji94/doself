@@ -105,5 +105,35 @@
 	    WHERE
 	        f.feed_num = #{feedCode};
 	</select>
+	
+	<!-- 피드 추가 -->
+	<insert id="addFeed" parameterType="Feed">
+		INSERT INTO feed (
+	        feed_num,
+	        mbr_id,
+	        mni_num,
+	        feed_food_intake,
+	        feed_content,
+	        feed_picture,
+	        mc_num,
+	        feed_date,
+	        feed_intake_date,
+	        feed_like,
+	        feed_open_status
+	    )
+	    VALUES (
+	        #{feedCode},
+	        #{memberId},
+	        #{mealNutritionInfoCode},
+	        #{feedFoodIntake},
+	        #{feedContent},
+	        #{feedPicture},
+	        #{mealCategoryCode},
+	        NOW(),
+	        #{feedIntakeDate},
+	        0,
+	        #{feedOpenStatus}
+	    )
+	</insert>
  </mapper>
   
