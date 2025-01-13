@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정</title>
+    <link th:href="@{/assets/css/community/create.css}" rel="stylesheet" type="text/css" />
+    <script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script>
+    
+   	<!-- summernote   -->
+    <script th:src="@{/assets/js/summernote/summernote-lite.js}"></script>
+    <script th:src="@{/assets/js/summernote/lang/summernote-ko-KR.js}"></script>
+    <link rel="stylesheet" th:href="@{/assets/css/summernote/summernote-lite.css}">
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+    
+</head>
+	
+	<th:block layout:fragment="content-body">
+   <div class="container">
+        <main id="main-content" th:with="test=${session.SGRD}">
+        	<th:block th:object="${articleDetail}">
+            <div id="main-container-contents" >
+                <div id="main-container-title">community</div>
+                <form th:action="@{/community/modify}" method="post">
+                	<input type="hidden" name="articleKeyNum" th:value="*{articleKeyNum}" />
+	                <div id="post-editor">
+	                    <div id="category-select">
+       	                    <div class="form-check" th:with="articleCategory=*{articleCategory}">
+							  <label class="form-check-label" th:if="${test eq 'mg_001'}">
+							    <input type="radio" class="form-check-input " name="articleCategoryKeyNum" value="1" th:checked="${'공지사항' eq #strings.trim(articleCategory)}">공지사항
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="2" th:checked="${'자유' eq #strings.trim(articleCategory)}">자유
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="3" th:checked="${'정보' eq #strings.trim(articleCategory)}">정보
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="4" th:checked="${'질문' eq #strings.trim(articleCategory)}">질문
+							  </label>
+							  <label class="form-check-label">
+							    <input type="radio" class="form-check-input" name="articleCategoryKeyNum" value="5" th:checked="${'유머' eq #strings.trim(articleCategory)}">유머
+							  </label>
+							</div>
+	                    </div>
+
+	
+	                    <div id="title-container">
+	                        <label for="post-title">제목</label>
+	                        <input type="text" id="post-title" name="articleTitle" th:value="*{articleTitle}"/>
+	                    </div>
+	                    
+	                    <textarea id="summernote" name="articleContent" th:utext==*{articleContent}></textarea>
+	
+	                    <div class="article-button-container">
+	                            <button type="submit" id="article-write__button">저장</button>
+	                            <button type="button" id="article-cancel__button">취소</button>
+	                    </div>
+	                </div>
+                </form>
+            </div>
+            </th:block>
+        </main>
+        <div id="main-container-advertise">
+            <div id="main-container-advertise__adBlock">
+                <a th:href="@{https://www.tesla.com/ko_kr/cybertruck}" target="_blank">
+                    <img id="mcaa__img" src="https://i.pinimg.com/1200x/de/35/56/de355692714024d48880cb98db8f9d4b.jpg" alt="">
+                </a>
+            </div>
+        </div>
+    </div>
+	</th:block> 
+
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource">
+	    <script th:src="@{/assets/js/layout.js}"></script>
+    </th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+	    <script>
+	      $('#summernote').summernote({
+	        tabsize: 2,
+	        height: 430,
+	        toolbar: [
+				['fontname', ['fontname']],
+				['fontsize', ['fontsize']],
+				['font', ['bold', 'underline', 'italic']],
+				['color', ['forecolor']],
+				['para', ['paragraph']],
+				['insert', ['picture']]
+	        ],
+	        disableResizeEditor: true,
+	        fontNames: ['Arial', 'Arial Black','맑은 고딕','궁서','굴림','바탕체'],
+			fontSizes: ['10','11','12','14','16','18','20','22','24']
+	      });
+	      
+	      $('#article-cancel__button').click(event => {
+	    	  
+	    	  const isDelete = confirm("글쓰기를 취소하시겠습니까?");
+	    	  
+	    	  if(isDelete) {
+					// list로 리다이렉트 변경
+	    		  history.back();
+	    	  }
+	    	  
+	      })
+	      
+	      
+	    </script>
+    </th:block> 
+</html>
