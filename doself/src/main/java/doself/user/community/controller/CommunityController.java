@@ -1,6 +1,8 @@
 package doself.user.community.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -187,6 +189,16 @@ public class CommunityController {
 		return "redirect:/community/view";
 	}
 	
+	@PostMapping("modifycomment")
+	@ResponseBody
+	public Map<String, Boolean> modifyComment(Comment comment) {
+		//TODO: process POST request
+		
+	    Map<String, Boolean> resultMap = new HashMap<>();
+	    resultMap.put("success", communityMapper.modifyComment(comment) > 0);
+	    return resultMap;
+		
+	}
 	
 	@PostMapping("/createreport")
 	@ResponseBody
