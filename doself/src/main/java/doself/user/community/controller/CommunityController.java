@@ -1,6 +1,8 @@
 package doself.user.community.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CommunityController {
 	
 	private final CommunityService communityService;
+	private final CommunityMapper communityMapper;
 	
 	@GetMapping("/list")
 	public String getCommunityList(Pageable pageable, Model model) {
@@ -124,9 +127,26 @@ public class CommunityController {
 		
 		communityService.createArticle(article);
 		
-		return "user/community/list";
+		return "redirect:/community/list";
 	}
 	
+	@GetMapping("/modify")
+	public String modifyArticle(@RequestParam(name = "articleNum") int articleKeyNum, Model model) {
+		model.addAttribute("articleDetail", communityService.getArticleDetail(articleKeyNum));
+		
+		return "user/community/modify";
+	}
+	
+	@PostMapping("/modify")
+	public String modifyArticle(Article article, RedirectAttributes reAttr) {
+		//TODO: process POST request
+		
+		communityService.modifyArticle(article);
+		
+		reAttr.addAttribute("articleNum", article.getArticleKeyNum());
+		
+		return "redirect:/community/view";
+	}
 	
 	@PostMapping("/delete")
 	public String deleteArticle(@RequestParam(name = "articleNum") int articleKeyNum) {
@@ -164,7 +184,7 @@ public class CommunityController {
 	}
 	
 	@PostMapping("/createcomment")
-	public String postMethodName(Comment comment, @RequestParam(name = "articleNum") String articleNum, HttpSession session, RedirectAttributes reAttr) {
+	public String createComment(Comment comment, @RequestParam(name = "articleNum") String articleNum, HttpSession session, RedirectAttributes reAttr) {
 		//TODO: process POST request
 		comment.setCommentAuthorId((String) session.getAttribute("SID"));
 		
@@ -175,13 +195,40 @@ public class CommunityController {
 		return "redirect:/community/view";
 	}
 	
+	@PostMapping("/deletecomment")
+	public String deleteComment(@RequestParam(name = "commentKeyNum") String commentKeyNum, @RequestParam(name = "articleNum") String articleNum, RedirectAttributes reAttr) {
+		//TODO: process POST request
+		
+		communityMapper.deleteComment(commentKeyNum);
+		
+		reAttr.addAttribute("articleNum", articleNum);
+		
+		return "redirect:/community/view";
+	}
+	
+	@PostMapping("modifycomment")
+	@ResponseBody
+	public Map<String, Boolean> modifyComment(Comment comment) {
+		//TODO: process POST request
+		
+	    Map<String, Boolean> resultMap = new HashMap<>();
+	    resultMap.put("success", communityMapper.modifyComment(comment) > 0);
+	    return resultMap;
+		
+	}
+	
 	@PostMapping("/createreport")
-	public String postMethodName(Report report, HttpSession session) {
+	@ResponseBody
+	public boolean createReport(Report report, HttpSession session) {
 		//TODO: process POST request
 		
 		report.setReporterId((String) session.getAttribute("SID"));
-
-		return "";
+		
+		boolean isReg = false;
+		int result = communityService.createReport(report);
+		if(result > 0) isReg = true; 
+		
+		return isReg;
 	}
 	
 	

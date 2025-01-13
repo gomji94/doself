@@ -18,11 +18,20 @@ $('#item-purchase__button').click(event => {
 			url: '/market/purchaseitem',
 			method: 'post',
 			data : { pointItemKeyNum : $('#pointItemKeyNum').val(), itemPrice : $('#itemPrice').val() },
+			contentType: 'application/x-www-form-urlencoded',
 			dataType: 'json'
 		});
 		
 		request.done(response => {
-			console.log('성공');
+			
+			// 부모 페이지의 URL을 특정 경로로 변경
+			if (window.opener) {
+			    window.opener.location.href = '/market/purchaselist'; // 부모 페이지가 이동할 URL
+			}
+
+			// 현재 창 닫기
+			window.close();
+			
 		})
 		
 		request.fail((jqXHR, textStatus, error)=>{

@@ -21,6 +21,7 @@ public class Declare {
 	private String rrReasonContent;
 	
 	private Member memberInfo;
+	private AdminInfo adminInfo;
 	private OccuranceLocation occuranceLocationInfo;
 	private StatusCategory statusCategoryInfo;
 	private DeclareCategory declareCategoryInfo;
