@@ -215,6 +215,15 @@
 		VALUES (#{reportKeyValue}, #{reporterId}, #{occurLocationCode}, #{reportedKeyValue}, #{reportCateValue}, #{reportContent}, NOW())
   	</insert>
   	
+  	<!-- 게시글 수정 -->
+  	<update id="modifyArticle" parameterType="Article">
+  		UPDATE free_board
+		SET
+			fbctg_code=#{articleCategory},
+			fb_title=#{articleTitle},
+			fb_content=#{articleContent}
+		WHERE fb_num=#{articleKeyValue}
+  	</update>
   	
 
   	

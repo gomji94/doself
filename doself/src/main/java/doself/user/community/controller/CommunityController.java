@@ -130,6 +130,26 @@ public class CommunityController {
 		return "user/community/list";
 	}
 	
+	@GetMapping("/modify")
+	public String modifyArticle(@RequestParam(name = "articleNum") int articleKeyNum, Model model) {
+		model.addAttribute("articleDetail", communityService.getArticleDetail(articleKeyNum));
+		
+		return "user/community/modify";
+	}
+	
+	@PostMapping("/modify")
+	public String modifyArticle(Article article, RedirectAttributes reAttr) {
+		//TODO: process POST request
+		
+		communityService.modifyArticle(article);
+		
+		reAttr.addAttribute("articleNum", article.getArticleKeyNum());
+		
+		return "redirect:/community/view";
+	}
+	
+	
+	
 	
 	@PostMapping("/delete")
 	public String deleteArticle(@RequestParam(name = "articleNum") int articleKeyNum) {

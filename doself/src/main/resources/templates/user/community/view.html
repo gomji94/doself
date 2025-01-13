@@ -57,7 +57,7 @@
                         </th:block>
                         
 						<th:block th:if="${test != null and test eq articleDetail.articleAuthorId}">
-						    <a href="#">
+						    <a th:href="@{/community/modify(articleNum=*{articleKeyNum})}">
 						        <button id="article-modify__button">modify</button>
 						    </a>
 						    <form id="deleteForm" th:action="@{/community/delete}" method="POST">

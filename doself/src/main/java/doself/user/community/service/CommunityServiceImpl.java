@@ -235,5 +235,18 @@ public class CommunityServiceImpl implements CommunityService {
 		return communityMapper.createReport(report);
 	}
 
+	@Override
+	public void modifyArticle(Article article) {
+		// TODO Auto-generated method stub
+		
+		String formattedArticleKeyValue = String.format("fb_%03d", article.getArticleKeyNum());
+		article.setArticleKeyValue(formattedArticleKeyValue);
+		
+		String formattedArticleCategory = String.format("fbcate_%03d", article.getArticleCategoryKeyNum());
+		article.setArticleCategory(formattedArticleCategory);
+		
+		communityMapper.modifyArticle(article);
+	}
+
 
 }
