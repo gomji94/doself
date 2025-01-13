@@ -14,6 +14,7 @@ import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +40,7 @@ public class ChallengeListController {
 		int endPageNum = challengeListPageInfo.getEndPageNum();
 		int lastPage = challengeListPageInfo.getLastPage();
 		
-		log.info("Fetched Challenge List: {}", challengeList);
+		//log.info("Fetched Challenge List: {}", challengeList);
 		model.addAttribute("challengeList", challengeList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
@@ -53,16 +54,19 @@ public class ChallengeListController {
 	@ResponseBody
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public ChallengeDetailView getChallengeListView(@RequestParam("challengeCode") String challengeCode) {
-        log.info("Challenge Code: {}", challengeCode);
+        //log.info("Challenge Code: {}", challengeCode);
         ChallengeDetailView challengeDetail = challengeListService.getChallengeListView(challengeCode);
-        log.info("Challenge Detail: {}", challengeDetail);
+        //log.info("Challenge Detail: {}", challengeDetail);
         return challengeDetail;
     }
 	
+	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
-	public String addChallenge(ChallengeList challengeList) {
-		log.info("challengeList : {}", challengeList);
+	public String addChallenge(ChallengeList challengeList, HttpSession session) {
+		challengeList.setMemberId((String) session.getAttribute("SID"));
 		challengeListService.addChallenge(challengeList);
+		log.info("challengeList : {}", challengeList);
+
 		return "redirect:/challenge/list";
 	}
 	
