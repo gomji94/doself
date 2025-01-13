@@ -12,5 +12,6 @@ public class TicketPurchaseInfo {
 	private String orderNum;            //주문번호
 	private String PaymentMethod;       //결제수단
 	private String PaymentStatus;       //결제상태
+	private String paymentReturnStatus; //환불상태
 	
 }

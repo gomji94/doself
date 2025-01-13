@@ -17,6 +17,7 @@ import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
 import doself.user.members.service.MembersService;
 import doself.util.Pageable;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -115,11 +116,12 @@ public class MypageController {
 	
 	// 회원티켓 내역조회
 	@GetMapping("/tickethistory" )
-	public String getTicketHistory(@RequestParam(name = "memberId") String memberId,
+	public String getTicketHistory(HttpSession session,
 								   @RequestParam(name="startDate", required=false) String startDate,
 								   @RequestParam(name="endDate", required=false) String endDate,
 								   Model model, Pageable pageable) {
 		
+		String memberId = (String) session.getAttribute("SID");
 		var pageTicketInfo = membersService.getTicketHistory(memberId, pageable, startDate, endDate);
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		
@@ -147,11 +149,12 @@ public class MypageController {
 	
 	// 회원포인트내역조회
 	@GetMapping("/pointhistory" )
-	public String getPointHistory(@RequestParam(name = "memberId") String memberId,
-								  @RequestParam(name="startDate", required=false, defaultValue = "2024-01-01") String startDate,
-			                      @RequestParam(name="endDate", required=false, defaultValue = "2024-12-31") String endDate,
+	public String getPointHistory(HttpSession session,
+								  @RequestParam(name="startDate", required=false) String startDate,
+			                      @RequestParam(name="endDate", required=false) String endDate,
 			                      Model model, Pageable pageable) {
 		
+		String memberId = (String) session.getAttribute("SID");
 		var pagePointInfo = membersService.getPointHistory(memberId, pageable, startDate, endDate);
 		Members memberInfo = membersService.getMemberInfoById(memberId);
 		
@@ -182,7 +185,6 @@ public class MypageController {
 	public String getFeedList(@RequestParam(name = "memberId") String memberId, Model model) {
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
-		System.out.println(memberInfo);
 		model.addAttribute("memberInfo", memberInfo);
 		return "user/mypage/feed-list";	
 	}
