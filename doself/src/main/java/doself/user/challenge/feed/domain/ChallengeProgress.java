@@ -1,6 +1,5 @@
 package doself.user.challenge.feed.domain;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -26,21 +25,21 @@ public class ChallengeProgress {
 	private Date challengeTodayUploadDate;			// 피드 업로드 일자
 	
 	// 날짜 포맷 변환
-    public String getChallengeStartDate() {
-        return formatDate(this.challengeStartDate);
-    }
-
-    public String getChallengeEndDate() {
-        return formatDate(this.challengeEndDate);
-    }
-
-    private String formatDate(Date date) {
-        if (date == null) {
-            return null;
-        }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(date);
-    }
+//    public String getChallengeStartDate() {
+//        return formatDate(this.challengeStartDate);
+//    }
+//
+//    public String getChallengeEndDate() {
+//        return formatDate(this.challengeEndDate);
+//    }
+//
+//    private String formatDate(Date date) {
+//        if (date == null) {
+//            return null;
+//        }
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//        return formatter.format(date);
+//    }
     
     @Override
     public boolean equals(Object o) {

@@ -15,6 +15,10 @@ dl, ol, ul {
 	margin-bottom: 0 !important;	
 }
 
+a:hover {
+	color: #a9bd4d !important;
+}
+
 /* challenge-main-container */
 .challenge-main-container {
     flex: 1;
@@ -86,6 +90,21 @@ dl, ol, ul {
 .sidebar ul li a:hover {
     background-color: transparent;
 }
+
+div#feedOptionButton {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+#memberWarnigButton {
+	width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
 /* 
     .sidebar.shrink {
         width: 80px;
@@ -114,7 +133,7 @@ dl, ol, ul {
 
 /* 모달 컨테이너 */
 #cf-mbr-modal {
-    display: none; /* 기본적으로 숨김 */
+    /* display: none; */
     position: fixed;
     top: 50%;
     left: 50%;
@@ -136,7 +155,7 @@ dl, ol, ul {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 1004;
     display: none;
 }
@@ -490,7 +509,7 @@ p.progress-text {
 }
 
 .feed hr {
-    opacity: 0.2;
+    opacity: 0.5;
 }
 
 .feed .add-comment {
@@ -538,8 +557,8 @@ p.progress-text {
 
 button#loadMore {
     background-color: #ffffff !important;
-    color: #618141 !important;
-    border-color: #a9bd4d !important;
+    color: #9cb331 !important;
+    border-color: #d2dba7 !important;
     padding: 6px 15px 5px 18px !important;
 }
 
@@ -788,6 +807,7 @@ button.cf-comment-comment-btn {
 
 .popup-body li:last-child {
     border-bottom: none;
+    width: 250px;
     /* margin-bottom: 7px; */
 }
 
@@ -797,8 +817,8 @@ button.cf-comment-comment-btn {
 }
 
 .close:hover {
-    cursor: pointer;
-    color: red;
+    cursor: pointer !important;
+    color: red !important;
 }
 
 /* create challenge modal */
@@ -1307,7 +1327,7 @@ select option:checked {
     justify-content: space-between;
     text-align: center;
     margin-bottom: -1px;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .\.cf-modal-header img {
@@ -2074,7 +2094,8 @@ select #meal-type option:checked {
     position: absolute;
     font-size: 14px;
     color: #515151;
-    margin-left: 187px;
+    right: 12%;
+    opacity: 0.7;
 }
 
 .participants p {
@@ -2109,7 +2130,7 @@ select #meal-type option:checked {
 
 .info-box {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     justify-content: space-between;
     padding: 19px 29px;
     background-color: #fff;
@@ -2117,6 +2138,7 @@ select #meal-type option:checked {
     margin-top: 219px;
     margin-left: 17px;
     margin-right: 17px;
+    align-items: flex-end;
 }
 
 .info-item {
@@ -2149,6 +2171,7 @@ select #meal-type option:checked {
     width: 1px;
     height: 50px;
     background-color: #E0E0E0;
+    align-self: center;
 }
 
 .footer {
