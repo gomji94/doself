@@ -50,5 +50,10 @@ public interface ChallengeMapper {
 	List<Reward> getRewardList(Map<String, Object> searchMap);
 	//챌린지 개인기록 갯수
 	int getCntRewardList(Map<String, Object> searchMap);
+	
+	//챌린지 상태 완료이면 보상지급 (보상지급여부 업데이트)
+	int updateReward();
+	
+	//챌린지 상태 > 완료, 보상지급
 		
 }

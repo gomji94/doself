@@ -633,4 +633,9 @@
 		    ORDER BY
 		    	rph.rph_num
 		</select>
+		
+		<!-- 챌린지 보상지급여부 업데이트 -->
+		<update id="updateReward">
+		
+		</update>
   </mapper>
