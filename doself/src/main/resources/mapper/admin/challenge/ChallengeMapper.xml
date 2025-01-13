@@ -633,4 +633,87 @@
 		    ORDER BY
 		    	rph.rph_num
 		</select>
+		
+		<!-- 보상 지급 받지 않은 챌린지 리스트 -->
+		<select id="getNoRewardList" resultMap="challengeResultMap">
+			SELECT
+				cg_num
+			FROM
+				challenge_group cg
+			WHERE
+				cs_num = cs_001
+				AND
+				cs_reward_check = ''
+				OR
+				cs_reward_check = null
+		</select>
+		
+		<!-- 챌린지 보상지급여부 업데이트 -->
+		<update id="updateReward">
+			UPDATE challenge_group
+			SET
+				cs_reward_check = '지급'
+			WHERE
+				cg_num = #{cgNum}
+		</update>
+		
+		<resultMap type="RewardHistory" id="RewardHistoryResultMap">
+				<id 	column="rh_num" property="rhNum" />	  			
+	  			<result column="rh_target" property="rhTarget" />	  				  				  			  			  			
+	  			<result column="rh_reward_type" property="rhRewardType" />	  				  				  			  			  			
+	  			<result column="rh_rank" property="rhRank" />
+	  			<result column="rh_point" property="rhPoint" />
+	  			<result column="rhName" property="rhName" />
+		</resultMap>
+		
+		<!-- 챌린지 보상받을 멤버와 얼마 받아야하는지 가져오기 -->
+		<select id="getRewardMember" resultType="map">
+			SELECT
+				cpsl.mbr_id AS mbrId,
+				rh.rh_point AS rhPoint
+			FROM
+				reward_history rh INNER JOIN challenge_personal_score_list cpsl
+				ON rh.rh_rank = cpsl.cpsl_rank
+			WHERE
+				rh.rh_target = '멤버'
+				AND
+				cpsl.cg_num = #{cgNum}
+		</select>
+		
+		<!-- 포인트 지급 -->
+		<update id="updateMemberReward" parameterType="map">
+			UPDATE
+				`member`
+			SET
+				mbr_point = mbr_point + #{rhPoint}
+			WHERE
+				mbr_id = #{mbrId}
+		</update>
+		
+		<!-- 보상지급기록 인서트 -->
+		<insert id="createRewardPaymentHistory">
+			INSERT INTO reward_payment_history (
+			rph_num, 
+			cg_num, 
+			mbr_id, 
+			rh_num, 
+			rph_reward_selected_date, 
+			rph_admin, 
+			rph_reward_payment_date
+			) VALUES (
+			#{newKey}, 
+			#{cgNum}, 
+			#{mbrId}, 
+			(SELECT
+				rh_num
+			FROM
+				reward_history rh
+			WHERE
+				rh_point = #{rhPoint}
+				AND 
+				rh_target = '멤버'), 
+			NOW(), 
+			'id001', 
+			NOW())
+		</insert>
   </mapper>

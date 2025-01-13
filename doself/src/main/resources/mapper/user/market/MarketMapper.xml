@@ -64,6 +64,7 @@
 			INNER JOIN point_exchange_product_list pepl
 		USING(pepl_num)
 		WHERE mbr_id = #{memberId}
+		ORDER BY pumh.pumh_date DESC
   		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
   	</select>
   	

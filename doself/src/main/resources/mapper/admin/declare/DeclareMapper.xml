@@ -24,6 +24,12 @@
 	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
 	  		</association>	
 	  		
+  			<!-- 관리자 관계 -->
+	  		<association property="adminInfo" javaType="AdminInfo">
+	  			<id 	column="admin.mbr_id" property="adminMbrId" />	  			
+	  			<result column="adminMbrName" property="adminMbrName" />	  				  				  			  			  			
+	  		</association>	
+	  		
 	  		<!-- 발생위치카테고리 관계 -->
 	  		<association property="occuranceLocationInfo" javaType="OccuranceLocation">
 	  			<id 	column="olc_code" property="olcCode" />	  			
@@ -47,7 +53,7 @@
 		<select id="getDeclareList" resultMap="declareResultMap">
 			/* 신고요청 접수 조회 */
 			
-			SELECT
+				SELECT
 				rr_num,
 				m.mbr_name,
 				olc.olc_name,
@@ -55,12 +61,14 @@
 				rc.rc_name,
 				rr_content,
 				rr_date,
-				sc.sc_status,
-				rr_admin,
+				sc.sc_status,		
+				admin.mbr_name AS adminMbrName,
 				rr_processing_period,
 				rr_reason_content
 			FROM report_request rr INNER JOIN `member` m
 				ON rr.mbr_id = m.mbr_id
+				LEFT JOIN `member` admin
+				ON admin.mbr_id = rr.rr_admin
 				INNER JOIN occurance_location_code olc
 				ON rr.olc_code = olc.olc_code
 				INNER JOIN status_category sc
@@ -130,7 +138,13 @@
 	  			<id 	column="mbr_id" property="mbrId" />	  			
 	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
 	  			<result column="mg_code" property="mgCode" />	  				  				  			  			  			
-	  		</association>	
+	  		</association>
+	  		
+	  		<!-- 관리자 관계 -->
+	  		<association property="adminInfo" javaType="AdminInfo">
+	  			<id 	column="admin.mbr_id" property="adminMbrId" />	  			
+	  			<result column="adminMbrName" property="adminMbrName" />	  				  				  			  			  			
+	  		</association>		
 	  			  		   		  		  			 	   		
 	  		<!-- 신고유형카테고리 관계 -->
 	  		<association property="declareCategoryInfo" javaType="DeclareCategory">
@@ -151,9 +165,11 @@
 				rmm_sanction_start_date,
 				rmm_sanction_period,
 				rmm_sanction_end_date,
-				rmm_admin
+				admin.mbr_name AS adminMbrName
 			FROM report_member_management rmm INNER JOIN `member` m
 				ON rmm.mbr_id = m.mbr_id
+				LEFT JOIN `member` admin
+				ON rmm.rmm_admin = admin.mbr_id
 				INNER JOIN report_category rc
 				ON rmm.rc_code = rc.rc_code
 			<where>

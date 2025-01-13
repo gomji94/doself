@@ -1,14 +1,24 @@
 package doself.user.challenge.feed.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
-import doself.user.challenge.feed.domain.ChallengeProcess;
+import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,51 +32,107 @@ import lombok.extern.slf4j.Slf4j;
 public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	private final ChallengeFeedMapper challengeFeedMapper;
+	// 요청 데이터 한번만 가져오도록 캐싱 적용
+	private final ConcurrentMap<String, List<ChallengeProgress>> challengeProgressCache = new ConcurrentHashMap<>();
 	
-	// 챌린지 피드 조회(로직 검토 필요)
+	// 로그인된 챌린지 멤버 아이디
 	@Override
-	public List<ChallengeFeed> getChallengeFeedList(int page, int pageSize) {
-		List<ChallengeFeed> challengeFeed = challengeFeedMapper.getChallengeFeedList(page, pageSize);
-		if (challengeFeed == null || challengeFeed.isEmpty()) {
-	        log.warn("챌린지 피드 정보가 없습니다.");
-	        return challengeFeed;
-	    }
-		
-		// 챌린지 번호와 챌린지 피드 번호가 일치하는 것만 조회되게 함
-		challengeFeed.forEach(challengeFeedInfo -> {
-			String feedMatched = challengeFeedInfo.getChallengeCode();
-			if(feedMatched == challengeFeedInfo.getChallengeFeedCode());
-		});
-		
-	    int offset = (page - 1) * pageSize;
-	    return challengeFeedMapper.getChallengeFeedList(offset, pageSize);
+	public String getChallengeCodeByMemberId(String challengeMemberId) {
+	    return challengeFeedMapper.getChallengeCodeByMemberId(challengeMemberId);
 	}
 	
-	// 챌린지 진행 상태 조회
+	// 피드 페이징
 	@Override
-	public List<ChallengeProcess> getChallengeProgress(String challengeCode) {
-		List<ChallengeProcess> challengeProgress = challengeFeedMapper.getChallengeProgress(challengeCode);
-
-		// 챌린지 상태에 따른 화면 데이터 업데이트
-		challengeProgress.forEach(challengeInfo -> {
-	        String challengeStatus = challengeInfo.getChallengeStatusCode();
-	        if("cs_001".equals(challengeStatus)) {
-	        	log.info("challengeStatus: ", "완료");
-	        } if ("cs_002".equals(challengeStatus) || "cs_003".equals(challengeStatus)) {
-	        	log.info("challengeStatus: ", "진행중");
-			} else {
-	        	log.info("challengeStatus: ", "중단");
-	        }
-	    });
-		return challengeProgress;
-	}	
+	public PageInfo<ChallengeFeed> getChallengeFeedPage(String challengeCode, Pageable pageable) {
+		int rowCnt = challengeFeedMapper.getChallengeFeedCount(challengeCode);
+		Map<String, Object> params = new HashMap<>();
+		params.put("challengeCode", challengeCode);
+		params.put("pageable", pageable);
+		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeFeed(params);
+		
+		
+		return new PageInfo<>(challengeFeedList, pageable, rowCnt);
+	}
 	
+	// 챌린지 피드
+	@Override
+	public List<ChallengeFeed> getChallengeFeed(Map<String, Object> params) {
+        return challengeFeedMapper.getChallengeFeed(params);
+    }
+	
+	// 총 업로드 데이터 합계
+	@Override
+	public int calculateTotalProgress(String challengeCode) {
+		return challengeFeedMapper.getTodayProgressSum(challengeCode);
+	}
+
+	// 참여 멤버 상위 3명 표시
+	@Override
+    public List<ChallengeMemberList> getTopParticipants(String challengeCode) {
+        return challengeFeedMapper.getTopParticipants(challengeCode);
+    }
+
 	// 챌린지 멤버 조회(참여자 번호, 챌린지 번호, 챌린지 참여 및 퇴장 일시 기록 → 추후, 유효성 검사 로직 추가)
 	@Override
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
 		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
 	    log.info("Fetched memberList from Mapper: {}", memberList); // Mapper에서 가져온 데이터 확인
 	    return memberList;
+	}
+
+	@Override
+	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatus) {
+		// 캐시 내 데이터 여부 확인
+		if (challengeProgressCache.containsKey(challengeCode)) {
+	        return challengeProgressCache.get(challengeCode); // 캐시된 데이터 반환
+	    }
+		
+        // 데이터 가져오기
+		List<ChallengeProgress> challengeProgress = challengeFeedMapper.getChallengeProgress(challengeCode);
+
+	    // 중복 제거 후 캐시에 저장
+		List<ChallengeProgress> distinctProgress = challengeProgress.stream()
+		        .distinct() // 중복 제거
+		        .collect(Collectors.toList());
+//	    List<ChallengeProgress> distinctProgress = challengeProgress.stream()
+//	        .distinct()
+//	        .collect(Collectors.toList());
+//	    challengeProgressCache.put(challengeCode, distinctProgress);
+
+	    return distinctProgress;
+	}
+	
+	// 불필요한 캐시 초기화
+	public void clearChallengeProgressCache(String challengeCode) {
+	    challengeProgressCache.remove(challengeCode);
+	}
+
+	@Override
+	public Map<String, String> calculateDPlusAndDMinus(String challengeCode) {
+		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
+        if (progress == null) {
+            return Map.of("dPlus", "N/A", "dMinus", "N/A");
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = progress.getChallengeStartDate().toInstant()
+                                      .atZone(ZoneId.systemDefault())
+                                      .toLocalDate();
+        LocalDate endDate = progress.getChallengeEndDate().toInstant()
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate();
+
+        long dPlus = ChronoUnit.DAYS.between(startDate, today);
+        long dMinus = ChronoUnit.DAYS.between(today, endDate);
+
+        log.info("Start Date from progress: {}", progress.getChallengeStartDate());
+        log.info("End Date from progress: {}", progress.getChallengeEndDate());
+        
+        
+        return Map.of(
+            "dPlus", "D+" + Math.max(0, dPlus),
+            "dMinus", "D-" + Math.max(0, dMinus)
+        );
 	}
 
 }

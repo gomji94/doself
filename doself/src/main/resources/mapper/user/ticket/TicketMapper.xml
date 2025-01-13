@@ -12,6 +12,17 @@
   		<result column="ctp_price"			property="ticketPrice"/>
   		<result column="ctc_expl" 			property="ticketExplanation"/>
   	</resultMap>
+  	
+  	<resultMap type="TicketPurchase" id="TicketPurchaseResultMap">
+  		<id 	column="mbr_id" 			 property="memeberId"/>
+  		<result column="ctph_num" 		     property="paymentNum"/>
+  		<result column="ctph_date" 		     property="ticketPurchaseDate"/>
+  		<result column="ctc_category" 		 property="ticketCategory"/>
+  		<result column="ctp_price"			 property="paymentAmount"/>
+  		<result column="ctph_status" 		 property="paymentStatus"/>
+  		<result column="ctph_return_status"  property="paymentReturnStatus"/>
+  		<result column="pmc_name" 			 property="paymentMethod"/>
+  	</resultMap>
  
   	<!-- 티켓 아이템 리스트 조회 -->
   	<select id="getTicketList" resultMap="ticketItemResultMap" >
@@ -27,5 +38,50 @@
 		USING(ctc_code)
 		WHERE ctp_is_deleted = 'active';
   	</select>
+  	
+  	<select id="getTicketListById" resultMap="TicketPurchaseResultMap">
+  		SELECT 
+			ctph.mbr_id,
+			ctph.ctph_num,
+			ctc.ctc_category, 
+			ctph.ctph_date, 
+			ctp.ctp_price, 
+			ctph.ctph_status,
+			TRIM(ctph.ctph_return_status) AS ctph_return_status,
+			pmc.pmc_name 
+		FROM 
+			challenge_ticket_payment_history ctph
+		INNER JOIN 
+			challenge_ticket_price ctp
+		USING(ctp_code)
+		INNER JOIN 
+			ticket_payment_method tpm
+		USING(tpm_num)
+		INNER JOIN 
+			payment_method_category pmc
+		USING(pmc_code)
+		INNER JOIN
+			challenge_ticket_category ctc
+		USING(ctc_code)
+		WHERE 
+			ctph.mbr_id = #{memberId}
+		ORDER BY ctph_date DESC
+		LIMIT #{rowPerPage}	OFFSET #{offset};	
+  	</select>
+  	<select id="getCntTicketHistory" resultType="int">
+  		SELECT	
+			COUNT(*)
+		FROM
+			challenge_ticket_payment_history
+  		WHERE
+  			mbr_id = #{memberId}	
+		<if test="startDate != null">
+		AND ctph_date >= #{startDate} 
+		</if>
+		<if test="endDate != null">
+		AND ctph_date <![CDATA[ <= ]]> #{endDate} 
+		</if>
+  	</select>
+
   	
 </mapper>

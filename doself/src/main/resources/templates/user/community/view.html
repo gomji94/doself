@@ -39,10 +39,12 @@
                         <span id="likeCnt"  th:text="*{articleLike}"></span>
                         <input type="hidden" id="currentArticleLikeCnt" name="currentArticleLikeCnt" th:value="*{articleLike}">
                     </div>
-					    <img th:src="*{articleAttachmentFile}" width="400" height="300">
+                    	<th:block th:with="imgSrc=*{articleAttachmentFile}">
+						    <img th:src="${imgSrc != '' ? imgSrc : ''}" width="300" height="300" th:if="${imgSrc != ''}">
+                    	</th:block>
 
                     <!-- 게시글 본문 내용 -->
-                    <div id="post-content" th:text="*{articleContent}">
+                    <div id="post-content" th:utext="*{articleContent}">
                     						        
                     </div>
 
@@ -50,12 +52,12 @@
                     <div class="article-button-container">
                     	<th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
                             <button id="article-like__button">like</button>
-                            <button id="article-report__button">신고</button>
+                            <button id="article-report__button" data-occurType="1">신고</button>
                             <input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
                         </th:block>
                         
 						<th:block th:if="${test != null and test eq articleDetail.articleAuthorId}">
-						    <a href="#">
+						    <a th:href="@{/community/modify(articleNum=*{articleKeyNum})}">
 						        <button id="article-modify__button">modify</button>
 						    </a>
 						    <form id="deleteForm" th:action="@{/community/delete}" method="POST">
@@ -76,10 +78,17 @@
                         <!-- 댓글 목록 -->
                         <th:block th:if="${articleDetail.commentList != null}">
 	                        <ul id="comment-list">
-	                            <li class="comment" th:each="l : ${articleDetail.commentList}">
+	                            <li class="comment" th:each="l : ${articleDetail.commentList}" th:with="commentAuhorId=${l.commentAuthorId}">
 	                                <div class="comment-info__left">
+	                                    <input type="hidden" name="commentKeyNum" th:value="${l.commentKeyNum}">
 	                                    <p class="comment-author" th:text="${l.commentAuthorId}"></p>
 	                                    <p class="comment-content" th:text="${l.commentContent}"></p>
+	                                    <form th:action="@{/community/modifycomment}" method="post" id="comment-edit-form" style="display: none;">
+		                                    <input type="hidden" name="commentKeyNum" th:value="${l.commentKeyNum}">
+		                                    <textarea id="edit-comment-text" class="edit-comment-text" th:text="${l.commentContent}"></textarea>
+	                                    	<button type="submit" id="edit-comment-submit-btn">저장</button>
+	                                    	<button type="button" id="edit-comment-cancel-btn">취소</button>
+	                                    </form>
 	                                </div>
 	                                <div class="comment-info__right">
 	                                    <p class="comment-date" th:text="${l.commentDate}"></p>
@@ -88,10 +97,14 @@
 		                                        <i class="fa-solid fa-ellipsis-vertical"></i>
 		                                    </button>
 	                                        <div class="dropdown-menu">
-												<a class="dropdown-item" href="#" id="report-comment-btn" th:unless="${test != null and test != articleDetail.articleAuthorId}">신고</a>
-										        <th:block th:if="${test != null and test != articleDetail.articleAuthorId}">
+												<a class="dropdown-item" href="#" id="report-comment-btn" th:if="${test != null and test != commentAuhorId}" data-occurType="2">신고</a>
+										        <th:block th:if="${test != null and test == commentAuhorId}">
 											      <a class="dropdown-item" href="#" id="modify-comment-btn">수정</a>
-											      <a class="dropdown-item" href="#" id="delete-comment-btn">삭제</a>
+					      						    <form id="deleteForm" th:action="@{/community/deletecomment}" method="POST">
+							                        	<input type="hidden" id="articleNum" name="articleNum" th:value="*{articleKeyNum}">
+					                                    <input type="hidden" name="commentKeyNum" th:value="${l.commentKeyNum}">
+											      		<button type="submit" class="dropdown-item" th:href="@{/community/deletecomment}" id="delete-comment-btn">삭제</button>
+													</form>
 										        </th:block>
 										    </div>
 	                                    </div>
@@ -129,7 +142,6 @@
                         <div class="body-titlebox">
                             <div id="modal-request-title">신고 요청</div>
                             <form id="modal-request-form" th:action="@{community/createreport}" method="post">
-							    <label for="cars"></label>
 							    <select id="reports-code" name="reports-code">
 							        <option value="1">불법 컨텐츠</option>
 							        <option value="2">사기 및 사칭</option>
@@ -138,7 +150,7 @@
 							        <option value="5">스팸 및 광고</option>
 							        <option value="6">허위 사실 유포</option>
 							    </select>
-							    <input type="text" placeholder="신고 내용을 입력해주세요" />
+							    <input type="text" id="reportContent" name="reportContent" placeholder="신고 사유를 입력해주세요" />
                             </form>
                             <div id="modal-request-form__buttons">
                                 <button type="button" id="modal-request-form__submitButton" data-target="confirm-message.html">접수</button>
@@ -151,6 +163,24 @@
         </div>
     </div>
     
+            <!-- 모달창 여기부터 복사 -->
+        <div class="modal-confirm-container">
+            <div class="confirm-popup-wrap" style="display: none;">
+                <div class="confirm-popup">
+                    <div class="confirm-popup-body">
+                        <div class="confirm-body-content">
+                            <div class="confirm-body-titlebox">
+                                <div id="modal-request-title">DoSelf</div>
+                                <div id="confirm-message">
+                                    성공적으로 제출 되었습니다.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
@@ -158,6 +188,7 @@
     	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
     	<script th:src="@{/assets/js/layout.js}"></script>
     	<script th:src="@{/assets/js/community/view.js}"></script>
+    	<script th:src="@{/assets/js/community/comment-modify.js}"></script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->

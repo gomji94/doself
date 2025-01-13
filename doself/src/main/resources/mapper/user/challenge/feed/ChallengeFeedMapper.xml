@@ -7,15 +7,15 @@
   	<!-- 특정 챌린지 피드 조회 -->
   	<resultMap type="ChallengeFeed" id="ChallengeFeedResultMap">
 	    <id 	column="cmf_num"		   property="challengeFeedCode" />
-	    <result column="cg_num" 		   property="challengeCode" />
-	    <result column="mbr_id" 		   property="challengeFeedAuthor" />
+	    <id 	column="cg_num" 		   property="challengeCode" />
+	    <result column="mbr_id" 		   property="challengeMemberId" />
 	    <result column="cmf_content"	   property="challengeFeedContent" />
 	    <result column="cmf_picture"	   property="challengeFeedPicture" />
 	    <result column="cmf_date"	   	   property="challengeFeedDate" />
 	    <result column="cmf_like"		   property="challengeFeedLike" />
 	    <result column="cmf_warning_check" property="challengeFeedWarningCheck" />
 	    <result column="mbr_image"		   property="memberProfileImage" />
-	    <result column="cfc_num"		   property="challengeFeedCommentCode" />
+	    <result column="cfc_num"		   property="challengeFeedCommentCode" javaType="string"/>
 	    <result column="cfc_content"	   property="challengeFeedCommentContent" />
 	</resultMap>
 	
@@ -27,6 +27,9 @@
 		<result column="cs_num" 	 property="challengeStatus" />
 		<result column="cgm_date"	 property="challengeMemberInOutDate" />
 		<result column="mbr_image"   property="memberProfileImage" />
+		<result column="cmss_today_participation_rate"  property="todayParticipationRate" javaType="double" />
+	    <result column="cmss_today_achievement_rate" 	property="todayAchievementRate" javaType="double" />
+	    <result column="score" 							property="score" javaType="double" />
 	</resultMap>
 	
 	<!-- 챌린지 댓글 리스트 조회 -->
@@ -42,12 +45,12 @@
 	</resultMap>
 	
 	<!-- 챌린지 진행 상태 조회 -->
-	<resultMap type="ChallengeProcess" id="ChallengeProcessMap">
+	<resultMap type="ChallengeProgress" id="ChallengeProcessMap">
 		<id 	column="cg_num" 						property="challengeCode"/>
 		<result column="cg_name" 						property="challengeName"/>
 		<result column="cs_num"							property="challengeStatusCode"/>
 		<result column="mbr_id" 						property="challengeMemberId"/>
-		<result column="mbr_image" 						property="challengeMemberProfile"/>
+		<result column="mbr_image" 						property="memberProfileImage"/>
 		<result column="cg_creation_date" 				property="challengeCreationDate"/>
 		<result column="cg_start_date" 					property="challengeStartDate"/>
 		<result column="cg_end_date" 					property="challengeEndDate"/>
@@ -55,10 +58,22 @@
 		<result column="cg_max_mbr_count"			    property="challengeMaxMember"/>
 		<result column="cmss_today_participation_rate"  property="challengeTodayParticipationRate"/>
 		<result column="cmss_today_achievement_rate" 	property="challengeTodayAchievementRate"/>
+		<result column="cmss_date" 						property="challengeTodayUploadDate"/>
 	</resultMap>
 	
+	<!-- 로그인된 챌린지 멤버 아이디 -->
+	<select id="getChallengeCodeByMemberId" parameterType="string" resultType="string">
+	    SELECT
+	    	cg_num
+        FROM
+        	challenge_member_feed
+        WHERE
+        	mbr_id = #{memberId}
+        LIMIT 1
+	</select>
+	
 	<!-- 특정 챌린지 피드 조회 -->
-	<select id="getChallengeFeedList" resultMap="ChallengeFeedResultMap">
+	<select id="getChallengeFeed" parameterType="map" resultMap="ChallengeFeedResultMap">
 		SELECT
 			cmf.cmf_num,
 			cmf.cg_num,
@@ -75,8 +90,51 @@
 			challenge_member_feed cmf
 			INNER JOIN `member` m USING(mbr_id)
 			LEFT JOIN challenge_feed_comments cfc USING(cmf_num)
-		LIMIT #{offset}, #{pageSize}
+		WHERE
+			cmf.cg_num = #{challengeCode}
+			AND cg_num IS NOT NULL
+		ORDER BY cmf_date DESC
+		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
 	</select>
+	
+	<!-- 챌린지 피드 행 갯수 조회 -->
+	<select id="getChallengeFeedCount" resultType="int" parameterType="string">
+		SELECT
+			COUNT(*)
+		FROM
+			challenge_member_feed cmf
+		WHERE
+			cmf.cg_num = #{challengeCode}
+			AND cg_num IS NOT NULL
+		ORDER BY cmf_date DESC
+	</select>
+	
+	<!-- 총 업로드 데이터 합계((총 참여율+총달성률)/2/14(기간)/멤버수/100) -->
+  	<select id="getTodayProgressSum" resultType="int" parameterType="string">
+  		SELECT
+		   ROUND(SUM(cmss_today_participation_rate + cmss_today_achievement_rate)/2/14/COUNT(DISTINCT mbr_id)/100, 1) AS result
+		FROM
+			challenge_member_score_stats cmss
+		WHERE
+		   cg_num = #{challengeCode}
+  	</select>
+  	
+  	<!-- 참여 멤버 점수 -->
+  	<select id="getTopParticipants" parameterType="string" resultType="ChallengeMemberList">
+  		SELECT 
+	        m.mbr_id 							AS memberId,
+	        m.mbr_image 						AS memberProfileImage,
+	        cmss.cmss_today_participation_rate  AS todayParticipationRate,
+	        cmss.cmss_today_achievement_rate 	AS todayAchievementRate,
+	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate)/2/14, 1) AS score
+	    FROM 
+	        challenge_member_score_stats cmss
+	    	INNER JOIN member m USING (mbr_id)
+	    WHERE 
+	        cmss.cg_num = #{challengeCode}
+	    ORDER BY score DESC
+	    LIMIT 3
+  	</select>
 	
 	<!-- 챌린지 멤버 리스트 조회 -->
   	<select id="getMemberList" resultMap="ChallengeMemberListMap">		
@@ -93,7 +151,7 @@
 		WHERE
 			cg_num = #{challengeCode}
 		GROUP BY
-			cgm.mbr_id, m.mbr_image;
+			cgm.mbr_id, m.mbr_image
   	</select>
   	
   	<!-- 챌린지 댓글 리스트 조회 -->
@@ -112,11 +170,13 @@
 			LEFT JOIN `member` m USING(mbr_id)
 		WHERE
 			cfc.cmf_num = #{challengeFeedCode};
+		ORDER BY cfc_date DESC
+		LIMIT 1
   	</select>
   	
   	<!-- 챌린지 진행 상태 조회 -->
   	<select id="getChallengeProgress" resultMap="ChallengeProcessMap">
-  		SELECT
+  		SELECT DISTINCT
 			cg.cg_num,
 			cg.cg_name,
 			cg.cs_num,
@@ -128,7 +188,8 @@
 			cg.cg_current_mbr_count,
 			cg.cg_max_mbr_count,
 			cmss.cmss_today_participation_rate,
-			cmss.cmss_today_achievement_rate
+			cmss.cmss_today_achievement_rate,
+			cmss.cmss_date
 		FROM
 			challenge_group cg
 			INNER JOIN `member` m USING(mbr_id)
@@ -136,5 +197,14 @@
 		WHERE
 			cg_num = #{challengeCode}
   	</select>
+  	
+  	<select id="getChallengeProgressByCode" parameterType="string" resultType="ChallengeProgress">
+	    SELECT 
+	        cg.cg_num AS challengeCode,
+	        cg.cg_start_date AS challengeStartDate,
+	        cg.cg_end_date AS challengeEndDate
+	    FROM challenge_group cg
+	    WHERE cg_num = #{challengeCode}
+	</select>
   </mapper>
   

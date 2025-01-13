@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import doself.user.community.domain.Article;
 import doself.user.community.domain.Comment;
 import doself.user.community.domain.Like;
+import doself.user.community.domain.Report;
 import doself.user.community.domain.SearchArticle;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -42,6 +43,9 @@ public interface CommunityMapper {
 	// 게시글 작성
 	void createArticle(Article article);
 	
+	// 게시글 수정
+	void modifyArticle(Article article);
+	
 	// 게시글 삭제
 	void deleteArticle(String articleKeyNum);
 	
@@ -62,6 +66,15 @@ public interface CommunityMapper {
 	
 	// 댓글 작성
 	void createComment(Comment comment);
+	
+	// 댓글 삭제
+	void deleteComment(String commentKeyNum);
+	
+	// 댓글 업데이트
+	int modifyComment(Comment comment);
+	
+	// 게시글 및 댓글 신고
+	int createReport(Report report);
 	
 
 }
