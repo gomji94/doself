@@ -64,6 +64,9 @@ public interface CommunityMapper {
 	// 댓글 작성
 	void createComment(Comment comment);
 	
+	// 댓글 삭제
+	void deleteComment(String commentKeyNum);
+	
 	// 게시글 및 댓글 신고
 	int createReport(Report report);
 	

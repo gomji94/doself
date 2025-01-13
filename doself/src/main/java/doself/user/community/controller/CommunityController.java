@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CommunityController {
 	
 	private final CommunityService communityService;
+	private final CommunityMapper communityMapper;
 	
 	@GetMapping("/list")
 	public String getCommunityList(Pageable pageable, Model model) {
@@ -174,6 +175,18 @@ public class CommunityController {
 		
 		return "redirect:/community/view";
 	}
+	
+	@PostMapping("/deletecomment")
+	public String deleteComment(@RequestParam(name = "commentKeyNum") String commentKeyNum, @RequestParam(name = "articleNum") String articleNum, RedirectAttributes reAttr) {
+		//TODO: process POST request
+		
+		communityMapper.deleteComment(commentKeyNum);
+		
+		reAttr.addAttribute("articleNum", articleNum);
+		
+		return "redirect:/community/view";
+	}
+	
 	
 	@PostMapping("/createreport")
 	@ResponseBody
