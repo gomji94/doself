@@ -69,6 +69,12 @@ $(document).ready(function () {
             $(this).fadeOut(300);
         }
     });
+	$(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-mbr-modal-overlay').fadeOut();
+            $('#cf-warning-modal-overlay').fadeOut();
+        }
+    });
 });
 
 
@@ -155,6 +161,13 @@ $(document).on("click", "#card-modal-close, #card-modal-overlay", function () {
     // 해당 모달 닫기
     $("#card-modal-overlay").css("display", "none");
     $("#card-modal").css("display", "none");
+});
+
+$(document).on('keydown', function (e) {
+    if (e.key === "Escape") {
+        $('#cf-mbr-modal-overlay').fadeOut();
+        $('#cf-warning-modal-overlay').fadeOut();
+    }
 });
 
 // 날짜 형식 변환 함수

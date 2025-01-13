@@ -18,8 +18,8 @@ public interface ChallengeFeedMapper {
 	//String getChallengeCodeByMemberId(@Param("challengeMemberId") String challengeMemberId);
 
 	// 챌린지 피드
-	List<ChallengeFeed> getChallengeFeed(@Param("params") Map<String, Object> params);
-
+	List<ChallengeFeed> getChallengeFeed(Map<String, Object> params);
+	
 	// 피드 갯수 카운트
 	int getChallengeFeedCount(@Param("challengeCode") String challengeCode);
 	
@@ -31,13 +31,10 @@ public interface ChallengeFeedMapper {
 
 	// 참여 멤버 상위 3명 표시
 	List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
-    
-//    // D+ 계산
-//    String calculateDPlus(@Param("challengeCode") String challengeCode);
-//
-//    // D- 계산
-//    String calculateDMinus(@Param("challengeCode") String challengeCode);
-    
+	
+	// 투데이 디데이 계산
+	ChallengeProgress getChallengeProgressByCode(@Param("challengeCode") String challengeCode);
+	
     // 참여 멤버 점수
     //List<ChallengeMemberList> getParticipantsWithScore(@Param("challengeCode")String challengeCode);
 
