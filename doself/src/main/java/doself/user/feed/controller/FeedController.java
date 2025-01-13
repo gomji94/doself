@@ -1,8 +1,10 @@
 package doself.user.feed.controller;
 
+import java.io.File;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import doself.user.feed.domain.Feed;
 import doself.user.feed.service.FeedService;
@@ -52,9 +55,48 @@ public class FeedController {
     
 	// 피드 추가
     @PostMapping("/createFeed")
-    public String addFeed( Feed feed) {
-    	
-    	return "user/feed/feed-create";
+    public ResponseEntity<String> addFeed(
+            @RequestParam("feedPicture") MultipartFile feedPicture,
+            @RequestParam("feedContent") String feedContent,
+            @RequestParam("feedFoodIntake") Integer feedFoodIntake,
+            @RequestParam("mealCategoryCode") String mealCategoryCode,
+            @RequestParam("feedOpenStatus") Integer feedOpenStatus) {
+        try {
+            // 유효성 검사
+            if (feedPicture == null || feedPicture.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사진을 업로드해주세요.");
+            }
+
+            if (feedContent == null || feedContent.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("내용을 작성해주세요.");
+            }
+
+            if (feedFoodIntake == null || feedFoodIntake <= 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("섭취 인분을 선택해주세요.");
+            }
+
+            if (mealCategoryCode == null || mealCategoryCode.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("식사 분류를 선택해주세요.");
+            }
+
+            // 파일 저장 처리 (임시)
+            String filePath = "/uploads/" + feedPicture.getOriginalFilename();
+            feedPicture.transferTo(new File(filePath));
+
+            // Feed 객체 생성 및 저장
+            Feed feed = new Feed();
+            feed.setFeedPicture(filePath);
+            feed.setFeedContent(feedContent);
+            feed.setFeedFoodIntake(feedFoodIntake);
+            feed.setMealCategoryCode(mealCategoryCode);
+            feed.setFeedOpenStatus(feedOpenStatus);
+
+            feedService.addFeed(feed);
+            return ResponseEntity.ok("피드가 성공적으로 생성되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("피드 생성 중 오류 발생");
+        }
     }
     
 	// 피드 수정

@@ -46,13 +46,28 @@ public class FeedServiceImpl implements FeedService {
 	// 피드 추가
 	@Override
 	public void addFeed(Feed feed) {
-	    try {
-	        feedMapper.addFeed(feed);
-	        log.info("피드가 성공적으로 생성되었습니다. {}", feed);
-	    } catch (Exception e) {
-	        log.error("피드 생성 중 오류 발생: {}", e.getMessage());
-	        throw new RuntimeException("피드 생성 중 오류 발생");
+	    // 유효성 검사
+	    if (feed.getFeedPicture() == null || feed.getFeedPicture().isEmpty()) {
+	        throw new IllegalArgumentException("사진을 업로드해주세요.");
 	    }
+
+	    if (feed.getFeedContent() == null || feed.getFeedContent().trim().isEmpty()) {
+	        throw new IllegalArgumentException("내용을 작성해주세요.");
+	    }
+
+	    if (feed.getFeedFoodIntake() == null || feed.getFeedFoodIntake() <= 0) {
+	        throw new IllegalArgumentException("섭취 인분을 선택해주세요.");
+	    }
+
+	    if (feed.getMealCategoryCode() == null || feed.getMealCategoryCode().trim().isEmpty()) {
+	        throw new IllegalArgumentException("식사 분류를 선택해주세요.");
+	    }
+
+	    if (feed.getFeedOpenStatus() == null) {
+	        throw new IllegalArgumentException("공개 여부를 선택해주세요.");
+	    }
+
+	    feedMapper.addFeed(feed);
 	}
 	
 	// 자동완성 검색

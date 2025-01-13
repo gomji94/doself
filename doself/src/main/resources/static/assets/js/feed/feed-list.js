@@ -110,58 +110,116 @@ $(document).ready(function () {
     });
 });
 
-// --- 자동완성 검색 ---
-document.addEventListener("DOMContentLoaded", () => {
-    const autoCompleteJS = new autoComplete({
-        selector: "#search-input",
-        data: {
-            src: async () => {
-                const query = document.querySelector("#search-input").value;
-                const response = await fetch(`/api/search/keywords?query=${query}`);
-                const data = await response.json();
-                return data;
-            },
-            key: ["keyword"]
-        },
-        threshold: 2,
-        debounce: 300,
-        resultsList: {
-            render: true,
-            container: (source) => {
-                source.setAttribute("id", "autoCompleteList");
-            },
-            destination: document.querySelector("#search-input"),
-            position: "afterend",
-            element: "div"
-        },
-        resultItem: {
-            content: (data, source) => {
-                source.innerHTML = data.match;
-            },
-            element: "div"
-        },
-        onSelection: (feedback) => {
-            document.querySelector("#search-input").value = feedback.selection.value;
+// --- 피드 추가 유효성 검사 ---
+$(document).ready(function () {
+    $('#feed-create-submit-btn').on('click', function () {
+        // 값 가져오기
+		const feedPicture = $('#feed-create-file-input')[0].files[0];
+	    const feedContent = $('#feed-create-d-feed-content').val();
+	    const feedFoodIntake = $('#serving').val();
+	    const mealType = $('#meal-type').val();
+	    const feedOpenStatus = $('input[name="visibility"]:checked').val();
+
+        // 유효성 검사
+        if (!feedPicture || feedPicture === '') {
+            alert('사진을 업로드해주세요.');
+            return;
         }
+
+        if (!feedContent || feedContent.trim().length === 0) {
+            alert('피드 내용을 작성해주세요.');
+            return;
+        }
+
+        if (!serving) {
+            alert('섭취 인분을 선택해주세요.');
+            return;
+        }
+
+        if (!mealType) {
+            alert('식사 분류를 선택해주세요.');
+            return;
+        }
+
+		if (!feedOpenStatus) {
+		    alert('공개 여부를 선택해주세요.');
+		    return;
+		}
+		
+		if (!feedPicture || !feedContent || !feedFoodIntake || !mealType) {
+	        alert('모든 필드를 입력해주세요.');
+	        return;
+	    }
+
+        // 유효성 검사가 통과되었을 경우
+		const formData = new FormData();
+	    formData.append('feedPicture', feedPicture);
+	    formData.append('feedContent', feedContent);
+	    formData.append('feedFoodIntake', feedFoodIntake);
+	    formData.append('mealType', mealType);
+	    formData.append('feedOpenStatus', feedOpenStatus);
+
+        // AJAX 요청으로 피드 추가
+		$.ajax({
+		        url: '/feed/createFeed',
+		        type: 'POST',
+		        data: formData,
+		        processData: false,
+		        contentType: false,
+		        success: function (response) {
+		            alert(response);
+		            location.reload(); // 페이지 새로고침
+		        },
+		        error: function (error) {
+		            alert('피드 생성에 실패했습니다.');
+					
+	            console.error(error);
+				console.log('feedPicture:', feedPicture);
+				console.log('feedContent:', feedContent);
+				console.log('feedFoodIntake:', feedFoodIntake);
+				console.log('mealCategoryCode:', mealCategoryCode);
+				console.log('feedOpenStatus:', feedOpenStatus); // visibility 값 확인
+            },
+        });
     });
 });
 
-const observer = new MutationObserver(() => {
-    const searchInput = document.querySelector("#search-input");
-    if (searchInput) {
-        observer.disconnect(); // 감시 중지
-        const autoCompleteJS = new autoComplete({
-            selector: "#search-input",
-            data: { /* 데이터 설정 */ },
-            // 나머지 옵션...
-        });
-    }
+// --- 파일 업로드와 글자 수 카운팅 기능 ---
+$(document).ready(function () {
+    // 이미지 업로드 버튼 클릭 시 파일 선택 트리거
+    $('#feed-create-upload-btn').on('click', function () {
+        $('#feed-create-file-input').trigger('click');
+    });
+
+    // 파일 업로드 시 이미지 미리보기
+    $('#feed-create-file-input').on('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#feed-create-image-preview')
+                    .attr('src', e.target.result)
+                    .css('display', 'block'); // 미리보기 이미지 표시
+                $('#plate').css('display', 'none'); // 빈 접시 이미지 숨김
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 글자 수 카운팅
+    const maxLength = 2000; // 최대 글자 수
+    $('#feed-create-d-feed-content').on('input', function () {
+        const textLength = $(this).val().length; // 현재 글자 수
+        $('#feed-create-text-count').text(textLength); // 카운터 업데이트
+
+        // 글자 수 초과 시 스타일 변경
+        if (textLength > maxLength) {
+            $('#feed-create-text-count').css('color', 'red');
+        } else {
+            $('#feed-create-text-count').css('color', '');
+        }
+    });
 });
-
-// 감시할 대상 설정
-observer.observe(document.body, { childList: true, subtree: true });
-
-// --- feed carete ---
 
 // --- modify feed modal ---
 $(document).ready(function () {
@@ -241,14 +299,14 @@ $(document).ready(function () {
 
 // 오른쪽 사이드바 업데이트
 function updateRightSidebar(feed) {
-    const mealPicture = feed.getAttribute('data-meal-picture') || '/images/default-food.png';
+    const mealPicture = feed.getAttribute('data-meal-picture') || '/default-food.png';
 	const mealWeight = feed.getAttribute('data-meal-weight') || '0';
 	const mealCalories = feed.getAttribute('data-meal-calories') || '0';
     const mealCarbohydrates = feed.getAttribute('data-meal-carbohydrates') || '0';
     const mealProtein = feed.getAttribute('data-meal-protein') || '0';
     const mealFat = feed.getAttribute('data-meal-fat') || '0';
 
-    const imgElement = document.querySelector('#analysis-img img');
+    const imgElement = document.querySelector('#analysis-img img').src = mealPicture;
     if (imgElement) imgElement.src = mealPicture;
 
 	const weightElement = document.querySelector('#weight');
@@ -299,7 +357,7 @@ document.querySelectorAll('.feed').forEach(feed => {
         const mealFat = this.getAttribute('data-meal-fat') || '0';
 
         // 데이터 업데이트
-        const imgElement = document.querySelector('#analysis-img img');
+        const imgElement = document.querySelector('#analysis-img img').src = mealPicture;
         if (imgElement) imgElement.src = mealPicture;
 
 		const weightElement = document.querySelector('#weight');

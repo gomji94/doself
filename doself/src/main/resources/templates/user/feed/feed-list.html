@@ -97,7 +97,7 @@
 		<div class="analysis-table">
 			<p class="analysis-title">식단 영양 정보 분석표</p>
 			<div id="analysis-img">
-	            <img th:src="@{/images/} + ${FeedList[0].mealPicture}" alt="대표 음식 이미지">
+	            <img th:src="${f.feedPicture}" alt="피드 이미지">
 	        </div>
 	    </div>
 	    <div class="analysis-info">
@@ -134,7 +134,6 @@
 <!--/* 사용자 추가 js file */-->
 <th:block layout:fragment="customJsResource">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
 	<script th:src="@{/assets/js/feed/feed-list.js}"></script>
 </th:block>
 
