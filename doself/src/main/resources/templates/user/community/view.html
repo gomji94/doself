@@ -83,6 +83,12 @@
 	                                    <input type="hidden" name="commentKeyNum" th:value="${l.commentKeyNum}">
 	                                    <p class="comment-author" th:text="${l.commentAuthorId}"></p>
 	                                    <p class="comment-content" th:text="${l.commentContent}"></p>
+	                                    <form th:action="@{/community/modifycomment}" method="post" id="comment-edit-form" style="display: none;">
+		                                    <input type="hidden" name="commentKeyNum" th:value="${l.commentKeyNum}">
+		                                    <textarea id="edit-comment-text" class="edit-comment-text" th:text="${l.commentContent}"></textarea>
+	                                    	<button type="submit" id="edit-comment-submit-btn">저장</button>
+	                                    	<button type="button" id="edit-comment-cancel-btn">취소</button>
+	                                    </form>
 	                                </div>
 	                                <div class="comment-info__right">
 	                                    <p class="comment-date" th:text="${l.commentDate}"></p>
@@ -174,7 +180,7 @@
                 </div>
             </div>
         </div>
-    
+        
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
@@ -182,6 +188,7 @@
     	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
     	<script th:src="@{/assets/js/layout.js}"></script>
     	<script th:src="@{/assets/js/community/view.js}"></script>
+    	<script th:src="@{/assets/js/community/comment-modify.js}"></script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->

@@ -199,6 +199,15 @@
 		WHERE fbc_num=#{commentKeyNum}
   	</update>
   	
+  	<!-- comment modify -->
+  	<update id="modifyComment" parameterType="Comment">
+  		UPDATE free_board_comments
+		SET
+			fbc_content=#{commentContent},
+			fbc_date=NOW()
+		WHERE fbc_num=#{commentKeyNum}
+  	</update>
+  	
   	<!-- 신고 insert -->
   	<insert id="createReport" parameterType="Report">
 	  	INSERT INTO report_request
