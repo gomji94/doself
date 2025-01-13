@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.user.challenge.feed.domain.ChallengeFeed;
+import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
@@ -94,10 +95,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		List<ChallengeProgress> distinctProgress = challengeProgress.stream()
 		        .distinct() // 중복 제거
 		        .collect(Collectors.toList());
-//	    List<ChallengeProgress> distinctProgress = challengeProgress.stream()
-//	        .distinct()
-//	        .collect(Collectors.toList());
-//	    challengeProgressCache.put(challengeCode, distinctProgress);
 
 	    return distinctProgress;
 	}
@@ -116,10 +113,10 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
         LocalDate today = LocalDate.now();
         LocalDate startDate = progress.getChallengeStartDate().toInstant()
-                                      .atZone(ZoneId.systemDefault())
+                                      .atZone(ZoneId.of("Asia/Seoul"))
                                       .toLocalDate();
         LocalDate endDate = progress.getChallengeEndDate().toInstant()
-                                    .atZone(ZoneId.systemDefault())
+                                    .atZone(ZoneId.of("Asia/Seoul"))
                                     .toLocalDate();
 
         long dPlus = ChronoUnit.DAYS.between(startDate, today);
@@ -133,6 +130,13 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
             "dPlus", "D+" + Math.max(0, dPlus),
             "dMinus", "D-" + Math.max(0, dMinus)
         );
+	}
+
+	// 챌린지 피드별 댓글 리스트
+	@Override
+	public List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode) {
+		List<ChallengeFeedComment> feedCommentList = challengeFeedMapper.getFeedCommentList(challengeFeedCode);
+		return feedCommentList;
 	}
 
 }
