@@ -16,7 +16,6 @@ import doself.admin.challenge.domain.Score;
 import doself.admin.challenge.domain.Stat;
 import doself.admin.challenge.domain.Warning;
 import doself.admin.challenge.service.ChallengeService;
-import doself.admin.member.domain.MemberLog;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

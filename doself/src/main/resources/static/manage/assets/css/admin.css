@@ -1734,27 +1734,76 @@ textarea.form-control {
   margin-right: 2% !important;
 }
 
-.date {
-  width: 120px; /* 날짜 필드의 넓이 */
-  padding: 5px; /* 여백 추가 */
-  border: 1px solid #ccc; /* 테두리 색상 */
-  border-radius: 4px; /* 둥근 테두리 */
-  font-size: 14px; /* 폰트 크기 */
-  margin: 0 5px; /* input 필드 간 간격 */
+/* .date {
+  width: 120px; 날짜 필드의 넓이
+  padding: 5px; 여백 추가
+  border: 1px solid #ccc; 테두리 색상
+  border-radius: 4px; 둥근 테두리
+  font-size: 14px; 폰트 크기
+  margin: 0 5px; input 필드 간 간격
 }
-/* 날짜 섹션을 한 줄로 정렬 */
+날짜 섹션을 한 줄로 정렬
 .date-container {
   display: flex;
-  align-items: center; /* 수직 정렬 */
-  gap: 5px; /* 요소 간 간격 */
-  font-size: 14px; /* 가운데 `~` 텍스트 크기 */
+  align-items: center; 수직 정렬
+  gap: 5px; 요소 간 간격
+  font-size: 14px; 가운데 `~` 텍스트 크기
   margin-top: 3px;
 }
 
 .date-container p {
-  margin: 0; /* p 태그의 기본 여백 제거 */
-  font-weight: bold; /* 텍스트 강조 */
+  margin: 0; p 태그의 기본 여백 제거
+  font-weight: bold; 텍스트 강조
+} */
+
+
+/* 날짜 입력 컨테이너 스타일링 */
+.date-container {
+  height: 36px;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.date-container:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.date-container:hover {
+  border-color: #b3b3b3;
+}
+
+/* 날짜 선택기 아이콘 커스터마이징 */
+.date-container::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 2px;
+  opacity: 0.6;
+}
+
+.date-container::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* 날짜 입력 그룹 레이아웃 */
+.searchLeft {
+  display: inline-block;
+  margin: 0 8px;
+  vertical-align: middle;
+}
+
+p.searchLeft {
+  margin-bottom: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+
 /*ANIMATION*/
 .animation-shake {
   -webkit-animation: shake 1.5s ease infinite;
@@ -4265,7 +4314,7 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
 }
 
 .searchLeft{
-	margin-left: 25px;
+	margin-left: 16px;
 }
 
 .align-content {
@@ -4275,7 +4324,6 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
 	margin-left: 5px !important;
 }
 #searchBtn{
-	margin-left:40px;
 	white-space:nowrap;
 }
 
@@ -4527,11 +4575,7 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
   .form-control {
     width: 265px;  
   }
-  .date-container{
-    position: absolute;
-    left: 18px;
-    top: 77px;
-  }  
+
   .searchBtn {
     position: absolute;
         left: 331px;

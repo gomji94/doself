@@ -99,25 +99,25 @@
               		<nav>
                    <ul class="pagination justify-content-center">
                    	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-                   		<a class="page-link" th:href="@{/admin/member/list}">
+                   		<a class="page-link" th:href="@{/admin/member/list(currentPage=1, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}">
                    			<i class="material-icons md-first_page"></i>
                    		</a>
                    	</li>
                    	<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-                   		<a class="page-link" th:href="@{/admin/member/list(currentPage=${currentPage - 1})}">
+                   		<a class="page-link" th:href="@{/admin/member/list(currentPage=${currentPage - 1}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}">
                    			<i class="material-icons md-chevron_left"></i>
                    		</a>
                    	</li>
                    		<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 					        <li class="page-item" th:classappend="${num == currentPage} ? 'active'">
-					            <a class="page-link" th:href="@{/admin/member/list(currentPage=${num})}" th:text="${num}"></a>
+					            <a class="page-link" th:href="@{/admin/member/list(currentPage=${num}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}" th:text="${num}"></a>
 					        </li>
 					    </th:block>     
                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/admin/member/list(currentPage=${currentPage +1})}"><i class="material-icons md-chevron_right"></i></a>
+                        <a class="page-link" th:href="@{/admin/member/list(currentPage=${currentPage +1}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}"><i class="material-icons md-chevron_right"></i></a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/admin/member/list(currentPage=${lastPage})}"><i class="material-icons md-last_page"></i></a>
+                        <a class="page-link" th:href="@{/admin/member/list(currentPage=${lastPage}, searchType=${searchType}, searchKeyword=${searchKeyword}, startDate=${startDate}, endDate=${endDate})}"><i class="material-icons md-last_page"></i></a>
                     </li>
                    </ul>
                </nav>
@@ -132,25 +132,7 @@
         <!--/* 사용자 추가 js script */-->
         <th:block layout:fragment="customJs">
         	<script>
-	        	$('#searchBtn').click(function(){
-	    			const searchType = $('#searchType').val();
-	    			const searchKeyword = $('#searchKeyword').val();
-	    			const startDate = $('#startDate').val();
-	    			const endDate = $('#endDate').val();
-	    			
-	    			const $form = $('<form />', { 'action' : '/admin/member/list', 'method': 'get'});
-	    			const $searchType = 
-	    					$('<input />', {'type':'hidden', 'name' : 'searchType'}).val(searchType);
-	    			const $searchKeyword = 
-	    					$('<input />', {'type':'hidden', 'name' : 'searchKeyword'}).val(searchKeyword);
-	    			const $startDate = 
-	    					$('<input />', {'type':'hidden', 'name' : 'startDate'}).val(startDate);
-	    			const $endDate = 
-	    					$('<input />', {'type':'hidden', 'name' : 'endDate'}).val(endDate);
-	    			$form.append($searchType, $searchKeyword, $startDate, $endDate);
-	    			$('body').append($form);
-	    			$form.submit();
-	    		});
+        	
         	</script>
         </th:block> 
 </html>
