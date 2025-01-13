@@ -15,6 +15,12 @@
     </nav>
 	    <div class="profile">
 	        <a th:href="@{/mypage/feedlist(memberId=${session.SID})}"><img th:src="${session.IMAGE}" alt="프로필"></a>
+	        <a th:if="${session.SID == null}" class="dropdown-item text-primary" th:href="@{/login}">
+				<i class="material-icons md-perm_identity"></i>Login
+			</a>
+			<a th:unless="${session.SID == null}" class="dropdown-item text-danger" th:href="@{/logout}">
+				<i class="material-icons md-exit_to_app"></i>Logout
+			</a>
 	    </div>
 </header>
 </html>

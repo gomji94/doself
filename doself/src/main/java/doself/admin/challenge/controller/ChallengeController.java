@@ -236,4 +236,10 @@ public class ChallengeController {
 		
 		return "admin/challenge/reward-list";
 	}
+	
+	// 챌린지 상태 완료이면 보상 지급
+	public void everydayCheck() {
+		
+		challengeService.everydayCheck();
+	}
 }

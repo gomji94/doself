@@ -34,4 +34,7 @@ public interface ChallengeService {
 	
 	//챌린지 보상지급기록 출력
 	PageInfo<Reward> getRewardList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable);
+	
+	//챌린지 상태 완료이면 보상지급
+	void everydayCheck();
 }

@@ -180,5 +180,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 		
 		return new PageInfo<>(challengeList, pageable, rowCnt);
 	}
+	
+	// 챌린지 상태 완료이면 보상지급
+	public void everydayCheck() {
+		
+		challengeMapper.updateReward();
+	}
 
 }
