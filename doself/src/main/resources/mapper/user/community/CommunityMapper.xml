@@ -143,7 +143,7 @@
   	<select id="getCommentsByArticle" parameterType="String" resultMap="commentResultMap" >
   		SELECT fbc_num, mbr_id, fbc_content, fbc_date
 		FROM free_board_comments
-		WHERE fb_num=#{articleKeyNum}
+		WHERE fb_num=#{articleKeyNum} AND fbc_is_deleted = 'active'
   	</select>
   	
   	<!-- 좋아요 기록 가져오기 -->
@@ -190,6 +190,41 @@
 		(fbc_num, fb_num, mbr_id, fbc_content, fbc_date)
 		VALUES (#{commentKeyNum}, #{articleKeyValue}, #{commentAuthorId}, #{commentContent}, NOW())
   	</insert>
+  	
+  	<!-- comment delete(soft) -->
+  	<update id="deleteComment" parameterType="String">
+  		UPDATE free_board_comments
+		SET
+			fbc_is_deleted='delete'
+		WHERE fbc_num=#{commentKeyNum}
+  	</update>
+  	
+  	<!-- comment modify -->
+  	<update id="modifyComment" parameterType="Comment">
+  		UPDATE free_board_comments
+		SET
+			fbc_content=#{commentContent},
+			fbc_date=NOW()
+		WHERE fbc_num=#{commentKeyNum}
+  	</update>
+  	
+  	<!-- 신고 insert -->
+  	<insert id="createReport" parameterType="Report">
+	  	INSERT INTO report_request
+		(rr_num, mbr_id, olc_code, rr_bc_num, rc_code, rr_content, rr_date)
+		VALUES (#{reportKeyValue}, #{reporterId}, #{occurLocationCode}, #{reportedKeyValue}, #{reportCateValue}, #{reportContent}, NOW())
+  	</insert>
+  	
+  	<!-- 게시글 수정 -->
+  	<update id="modifyArticle" parameterType="Article">
+  		UPDATE free_board
+		SET
+			fbctg_code=#{articleCategory},
+			fb_title=#{articleTitle},
+			fb_content=#{articleContent}
+		WHERE fb_num=#{articleKeyValue}
+  	</update>
+  	
 
   	
 </mapper>

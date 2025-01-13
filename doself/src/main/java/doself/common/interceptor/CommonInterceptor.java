@@ -64,7 +64,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 		}
 		
 		log.info("queryParam : {}", param);
-		modelAndView.addObject("queryParam", param);
+		if(param.toString().contains("currentPage")) modelAndView.addObject("queryParam", param);
 		
 	}
 	

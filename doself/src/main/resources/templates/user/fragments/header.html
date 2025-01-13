@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <header class="header" th:fragment="headerFragment">
+   	<script th:src="@{/assets/js/layout.js}"></script>
+   	<script th:src="@{/assets/js/community/view.js}"></script>
+   	<script th:src="@{/assets/js/community/comment-modify.js}"></script>
     <a href="/" class="logo">
         <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
     </a>
@@ -18,8 +21,8 @@
 	        <a th:if="${session.SID == null}" class="dropdown-item text-primary" th:href="@{/login}">
 				<i class="material-icons md-perm_identity"></i>Login
 			</a>
-			<a th:unless="${session.SID == null}" class="dropdown-item text-danger" th:href="@{/logout}">
-				<i class="material-icons md-exit_to_app"></i>Logout
+			<a th:unless="${session.SID == null}" class="dropdown-item text-danger" id="logout-btn" th:href="@{/logout}">
+				<i class="fa-solid fa-person-running"></i>
 			</a>
 	    </div>
 </header>
