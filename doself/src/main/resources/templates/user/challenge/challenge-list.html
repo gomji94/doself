@@ -47,8 +47,8 @@
 		<!-- container -->
 	    <div class="view-container">
 		    <!-- 챌린지 생성 모달 -->
-            <div class="modal-overlay" id="cl-create-modal-overlay">
-		        <div class="modal-container">
+            <div class="modal-overlay" id="createChallengeModalOverlay">
+		        <div class="modal-container" id="createChallengeModal">
 		            <div class="modal-header">
 		                <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
 		                <h2>챌린지 생성</h2>
@@ -63,11 +63,11 @@
 			                    <div class="upload-box">
 			                        <img id="cl-create-preview-image" src="https://velog.velcdn.com/images/mekite/post/da056d49-1aaa-4f12-9913-b1ddd137e7d5/image.png" alt="사진입력">
 			                        <p>사진을 끌어서 이곳에 넣어주세요</p>
-			                        <button class="upload-btn" id="cl-create-upload-btn">파일 불러오기</button>
+			                        <button class="upload-btn" id="createChallengeUploadButton">파일 불러오기</button>
 			                        <!-- 파일 input 태그 -->
-			                        <input type="file" id="cl-create-file-input" accept="image/*" style="display: none;">
+			                        <input type="file" id="createChallengeFileInput" accept="image/*" style="display: none;">
 			                    </div>
-			                    <div class="preview-box" id="cl-create-preview-container" style="display: none;">
+			                    <div class="preview-box" id="createChallengePreviewContainer" style="display: none;">
 			                        <img src="" alt="업로드된 이미지 미리보기" id="cl-create-preview-image">
 			                    </div>
 			                </div>
@@ -81,9 +81,11 @@
 			                            id="ChallengeName" name="ChallengeName" placeholder="이름을 입력해주세요">
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
+			                        <!-- 에러 메시지 영역 -->
+			                        <div id="challengeNameError" style="display: none;"></div>
 			                        <div class="input-block">
 			                            <span>챌린지 주제</span>
-			                            <select id="select-subject">
+			                            <select id="selectSubject">
 			                                <option value="diet">다이어트</option>
 			                                <option value="glutenFree">글루텐프리</option>
 			                                <option value="highProtein">고단백질</option>
@@ -94,24 +96,24 @@
 			                            </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
-			                        <div class="input-block">
+			                        <div class="select-level-block input-block">
 			                            <span>난이도</span>
-			                            <select id="select-level">
+			                            <select id="selectLevel">
 			                                <option value="easy">쉬움</option>
 			                                <option value="normal">보통</option>
 			                                <option value="hard">어려움</option>
 			                            </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
-			                        <div class="input-block">
+			                        <div class="challenge-start-date-block input-block">
 			                            <span>시작일</span>
 			                            <input type="text">
 			                            <input class="date" type="date">
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
-			                        <div class="input-block">
+			                        <div class="participation-member-block input-block">
 			                            <span>참여인원</span>
-			                            <select id="select-subject" placeholder="참여인원을 선택해주세요">
+			                            <select id="participationMember">
 			                                <option value="5">5인(최소인원)</option>
 			                                <option value="6">6인</option>
 			                                <option value="7">7인</option>
@@ -134,23 +136,22 @@
 			                    </div>
 			                    <textarea placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
 			                    <div class="text-box-under">
-			                        <button type="button" id="emoji-btn">
+			                        <button type="button" id="emojiButton">
 			                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
 			                        </button>
+			                        <!-- 이모지 드롭다운 -->
+			                        <div class="emoji-dropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 5px;"></div>
 			                        <div class="text-counter">
 			                            <span id="text-count">0</span>
 			                            <span>/500</span>
 			                        </div>
 			                    </div>
-			                    <button type="submit" class="submit-btn"><p>생성</p></button>
+			                    <button type="submit" class="submit-btn" id="createChallengeSubmitButton"><p>생성</p></button>
 			                </div>
 			            </div>
 		           	</form>
 		        </div>
 		    </div>
-			
-		    <!-- 챌린지 상세 정보 모달 -->
-           <!--  <div th:replace="~{user/challenge/challenge-list-view :: challenge-list-view}"></div> -->
 	        
 	        <section class="tag">
 	            <div class="tag-buttons">
@@ -163,7 +164,7 @@
 	                <button type="button">#저탄고지</button>
 	            </div>
 	            <div class="create-button">
-	                <button type="button" id="create-challenge-open-btn">생성</button>
+	                <button type="button" id="createChallengeOpenButton">생성</button>
 	            </div>
 	        </section>
 	        <!-- 카드 목록 -->

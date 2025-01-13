@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import doself.common.mapper.CommonMapper;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.mapper.ChallengeListMapper;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChallengeListServiceImpl implements ChallengeListService {
 
 	private final ChallengeListMapper challengeListMapper;
+	private final CommonMapper commonMapper;
 	
 	// 챌린지 조회 리스트 반환
 	@Override
@@ -55,8 +57,14 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	// 챌린지 생성(등록)
 	@Override
 	public void addChallenge(ChallengeList challengeList) {
-		int addChallengeResult = challengeListMapper.addChallenge(challengeList);
+		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
+		String formattedKeyNum = commonMapper.getPrimaryKey("cg_", "challenge_group", "cg_num");
+		challengeList.setChallengeCode(formattedKeyNum);
 		
+		String addChallengeResult = String.format("ctl_%03d", challengeList.getChallengeTopicCode());
+		challengeList.setChallengeTopicCode(addChallengeResult);
+		
+		challengeListMapper.addChallenge(challengeList);
 	}
 
 	// 챌린지 리스트 페이지
