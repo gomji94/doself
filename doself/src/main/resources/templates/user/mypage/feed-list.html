@@ -68,7 +68,9 @@
 	          		    th:each="l: *{feedList}">    
 				<li class="main-container-feedList__item">
 					<input type="hidden" name="feedNum" th:value="${l.feedNum}"/>
-				    <img class="mcfi__image" th:src="@{|${l.feedImage}|}" alt="피드">  
+				    <a th:href="@{/feed/{feedNum}(feedNum=${l.feedNum})}" target="_self">
+				   	  <img class="mcfi__image" th:src="@{|${l.feedImage}|}" alt="피드">  
+				    </a>
 				</li>
 	          </th:block>
 	          <th:block th:unless="*{not #lists.isEmpty(feedList)}">
