@@ -59,7 +59,6 @@ $(document).ready(function () {
 				console.log(error)
 			})
 			
-			//$('#modal-request-form').submit();
 		}
     });
 

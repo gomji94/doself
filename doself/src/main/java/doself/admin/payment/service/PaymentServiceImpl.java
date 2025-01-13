@@ -27,6 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		switch(searchType) {
 			case "ctcCategory" 	-> searchType = "ctc.ctc_category";
+			case "mbrName" 	-> searchType = "m.mbr_name";
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
@@ -47,8 +48,8 @@ public class PaymentServiceImpl implements PaymentService {
 	public PageInfo<PaymentRefund> getRefundList(String searchType, String searchKeyword, String startDate, String endDate, Pageable pageable) {
 		
 		switch(searchType) {
-			case "nirrCategory" 	-> searchType = "nirr.nirr_category";
-			case "scStatus" 		-> searchType = "sc.sc_status";	
+			case "mbrName" 	-> searchType = "m.mbr_name";
+
 		}
 		
 		Map<String, Object> searchMap = new HashMap<String, Object>();

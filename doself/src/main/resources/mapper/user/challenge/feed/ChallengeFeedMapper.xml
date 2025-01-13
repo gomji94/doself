@@ -91,10 +91,10 @@
 			INNER JOIN `member` m USING(mbr_id)
 			LEFT JOIN challenge_feed_comments cfc USING(cmf_num)
 		WHERE
-			cmf.cg_num = #{params.challengeCode}
+			cmf.cg_num = #{challengeCode}
 			AND cg_num IS NOT NULL
 		ORDER BY cmf_date DESC
-		LIMIT #{params.offset}, #{params.pageSize}
+		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
 	</select>
 	
 	<!-- 챌린지 피드 행 갯수 조회 -->
@@ -109,13 +109,14 @@
 		ORDER BY cmf_date DESC
 	</select>
 	
-	<!-- 총 업로드 데이터 합계 -->
+	<!-- 총 업로드 데이터 합계((총 참여율+총달성률)/2/14(기간)/멤버수/100) -->
   	<select id="getTodayProgressSum" resultType="int" parameterType="string">
   		SELECT
-		    SUM(cmss_today_participation_rate + cmss_today_achievement_rate) / 100 AS result
-		FROM challenge_member_score_stats
+		   ROUND(SUM(cmss_today_participation_rate + cmss_today_achievement_rate)/2/14/COUNT(DISTINCT mbr_id)/100, 1) AS result
+		FROM
+			challenge_member_score_stats cmss
 		WHERE
-		    cg_num = #{challengeCode}
+		   cg_num = #{challengeCode}
   	</select>
   	
   	<!-- 참여 멤버 점수 -->
@@ -125,7 +126,7 @@
 	        m.mbr_image 						AS memberProfileImage,
 	        cmss.cmss_today_participation_rate  AS todayParticipationRate,
 	        cmss.cmss_today_achievement_rate 	AS todayAchievementRate,
-	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate) / 2, 2) AS score
+	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate)/2/14, 1) AS score
 	    FROM 
 	        challenge_member_score_stats cmss
 	    	INNER JOIN member m USING (mbr_id)
@@ -196,5 +197,14 @@
 		WHERE
 			cg_num = #{challengeCode}
   	</select>
+  	
+  	<select id="getChallengeProgressByCode" parameterType="string" resultType="ChallengeProgress">
+	    SELECT 
+	        cg.cg_num AS challengeCode,
+	        cg.cg_start_date AS challengeStartDate,
+	        cg.cg_end_date AS challengeEndDate
+	    FROM challenge_group cg
+	    WHERE cg_num = #{challengeCode}
+	</select>
   </mapper>
   

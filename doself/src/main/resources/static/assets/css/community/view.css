@@ -206,6 +206,12 @@
     justify-content: center;
 }
 
+#edit-comment-text {
+    width: 600px;
+    height: 30px;
+    resize: none;
+}
+
 #main-container-advertise {
     width: fit-content;
     width: 180px; /* 고정된 폭 */

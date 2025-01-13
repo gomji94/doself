@@ -1,8 +1,11 @@
 package doself.user.challenge.feed.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -14,7 +17,8 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
-import doself.util.FeedPageInfo;
+import doself.util.PageInfo;
+import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,35 +41,29 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    return challengeFeedMapper.getChallengeCodeByMemberId(challengeMemberId);
 	}
 	
+	// 피드 페이징
+	@Override
+	public PageInfo<ChallengeFeed> getChallengeFeedPage(String challengeCode, Pageable pageable) {
+		int rowCnt = challengeFeedMapper.getChallengeFeedCount(challengeCode);
+		Map<String, Object> params = new HashMap<>();
+		params.put("challengeCode", challengeCode);
+		params.put("pageable", pageable);
+		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeFeed(params);
+		
+		
+		return new PageInfo<>(challengeFeedList, pageable, rowCnt);
+	}
+	
 	// 챌린지 피드
 	@Override
-	public FeedPageInfo<ChallengeFeed> getChallengeFeed(Map<String, Object> params) {
-		// 데이터 가져오기
-		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeFeed(params);
-		int totalCount = challengeFeedMapper.getChallengeFeedCount((String) params.get("challengeCode"));
-
-        // 페이징 정보 생성
-		int currentPage = (int) params.getOrDefault("currentPage", 1);
-		int pageSize = (int) params.getOrDefault("pageSize", 10);
-	    
-	    if (currentPage < 0) {
-	        params.put("offset", 0); // offset이 음수일 경우 0으로 설정
-	    }
-
-	    if (pageSize <= 0) {
-	        params.put("pageSize", 10); // pageSize가 유효하지 않을 경우 기본값 설정
-	    }
-	    
-	    return new FeedPageInfo<>(challengeFeedList, totalCount, currentPage, pageSize);
-	}
-
-	// 챌린지 진행 상태 조회
-	
+	public List<ChallengeFeed> getChallengeFeed(Map<String, Object> params) {
+        return challengeFeedMapper.getChallengeFeed(params);
+    }
 	
 	// 총 업로드 데이터 합계
 	@Override
 	public int calculateTotalProgress(String challengeCode) {
-		return challengeFeedMapper.getTodayProgressSum(challengeCode) / 14;
+		return challengeFeedMapper.getTodayProgressSum(challengeCode);
 	}
 
 	// 참여 멤버 상위 3명 표시
@@ -74,18 +72,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
         return challengeFeedMapper.getTopParticipants(challengeCode);
     }
 
-//	// D+ 계산
-//	@Override
-//	public String calculateDPlus(String challengeCode) {
-//		return challengeFeedMapper.findDPlus(challengeCode);
-//    }
-//
-//	// D- 계산
-//	@Override
-//	public String calculateDMinus(String challengeCode) {
-//		return challengeFeedMapper.findDMinus(challengeCode);
-//    }
-	
 	// 챌린지 멤버 조회(참여자 번호, 챌린지 번호, 챌린지 참여 및 퇴장 일시 기록 → 추후, 유효성 검사 로직 추가)
 	@Override
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
@@ -120,4 +106,33 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public void clearChallengeProgressCache(String challengeCode) {
 	    challengeProgressCache.remove(challengeCode);
 	}
+
+	@Override
+	public Map<String, String> calculateDPlusAndDMinus(String challengeCode) {
+		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
+        if (progress == null) {
+            return Map.of("dPlus", "N/A", "dMinus", "N/A");
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = progress.getChallengeStartDate().toInstant()
+                                      .atZone(ZoneId.systemDefault())
+                                      .toLocalDate();
+        LocalDate endDate = progress.getChallengeEndDate().toInstant()
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate();
+
+        long dPlus = ChronoUnit.DAYS.between(startDate, today);
+        long dMinus = ChronoUnit.DAYS.between(today, endDate);
+
+        log.info("Start Date from progress: {}", progress.getChallengeStartDate());
+        log.info("End Date from progress: {}", progress.getChallengeEndDate());
+        
+        
+        return Map.of(
+            "dPlus", "D+" + Math.max(0, dPlus),
+            "dMinus", "D-" + Math.max(0, dMinus)
+        );
+	}
+
 }
