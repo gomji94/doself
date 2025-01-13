@@ -79,18 +79,18 @@ public class MarketServiceImpl implements MarketService {
 		String formattedKeyNum = commonMapper.getPrimaryKey("pumh_", "point_use_management_history", "pumh_num");
 		purchaseItemInfo.setRequestTableLastPkNum(formattedKeyNum);
 		
-//		// 구매내역 insert
-//		int result = marketMapper.createPurchaseItem(purchaseItemInfo);
-//		
-//		// 결과에 따라 포인트 차감 업데이트
-//		if (result > 0) {
-//			Map<String, Object> params = new HashMap<String, Object>();
-//			params.put("memberId", memberId);
-//			params.put("calculatedPoint", calculatedPoint);
-//			marketMapper.modifyMemberPoint(params);
-//		}
+		// 구매내역 insert
+		int result = marketMapper.createPurchaseItem(purchaseItemInfo);
 		
-		return 0;
+		// 결과에 따라 포인트 차감 업데이트
+		if (result > 0) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("memberId", memberId);
+			params.put("calculatedPoint", calculatedPoint);
+			marketMapper.modifyMemberPoint(params);
+		}
+		
+		return result;
 	}
 
 	
