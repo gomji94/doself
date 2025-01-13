@@ -111,7 +111,7 @@ public class CommunityServiceImpl implements CommunityService {
 		article.setArticleCategory(formattedArticleCategory);
 		
 		if (article.getArticleAttachmentFile() == null) {
-			article.setArticleAttachmentFile("https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG");
+			article.setArticleAttachmentFile("");
 		}
 		
 		communityMapper.createArticle(article);
@@ -227,7 +227,7 @@ public class CommunityServiceImpl implements CommunityService {
 			case 2 -> {
 				report.setOccurLocationCode("olc_002");
 				// 댓글 키값으로 변경
-				String formattedReportedKeyValue = String.format("fbㅊ_%03d", report.getReportedKeyNum());
+				String formattedReportedKeyValue = String.format("fbc_%03d", report.getReportedKeyNum());
 				report.setReportedKeyValue(formattedReportedKeyValue);
 			}
 		}
