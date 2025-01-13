@@ -127,7 +127,7 @@ public class CommunityController {
 		
 		communityService.createArticle(article);
 		
-		return "user/community/list";
+		return "redirect:/community/list";
 	}
 	
 	@GetMapping("/modify")
@@ -147,9 +147,6 @@ public class CommunityController {
 		
 		return "redirect:/community/view";
 	}
-	
-	
-	
 	
 	@PostMapping("/delete")
 	public String deleteArticle(@RequestParam(name = "articleNum") int articleKeyNum) {
