@@ -16,5 +16,6 @@ public class DeclareUser {
 	private String rmmAdmin;
 	
 	private Member memberInfo;
+	private AdminInfo adminInfo;
 	private DeclareCategory declareCategoryInfo;
 }

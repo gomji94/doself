@@ -100,6 +100,7 @@ public class DeclareController {
 		int endPageNum = pageInfo.getEndPageNum();
 		int lastPage = pageInfo.getLastPage();
 		
+		
 		model.addAttribute("title", "부정회원관리");
 		model.addAttribute("declareUserList", declareUserList);
 		model.addAttribute("searchType", searchType);
