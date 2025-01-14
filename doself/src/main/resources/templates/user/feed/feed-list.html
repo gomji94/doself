@@ -42,12 +42,18 @@
 		<!-- 피드 리스트 -->
 		<section th:if="${FeedList != null && !FeedList.isEmpty()}">
             <div class="feed" th:each="f, iterStat : ${FeedList}"
-							  th:data-meal-picture="${f.mealPicture}" 
+							  th:data-meal-picture="${f.mealPicture}"					  
+							  th:data-meal-date="${f.feedDate}"					  
 							  th:data-meal-weight="${f.mealWeight}" 
 					          th:data-meal-calories="${f.mealCalories}" 
 					          th:data-meal-carbohydrates="${f.mealCarbohydrates}" 
 					          th:data-meal-protein="${f.mealProtein}" 
 					          th:data-meal-fat="${f.mealFat}"
+					          th:data-meal-sugar="${f.mealSugar}"
+					          th:data-meal-cholesterol="${f.mealCholesterol}"
+					          th:data-meal-sodium="${f.mealSodium}"
+					          th:data-meal-calcium="${f.mealCalcium}"
+					          th:data-meal-iron="${f.mealIron}"
 				              th:id="'feed-' + ${iterStat.index}" >
                 <div class="feed-header">
                     <a href="#">
@@ -76,7 +82,7 @@
                             <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
                         </button>
                     </div>
-                    <p class="feed-upload-date" th:text="${f.feedDate != null ? #dates.format(f.FeedDate, 'yyyy/MM/dd') : '날짜 없음'}"></p>
+                    <!-- <p class="feed-upload-date" th:text="${f.feedDate != null ? #dates.format(f.FeedDate, 'yyyy/MM/dd') : '날짜 없음'}"></p> -->
                 </div>
                 <div class="feed-description">
                     <p id="feed-likes" th:text="|좋아요 ${f.feedLike}개|"></p>
@@ -97,7 +103,7 @@
 		<div class="analysis-table">
 			<p class="analysis-title">식단 영양 정보 분석표</p>
 			<div id="analysis-img">
-	            <img th:src="${f.feedPicture}" alt="피드 이미지">
+	            <img th:src="@{'${f.mealPicture}'}" alt="피드 이미지">
 	        </div>
 	    </div>
 	    <div class="analysis-info">
@@ -116,11 +122,11 @@
 			    </tr>
 			    <tr>
 			        <td>단백질</td>
-			        <td id="protein">0 kcal</td>
+			        <td id="protein">0 g</td>
 			    </tr>
 			    <tr>
 			        <td>지방</td>
-			        <td id="fat">0 kcal</td>
+			        <td id="fat">0 g</td>
 			    </tr>
 	        </table>
 	    </div>

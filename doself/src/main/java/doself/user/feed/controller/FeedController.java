@@ -78,6 +78,10 @@ public class FeedController {
             if (mealCategoryCode == null || mealCategoryCode.trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("식사 분류를 선택해주세요.");
             }
+            
+            if (feedOpenStatus == null || feedOpenStatus <= 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("섭취 인분을 선택해주세요.");
+            }
 
             // 파일 저장 처리 (임시)
             String filePath = "/uploads/" + feedPicture.getOriginalFilename();
@@ -117,8 +121,4 @@ public class FeedController {
     }
 	
 	// 자동완성 검색
-	@GetMapping("/keywords")
-    public List<String> getKeywords(@RequestParam("query") String query) {
-        return feedService.getKeywords(query);
-    }
 }

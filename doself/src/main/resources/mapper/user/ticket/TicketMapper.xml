@@ -9,6 +9,7 @@
   	<resultMap type="TicketItem" id="ticketItemResultMap">
   		<id 	column="ctc_code" 			property="ticketCode"/>
   		<result column="ctc_category" 		property="ticketCategory"/>
+  		<result column="ctp_code" 			property="ticketPriceCode"/>
   		<result column="ctp_price"			property="ticketPrice"/>
   		<result column="ctc_expl" 			property="ticketExplanation"/>
   	</resultMap>
@@ -82,6 +83,59 @@
 		AND ctph_date <![CDATA[ <= ]]> #{endDate} 
 		</if>
   	</select>
+  	
+  	<!-- 단일 티켓 정보 가져오는 쿼리 -->
+  	<select id="getTicketInfoByTicketKey" parameterType="String" resultMap="ticketItemResultMap">
+  		SELECT ctc.ctc_code, ctc.ctc_category, ctp.ctp_code, ctp.ctp_price
+		FROM challenge_ticket_category ctc INNER JOIN challenge_ticket_price ctp
+		USING (ctc_code)
+		WHERE ctc_code = #{ticketKey} AND ctp_is_deleted = 'active';
+  	</select>
 
+	<select id="getCntOfPurchaseBySearch" resultType="int" parameterType="String">
+		SELECT COUNT(*)
+		FROM   challenge_ticket_payment_history 
+		<where>
+			  mbr_id = #{memberId}
+			<if test="dayFilter > 1">
+				AND ctph_date > NOW() - INTERVAL ${dayFilter} DAY
+			</if>
+		</where>	
+	</select>
+	
+	<select id="getPurchaseListBySearch" resultType="map" resultMap="TicketPurchaseResultMap">
+		SELECT 
+			ctph.mbr_id,
+			ctph.ctph_num,
+			ctc.ctc_category, 
+			ctph.ctph_date, 
+			ctp.ctp_price, 
+			ctph.ctph_status,
+			TRIM(ctph.ctph_return_status) AS ctph_return_status,
+			pmc.pmc_name 
+		FROM 
+			challenge_ticket_payment_history ctph
+		INNER JOIN 
+			challenge_ticket_price ctp
+		USING(ctp_code)
+		INNER JOIN 
+			ticket_payment_method tpm
+		USING(tpm_num)
+		INNER JOIN 
+			payment_method_category pmc
+		USING(pmc_code)
+		INNER JOIN
+			challenge_ticket_category ctc
+		USING(ctc_code)
+		<where>
+			ctph.mbr_id = #{memberId}
+			<if test="dayFilter > 1">
+				AND ctph.ctph_date > NOW() - INTERVAL ${dayFilter} DAY
+			</if>
+		</where>	
+		ORDER BY ctph_date DESC
+		LIMIT #{rowPerPage}	OFFSET #{offset};	
+	</select>
+	
   	
 </mapper>

@@ -166,3 +166,11 @@
     height: 100%;
     object-fit: cover;
 }
+
+.form-check {
+    margin: 10px;
+}
+
+.form-check-label {
+    margin: 0px 7px;
+}

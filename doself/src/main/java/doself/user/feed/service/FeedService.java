@@ -16,5 +16,4 @@ public interface FeedService {
 	void addFeed(Feed feed);
 	
 	// 자동완성 검색
-	List<String> getKeywords(String query);
 }

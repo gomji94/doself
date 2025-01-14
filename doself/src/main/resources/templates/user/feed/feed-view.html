@@ -5,6 +5,24 @@
 	<div class="sidebar-container"></div>
 	<main class="main">
 		<div class="df-container">
+		<!-- 여기서부터 옵션 모달 -->
+	        <div class="popup-wrap feed-option-modal-wrap" style="display: none;">
+	            <div class="popup">
+	                <div class="popup-body">
+	                    <div class="body-content">
+	                        <div class="body-titlebox">
+	                            <ul>
+	                                <li class="pop" id="feed-modify-modal">피드 수정</li>
+	                                <li class="pop" id="feed-delete-modal">피드 삭제</li>
+	                                <li class="pop" id="feed-link-copy"> 피드 링크 복사</li>
+	                                <!-- 위 내용 그냥 복붙하면 자동으로 증가 -->
+	                                <li class="pop close">취소</li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
 			<!-- 특정 피드 상세 정보 -->
 			<section>
 				<div class="df-feed">
@@ -15,39 +33,46 @@
 						<div class="df-user-name">
 							<a href="#"><p th:text="${feed.memberId}"></p></a>
 						</div>
+						<div class="df-feed-option">
+                        <button class="df-option-button">
+                            <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
+                        </button>
+                    </div>
 					</div>
+					<hr>
 					<div class="df-feed-content">
 						<div class="df-feed-main-img">
-							<img class="df-meal-img" th:src="${feed.feedPicture}">
+							<img class="df-meal-img" th:src="${feed.mealPicture}">
 						</div>
 						<div class="df-progress-container">
 							<div class="df-analysis-table">
-								<p class="df-analysis-title">식단 영양 정보 분석표</p>
-								<div id="df-analysis-img">
-									<img th:src="${feed.mealPicture}" alt="대표 음식 이미지">
-								</div>
+								<p class="df-analysis-title" th:text="${feed.mealName}"></p>
 							</div>
 							<div class="df-analysis-info">
 								<table class="df-info-table">
 									<tr>
 										<td>구분(1인분)</td>
-										<td th:text="${feed.mealWeight} + ' kcal'"></td>
-									</tr>
-									<tr>
 										<td>칼로리</td>
-										<td th:text="${feed.mealCalories} + ' kcal'"></td>
-									</tr>
-									<tr>
 										<td>탄수화물</td>
-										<td th:text="${feed.mealCarbohydrates} + ' g'"></td>
-									</tr>
-									<tr>
 										<td>단백질</td>
-										<td th:text="${feed.mealProtein} + ' g'"></td>
+										<td>지방</td>
+										<td>당류</td>
+										<td>콜레스트롤</td>
+										<td>나트륨</td>
+										<td>칼슘</td>
+										<td>철분</td>
 									</tr>
 									<tr>
-										<td>지방</td>
-										<td th:text="${feed.mealFat} + ' g'"></td>
+										<td th:text="${feed.mealWeight} + ' g'"></td>
+										<td th:text="${feed.mealCalories} + ' kcal'"></td>
+										<td th:text="${feed.mealCarbohydrates} + 'kcal'"></td>
+										<td th:text="${feed.mealProtein} + 'g'"></td>
+										<td th:text="${feed.mealFat} + 'g'"></td>
+										<td th:text="${feed.mealSugar} + 'g'"></td>
+										<td th:text="${feed.mealCholesterol} + 'mg'"></td>
+										<td th:text="${feed.mealSodium} + 'mg'"></td>
+										<td th:text="${feed.mealCalcium} + 'mg'"></td>
+										<td th:text="${feed.mealIron} + 'mg'"></td>
 									</tr>
 								</table>
 							</div>
@@ -55,17 +80,6 @@
 								<p>※ 표시된 영양성분은 산출근거에 따른 표준 값으로 실제 제품과 차이가 있을 수 있습니다.</p>
 							</div>
 						</div>
-					</div>
-					<div class="df-feed-description">
-					    <p id="feed-likes" th:text="|좋아요 ${feed.feedLike != null ? feed.feedLike : 0}개|"></p>
-					    <p th:text="${feed.feedContent}"></p>
-					    <p class="df-comments-link" th:text="${feed.feedCommentContent}"></p>
-					</div>
-					<hr>
-					<div class="df-add-comment">
-					    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-					    <input type="text" placeholder="댓글 달기...">
-					    <button class="df-comment-submit">게시</button>
 					</div>
 				</div>
 			</section>
