@@ -241,4 +241,9 @@ public class ChallengeController {
 		
 		challengeService.everydayCheck();
 	}
+	// 챌린지 월별 순위보상지급
+	public void everyMonthlyCheck() {
+		
+		challengeService.everyMonthlyCheck();
+	}
 }
