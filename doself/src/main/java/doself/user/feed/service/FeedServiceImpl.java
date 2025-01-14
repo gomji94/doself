@@ -2,7 +2,6 @@ package doself.user.feed.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +40,12 @@ public class FeedServiceImpl implements FeedService {
         }
         return feed;
     }
+	
+	// 음식 이름 검색
+	@Override
+	public List<String> findKeywords(String query) {
+	    return feedMapper.findKeywords(query);
+	}
 	
 	// 피드 추가
 	@Override

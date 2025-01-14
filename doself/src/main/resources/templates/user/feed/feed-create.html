@@ -10,7 +10,6 @@
         <hr>
         <div class="feed-create-modal-body">
             <!-- 이미지 업로드 영역 -->
-			<!-- 이미지 업로드 영역 -->
 			<div class="feed-create-image-upload">
 			    <div class="feed-create-upload-box">
 			        <input type="file" id="feed-create-file-input" style="display: none;" accept="image/*" />
@@ -27,8 +26,8 @@
             <!-- 정보 입력 영역 -->
             <div class="feed-create-feed-info">
                 <div class="feed-create-user-block">
-                    <img src="https://buly.kr/EdsBkqu" alt="프로필">
-                    <a href="#" class="user-link">아이디</a>
+                    <img th:src="${session.IMAGE}" alt="프로필">
+                    <a href="#" th:text="${session.SID}" class="user-link"></a>
                 </div>
                 <textarea placeholder="내용을 입력해주세요" maxlength="2000" id="feed-create-d-feed-content"></textarea>
 				
@@ -38,6 +37,14 @@
 				        <span id="feed-create-text-count">0</span>
 				        <span>/2000</span>
 				    </div>
+				</div>
+				<div class="input-group">
+				    <input type="text" 
+					       class="feed-create-food-search" 
+					       id="searchFood" 
+					       name="searchValue" 
+					       placeholder="Search"/>
+				<div id="searchResults" class="dropdown-menu" style="display: none;"></div>
 				</div>
                 <div class="input-group">
                     <label for="serving">섭취 인분</label>

@@ -9,7 +9,7 @@
 	<!-- Main Content -->
 	<main class="main">
 		<div class="container">
-	        <!-- 여기서부터 옵션 모달 -->
+	        <!-- 피드 옵션 모달 -->
 	        <div class="popup-wrap feed-option-modal-wrap" style="display: none;">
 	            <div class="popup">
 	                <div class="popup-body">
@@ -41,7 +41,7 @@
 		</div>
 		<!-- 피드 리스트 -->
 		<section th:if="${FeedList != null && !FeedList.isEmpty()}">
-            <div class="feed" th:each="f, iterStat : ${FeedList}"
+            <div class="feed" th:each="f, iterStat : ${FeedList}"				  
 							  th:data-meal-picture="${f.mealPicture}"					  
 							  th:data-meal-date="${f.feedDate}"					  
 							  th:data-meal-weight="${f.mealWeight}" 
@@ -103,7 +103,7 @@
 		<div class="analysis-table">
 			<p class="analysis-title">식단 영양 정보 분석표</p>
 			<div id="analysis-img">
-	            <img th:src="@{'${f.mealPicture}'}" alt="피드 이미지">
+	            <img th:src="@{'${f.feedPicture}'}" alt="피드 이미지">
 	        </div>
 	    </div>
 	    <div class="analysis-info">
