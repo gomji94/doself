@@ -85,27 +85,23 @@
 			                        <div id="challengeNameError" style="display: none; color: red; font-size: 14px;"></div>
 			                        <div class="input-block">
 			                            <span>챌린지 주제</span>
-			                            <select id="selectSubject" class="form-control text-center" name="challengeTopicLevelCode">
-			                            	<!-- todo : DB에서 정보 가져와서 반복문 돌려서 옵션 생성 -->
-			                                <option value="">카테고리를 선택해주세요</option>
-			                                <!-- <option value="diet" th:selected="${challengeTopicLevelCode == 'diet'}">다이어트</option>
-			                                <option value="glutenFree" th:selected="${challengeTopicLevelCode == 'glutenFree'}">글루텐프리</option>
-			                                <option value="highProtein" th:selected="${challengeTopicLevelCode == 'highProtein'}">고단백질</option>
-			                                <option value="vegan" th:selected="${challengeTopicLevelCode == 'vegan'}">비건</option>
-			                                <option value="vegetarian" th:selected="${challengeTopicLevelCode == 'vegetarian'}">채식</option>
-			                                <option value="healthyMeal" th:selected="${challengeTopicLevelCode == 'healthyMeal'}">건강식단</option>
-			                                <option value="lowCarbohydrate" th:selected="${challengeTopicLevelCode == 'lowCarbohydrate'}">저탄고지</option> -->
-			                            </select>
+			                            <select id="selectSubject" class="form-control" name="challengeTopicLevelCode">
+									        <option value="">주제를 선택해주세요</option>
+									        <!-- 리스트 안뜨는 오류 -->
+									        <th:block th:if="${topicList}" th:each="topic : ${topicList}">
+									            <option th:value="${topic.challengeTopicCode}" th:text="${topic.challengeTopicName}"></option>
+									        </th:block>
+									    </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                        <div class="select-level-block input-block">
 			                            <span>난이도</span>
-			                            <select id="selectLevel" class="form-control text-center" name="challengeLevel" th:value="${selectedLevel}">
-			                                <!-- todo : DB에서 정보 가져와서 반복문 돌려서 옵션 생성 -->
+			                            <select id="selectLevel" class="form-control" name="challengeLevel">
+			                                <!-- 리스트 안뜨는 오류 -->
 			                                <option value="">난이도를 선택해주세요</option>
-			                                <!-- <option value="easy" th:selected="${selectedLevel == 'easy'}">쉬움</option>
-										    <option value="normal" th:selected="${selectedLevel == 'normal'}">보통</option>
-										    <option value="hard" th:selected="${selectedLevel == 'hard'}">어려움</option> -->
+			                                <th:block th:if="${levelList}" th:each="level : ${levelList}">
+			                                	<option th:value="${level.challengeLevelCode}" th:text="${level.challengeLevelContent}"></option>
+			                                </th:block>
 			                            </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
@@ -117,7 +113,7 @@
 			                        </div>
 			                        <div class="participation-member-block input-block">
 			                            <span>참여인원</span>
-			                            <select id="participationMember" class="form-control text-center" name="challengeMaxMember">
+			                            <select id="participationMember" class="form-control" name="challengeMaxMember">
 			                                <option value="5" th:selected="${challengeMaxMember == '5'}">5인(최소인원)</option>
 			                                <option value="6" th:selected="${challengeMaxMember == '6'}">6인</option>
 			                                <option value="7" th:selected="${challengeMaxMember == '7'}">7인</option>

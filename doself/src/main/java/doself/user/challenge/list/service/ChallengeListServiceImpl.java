@@ -1,6 +1,7 @@
 package doself.user.challenge.list.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	public List<ChallengeList> getChallengeList() {
 		List<ChallengeList> challengeList = challengeListMapper.getChallengeList();
 		if (challengeList == null || challengeList.isEmpty()) {
-	        log.warn("챌린지 리스트 정보가 없습니다.");
+	        //log.warn("챌린지 리스트 정보가 없습니다.");
 	        return challengeList;
 	    }
 		
@@ -79,13 +80,30 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	    int rowCnt = challengeListMapper.getCntChallengeList();
 	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
 	    
-	    log.info(">>>>>>>>>> challengeList : {}", challengeList);
+	    //log.info(">>>>>>>>>> challengeList : {}", challengeList);
 	    
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
 	}
 
+	// 챌린지 생성 시, 이름 중복 체크
 	@Override
 	public boolean isNameDuplicate(String challengeName) {
 		return challengeListMapper.isNameDuplicate(challengeName);
+	}
+
+	// 챌린지 주제 리스트
+	@Override
+	public List<Map<String, String>> getChallengeTopicList() {
+		List<Map<String, String>> topicList = challengeListMapper.getChallengeTopicList();
+	    log.info(">>> location/service >>> topicList: {}", topicList); // 로그로 확인
+	    return topicList;
+	}
+
+	// 챌린지 난이도 리스트
+	@Override
+	public List<Map<String, String>> getChallengeLevelList() {
+		List<Map<String, String>> levelList = challengeListMapper.getChallengeLevelList();
+		log.info(">>> location/service >>> levelList: {}", levelList); // 로그로 확인
+	    return levelList;
 	}
 }

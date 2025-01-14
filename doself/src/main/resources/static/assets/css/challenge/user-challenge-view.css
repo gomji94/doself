@@ -1045,6 +1045,11 @@ hr {
     gap: 15px;
 }
 
+.feed-info .challenge-create-info .input-block .form-control {
+    display: block;
+    padding-left: 12.5px !important;
+}
+
 .feed-info .challenge-create-info {
     margin-top: 20px;
     display: grid;
@@ -1080,7 +1085,7 @@ hr {
     position: absolute;
     z-index: 3;
     bottom: 0px;
-    left: 111px;
+    left: 101px;
     width: 190px;
     font-size: 14px;
     border-style: none;
@@ -1094,14 +1099,14 @@ hr {
     position: absolute;
     z-index: 3;
     bottom: 0px;
-    left: 102px;
-    width: 205px;
+    left: 100px;
+    width: 203px;
     font-size: 14px;
     border-style: none;
     outline: none;
     color: #515151;
     opacity: 0.6;
-    background-color: inherit;
+    background-color: transparent;
 }
 
 .feed-info .challenge-create-info .input-block .date {

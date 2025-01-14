@@ -146,12 +146,21 @@
   	</insert>
   	
   	<!-- 챌린지 카테고리 조회 -->
-  	<select id="getChallengeTopicList" parameterType="string">
+  	<select id="getChallengeTopicList" resultType="Map">
+	    SELECT
+	        CAST(SUBSTRING_INDEX(ct_num, '_', -1) AS UNSIGNED) AS challengeTopicCode, 
+	        ct_name AS challengeTopicName
+	    FROM
+	        challenge_topic
+	</select>
+	
+	<!-- 챌린지 난이도 조회 -->
+  	<select id="getChallengeLevelList" resultType="Map">
   		SELECT
-			ct.ct_num,
-			ct.ct_name
+			CAST(SUBSTRING_INDEX(ctl_num, '_', -1) AS UNSIGNED) AS challengeLevelCode,
+			ctl_content AS challengeLevelContent
 		FROM
-			challenge_topic ct
+			challenge_topic_level
   	</select>
   	
   	<select id="isNameDuplicate" parameterType="String" resultType="boolean">
