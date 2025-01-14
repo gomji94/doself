@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import doself.common.mapper.CommonMapper;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
+import doself.user.ticket.domain.TicketPurchaseInfo;
 import doself.user.ticket.mapper.TicketMapper;
 import doself.user.ticket.service.TicketService;
 import doself.util.Pageable;
@@ -67,8 +68,7 @@ public class TicketController {
 	
 	@GetMapping("/purchaselist/search")
 	public String getPurchaseListBySearch(@RequestParam(value = "dayFilter") String dayFilter, 
-											Pageable pageable, Model model, HttpSession session
-										  ) {
+											Pageable pageable, Model model, HttpSession session) {
 		String memberId = (String) session.getAttribute("SID");
 		var pageInfo = ticketService.getPurchaseListBySearch(memberId, pageable, dayFilter);
 		List<TicketPurchase> ticketPurchase = pageInfo.getContents();
@@ -88,8 +88,14 @@ public class TicketController {
 	}
 	
 	
-	@GetMapping("/purchasedetail")
-	public String getPurchaseDetail() {
+	@GetMapping("/purchasedetail/view")
+	public String getPurchaseDetail(@RequestParam(name="paymentNum") String paymentNum,
+									Model model, HttpSession session) {
+		
+		String memberId = (String) session.getAttribute("SID");
+		TicketPurchaseInfo ditailInfo = ticketService.getPurchaseDitail(memberId, paymentNum);
+		
+		model.addAttribute("ditailInfo", ditailInfo);
 		
 		return "user/ticket/purchase-detail";
 	}

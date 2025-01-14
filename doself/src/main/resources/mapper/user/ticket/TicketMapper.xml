@@ -24,6 +24,14 @@
   		<result column="ctph_return_status"  property="paymentReturnStatus"/>
   		<result column="pmc_name" 			 property="paymentMethod"/>
   	</resultMap>
+  	
+  	<resultMap type="TicketPurchaseInfo" id="TicketPurchaseInfoResultMap">
+  		<id column="ctph_num" 		         property="paymentNum"/>
+  		<result column="ctc_category" 		 property="ticketCategory"/>
+  		<result column="ctph_date" 		     property="ticketPurchaseDate"/>
+  		<result column="ctp_price"			 property="paymentAmount"/>
+  		<result column="pmc_name" 			 property="paymentMethod"/>
+  	</resultMap>
  
   	<!-- 티켓 아이템 리스트 조회 -->
   	<select id="getTicketList" resultMap="ticketItemResultMap" >
@@ -135,6 +143,30 @@
 		</where>	
 		ORDER BY ctph_date DESC
 		LIMIT #{rowPerPage}	OFFSET #{offset};	
+	</select>
+	<select id="getPurchaseDitail" parameterType="String" resultMap="TicketPurchaseInfoResultMap">
+	  		SELECT 
+			ctph.ctph_num, 
+			ctc.ctc_category, 
+			ctph.ctph_date, 
+			ctp.ctp_price, 
+			pmc.pmc_name
+		FROM 
+			challenge_ticket_payment_history ctph
+		INNER JOIN 
+			challenge_ticket_price ctp
+		USING(ctp_code)
+		INNER JOIN 
+			ticket_payment_method tpm
+		USING(tpm_num)
+		INNER JOIN 
+			payment_method_category pmc
+		USING(pmc_code)
+		INNER JOIN
+			challenge_ticket_category ctc
+		USING(ctc_code)
+		WHERE 
+			ctph.ctph_num = #{paymentNum}
 	</select>
 	
   	
