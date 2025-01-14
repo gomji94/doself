@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
-import doself.util.Pageable;
+import doself.user.ticket.domain.TicketPurchaseInfo;
 
 @Mapper
 public interface TicketMapper {
@@ -28,6 +28,7 @@ public interface TicketMapper {
 	
 	int getCntOfPurchaseBySearch(String memberId, String dayFilter);
 	
-	
+	// 티켓 상세정보 조회
+	TicketPurchaseInfo getPurchaseDitail(String paymentNum);
 	
 }

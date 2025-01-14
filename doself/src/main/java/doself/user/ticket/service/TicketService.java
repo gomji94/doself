@@ -4,6 +4,7 @@ import java.util.List;
 
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
+import doself.user.ticket.domain.TicketPurchaseInfo;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 
@@ -22,8 +23,8 @@ public interface TicketService {
 	// 티켓 결제내역 
 	PageInfo<TicketPurchase> getPurchaseListBySearch(String memberId, Pageable pageable, String dayFilter);
 
-	//티켓 결제상세내역 조회
-	
-	
+	//티켓 결제상세내역 조회	
+	TicketPurchaseInfo getPurchaseDitail(String memberId, String paymentNum);
+
 	
 }

@@ -92,7 +92,7 @@
 	                               <td th:text="${l.paymentAmount}"></td>
 	                               <td th:text="${l.paymentReturnStatus == '' ? l.paymentStatus : l.paymentReturnStatus}"></td>
 	                               <td th:text="${l.paymentMethod}"></td>
-	                               <td><a th:href="@{/ticket/purchasedetail/{paymentNum}(paymentNum=${l.paymentNum})}">결제 상세</a></td>
+	                               <td><a th:href="@{/ticket/purchasedetail/view(paymentNum=${l.paymentNum})}">결제 상세</a></td>
 	                           </tr>
 	                         </th:block>
                             <th:block th:unless="${not #lists.isEmpty(ticketPurchase)}">
