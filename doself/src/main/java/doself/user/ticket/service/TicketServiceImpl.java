@@ -43,12 +43,28 @@ public class TicketServiceImpl implements TicketService{
 		return new PageInfo<>(ticketList, pageable, rowCnt);
 	}
 
-	
+	//티켓 상세내역 검색조회
+	@Override
+	public PageInfo<TicketPurchase> getPurchaseListBySearch(String memberId, Pageable pageable, String dayFilter) {
+		
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("memberId", memberId);
+		params.put("rowPerPage", pageable.getRowPerPage());
+		params.put("offset", pageable.getOffset());
+		params.put("dayFilter", dayFilter);
+		
+		int rowCnt = ticketMapper.getCntOfPurchaseBySearch(memberId, dayFilter);
+		
+		List<TicketPurchase> ticketList = ticketMapper.getPurchaseListBySearch(params);
+		return new PageInfo<>(ticketList, pageable, rowCnt);
+	}
 	
 	// 사용자 티켓정보
 	@Override
 	public TicketPurchase getPurchaseById(String memberId) {
 		return null;
 	}
+
 	
 }
