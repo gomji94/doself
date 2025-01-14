@@ -130,6 +130,10 @@ body > .content-main {
 	margin-right: 10px;
 }
 
+#logout-btn {
+	color: #b7b7b7 !important;
+}
+
 .nav-links {
     display: flex;
     gap: 30px;
