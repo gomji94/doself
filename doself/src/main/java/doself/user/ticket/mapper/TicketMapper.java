@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
+import doself.util.Pageable;
 
 @Mapper
 public interface TicketMapper {
@@ -22,6 +23,10 @@ public interface TicketMapper {
 
 	// 티켓 상세내역 조회
 	List<TicketPurchase> getTicketListById(Map<String, Object> paramMap);
+
+	List<TicketPurchase> getPurchaseListBySearch(Map<String, Object> params);
+	
+	int getCntOfPurchaseBySearch(String memberId, String dayFilter);
 	
 	
 	
