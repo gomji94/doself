@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.util.CardPageable;
@@ -18,7 +19,7 @@ public interface ChallengeListMapper {
 	//List<ChallengeDetailView> getChallengeListView(@Param("challengeCode") String challengeCode);
 
 	// 챌린지 추가(작업중)
-	void addChallenge(ChallengeList challengeList);
+	void addChallenge(AddChallenge addChallenge);
 	
 	// 챌린지 페이지
 	List<ChallengeList> getChallengeList(CardPageable cardPageable);
@@ -28,4 +29,10 @@ public interface ChallengeListMapper {
 	
 	// 챌린지명 중복 체크
 	boolean isNameDuplicate(String challengeName);
+	
+	// 챌린지 카테고리
+	List<ChallengeList> getChallengeTopicList();
+	
+	// 챌린지 생성 조회
+	List<AddChallenge> addChallengeList();
 }
