@@ -20,4 +20,7 @@ public interface ChallengeListService {
 	
 	// 챌린지 페이지
 	CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable);
+	
+	// 챌린지 이름 중복 체크
+	boolean isNameDuplicate(String challengeName);
 }

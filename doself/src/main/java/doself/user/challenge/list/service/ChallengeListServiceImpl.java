@@ -64,6 +64,8 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		String addChallengeResult = String.format("ctl_%03d", challengeList.getChallengeTopicCode());
 		challengeList.setChallengeTopicCode(addChallengeResult);
 		
+		//log.info(">>>>>>>>>> challengeList : {}", challengeList);
+		
 		challengeListMapper.addChallenge(challengeList);
 	}
 
@@ -72,6 +74,14 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	public CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable) {
 	    int rowCnt = challengeListMapper.getCntChallengeList();
 	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
+	    
+	    log.info(">>>>>>>>>> challengeList : {}", challengeList);
+	    
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
+	}
+
+	@Override
+	public boolean isNameDuplicate(String challengeName) {
+		return challengeListMapper.isNameDuplicate(challengeName);
 	}
 }

@@ -3,7 +3,6 @@ package doself.user.challenge.list.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
@@ -26,4 +25,7 @@ public interface ChallengeListMapper {
 	
 	// 챌린지 총 갯수
 	int getCntChallengeList();
+	
+	// 챌린지명 중복 체크
+	boolean isNameDuplicate(String challengeName);
 }
