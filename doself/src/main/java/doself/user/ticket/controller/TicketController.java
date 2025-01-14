@@ -1,19 +1,28 @@
 package doself.user.ticket.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import doself.common.mapper.CommonMapper;
+import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
+import doself.user.ticket.mapper.TicketMapper;
 import doself.user.ticket.service.TicketService;
 import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/ticket")
@@ -22,6 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TicketController {
 	
 	private final TicketService ticketService;
+	private final TicketMapper ticketMapper;
+	private final CommonMapper commonMapper;
 	
 	@GetMapping("/itemlist")
 	public String getItemList(Model model) {
@@ -82,5 +93,33 @@ public class TicketController {
 		
 		return "user/ticket/purchase-detail";
 	}
+	
+	@PostMapping("/payment")
+	@ResponseBody
+	public Map<String, Object> pamentTest(String ticketKey, HttpSession session) {
+		//TODO: process POST request
+		
+		String memberId = (String) session.getAttribute("SID");
+		String orderKeyValue =  commonMapper.getPrimaryKey("ctph_", "challenge_ticket_payment_history", "ctph_num");
+		TicketItem ticketInfo = ticketMapper.getTicketInfoByTicketKey(ticketKey);
+		
+		Map<String, Object> preOrderData = new HashMap<String, Object>();
+		preOrderData.put("memberId", memberId);
+		preOrderData.put("orderKeyValue", orderKeyValue);
+		preOrderData.put("ticketPrice", ticketInfo.getTicketPrice());
+		preOrderData.put("ticketName", ticketInfo.getTicketCategory());
+		
+		
+		return preOrderData;
+	}
+	
+	@PostMapping("/payment/result")
+	@ResponseBody
+	public String paymentResult(@RequestBody String entity) {
+		//TODO: process POST request
+		System.out.println("=-======================> 확인용 ");
+		return entity;
+	}
+	
 	
 }

@@ -28,6 +28,7 @@ public interface TicketMapper {
 	
 	int getCntOfPurchaseBySearch(String memberId, String dayFilter);
 	
-	
+	// 단일 티켓 정보 조회
+	TicketItem getTicketInfoByTicketKey(String ticketKey);
 	
 }
