@@ -64,5 +64,12 @@ public interface ChallengeMapper {
 	int updateMemberReward(String mbrId, int rhPoint);
 	//보상지급 기록 인서트
 	void createRewardPaymentHistory(String newKey,String mbrId,int rhPoint,String cgNum);
-		
+	
+	// 보상받을 챌린지와 얼마받아야하는지 가져오기
+	List<Map<String, Object>> getRewardChallenge(Map<String, Object> searchMap);
+	
+	// 보상받을 챌린지의 멤버 가져오기
+	List<String> getChallengeMemberList(String cgNum);
+	// 보상 지급
+	int updateChallengeMemberReward(Map<String, Object> rewardMember);
 }

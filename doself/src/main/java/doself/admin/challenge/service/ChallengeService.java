@@ -37,4 +37,7 @@ public interface ChallengeService {
 	
 	//챌린지 상태 완료이면 보상지급
 	void everydayCheck();
+	
+	//월별 챌린지 보상지급
+	void everyMonthlyCheck();
 }

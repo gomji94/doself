@@ -1,5 +1,6 @@
 package doself.admin.challenge.service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -209,9 +210,50 @@ public class ChallengeServiceImpl implements ChallengeService {
 				//보상지급기록 인서트
 				challengeMapper.createRewardPaymentHistory(newKey,mbrId,rhPoint,cgNum);
 			}
-			
-			
 		});
 	}
+
+	// 월별 챌린지 보상지급
+	@Override
+	public void everyMonthlyCheck() {
+		
+		// 현재 날짜
+		LocalDate currentDate = LocalDate.now();
+		// 이전달
+		LocalDate previousMonth = currentDate.minusMonths(1);
+		// 년도
+		int year = previousMonth.getYear();
+		// 월
+        int month = previousMonth.getMonthValue();
+        
+        Map<String, Object> searchMap = new HashMap<String, Object>();
+        searchMap.put("year", year);
+        searchMap.put("month", month);
+        
+        // 월별 보상받을 챌린지와 얼마 받아야하는지 가져오기
+        List<Map<String, Object>> challengeList = challengeMapper.getRewardChallenge(searchMap);
+        
+        for(Map<String, Object> target : challengeList) {
+        	
+        	// 보상받을 챌린지 번호
+        	String cgNum = (String) target.get("cgNum");
+        	// 보상받을 포인트
+        	int rhPoint = (int) target.get("rhPoint");
+        	Map<String, Object> rewardMember = new HashMap<String, Object>();
+        	rewardMember.put("rhPoint", rhPoint);
+        	// 보상받을 챌린지의 멤버 가져오기
+        	List<String> challengeMemberList = challengeMapper.getChallengeMemberList(cgNum);
+        	
+        	// 보상 지급
+        	for(String mbrId : challengeMemberList) {
+        		
+        		rewardMember.put("mbrId", mbrId);
+        		challengeMapper.updateChallengeMemberReward(rewardMember);
+        	}        
+        }
+        
+	}
+	
+	
 
 }
