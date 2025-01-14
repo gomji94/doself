@@ -146,7 +146,7 @@ $(document).ready(function () {
 		    return;
 		}
 		
-		if (!feedPicture || !feedContent || !feedFoodIntake || !mealType) {
+		if (!feedPicture || !feedContent || !serving || !feedFoodIntake || !mealCategoryCode || !feedOpenStatus) {
 	        alert('모든 필드를 입력해주세요.');
 	        return;
 	    }
@@ -156,7 +156,7 @@ $(document).ready(function () {
 	    formData.append('feedPicture', feedPicture);
 	    formData.append('feedContent', feedContent);
 	    formData.append('feedFoodIntake', feedFoodIntake);
-	    formData.append('mealType', mealType);
+	    formData.append('mealCategoryCode', mealCategoryCode);
 	    formData.append('feedOpenStatus', feedOpenStatus);
 
         // AJAX 요청으로 피드 추가
@@ -178,7 +178,7 @@ $(document).ready(function () {
 				console.log('feedContent:', feedContent);
 				console.log('feedFoodIntake:', feedFoodIntake);
 				console.log('mealCategoryCode:', mealCategoryCode);
-				console.log('feedOpenStatus:', feedOpenStatus); // visibility 값 확인
+				console.log('feedOpenStatus:', feedOpenStatus);
             },
         });
     });
@@ -232,14 +232,14 @@ $(document).ready(function () {
         const feedImage = feedElement.data('meal-picture'); // 이미지 URL
         const feedContent = feedElement.find('.feed-description p:nth-child(2)').text(); // 내용
         const feedServing = feedElement.find('.add-comment input[type="number"]').val(); // 섭취 인분
-        const feedMealType = feedElement.find('.input-group select').val(); // 식사 분류
+        const mealCategoryCode = feedElement.find('.input-group select').val(); // 식사 분류
         const feedVisibility = feedElement.find('.radio-group input[name="visibility"]:checked').val(); // 공개 여부
 
         // 수정 모달에 데이터 삽입
         $('#feed-modify-image-preview').attr('src', feedImage);
         $('#feed-modify-content').val(feedContent);
         $('#feed-modify-serving').val(feedServing);
-        $('#feed-modify-meal-type').val(feedMealType);
+        $('#feed-modify-meal-type').val(mealCategoryCode);
         $(`.radio-group input[name="visibility"][value="${feedVisibility}"]`).prop('checked', true);
 
         // 글자수 카운터 업데이트

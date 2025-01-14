@@ -71,8 +71,5 @@ public class FeedServiceImpl implements FeedService {
 	}
 	
 	// 자동완성 검색
-	public List<String> getKeywords(String query) {
-        return feedMapper.findKeywords(query);
-    }
 }
 	
