@@ -19,6 +19,4 @@ public interface FeedMapper {
 	int addFeed(Feed feed);
 	
 	// 자동완성 검색
-	@Select("SELECT mni_name FROM meal_nutrition_info WHERE mni_name LIKE CONCAT('%', #{query}, '%')")
-    List<String> findKeywords(String query);
 }
