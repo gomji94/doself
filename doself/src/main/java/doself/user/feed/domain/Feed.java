@@ -15,7 +15,7 @@ public class Feed {
 	private String  memberId;				// 작성자 아이디
 	private String  mealNutritionInfoCode;  // 음식 영양 정보 코드
 	private String  mealCategoryCode;		// 식사 카테고리
-	private Integer  feedFoodIntake;		// 섭취 인분
+	private Integer feedFoodIntake;		// 섭취 인분
 	private String	feedContent;			// 피드 내용
 	private String feedPicture;			  	// 피드 이미지
 	private Date  feedDate;	  				// 피드 등록 날짜
