@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import doself.user.feed.domain.Feed;
@@ -28,10 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedController {
 	
 	private final FeedService feedService;
-
+	
 	// 메인 피드 조회
 	@GetMapping("/list")
 	public String getFeedList(Model model) {
+		
 		List<Feed> feedList = feedService.getFeedList();
 		System.out.println(feedList);
 		log.info("Fetched feed list: {}", feedList); // 로그 추가
@@ -51,6 +53,13 @@ public class FeedController {
 
         model.addAttribute("feed", feed); // 모델에 피드 데이터를 추가
         return "user/feed/feed-view"; // 상세 정보 페이지로 이동
+    }
+    
+    // 음식 이름 검색
+    @GetMapping("/search-food")
+    @ResponseBody
+    public List<String> searchFood(@RequestParam("query") String query) {
+        return feedService.findKeywords(query);
     }
     
 	// 피드 추가
@@ -82,20 +91,7 @@ public class FeedController {
             if (feedOpenStatus == null || feedOpenStatus <= 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("섭취 인분을 선택해주세요.");
             }
-
-            // 파일 저장 처리 (임시)
-            String filePath = "/uploads/" + feedPicture.getOriginalFilename();
-            feedPicture.transferTo(new File(filePath));
-
-            // Feed 객체 생성 및 저장
-            Feed feed = new Feed();
-            feed.setFeedPicture(filePath);
-            feed.setFeedContent(feedContent);
-            feed.setFeedFoodIntake(feedFoodIntake);
-            feed.setMealCategoryCode(mealCategoryCode);
-            feed.setFeedOpenStatus(feedOpenStatus);
-
-            feedService.addFeed(feed);
+            
             return ResponseEntity.ok("피드가 성공적으로 생성되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();

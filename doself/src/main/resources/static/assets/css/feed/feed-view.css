@@ -621,14 +621,14 @@ button.feed-comment-comment-btn {
     gap: 15px;
 }
 
-.feed-info .challenge-create-info {
+.feed-info .feed-create-info {
     margin-top: 20px;
     display: grid;
     position: relative;
     gap: 10px;
 }
 
-.feed-info .challenge-create-info .input-block {
+.feed-info .feed-create-info .input-block {
     position: relative;
 }
 
@@ -861,7 +861,28 @@ select option:checked {
     background-color: #D7E790;
 }
 
-/* create challenge modal */
+/* food search dropdown */
+.dropdown-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-width: 200px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* feed create modal */
 /* 모달 전체 배경 (오버레이) */
 .modal-overlay {
     display: none;
@@ -1059,13 +1080,13 @@ img#feed-create-image-preview {
     margin: 0px;
     padding: 0px;
     position: absolute;
-    min-width: 480px;
+    min-width: auto;
     max-width: 480px;
     width: 100%;
     left: 20px;
     top: 54px;
-    max-height: 100%;
-    height: 404px;
+    max-height: 440px;
+    height: auto;
     min-height: 0;
     border-radius: 0px 0px 0px 10px;
     z-index: 1100;

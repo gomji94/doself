@@ -109,6 +109,58 @@ $(document).ready(function () {
     });
 });
 
+// --- 음식 이름 검색 ---
+$(document).ready(function () {
+    const $searchInput = $('#searchFood');
+    const $resultsContainer = $('#searchResults');
+
+    // 검색 입력 이벤트
+    $searchInput.on('input', function () {
+        const query = $(this).val().trim();
+
+        if (query.length < 2) {
+            $resultsContainer.hide();
+            return;
+        }
+
+        // 서버에서 데이터 요청
+        $.ajax({
+            url: '/feed/search-food',
+            type: 'GET',
+            data: { query: query },
+            success: function (data) {
+                if (data && data.length > 0) {
+                    // 검색 결과 표시
+                    $resultsContainer.empty().show();
+                    data.forEach(item => {
+                        $resultsContainer.append(`<div class="dropdown-item">${item}</div>`);
+                    });
+                } else {
+                    $resultsContainer.hide();
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching food suggestions:', error);
+                $resultsContainer.hide();
+            }
+        });
+    });
+
+    // 결과 선택 이벤트
+    $resultsContainer.on('click', '.dropdown-item', function () {
+        const selectedValue = $(this).text();
+        $searchInput.val(selectedValue);
+        $resultsContainer.hide();
+    });
+
+    // 입력 필드 외 클릭 시 결과 숨기기
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.input-group').length) {
+            $resultsContainer.hide();
+        }
+    });
+});
+
 // --- feed carete modal ---
 $(document).ready(function () {
     // 피드 추가 버튼 클릭 이벤트
@@ -137,8 +189,8 @@ $(document).ready(function () {
 		const feedPicture = $('#feed-create-file-input')[0].files[0];
 	    const feedContent = $('#feed-create-d-feed-content').val();
 	    const feedFoodIntake = $('#serving').val();
-	    const mealType = $('#meal-type').val();
-	    const feedOpenStatus = $('input[name="visibility"]:checked').val();
+	    const mealCategoryCode = $('#meal-type').val();
+	    const feedOpenStatus = $('input[name="visibility"]:checked').val() === 'public' ? 1 : 0;
 
         // 유효성 검사
         if (!feedPicture || feedPicture === '') {
@@ -151,12 +203,12 @@ $(document).ready(function () {
             return;
         }
 
-        if (!serving) {
+        if (!feedFoodIntake) {
             alert('섭취 인분을 선택해주세요.');
             return;
         }
 
-        if (!mealType) {
+        if (!mealCategoryCode) {
             alert('식사 분류를 선택해주세요.');
             return;
         }
@@ -165,11 +217,6 @@ $(document).ready(function () {
 		    alert('공개 여부를 선택해주세요.');
 		    return;
 		}
-		
-		if (!feedPicture || !feedContent || !serving || !feedFoodIntake || !mealCategoryCode || !feedOpenStatus) {
-	        alert('모든 필드를 입력해주세요.');
-	        return;
-	    }
 
         // 유효성 검사가 통과되었을 경우
 		const formData = new FormData();
@@ -350,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const feeds = document.querySelectorAll('.feed'); // 모든 피드 요소 선택
     const observerOptions = {
         root: null, // 뷰포트를 기준으로 감지
-        threshold: 0.5 // 피드가 50% 이상 보일 때 감지
+        threshold: 0.7 // 피드가 70% 이상 보일 때 감지
     };
 
     const observer = new IntersectionObserver((entries) => {

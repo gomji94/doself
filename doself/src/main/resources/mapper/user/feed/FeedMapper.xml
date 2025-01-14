@@ -130,12 +130,20 @@
 	        f.feed_num = #{feedCode};
 	</select>
 	
+	<!-- 음식 이름 검색 -->
+	<select id="findKeywords" parameterType="String" resultType="String">
+	    SELECT mni_name 
+	    FROM meal_nutrition_info 
+	    WHERE mni_name LIKE CONCAT('%', #{query}, '%');
+	</select>
+	
 	<!-- 피드 추가 -->
 	<insert id="addFeed" parameterType="Feed">
 		INSERT INTO feed (
 	        feed_num,
 	        mbr_id,
 	        mni_num,
+	        feed_mbr_image,
 	        feed_food_intake,
 	        feed_content,
 	        feed_picture,
@@ -143,18 +151,20 @@
 	        feed_date,
 	        feed_intake_date,
 	        feed_like,
-	        feed_open_status
+	        feed_open_status,
 	    )
 	    VALUES (
 	        #{feedCode},
 	        #{memberId},
 	        #{mealNutritionInfoCode},
+	        #{memberProfileImage},
+	        #{mealNutritionInfoCode},
 	        #{feedFoodIntake},
 	        #{feedContent},
 	        #{feedPicture},
 	        #{mealCategoryCode},
-	        NOW(),
-	        #{feedIntakeDate},
+	        CURDATE(),
+	        CURDATE(),
 	        0,
 	        #{feedOpenStatus}
 	    )
