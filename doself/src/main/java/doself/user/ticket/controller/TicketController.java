@@ -42,7 +42,7 @@ public class TicketController {
 	}
 	
 	@GetMapping("/purchaselist")
-	public String getPurchaseListByDate(HttpSession session,
+	public String getPurchaseList(HttpSession session,
 										@RequestParam(name="startDate", required=false) String startDate,
 									    @RequestParam(name="endDate", required=false) String endDate,
 									    Model model, Pageable pageable) {
@@ -55,7 +55,7 @@ public class TicketController {
 		int startPageNum = pageTicketInfo.getStartPageNum();
 		int endPageNum = pageTicketInfo.getEndPageNum();
 		int lastPage = pageTicketInfo.getLastPage();
-		log.info("ticketPurchase: {}",ticketPurchase);
+		//log.info("ticketPurchase: {}",ticketPurchase);
 		model.addAttribute("ticketPurchase", ticketPurchase);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
@@ -64,6 +64,29 @@ public class TicketController {
 		
 		return "user/ticket/purchase-list";
 	}
+	
+	@GetMapping("/purchaselist/search")
+	public String getPurchaseListBySearch(@RequestParam(value = "dayFilter") String dayFilter, 
+											Pageable pageable, Model model, HttpSession session
+										  ) {
+		String memberId = (String) session.getAttribute("SID");
+		var pageInfo = ticketService.getPurchaseListBySearch(memberId, pageable, dayFilter);
+		List<TicketPurchase> ticketPurchase = pageInfo.getContents();
+		int currentPage = pageInfo.getCurrentPage();
+		int startPageNum = pageInfo.getStartPageNum();
+		int endPageNum = pageInfo.getEndPageNum();
+		int lastPage = pageInfo.getLastPage();
+		
+		//log.info("ticketPurchase: {}",ticketPurchase);
+		model.addAttribute("ticketPurchase", ticketPurchase);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("lastPage", lastPage);
+		
+		return "user/ticket/purchase-list";
+	}
+	
 	
 	@GetMapping("/purchasedetail")
 	public String getPurchaseDetail() {

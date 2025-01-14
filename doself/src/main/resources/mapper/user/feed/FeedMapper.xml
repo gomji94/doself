@@ -17,12 +17,18 @@
 	    <result column="feed_open_status" property="feedOpenStatus" />
 	    <result column="mbr_image" property="memberProfileImage" />
 	    <result column="fc_content" property="feedCommentContent" />
+	    <result column="mni_name" property="mealName" />
 	    <result column="mni_picture" property="mealPicture" />
 	    <result column="mni_weight" property="mealWeight" />
 	    <result column="mni_kcal" property="mealCalories" />
 	    <result column="mni_carbo" property="mealCarbohydrates" />
 	    <result column="mni_protein" property="mealProtein" />
 	    <result column="mni_fat" property="mealFat" />
+	    <result column="mni_sugar" property="mealSugar" />
+	    <result column="mni_cholesterol" property="mealCholesterol" />
+	    <result column="mni_sodium" property="mealSodium" />
+	    <result column="mni_calcium" property="mealCalcium" />
+	    <result column="mni_iron" property="mealIron" />
 	</resultMap>
 	
 	<!-- 피드 조회 -->
@@ -40,12 +46,18 @@
 	        f.feed_like,
 	        f.feed_open_status,
 	        m.mbr_image,
+	        mll.mni_name,
 	        mll.mni_picture,
 	        mll.mni_weight,
 	        mll.mni_kcal,
 	        mll.mni_carbo,
 	        mll.mni_protein,
 	        mll.mni_fat,
+	        mll.mni_sugar,
+	        mll.mni_cholesterol,
+	        mll.mni_sodium,
+	        mll.mni_calcium,
+	        mll.mni_iron,
 	        fc.fc_content
 	    FROM
 	        feed f
@@ -61,12 +73,18 @@
 	<select id="getFeedNutritionInfo" resultMap="FeedResultMap">
 		SELECT
 		    f.mni_num,
+		    mll.mni_name,
 		    mll.mni_weight,
 		    mll.mni_kcal,
 		    mll.mni_carbo,
 		    mll.mni_protein,
 		    mll.mni_fat,
-		    mll.mni_picture
+		    mll.mni_picture,
+		    mll.mni_sugar,
+	        mll.mni_cholesterol,
+	        mll.mni_sodium,
+	        mll.mni_calcium,
+	        mll.mni_iron
 		FROM
 		    meal_nutrition_info mll INNER JOIN feed f
 		    ON mll.mni_num = f.mni_num
@@ -88,12 +106,18 @@
 	        f.feed_open_status,
 	        m.mbr_image,
 	        fc.fc_content,
+	        mll.mni_name,
 	        mll.mni_picture,
 	        mll.mni_weight,
 	        mll.mni_kcal,
 	        mll.mni_carbo,
 	        mll.mni_protein,
-	        mll.mni_fat
+	        mll.mni_fat,
+	        mll.mni_sugar,
+	        mll.mni_cholesterol,
+	        mll.mni_sodium,
+	        mll.mni_calcium,
+	        mll.mni_iron
 	    FROM
 	        feed f
 	    INNER JOIN

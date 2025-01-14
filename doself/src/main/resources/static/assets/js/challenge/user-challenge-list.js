@@ -8,49 +8,6 @@ $(document).ready(function () {
 });
 
 
-// --- create challenge ---
-$(document).ready(function() {
-    const uploadBtn = $('#cl-create-upload-btn'); // 파일 불러오기 버튼
-    const fileInput = $('#cl-create-file-input'); // 파일 input 요소
-    const imagePreview = $('#cl-create-preview-image'); // 미리보기 이미지
-    const previewContainer = $('#cl-create-preview-container'); // 미리보기 컨테이너
-
-    // 파일 불러오기 버튼 클릭 이벤트
-    uploadBtn.on('click', function() {
-        fileInput.click(); // 파일 선택 창 열기
-    });
-
-    // 파일 선택 시 이벤트
-    fileInput.on('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.attr('src', e.target.result); // 이미지 소스를 미리보기로 설정
-                previewContainer.show(); // 미리보기 컨테이너 보이기
-            };
-            reader.readAsDataURL(file); // 파일을 DataURL로 읽기
-        }
-    });
-
-    // 글자수 카운터
-    const content = $('#content'); // 텍스트 입력 박스
-    const textCount = $('#text-count'); // 글자 수 카운터
-    const maxLength = 500; // 최대 글자 수
-
-    content.on('input', function() {
-        const currentLength = content.val().length;
-        textCount.text(currentLength);
-
-        if (currentLength > maxLength) {
-            textCount.css('color', 'red'); // 초과 시 색상 변경
-        } else {
-            textCount.css('color', ''); // 기본 색상
-        }
-    });
-});
-
-
 // --- open create challenge modal ---
 $(document).ready(function () {
     // 생성 버튼 클릭 시 모달 열기
@@ -83,137 +40,110 @@ $(document).ready(function () {
 });
 
 
-// --- create challenge image preview ---
-$(document).ready(function () {
-    const fileInput = $('#createChallengeFileInput');
-    const previewContainer = $('#createChallengePreviewContainer');
-    const previewImage = $('#cl-create-preview-image');
 
-    // 파일 선택 창 열기
-    $('#createChallengeUploadButton').on('click', function () {
-        fileInput.click(); // 파일 선택 창 열기
+// --- create challenge input duplicate & validation ---
+$(document).ready(function () {
+    const challengeNameInput = $('#challengeName');
+    const challengeNameError = $('#challengeNameError');
+
+    challengeNameInput.on('blur', function () {
+        const challengeName = challengeNameInput.val().trim();
+
+        if (!challengeName) {
+            challengeNameError.text('이름을 입력해주세요').show();
+            return;
+        }
+
+        // 중복 확인 AJAX 요청
+        $.ajax({
+            url: '/challenge/checkDuplicateName',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ challengeName: challengeName }),
+            success: function (response) {
+                if (!response.available) {
+                    challengeNameError.text('이미 사용 중인 이름입니다. 다른 이름을 입력해주세요.').show();
+                } else {
+                    challengeNameError.hide();
+                }
+            },
+            error: function () {
+                challengeNameError.text('서버 오류가 발생했습니다. 다시 시도해주세요.').show();
+            }
+        });
     });
 
-    // 파일 선택 시 미리보기 표시
-    fileInput.on('change', function (event) {
+    // 입력 중에는 에러 메시지 숨기기
+    challengeNameInput.on('input', function () {
+        challengeNameError.hide();
+    });
+	
+	// 글자수 카운터
+    const content = $('#content'); // 텍스트 입력 박스
+    const textCount = $('#text-count'); // 글자 수 카운터
+    const maxLength = 500; // 최대 글자 수
+
+    content.on('input', function() {
+        const currentLength = content.val().length;
+        textCount.text(currentLength);
+
+        if (currentLength > maxLength) {
+            textCount.css('color', 'red'); // 초과 시 색상 변경
+        } else {
+            textCount.css('color', ''); // 기본 색상
+        }
+    });
+});
+
+
+// --- create challenge image preview & form submit ---
+$(document).ready(function () {
+	// 파일 선택 창 열기
+    $('#createChallengeUploadButton').on('click', function () {
+        $('#createChallengeFileInput').click(); // 파일 선택 창 열기
+    });
+
+    // 파일 선택 시 미리보기
+    $('#createChallengeFileInput').on('change', function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                previewImage.attr('src', e.target.result); // 이미지 미리보기
-                previewContainer.show(); // 컨테이너 표시
+                $('#createChallengePreviewImage').attr('src', e.target.result); // 이미지 미리보기 설정
+                $('#createChallengePreviewContainer').show(); // 미리보기 컨테이너 표시
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // 파일 읽기
         }
     });
 
-    // 드래그 앤 드롭 이벤트
-    $('.upload-box').on('dragover', function (e) {
+    // 폼 제출 이벤트
+    $('#addChallenge').on('submit', function (e) {
         e.preventDefault();
-        e.stopPropagation();
-        $(this).addClass('drag-over');
-    });
 
-    $('.upload-box').on('dragleave', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).removeClass('drag-over');
-    });
+        const formData = new FormData(this);
 
-    $('.upload-box').on('drop', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const file = e.originalEvent.dataTransfer.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                previewImage.attr('src', e.target.result);
-                previewContainer.show();
-            };
-            reader.readAsDataURL(file);
+        // 디버깅용: FormData 내용 확인
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
         }
+
+        $.ajax({
+            url: '/challenge/list/createchallengerequest',
+            method: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function () {
+                alert('챌린지가 성공적으로 생성되었습니다.');
+                location.reload();
+            },
+            error: function (xhr) {
+                console.error('Error:', xhr.responseText);
+                alert('챌린지 생성 중 오류가 발생했습니다.');
+            }
+        });
     });
 });
-
-
-// --- create challenge input duplicate & validation ---
-$(document).ready(function () {
-	const challengeNameInput = $('#ChallengeName');
-	const errorMessage = $('#challengeNameError');
-
-	challengeNameInput.on('blur', function () {
-	    const value = challengeNameInput.val().trim();
-
-	    if (!value) {
-	        errorMessage.text('이름을 입력해주세요').css('color', 'red').show();
-	        challengeNameInput.focus();
-	    } else {
-	        errorMessage.hide();
-	    }
-	});
-
-	challengeNameInput.on('input', function () {
-	    errorMessage.hide();
-	});
-});
-
-
-// --- create challenge selected ---
-$(document).ready(function () {
-	$('select').on('change', function () {
-	    $(this).find('option:selected').prop('selected', true);
-	});
-});
-
-
-// --- create challenge form submit ---
-$('#addChallenge').on('submit', function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-
-    $.ajax({
-        url: '/challenge/list/createchallengerequest',
-        method: 'POST',
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function () {
-            alert('챌린지가 성공적으로 생성되었습니다.');
-            location.reload();
-        },
-        error: function () {
-            alert('챌린지 생성 중 오류가 발생했습니다.');
-        }
-    });
-});
-
-
-// --- create challenge submit ---
-/*$("#create-challenge-form").on("submit", function (e) {
-    e.preventDefault(); // 기본 제출 동작 막기
-
-    const formData = {
-        challengeName: $("#challengeName").val(),
-        challengeStartDate: $("#challengeStartDate").val(),
-        challengeContent: $("#challengeContent").val(),
-    };
-
-    $.ajax({
-        url: "/challenge/list/createchallengerequest",
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(formData),
-        success: function () {
-            alert("챌린지가 성공적으로 생성되었습니다.");
-            $("#create-challenge-modal").hide();
-            location.reload(); // 페이지 새로고침
-        },
-        error: function () {
-            alert("챌린지 생성 중 오류가 발생했습니다.");
-        },
-    });
-});*/
 
 
 // --- challenge detail info modal ---
