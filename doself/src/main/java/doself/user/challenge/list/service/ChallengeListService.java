@@ -1,6 +1,7 @@
 package doself.user.challenge.list.service;
 
 import java.util.List;
+import java.util.Map;
 
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
@@ -24,4 +25,10 @@ public interface ChallengeListService {
 	
 	// 챌린지 이름 중복 체크
 	boolean isNameDuplicate(String challengeName);
+	
+	// 챌린지 주제 리스트
+	List<Map<String, String>> getChallengeTopicList();
+	
+	// 챌린지 난이도 리스트
+	List<Map<String, String>> getChallengeLevelList();
 }

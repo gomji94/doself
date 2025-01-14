@@ -71,7 +71,16 @@ public class ChallengeListController {
 	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
 	public String addChallenge(AddChallenge addChallenge,
-			@RequestPart(name = "files", required = false) MultipartFile files, HttpSession session) {
+			@RequestPart(name = "files", required = false) MultipartFile files,
+			HttpSession session, Model model) {
+		
+		// 챌린지 주제 리스트
+		var topicList = challengeListService.getChallengeTopicList();
+	    log.info(">>> location/controller >>> topicList: {}", topicList); // 챌린지 주제 리스트 확인
+	    // 챌린지 난이도 리스트
+	    var levelList = challengeListService.getChallengeLevelList();
+	    log.info(">>> location/controller >>> levelList: {}", levelList); // 챌린지 난이도 리스트 확인
+		
 		addChallenge.setMemberId((String) session.getAttribute("SID"));
 		challengeListService.addChallenge(addChallenge);
 		
@@ -86,9 +95,12 @@ public class ChallengeListController {
 	            return "redirect:/error";
 	        }
 	    }
-		
+	    
 	    log.info(">>>>>>>>>> addChallenge : {}", addChallenge);
 		log.info(">>>>>>>>>> file : {}", files);
+		
+		model.addAttribute("topicList", topicList);
+		model.addAttribute("levelList", levelList);
 
 		return "redirect:/challenge/list";
 	}
@@ -99,10 +111,11 @@ public class ChallengeListController {
     public Map<String, Boolean> checkDuplicateName(@RequestBody Map<String, String> request) {
         String challengeName = request.get("challengeName");
         boolean isAvailable = !challengeListService.isNameDuplicate(challengeName);
-        log.info(">>>>>>>>>> challengeName : {}", challengeName);
+        //log.info(">>>>>>>>>> challengeName : {}", challengeName);
         return Collections.singletonMap("available", isAvailable);
     }
 	
+	// 챌린지 참여 폼
 	@PostMapping("list/view/participation")
 	public String challengeParticipation(ChallengeList challengeList) {
 		return "redirect:/challenge/list";

@@ -1,6 +1,7 @@
 package doself.user.challenge.list.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -30,9 +31,12 @@ public interface ChallengeListMapper {
 	// 챌린지명 중복 체크
 	boolean isNameDuplicate(String challengeName);
 	
-	// 챌린지 카테고리
-	List<ChallengeList> getChallengeTopicList();
-	
 	// 챌린지 생성 조회
 	List<AddChallenge> addChallengeList();
+	
+	// 챌린지 주제 리스트
+	List<Map<String, String>> getChallengeTopicList();
+	
+	// 챌린지 난이도 리스트
+	List<Map<String, String>> getChallengeLevelList();
 }
