@@ -100,6 +100,17 @@ public class TicketController {
 		return "user/ticket/purchase-detail";
 	}
 	
+	@GetMapping("/purchasedetail/refund")
+	public String getPurchaseRefund(@RequestParam(name="paymentNum") String paymentNum, Model model, HttpSession session) {
+		String memberId = (String) session.getAttribute("SID");
+		TicketPurchaseInfo ditailInfo = ticketService.getPurchaseDitail(memberId, paymentNum);
+		
+		model.addAttribute("ditailInfo", ditailInfo);
+		
+		return "user/ticket/purchase-detail-refund";
+	}
+	
+	
 	@PostMapping("/payment")
 	@ResponseBody
 	public Map<String, Object> pamentTest(String ticketKey, HttpSession session) {
