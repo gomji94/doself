@@ -38,6 +38,25 @@
 		<result column="cg_max_mbr_count"	  property="challengeMaxMember"/>
 		<result column="cg_content" 		  property="challengeContent"/>
 	</resultMap>
+	
+	<!-- 챌린지 생성 조회 -->
+	<resultMap type="AddChallenge" id="AddChallengeMap">
+		<id 	column="cg_num" property="challengeCode"/>
+		<id 	column="ctl_num" property="challengeTopicLevelCode"/>
+		<id 	column="cs_num" property="challengeStatusCode"/>
+		<id 	column="mbr_id" property="memberId"/>
+		<result column="cg_leader_name" property="challengeLeaderName"/>
+		<result column="cg_name" property="challengeName"/>
+		<result column="cg_picture" property="challengePicture"/>
+		<result column="cg_content" property="challengeContent"/>
+		<result column="cg_creation_date" property="challengeCreationDate"/>
+		<result column="cg_current_mbr_count" property="challengeCurrentMember"/>
+		<result column="cg_max_mbr_count" property="challengeMaxMember"/>
+		<result column="cg_start_date" property="challengeStartDate"/>
+		<result column="cg_end_date" property="challengeEndDate"/>
+		<result column="cg_like" property="challengeGroupLike"/>
+		<result column="cs_reward_check" property="challengeRewardCheck"/>
+	</resultMap>
 
   	<!-- 특정 챌린지 리스트 조회 -->
   	<select id="getChallengeList"  parameterType="CardPageable" resultType="ChallengeList" resultMap="ChallengeListResultMap">
@@ -65,6 +84,28 @@
 	    LIMIT #{rowPerPage} OFFSET #{offset}
 	 <!--    WHERE
 			cg.cg_num = #{ChallengeCode}; -->
+  	</select>
+  	
+  	<!-- 챌린지 생성 조회 -->
+  	<select id="addChallengeList" resultMap="AddChallengeMap">
+  		SELECT
+			cg_num,
+			ctl_num,
+			cg_leader_name,
+			cg_name,
+			cg_picture,
+			cg_content,
+			cg_creation_date,
+			cg_current_mbr_count,
+			cg_max_mbr_count,
+			cg_start_date,
+			cg_end_date,
+			cg_like,
+			cs_num,
+			mbr_id,
+			cs_reward_check
+		FROM
+			challenge_group
   	</select>
   	
   	<!-- 챌린지 생성(등록) -->
@@ -103,6 +144,15 @@
 			#{challengeRewardCheck}
 		)
   	</insert>
+  	
+  	<!-- 챌린지 카테고리 조회 -->
+  	<select id="getChallengeTopicList" parameterType="string">
+  		SELECT
+			ct.ct_num,
+			ct.ct_name
+		FROM
+			challenge_topic ct
+  	</select>
   	
   	<select id="isNameDuplicate" parameterType="String" resultType="boolean">
   		SELECT EXISTS (
