@@ -138,56 +138,39 @@ $(document).ready(function () {
 
 // --- create challenge input duplicate & validation ---
 $(document).ready(function () {
-    const challengeNameInput = $('#ChallengeName');
+	const challengeNameInput = $('#ChallengeName');
+	const errorMessage = $('#challengeNameError');
 
-    challengeNameInput.on('blur', function () {
-        const value = challengeNameInput.val().trim();
-        const errorMessage = $('#challengeNameError'); // 에러 메시지 영역
+	challengeNameInput.on('blur', function () {
+	    const value = challengeNameInput.val().trim();
 
-        if (!value) {
-            errorMessage.text('이름을 입력해주세요').css('color', 'red').show();
-            challengeNameInput.focus();
-            return;
-        }
+	    if (!value) {
+	        errorMessage.text('이름을 입력해주세요').css('color', 'red').show();
+	        challengeNameInput.focus();
+	    } else {
+	        errorMessage.hide();
+	    }
+	});
 
-        // 중복 확인 (Ajax)
-        $.ajax({
-            url: '/challenge/checkDuplicateName',
-            method: 'POST',
-            data: { challengeName: value },
-            success: function (response) {
-                if (!response.available) {
-                    errorMessage.text('이미 사용 중인 이름입니다. 다른 이름을 입력해주세요.').css('color', 'red').show();
-                    challengeNameInput.focus();
-                } else {
-                    errorMessage.hide();
-                }
-            },
-            error: function () {
-                errorMessage.text('오류가 발생했습니다. 다시 시도해주세요.').css('color', 'red').show();
-            }
-        });
-    });
-
-    challengeNameInput.on('input', function () {
-        $('#challengeNameError').hide(); // 입력 시 에러 메시지 숨기기
-    });
+	challengeNameInput.on('input', function () {
+	    errorMessage.hide();
+	});
 });
 
 
 // --- create challenge selected ---
 $(document).ready(function () {
-    $('select').on('change', function () {
-        $(this).find('option:selected').prop('selected', true); // 선택한 옵션 유지
-    });
+	$('select').on('change', function () {
+	    $(this).find('option:selected').prop('selected', true);
+	});
 });
 
 
 // --- create challenge form submit ---
 $('#addChallenge').on('submit', function (e) {
-    e.preventDefault(); // 기본 동작 막기
+    e.preventDefault();
 
-    const formData = new FormData(this); // FormData 객체 생성
+    const formData = new FormData(this);
 
     $.ajax({
         url: '/challenge/list/createchallengerequest',
@@ -197,7 +180,7 @@ $('#addChallenge').on('submit', function (e) {
         data: formData,
         success: function () {
             alert('챌린지가 성공적으로 생성되었습니다.');
-            location.reload(); // 페이지 새로고침
+            location.reload();
         },
         error: function () {
             alert('챌린지 생성 중 오류가 발생했습니다.');
@@ -207,7 +190,7 @@ $('#addChallenge').on('submit', function (e) {
 
 
 // --- create challenge submit ---
-$("#create-challenge-form").on("submit", function (e) {
+/*$("#create-challenge-form").on("submit", function (e) {
     e.preventDefault(); // 기본 제출 동작 막기
 
     const formData = {
@@ -230,7 +213,7 @@ $("#create-challenge-form").on("submit", function (e) {
             alert("챌린지 생성 중 오류가 발생했습니다.");
         },
     });
-});
+});*/
 
 
 // --- challenge detail info modal ---

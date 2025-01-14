@@ -1,5 +1,7 @@
 package doself.user.challenge.list.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
@@ -62,9 +65,23 @@ public class ChallengeListController {
 	
 	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
-	public String addChallenge(ChallengeList challengeList, HttpSession session) {
+	public String addChallenge(ChallengeList challengeList,
+			@RequestParam("file") MultipartFile file, HttpSession session) {
 		challengeList.setMemberId((String) session.getAttribute("SID"));
 		challengeListService.addChallenge(challengeList);
+
+		// 파일 처리 로직 추가
+	    if (!file.isEmpty()) {
+	        String filePath = "uploads/" + file.getOriginalFilename();
+	        try {
+	            file.transferTo(new File(filePath));
+	            challengeList.setChallengePicture(filePath);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return "redirect:/error";
+	        }
+	    }
+		
 		log.info("challengeList : {}", challengeList);
 
 		return "redirect:/challenge/list";

@@ -400,6 +400,22 @@ p.challenge-text {
     margin-top: 1px;
 }
 
+img#createChallengePreviewContainer {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    min-width: 480px;
+    max-width: 480px;
+    width: 100%;
+    left: 0px;
+    top: 0;
+    max-height: 100%;
+    height: 470px;
+    min-height: 100%;
+    border-radius: 0px 0px 0px 10px;
+}
+
 /* .upload-box img {
     max-width: 63px;
     width: 100%;
