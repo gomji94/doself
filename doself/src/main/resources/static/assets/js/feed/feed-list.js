@@ -1,7 +1,27 @@
-// --- feed option button ---
+// --- feed.list option button ---
 $(document).ready(function () {
     // 옵션 버튼 클릭 시 모달창 표시
     $('.option-button').on('click', function () {
+        $('.feed-option-modal-wrap').fadeIn(); // 모달창 활성화
+    });
+
+    // 닫기 버튼 클릭 시 모달창 닫기
+    $('.feed-option-modal-wrap .close').on('click', function () {
+        $('.feed-option-modal-wrap').fadeOut(); // 모달창 비활성화
+    });
+
+    // 모달창 바깥을 클릭하면 모달창 닫기
+    $('.feed-option-modal-wrap').on('click', function (e) {
+        if ($(e.target).is('.feed-option-modal-wrap')) {
+            $(this).fadeOut();
+        }
+    });
+});
+
+// --- feed.view option button ---
+$(document).ready(function () {
+    // 옵션 버튼 클릭 시 모달창 표시
+    $('.df-option-button').on('click', function () {
         $('.feed-option-modal-wrap').fadeIn(); // 모달창 활성화
     });
 
