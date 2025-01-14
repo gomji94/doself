@@ -126,6 +126,10 @@ body > .content-main {
     height: auto;
 }
 
+#member-profile {
+	margin-right: 10px;
+}
+
 .nav-links {
     display: flex;
     gap: 30px;
