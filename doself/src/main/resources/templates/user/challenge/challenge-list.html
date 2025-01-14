@@ -56,7 +56,7 @@
 		                <img id="modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
 		            </div>
 		            <hr id="header-section">
-		           	<form id="addChallenge" th:action="@{/user/list/createchallengerequest}" method="post">
+		           	<form id="addChallenge" th:action="@{/user/list/createchallengerequest}" method="post" enctype="multipart/form-data">
 			            <div class="modal-body">
 			                <!-- 이미지 업로드 영역 -->
 			                <div class="upload-section">
