@@ -13,7 +13,7 @@
                 <li>
                     <a th:href="@{/ticket/itemlist}" class="menu-item">
                         <i class="fa-solid fa-ticket"></i>
-                        <div>티켓결제</div>
+                        <div>티켓 결제</div>
                     </a>
                 </li>
                 <li>
@@ -34,11 +34,13 @@
 			
             <!-- 상세내역 -->
             <div class="details">
+              <th:block th:object ="${ditailInfo}">
+              	
                 <div class="details-result">
                     <div class="details-header">
                         <div class="details-two">
                             <div id="details-title">상세내역</div>
-                            <div id="details-date">2024.11.06 00:19:42</div>
+                            <div id="details-date" th:text=*{ticketPurchaseDate}></div>
                         </div>
                     </div>
 
@@ -46,250 +48,27 @@
                         <tbody>
                             <tr>
                                 <th>결제번호</th>
-                                <td>20241026SI00001</td>
+                                <td th:text=*{paymentNum}></td>
                             </tr>
                             <tr>
                                 <th>티켓이름</th>
-                                <td>참여 티켓</td>
+                                <td th:text=*{ticketCategory}></td>
                             </tr>
                             <tr>
                                 <th>결제수단</th>
-                                <td>비씨카드</td>
+                                 <td th:text=*{PaymentMethod}></td>
                             </tr>
                             <tr>
                                 <th>총 결제금액</th>
-                                <td>10,780 원</td>
+                                <td th:text="${#numbers.formatInteger(ditailInfo.PaymentAmount, 0)} + ' 원'"></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <button class="status">환불신청</button>
+                <a class="status info-link" th:href="@{/ticket/purchasedetail/refund(paymentNum=${ditailInfo.paymentNum})}" target="_blank">환불신청</a>
             </div>
+            </th:block>
         </main>
-        
-            <div class="receipt-modal">
-        <div class="popup-wrap" style="display: none;">
-            <div class="popup">
-                <div class="popup-body">
-                    <div class="body-content">
-                        <div class="body-titlebox">
-                            <div class="pop">카드매출전표</div>
-                            <div class="recetipt-info">
-                                <div class="recetipt-tradename">(주) Doself</div>
-                                <div class="recetipt-pay">10,780원</div>
-                                <div class="recetipt-cardpay">카드결제</div>
-                            </div>
-                            <div class="recetipt-pay-info">
-                                <div class="recetipt-paymant">결제정보</div>
-                                <div class="recetipt-contents">
-                                    <div>
-                                        <span>거래일시</span>
-                                        <span>2024-11-26</span>
-                                    </div>
-                                    <div>
-                                        <span>결제번호</span>
-                                        <span>20241026ES100001</span>
-                                    </div>
-                                    <div>
-                                        <span>상품명</span>
-                                        <span>챌린지티켓</span>
-                                    </div>
-                                    <div>
-                                        <span>가맹점 주문번호</span>
-                                        <span>CTM12520241106</span>
-                                    </div>
-                                    <div>
-                                        <span>승인번호</span>
-                                        <span>123456789</span>
-                                    </div>
-                                    <div>
-                                        <span>카드사</span>
-                                        <span>신한카드</span>
-                                    </div>
-                                    <div>
-                                        <span>카드번호</span>
-                                        <span>****-****-****-****</span>
-                                    </div>
-                                    <div>
-                                        <span>할부기간</span>
-                                        <span>일시불</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="recetipt-Amount-info">
-                                <div class="recetipt-paymant">금액</div>
-                                <div class="recetipt-contents">
-                                    <div>
-                                        <span>주문금액</span>
-                                        <span>10,780원</span>
-                                    </div>
-                                    <div>
-                                        <span>결제수단</span>
-                                        <span>신한카드</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="recetipt-supplier">
-                                <div class="recetipt-paymant">공급자정보</div>
-                                <div class="recetipt-contents">
-                                    <div>
-                                        <span>상점명</span>
-                                        <span>(주)Doself</span>
-                                    </div>
-                                    <div>
-                                        <span>대표자명</span>
-                                        <span>홍길동</span>
-                                    </div>
-                                    <div>
-                                        <span>사업자등록번호</span>
-                                        <span>418-82-12345</span>
-                                    </div>
-                                    <div>
-                                        <span>주소</span>
-                                        <span>전라북도특별자치도 전주시 덕진구 기린대로 466</span>
-                                    </div>
-                                    <div>
-                                        <span>연락처</span>
-                                        <span>063-123-1234</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="recetipt-agent">
-                                <div class="recetipt-paymant">가맹점정보</div>
-                                <div class="recetipt-contents">
-                                    <div>
-                                        <span>가맹점명</span>
-                                        <span>(주)KG이니시스</span>
-                                    </div>
-                                    <div>
-                                        <span>대표자명</span>
-                                        <span>고영희</span>
-                                    </div>
-                                    <div>
-                                        <span>사업자등록번호</span>
-                                        <span>220-51-55597</span>
-                                    </div>
-                                    <div>
-                                        <span>주소</span>
-                                        <span>서울특별시 중구 통일로 92 KG타워 14,15층</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="refund-modal">
-        <div class="refund-popup-wrap" style="display: none;">
-            <div class="refund-popup">
-                <div class="refund-popup-body">
-                    <div class="body-content">
-                        <div class="body-titlebox">
-                            <div class="refund-pop">환불신청</div>
-                            <div class="ticketBox">
-                                <input type="radio" class="ticketCheck">
-                                <div class="ticketInfo">
-                                    <div class="ticketName">
-                                        환불가능한주문 : 참여자 티켓
-                                    </div>
-                                    <div class="ticketDesc">
-                                        주문번호 : CTM12520241106
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="refund-contents">
-                            <div>
-                                <span class="refund-list">구매날자</span>
-                                <span class="refund-list-sub">2024-11-26</span>
-                            </div>
-                            <div>
-                                <span class="refund-list">환불예정금액</span>
-                                <span class="refund-list-sub">10,780원</span>
-                            </div>
-                            <div>
-                                <span class="refund-list">결제수단</span>
-                                <span class="refund-list-sub">현대카드</span>
-                            </div>
-                        </div>
-                        <div>
-                            <span class="refund-list">환불사유</span>
-                            <div class="filter-section-reason">
-                                <button>단순변심</button>
-                                <button>실수로 구매</button>
-                                <button>다른상품구매</button>
-                                <button class="active">기타</button>
-                            </div>
-                        </div>
-                        <div>
-                            <span class="refund-list">환불 규정</span>
-                            <div class="refund-regulation">
-                                <div id="refund-check">확인해주세요</div>
-                                <div>
-                                    <div>환불 요청을 하시기 전 반드시 환불규정을 확인해 주세요.</div>
-                                    <div>결제일로부터 7일 이내에 환불 요청이 가능합니다. 이후 요청은 불가합니다</div>
-                                    <div>환불 요청 후 3~7영업일 내에 검토 및 환불 처리가 진행됩니다</div>
-                                    <div>환불 금액은 원 결제 수단으로 환급됩니다. </div>
-                                    <div>환불 시 결제 대행사 수수료가 차감될 수 있습니다. </div>
-                                    <div>사용된 서비스의 경우 해당 기간만큼의 금액이 공제됩니다.</div>
-                                    <div>본 환불 정책은 대한민국 전자상거래법 및 소비자 보호법을 준수합니다</div>
-                                    <div>환불 정책에 대해 궁금한 점은 고객센터 (heldiv@comdivany.com)로 문의 바랍니다</div>
-                                </div>
-                            </div>
-                            <div class="refund-result">
-                                <button class="refund-request-submit__button">제출</button>
-                                <button class="close">취소</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 모달창 여기부터 복사 -->
-<!-- 모달창 여기부터 복사 -->
-<div class="modal-confirm-container">
-    <div class="confirm-popup-wrap" style="display: none;">
-        <div class="confirm-popup">
-            <div class="confirm-popup-body">
-                <div class="confirm-body-content">
-                    <div class="confirm-body-titlebox">
-                        <div id="modal-request-title">DoSelf</div>
-                        <div id="confirm-message">
-                            성공적으로 제출 되었습니다.
-                            <!-- 이미 환불완료 요청하였습니다. p display-->
-                        </div>
-                        <p style="display: none;">요청 상태는 [티켓상세내역조회]을 통해 확인하실 수 있습니다. </p>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- 환불완 -->
-    <div id="success-box">
-        <div id="maintext">
-            환불신청이 완료 되었습니다.
-        </div>
-        <button id="enterbutton">확인</button>
-    </div>
-
-
-    <!-- 환불이미완 -->
-    <div id="already-box" style="display: none;">
-        <div id="maintext">
-            이미 환불요청 하셨습니다.
-        </div>
-        <div id="subtext">
-            요청상태는 [티켓상세내역조회]을 통해 확인하실 수 있습니다.
-        </div>
-        <button id="enterbutton">확인</button>
-    </div>
-    
     
 	</th:block> 
 
@@ -299,5 +78,6 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     <script th:src="@{/assets/js/layout.js}"></script>
+    <script th:src="@{/assets/js/ticket/refund.js}"></script>
     </th:block> 
 </html>
