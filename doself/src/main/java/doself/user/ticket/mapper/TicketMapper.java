@@ -31,4 +31,7 @@ public interface TicketMapper {
 	// 티켓 상세정보 조회
 	TicketPurchaseInfo getPurchaseDitail(String paymentNum);
 	
+	// 단일 티켓 정보 조회
+	TicketItem getTicketInfoByTicketKey(String ticketKey);
+	
 }

@@ -1,15 +1,12 @@
 package doself.common.interceptor;
 
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.yaml.snakeyaml.util.UriEncoder;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class CommonInterceptor implements HandlerInterceptor {
+	
+	private final static List<String> excludeUri = List.of("/market/purchaseitem", "/ticket/payment");
+	
 	
 	//컨트롤러 진입전 
 	@Override
@@ -53,19 +53,21 @@ public class CommonInterceptor implements HandlerInterceptor {
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
 		
 		Set<String> paramKeys = request.getParameterMap().keySet();
-		
+		String uri = request.getRequestURI();
 		StringJoiner param = new StringJoiner("&");
 		
 		log.info(request.getRequestURI());
+
 		for(String paramkey : paramKeys) {
+			log.info("=============> paramkey : {}", paramkey);
 			if(!paramkey.equals("currentPage")) {			
 				param.add(paramkey + "="+ request.getParameter(paramkey));
 			}
 		}
-		
+
 		log.info("queryParam : {}", param);
-		if(param.toString().contains("currentPage")) modelAndView.addObject("queryParam", param);
 		
+		if(!excludeUri.contains(uri)) modelAndView.addObject("queryParam", param);
 	}
 	
 	@Override

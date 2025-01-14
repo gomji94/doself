@@ -9,6 +9,7 @@
   	<resultMap type="TicketItem" id="ticketItemResultMap">
   		<id 	column="ctc_code" 			property="ticketCode"/>
   		<result column="ctc_category" 		property="ticketCategory"/>
+  		<result column="ctp_code" 			property="ticketPriceCode"/>
   		<result column="ctp_price"			property="ticketPrice"/>
   		<result column="ctc_expl" 			property="ticketExplanation"/>
   	</resultMap>
@@ -90,7 +91,15 @@
 		AND ctph_date <![CDATA[ <= ]]> #{endDate} 
 		</if>
   	</select>
-	
+  	
+  	<!-- 단일 티켓 정보 가져오는 쿼리 -->
+  	<select id="getTicketInfoByTicketKey" parameterType="String" resultMap="ticketItemResultMap">
+  		SELECT ctc.ctc_code, ctc.ctc_category, ctp.ctp_code, ctp.ctp_price
+		FROM challenge_ticket_category ctc INNER JOIN challenge_ticket_price ctp
+		USING (ctc_code)
+		WHERE ctc_code = #{ticketKey} AND ctp_is_deleted = 'active';
+  	</select>
+
 	<select id="getCntOfPurchaseBySearch" resultType="int" parameterType="String">
 		SELECT COUNT(*)
 		FROM   challenge_ticket_payment_history 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
@@ -69,24 +70,24 @@ public class ChallengeListController {
 	
 	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
-	public String addChallenge(ChallengeList challengeList,
+	public String addChallenge(AddChallenge addChallenge,
 			@RequestPart(name = "files", required = false) MultipartFile files, HttpSession session) {
-		challengeList.setMemberId((String) session.getAttribute("SID"));
-		challengeListService.addChallenge(challengeList);
+		addChallenge.setMemberId((String) session.getAttribute("SID"));
+		challengeListService.addChallenge(addChallenge);
 		
 		// 파일 처리
 	    if (files != null && !files.isEmpty()) {
 	        String filePath = "uploads/" + files.getOriginalFilename();
 	        try {
 	            files.transferTo(new File(filePath));
-	            challengeList.setChallengePicture(filePath);
+	            addChallenge.setChallengePicture(filePath);
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            return "redirect:/error";
 	        }
 	    }
 		
-	    log.info(">>>>>>>>>> challengeList : {}", challengeList);
+	    log.info(">>>>>>>>>> addChallenge : {}", addChallenge);
 		log.info(">>>>>>>>>> file : {}", files);
 
 		return "redirect:/challenge/list";
