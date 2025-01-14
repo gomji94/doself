@@ -126,6 +126,14 @@ body > .content-main {
     height: auto;
 }
 
+#member-profile {
+	margin-right: 10px;
+}
+
+#logout-btn {
+	color: #b7b7b7 !important;
+}
+
 .nav-links {
     display: flex;
     gap: 30px;

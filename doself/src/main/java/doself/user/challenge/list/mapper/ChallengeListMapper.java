@@ -19,7 +19,7 @@ public interface ChallengeListMapper {
 	//List<ChallengeDetailView> getChallengeListView(@Param("challengeCode") String challengeCode);
 
 	// 챌린지 추가(작업중)
-	int addChallenge(ChallengeList challengeList);
+	void addChallenge(ChallengeList challengeList);
 	
 	// 챌린지 페이지
 	List<ChallengeList> getChallengeList(CardPageable cardPageable);

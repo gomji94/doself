@@ -51,35 +51,146 @@ $(document).ready(function() {
 });
 
 
-// --- create challenge modal ---
+// --- open create challenge modal ---
 $(document).ready(function () {
     // 생성 버튼 클릭 시 모달 열기
-    $('#create-challenge-open-btn').on('click', function () {
-        $("#cl-create-modal-overlay").fadeIn(300); // 부드럽게 표시
+    $('#createChallengeOpenButton').on('click', function () {
+        $('#createChallengeModalOverlay').fadeIn(300); // 모달 오버레이 표시
+        $('#createChallengeModal').fadeIn(300); // 모달 표시
     });
 
-    // 모달 닫기 (닫기 버튼 클릭)
-    $("#modal-close").on("click", function () {
-        $("#cl-create-modal-overlay").fadeOut(300); // 부드럽게 숨기기
+    // 모달 닫기 버튼 클릭 시
+    $('#modal-close').on('click', function () {
+        $('#createChallengeModalOverlay').fadeOut(300); // 모달 오버레이 숨기기
+        $('#createChallengeModal').fadeOut(300); // 모달 숨기기
     });
 
-    // 모달 닫기 (오버레이 클릭)
-    $("#cl-create-modal-overlay").on("click", function (e) {
-        if ($(e.target).is("#cl-create-modal-overlay")) { // 오버레이 클릭 시만 닫기
+    // 오버레이 클릭 시 모달 닫기
+    $('#createChallengeModalOverlay').on('click', function (e) {
+        if ($(e.target).is('#createChallengeModalOverlay')) {
             $(this).fadeOut(300);
+            $('#createChallengeModal').fadeOut(300);
         }
     });
-	$(document).on('keydown', function (e) {
-        if (e.key === "Escape") {
-            $('#cf-mbr-modal-overlay').fadeOut();
-            $('#cf-warning-modal-overlay').fadeOut();
+
+    // ESC 키 누를 시 모달 닫기
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            $('#createChallengeModalOverlay').fadeOut(300);
+            $('#createChallengeModal').fadeOut(300);
+        }
+    });
+});
+
+
+// --- create challenge image preview ---
+$(document).ready(function () {
+    const fileInput = $('#createChallengeFileInput');
+    const previewContainer = $('#createChallengePreviewContainer');
+    const previewImage = $('#cl-create-preview-image');
+
+    // 파일 선택 창 열기
+    $('#createChallengeUploadButton').on('click', function () {
+        fileInput.click(); // 파일 선택 창 열기
+    });
+
+    // 파일 선택 시 미리보기 표시
+    fileInput.on('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImage.attr('src', e.target.result); // 이미지 미리보기
+                previewContainer.show(); // 컨테이너 표시
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 드래그 앤 드롭 이벤트
+    $('.upload-box').on('dragover', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('drag-over');
+    });
+
+    $('.upload-box').on('dragleave', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).removeClass('drag-over');
+    });
+
+    $('.upload-box').on('drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.originalEvent.dataTransfer.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImage.attr('src', e.target.result);
+                previewContainer.show();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+
+
+// --- create challenge input duplicate & validation ---
+$(document).ready(function () {
+	const challengeNameInput = $('#ChallengeName');
+	const errorMessage = $('#challengeNameError');
+
+	challengeNameInput.on('blur', function () {
+	    const value = challengeNameInput.val().trim();
+
+	    if (!value) {
+	        errorMessage.text('이름을 입력해주세요').css('color', 'red').show();
+	        challengeNameInput.focus();
+	    } else {
+	        errorMessage.hide();
+	    }
+	});
+
+	challengeNameInput.on('input', function () {
+	    errorMessage.hide();
+	});
+});
+
+
+// --- create challenge selected ---
+$(document).ready(function () {
+	$('select').on('change', function () {
+	    $(this).find('option:selected').prop('selected', true);
+	});
+});
+
+
+// --- create challenge form submit ---
+$('#addChallenge').on('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    $.ajax({
+        url: '/challenge/list/createchallengerequest',
+        method: 'POST',
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function () {
+            alert('챌린지가 성공적으로 생성되었습니다.');
+            location.reload();
+        },
+        error: function () {
+            alert('챌린지 생성 중 오류가 발생했습니다.');
         }
     });
 });
 
 
 // --- create challenge submit ---
-$("#create-challenge-form").on("submit", function (e) {
+/*$("#create-challenge-form").on("submit", function (e) {
     e.preventDefault(); // 기본 제출 동작 막기
 
     const formData = {
@@ -102,7 +213,7 @@ $("#create-challenge-form").on("submit", function (e) {
             alert("챌린지 생성 중 오류가 발생했습니다.");
         },
     });
-});
+});*/
 
 
 // --- challenge detail info modal ---
@@ -163,13 +274,6 @@ $(document).on("click", "#card-modal-close, #card-modal-overlay", function () {
     $("#card-modal").css("display", "none");
 });
 
-$(document).on('keydown', function (e) {
-    if (e.key === "Escape") {
-        $('#cf-mbr-modal-overlay').fadeOut();
-        $('#cf-warning-modal-overlay').fadeOut();
-    }
-});
-
 // 날짜 형식 변환 함수
 function formatDate(dateString) {
     if (!dateString) return "날짜 정보 없음";
@@ -180,85 +284,29 @@ function formatDate(dateString) {
 }
 
 
-
-
 /*
 $(document).ready(function () {
-    $('.card').on('click', function () {
-        const getChallengeCode = $(this).data('code'); // 클릭된 카드의 데이터 속성에서 challengeCode 가져오기
-		const request = $.ajax({
-			url : '/challenge/list/view',
-			method : 'GET',
-			data : { challengeCode: getChallengeCode },
-			dataType: 'json'
-		});
-		request.done((data) => {
-			if(data) {
-				// 모달 보이기
-				$('#card-modal-overlay').fadeIn();
-				$('#card-modal').fadeIn();
-				
-				// 데이터가 성공적으로 로드되면 모달 내용 업데이트
-		        $('#card-modal #card-body').html(data);
-			}
-		});
-		request.fail((jqXHR, textStatus, error)=>{
-		console.log(error)
-		});
-	});
-    // 모달 닫기 버튼 클릭 시
-    $('#card-modal-close, #card-modal-overlay').on('click', function () {
-        $('#card-modal-overlay').fadeOut(); // 오버레이 숨김
-        $('#card-modal').fadeOut(); // 모달 숨김
-    });
-});
-*/
+    const emojiButton = $('#emojiButton');
+    const emojiDropdown = $('<div class="emoji-dropdown"></div>'); // 이모지 드롭다운 생성
 
-    // 서버에서 상세 데이터 가져오기
-   /* function fetchChallengeDetails(challengeId) {
-        $.ajax({
-            url: `/challenge/list/view`, // 백엔드 URL
-            type: 'GET',
-            data: { ChallengeCode: challengeId },
-            success: function (data) {
-                // 데이터를 기반으로 모달 업데이트
-                $('#card-modal h2').text(data.challengeName); // 예: 챌린지 이름
-                //$('#image-preview').attr('src', data.challengePicture); // 예: 이미지 URL
-                //$('#challenge-tag').text(data.challengeLeaderName); // 리더 이름
-                $('#info-content-detail').html(`
-                    <p>📌 챌린지 소개 📌</p>
-                    <p>🗓 챌린지 일정: ${data.challengeStartDate} ~ ${data.challengeEndDate}</p>
-                    <p>🎯 난이도: ${data.challengeTopicLevel}</p>
-                    <p>📝 진행 내용: ${data.challengeContent}</p>
-                    <p>🤗‍ 참여 인원: ${data.challengeCurrentMember} / ${data.challengeMaxMember}</p>
-                `);
-                $('#card-modal-overlay').fadeIn(); // 모달 오버레이 표시
-                $('#card-modal').fadeIn(); // 모달 표시
-            },
-            error: function () {
-                alert('챌린지 정보를 가져오는 데 실패했습니다.');
-            }
+    // 간단한 이모지 리스트
+    const emojis = ['😀', '😂', '🥰', '👍', '🎉'];
+    emojis.forEach((emoji) => {
+        const emojiElement = $('<span class="emoji"></span>').text(emoji);
+        emojiElement.on('click', function () {
+            $('#content').val($('#content').val() + emoji); // 이모지 추가
+            emojiDropdown.hide(); // 드롭다운 닫기
         });
-    }*/
-
-/**
-$(document).ready(function () {
-    // card-1 클릭 시 모달 열기
-    $('#card-1').on('click', function () {
-        $('#card-modal-overlay').fadeIn(); // 오버레이 표시
-        $('#card-modal').fadeIn(); // 모달 표시
+        emojiDropdown.append(emojiElement);
     });
 
-    // 모달 닫기 버튼 클릭 시
-    $('#card-modal-close').on('click', function () {
-        $('#card-modal-overlay').fadeOut(); // 오버레이 숨김
-        $('#card-modal').fadeOut(); // 모달 숨김
+    // 이모지 드롭다운 표시
+    emojiButton.on('click', function () {
+        emojiDropdown.toggle();
     });
 
-    // 오버레이 클릭 시 모달 닫기
-    $('#card-modal-overlay').on('click', function () {
-        $('#card-modal-overlay').fadeOut(); // 오버레이 숨김
-        $('#card-modal').fadeOut(); // 모달 숨김
-    });
+    $('body').append(emojiDropdown); // 드롭다운을 body에 추가
+    emojiDropdown.hide(); // 초기 숨김
 });
+
 */

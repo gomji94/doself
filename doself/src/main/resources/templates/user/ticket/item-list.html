@@ -37,7 +37,7 @@
           <th:block th:if="${ticketList !=null}">
             <div class="ticket-options" id="ticket-options">
                 <div class="ticketBox" th:each="l:${ticketList}" id="ticketBox" >
-                    <input type="radio" name="check" class="ticketCheck" value="${l.ticketCategory}" id="ticketchk" >
+                    <input type="radio" name="check" class="ticketCheck" th:value="${l.ticketCategory}" id="ticketchk" >
                    	<div class="ticketInfo" >
                         <div class="ticketName" th:text="${l.ticketCategory}" > </div>
                         <div class="ticketDesc" th:text="${l.ticketExplanation}"></div>
@@ -52,19 +52,22 @@
                 <div class="payment-summary">
                     <h2>결제 내역</h2>
                     <div class="payment-info">
-                        <span>티켓 종류:</span> 
+                        <span>티켓 종류 :</span> 
                         <span></span>
                     </div>
                     <div class="payment-info">
-                        <span>가격:</span> 
+                        <span>가격 :</span> 
                         <span></span>
                     </div>
                     <div class="payment-info">
-                        <span>부가세:</span>
+                        <span>상품설명 :</span>
                         <span></span> 
                     </div>
                     <hr>
-                    <div class="total payment-info"><span>합계:</span></div>
+                    <div class="total payment-info">
+                    	<span>합계 :</span>
+                    	<span></span> 
+                    </div>
                 </div>
 
                 <!-- 결제 버튼 -->
@@ -74,21 +77,15 @@
             </div>
         </div>
         <!-- 결제규정내역-->
-        <div class = "regulation-box">
-            <ul>
-                <li>
-                    구매하신 티켓은 7일 이후 환불이 불가하며, 구매 후 변경이 불가능합니다.
-                </li>
-                <li>
-                    챌린지티켓으로 생성한 모임은 최소 인원이 모이지 않을 경우 자동 취소됩니다.
-                </li>
-                <li>
-                    참여 중도 포기 시, 티켓 재사용이 불가합니다.
-                </li>
-                <li>
-                    문의 사항이 있으시면 고객센터 (doself88@gmail.com) 으로 연락주세요.
-                </li>
-            </ul>
+        <div id="requlation">
+	        <div class = "regulation-box">
+	            <ul>
+	                <li>구매하신 티켓은 7일 이후 환불이 불가하며, 구매 후 변경이 불가능합니다.</li>
+	                <li>챌린지티켓으로 생성한 모임은 최소 인원이 모이지 않을 경우 자동 취소됩니다.</li>
+	                <li>참여 중도 포기 시, 티켓 재사용이 불가합니다.</li>
+	                <li>문의 사항이 있으시면 고객센터 (doself88@gmail.com) 으로 연락주세요.</li>
+	            </ul>
+	        </div>
         </div>
     </main>
 	
@@ -99,33 +96,49 @@
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}">
-     
-	    document.querySelectorAll('.ticketBox').forEach(function(box) {
-	        box.addEventListener('click', function() {
-	            const radio = box.querySelector('input[type="radio"]');
-	            if (radio) {
-	                radio.click();
-	            }
-	        });
-	    });
-     
-
-/*     	function updatePaymentResult(selectRadio){
-    		const ticketCategory = selectedRadio.val();
-    		const ticketPrice = parseInt(selectedRadio.getAttribute('data-price'));
-    		const vat = Math.floor(ticketPrice*0.1);
-    		const total = ticketPrice + vat;
-    	
-    	
-    	//결제 내역 섹션
-    	document.querySelector("#payment-result .payment-info span:nth-child(2)").textContent = ticketCategory;
-    	document.querySelector("#payment-result .payment-info span:nth-child(4)").textContent = ticketPrice.toLocaleString();
-    	document.querySelector("#payment-result .payment-info span:nth-child(6)").textContent = vat.toLocaleString();
-    	document.querySelector("#payment-result .total span:nth-child(2)").textContent = total.toLocaleString();
-    	
-    	}    */ 
+    <script th:src="@{/assets/js/layout.js}"> </script>
+    <script type="text/javascript">
     
-    </script>
+    document.querySelectorAll('.ticketCheck').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.checked) {
+                // 선택된 티켓의 정보 가져오기
+                const ticketBox = this.closest('.ticketBox');
+                const ticketName = ticketBox.querySelector('.ticketName').textContent.trim();
+                const ticketDesc = ticketBox.querySelector('.ticketDesc').textContent.trim();
+                const ticketprice = ticketBox.querySelector('.ticketprice').textContent.trim();
+                //const price = parseInt(priceText.replace(/[^0-9]/g, '')); // 숫자만 추출
+                
+                // 부가세 계산 (10%)
+                //const vat = Math.floor(price * 0.1);
+                //const total = price + vat;
+                
+                // 결제 내역 업데이트
+                const paymentResult = document.getElementById('payment-result');
+                paymentResult.querySelector('.payment-info:nth-child(2) span:last-child').textContent = ticketName;
+                paymentResult.querySelector('.payment-info:nth-child(3) span:last-child').textContent = ticketprice;
+                paymentResult.querySelector('.payment-info:nth-child(4) span:last-child').textContent = ticketDesc;
+                paymentResult.querySelector('.total span:last-child').textContent = ticketprice;
+                //paymentResult.querySelector('.total span:last-child').textContent = total.toLocaleString() + '원';
+                //paymentResult.querySelector('.payment-info:nth-child(4) span:last-child').textContent = vat.toLocaleString() + '원';
+            }
+        });
+    });
+
+    document.querySelectorAll('.ticketBox').forEach(box => {
+        box.addEventListener('click', function(e) {
+            if (e.target.type === 'radio') return;
+            
+            const radio = this.querySelector('.ticketCheck');
+            if (radio) {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+	
+	
+	    
+	</script>
     </th:block> 
 </html>

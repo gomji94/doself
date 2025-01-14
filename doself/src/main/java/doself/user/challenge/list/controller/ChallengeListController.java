@@ -1,5 +1,7 @@
 package doself.user.challenge.list.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -9,11 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +43,7 @@ public class ChallengeListController {
 		int endPageNum = challengeListPageInfo.getEndPageNum();
 		int lastPage = challengeListPageInfo.getLastPage();
 		
-		log.info("Fetched Challenge List: {}", challengeList);
+		//log.info("Fetched Challenge List: {}", challengeList);
 		model.addAttribute("challengeList", challengeList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
@@ -53,16 +57,33 @@ public class ChallengeListController {
 	@ResponseBody
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public ChallengeDetailView getChallengeListView(@RequestParam("challengeCode") String challengeCode) {
-        log.info("Challenge Code: {}", challengeCode);
+        //log.info("Challenge Code: {}", challengeCode);
         ChallengeDetailView challengeDetail = challengeListService.getChallengeListView(challengeCode);
-        log.info("Challenge Detail: {}", challengeDetail);
+        //log.info("Challenge Detail: {}", challengeDetail);
         return challengeDetail;
     }
 	
+	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
-	public String addChallenge(ChallengeList challengeList) {
-		log.info("challengeList : {}", challengeList);
+	public String addChallenge(ChallengeList challengeList,
+			@RequestParam("file") MultipartFile file, HttpSession session) {
+		challengeList.setMemberId((String) session.getAttribute("SID"));
 		challengeListService.addChallenge(challengeList);
+
+		// 파일 처리 로직 추가
+	    if (!file.isEmpty()) {
+	        String filePath = "uploads/" + file.getOriginalFilename();
+	        try {
+	            file.transferTo(new File(filePath));
+	            challengeList.setChallengePicture(filePath);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return "redirect:/error";
+	        }
+	    }
+		
+		log.info("challengeList : {}", challengeList);
+
 		return "redirect:/challenge/list";
 	}
 	
