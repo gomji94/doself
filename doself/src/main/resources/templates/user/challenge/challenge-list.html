@@ -63,12 +63,12 @@
 			                    <div class="upload-box">
 			                        <img id="cl-create-preview-image" src="https://velog.velcdn.com/images/mekite/post/da056d49-1aaa-4f12-9913-b1ddd137e7d5/image.png" alt="사진입력">
 			                        <p>사진을 끌어서 이곳에 넣어주세요</p>
-			                        <button class="upload-btn" id="createChallengeUploadButton">파일 불러오기</button>
+			                        <button type="button" class="upload-btn" id="createChallengeUploadButton">파일 불러오기</button>
 			                        <!-- 파일 input 태그 -->
-			                        <input type="file" id="createChallengeFileInput" accept="image/*" style="display: none;">
+			                        <input type="file" name="files" class="form-control" id="createChallengeFileInput" accept="image/*" style="display: none;" multiple>
 			                    </div>
 			                    <div class="preview-box" id="createChallengePreviewContainer" style="display: none;">
-			                        <img src="" alt="업로드된 이미지 미리보기" id="cl-create-preview-image">
+			                        <img src="" name="challengePicture" alt="업로드된 이미지 미리보기" id="createChallengePreviewImage">
 			                    </div>
 			                </div>
 			    
@@ -78,63 +78,63 @@
 			                        <div class="input-block">
 			                            <span>챌린지 이름</span>
 			                            <input type="text" class="form-control"
-			                            id="ChallengeName" name="ChallengeName" placeholder="이름을 입력해주세요">
+			                            id="challengeName" name="challengeName" placeholder="이름을 입력해주세요">
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                        <!-- 에러 메시지 영역 -->
-			                        <div id="challengeNameError" style="display: none;"></div>
+			                        <div id="challengeNameError" style="display: none; color: red; font-size: 14px;"></div>
 			                        <div class="input-block">
 			                            <span>챌린지 주제</span>
-			                            <select id="selectSubject">
-			                                <option value="diet">다이어트</option>
-			                                <option value="glutenFree">글루텐프리</option>
-			                                <option value="highProtein">고단백질</option>
-			                                <option value="vegan">비건</option>
-			                                <option value="vegetarian">채식</option>
-			                                <option value="healthyMeal">건강식단</option>
-			                                <option value="lowCarbohydrate">저탄고지</option>
+			                            <select id="selectSubject" name="challengeTopicLevelCode">
+			                                <option value="diet" th:selected="${challengeTopicLevelCode == 'diet'}">다이어트</option>
+			                                <option value="glutenFree" th:selected="${challengeTopicLevelCode == 'glutenFree'}">글루텐프리</option>
+			                                <option value="highProtein" th:selected="${challengeTopicLevelCode == 'highProtein'}">고단백질</option>
+			                                <option value="vegan" th:selected="${challengeTopicLevelCode == 'vegan'}">비건</option>
+			                                <option value="vegetarian" th:selected="${challengeTopicLevelCode == 'vegetarian'}">채식</option>
+			                                <option value="healthyMeal" th:selected="${challengeTopicLevelCode == 'healthyMeal'}">건강식단</option>
+			                                <option value="lowCarbohydrate" th:selected="${challengeTopicLevelCode == 'lowCarbohydrate'}">저탄고지</option>
 			                            </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                        <div class="select-level-block input-block">
 			                            <span>난이도</span>
-			                            <select id="selectLevel">
-			                                <option value="easy">쉬움</option>
-			                                <option value="normal">보통</option>
-			                                <option value="hard">어려움</option>
+			                            <select id="selectLevel" name="challengeLevel" th:value="${selectedLevel}">
+			                                <option value="easy" th:selected="${selectedLevel == 'easy'}">쉬움</option>
+										    <option value="normal" th:selected="${selectedLevel == 'normal'}">보통</option>
+										    <option value="hard" th:selected="${selectedLevel == 'hard'}">어려움</option>
 			                            </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                        <div class="challenge-start-date-block input-block">
 			                            <span>시작일</span>
 			                            <input type="text">
-			                            <input class="date" type="date">
+			                            <input type="date" class="date" id="challengeStartDate" name="challengeStartDate">
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                        <div class="participation-member-block input-block">
 			                            <span>참여인원</span>
-			                            <select id="participationMember">
-			                                <option value="5">5인(최소인원)</option>
-			                                <option value="6">6인</option>
-			                                <option value="7">7인</option>
-			                                <option value="8">8인</option>
-			                                <option value="9">9인</option>
-			                                <option value="10">10인</option>
-			                                <option value="11">11인</option>
-			                                <option value="12">12인</option>
-			                                <option value="13">13인</option>
-			                                <option value="14">14인</option>
-			                                <option value="15">15인</option>
-			                                <option value="16">16인</option>
-			                                <option value="17">17인</option>
-			                                <option value="18">18인</option>
-			                                <option value="19">19인</option>
-			                                <option value="20">20인</option>
+			                            <select id="participationMember" name="challengeMaxMember">
+			                                <option value="5" th:selected="${challengeMaxMember == '5'}">5인(최소인원)</option>
+			                                <option value="6" th:selected="${challengeMaxMember == '6'}">6인</option>
+			                                <option value="7" th:selected="${challengeMaxMember == '7'}">7인</option>
+			                                <option value="8" th:selected="${challengeMaxMember == '8'}">8인</option>
+			                                <option value="9" th:selected="${challengeMaxMember == '9'}">9인</option>
+			                                <option value="10" th:selected="${challengeMaxMember == '10'}">10인</option>
+			                                <option value="11" th:selected="${challengeMaxMember == '11'}">11인</option>
+			                                <option value="12" th:selected="${challengeMaxMember == '12'}">12인</option>
+			                                <option value="13" th:selected="${challengeMaxMember == '13'}">13인</option>
+			                                <option value="14" th:selected="${challengeMaxMember == '14'}">14인</option>
+			                                <option value="15" th:selected="${challengeMaxMember == '15'}">15인</option>
+			                                <option value="16" th:selected="${challengeMaxMember == '16'}">16인</option>
+			                                <option value="17" th:selected="${challengeMaxMember == '17'}">17인</option>
+			                                <option value="18" th:selected="${challengeMaxMember == '18'}">18인</option>
+			                                <option value="19" th:selected="${challengeMaxMember == '19'}">19인</option>
+			                                <option value="20" th:selected="${challengeMaxMember == '20'}">20인</option>
 			                            </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                    </div>
-			                    <textarea placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
+			                    <textarea name="challengeContent" placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
 			                    <div class="text-box-under">
 			                        <button type="button" id="emojiButton">
 			                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
