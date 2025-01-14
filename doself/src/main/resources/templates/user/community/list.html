@@ -6,6 +6,8 @@
 <head>
 	<link th:href="@{/assets/css/community/list.css}" rel="stylesheet" type="text/css" />
 	<script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+	<script src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 	<title>community</title>
 </head>
 	
@@ -106,6 +108,10 @@
                         <a th:href="@{/community/create}">
                             <button class="article-write__button">write</button>
                         </a>
+                        <form action="">
+                        	<input id="ticketKey" type="text" value="ctc_001" readonly="readonly">
+	                        <button id="payment" type="button">결제하기</button>
+                        </form>
                     </div>
                 </div>
                 <div id="search-container">
@@ -134,6 +140,7 @@
                 	</form>
                 </div>
             </div>
+			
         </main>
         <div id="main-container-advertise">
             <div id="main-container-advertise__adBlock">
@@ -143,6 +150,7 @@
             </div>
         </div>
 	</th:block> 
+	
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
@@ -151,5 +159,6 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     	<script th:src="@{/assets/js/layout.js}"></script>
+    	<script th:src="@{/assets/js/ticket/import-payment.js}"></script>
     </th:block> 
 </html>

@@ -27,10 +27,18 @@ public class Scheduler {
 		challengeController.everydayCheck();
 		
 	}
+	// 매달 1일 실행
+	@Scheduled(cron = "0 0 0 1 * ?")
+	public void runAtMonthly() {
+		
+		challengeController.everyMonthlyCheck();
+	}
 	
 	// 매년 1월1일 실행
 	@Scheduled(cron = "0 0 0 1 1 ?")
 	public void runAtYear() {
+		
+		// 나이계산하여 연령대 변경
 		memberController.everyYearCheck();
 	}
 }

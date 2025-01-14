@@ -4,6 +4,7 @@
       layout:decorate="~{user/layout/default}">
 <head>
 	<link th:href="@{/assets/css/ticket/purchase-list.css}" rel="stylesheet" type="text/css" />
+	<script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script>
 </head>			
 		
 	<th:block layout:fragment="content-body">
@@ -40,11 +41,26 @@
                     <div class = "line"></div>
                     <div class = "smile">
                         <div class = "filter-section month">
-                            <button>당일</button>
-                            <button>1개월</button>
-                            <button>3개월</button>
-                            <button class="active">6개월</button>
-                            <button>전체</button>
+						    <form th:action="@{/ticket/purchaselist/search}" method="get">
+						        <input type="hidden" value="7" name="dayFilter">
+						        <button type="submit">일주일</button>
+						    </form>
+						    <form th:action="@{/ticket/purchaselist/search}" method="get">
+						        <input type="hidden" value="30" name="dayFilter">
+						        <button type="submit">1개월</button>
+						    </form>
+						    <form th:action="@{/ticket/purchaselist/search}" method="get">
+						        <input type="hidden" value="90" name="dayFilter">
+						        <button type="submit">3개월</button>
+						    </form>
+						    <form th:action="@{/ticket/purchaselist/search}" method="get">
+						        <input type="hidden" value="180" name="dayFilter">
+						        <button type="submit">6개월</button>
+						    </form>
+						    <form th:action="@{/ticket/purchaselist/search}" method="get">
+						        <input type="hidden" value="1" name="dayFilter">
+						        <button type="submit">전체</button>
+						    </form>
                         </div>    
 <!--                         <div class="filtet-section date">
                             <div class="datebox">
@@ -76,7 +92,7 @@
 	                               <td th:text="${l.paymentAmount}"></td>
 	                               <td th:text="${l.paymentReturnStatus == '' ? l.paymentStatus : l.paymentReturnStatus}"></td>
 	                               <td th:text="${l.paymentMethod}"></td>
-	                               <td><a th:href="@{/ticket/purchasedetail/{paymentNum}(paymentNum=${l.paymentNum})}">결제 상세</a></td>
+	                               <td><a th:href="@{/ticket/purchasedetail/view(paymentNum=${l.paymentNum})}">결제 상세</a></td>
 	                           </tr>
 	                         </th:block>
                             <th:block th:unless="${not #lists.isEmpty(ticketPurchase)}">
@@ -86,23 +102,39 @@
                         </tbody>
                     </table>
                     <!-- 페이징 -->
-                    <div class="pagination">
-						<ul class="pagination">
-	                    	<li><a th:href="@{/ticket/purchaselist}">&lt;&lt;</a></li>
-	                    	<li th:classappend="${currentPage < 2} ? 'disabled'">
-	                        	<a th:href="@{/ticket/purchaselist(currentPage=${currentPage - 1})}" >&lt;</a>
-	                    	</li>
-	                    	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
-			                    <li th:classappend="${num == currentPage} ? 'active'">
-			                    	<a th:href="@{/ticket/purchaselist(currentPage=${num})}" th:text="${num}"></a>
-			                    </li>
-	                  		</th:block>
-	                  		<li th:classappend="${currentPage eq lastPage} ? 'disabled'">
-	                    	    <a th:href="@{/ticket/purchaselist(currentPage=${currentPage + 1})}">&gt;</a>
-	                  		</li>
-						    <li><a th:href="@{/ticket/purchaselist(currentPage=${lastPage})}">&gt;&gt;</a></li>                    
-						</ul>                    
-                    </div>
+  					  <th:block th:with="test=${queryParam + '&'}">
+	                    <div id="pagination" class="pagination" th:if="${not #lists.isEmpty(ticketPurchase)}" >
+		                   <ul class="pagination" >
+		                   	<li th:classappend="${currentPage eq 1} ? 'disabled'">
+		                   		<a class="page-link" th:href="@{/ticket/purchaselist}">
+		                   			<i class="fa-solid fa-angles-left"></i>
+		                   		</a>
+		                   	</li>
+		                   	<li th:classappend="${currentPage eq 1} ? 'disabled'">
+		                   		<a class="page-link" th:href="@{/ticket/purchaselist(currentPage=${currentPage - 1})}">
+		                   			<i class="fa-solid fa-angle-left"></i>
+		                   		</a>
+		                   	</li>
+		                   	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+		                        <li th:classappend="${num == currentPage} ? 'active'">
+		                          <a class="page-link" 
+		                        	th:attr="href=${test == null} ? |?currentPage=${num}| : |?${test}currentPage=${num}|"
+		                        	 th:text="${num}"></a>
+		                        </li>
+		                   	</th:block>                           
+		                    <li th:classappend="${currentPage eq lastPage} ? 'disabled'">
+		                        <a class="page-link" th:href="@{/ticket/purchaselist(currentPage=${currentPage +1})}">
+		                        	<i class="fa-solid fa-angle-right"></i>
+	                        	</a>
+		                    </li>
+		                    <li th:classappend="${currentPage eq lastPage} ? 'disabled'">
+		                        <a class="page-link" th:href="@{/ticket/purchaselist(currentPage=${lastPage})}">
+		                        	<i class="fa-solid fa-angles-right"></i>
+	                        	</a>
+		                    </li>
+		                   </ul>
+	                   	</div>
+                   	</th:block>	
                  </div>
             </main>      
 	

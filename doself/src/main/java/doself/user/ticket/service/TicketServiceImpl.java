@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
+import doself.user.ticket.domain.TicketPurchaseInfo;
 import doself.user.ticket.mapper.TicketMapper;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -43,12 +44,36 @@ public class TicketServiceImpl implements TicketService{
 		return new PageInfo<>(ticketList, pageable, rowCnt);
 	}
 
-	
-	
-	// 사용자 티켓정보
+	//티켓 상세내역 검색조회
+	@Override
+	public PageInfo<TicketPurchase> getPurchaseListBySearch(String memberId, Pageable pageable, String dayFilter) {
+		
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("memberId", memberId);
+		params.put("rowPerPage", pageable.getRowPerPage());
+		params.put("offset", pageable.getOffset());
+		params.put("dayFilter", dayFilter);
+		
+		int rowCnt = ticketMapper.getCntOfPurchaseBySearch(memberId, dayFilter);
+		
+		List<TicketPurchase> ticketList = ticketMapper.getPurchaseListBySearch(params);
+		return new PageInfo<>(ticketList, pageable, rowCnt);
+	}
+
 	@Override
 	public TicketPurchase getPurchaseById(String memberId) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public TicketPurchaseInfo getPurchaseDitail(String memberId, String paymentNum) {
+		// TODO Auto-generated method stub
+		return ticketMapper.getPurchaseDitail(paymentNum);
+	}
+	
+
+
 	
 }

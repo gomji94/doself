@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doself.common.mapper.CommonMapper;
+import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.mapper.ChallengeListMapper;
@@ -56,15 +57,20 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 챌린지 생성(등록)
 	@Override
-	public void addChallenge(ChallengeList challengeList) {
+	public void addChallenge(AddChallenge addChallenge) {
+		List<AddChallenge> addChallengeList = challengeListMapper.addChallengeList();
 		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
 		String formattedKeyNum = commonMapper.getPrimaryKey("cg_", "challenge_group", "cg_num");
-		challengeList.setChallengeCode(formattedKeyNum);
+		addChallenge.setChallengeCode(formattedKeyNum);
 		
-		String addChallengeResult = String.format("ctl_%03d", challengeList.getChallengeTopicCode());
-		challengeList.setChallengeTopicCode(addChallengeResult);
+		//String addChallengeResult = String.format("ctl_%03d", challengeList.getChallengeTopicCode());
+		//challengeList.setChallengeTopicCode(addChallengeResult);
 		
-		challengeListMapper.addChallenge(challengeList);
+		//challengeList.setChallengeEndDate(challengeList.getChallengeStartDate());
+		
+		//log.info(">>>>>>>>>> challengeList : {}", challengeList);
+		
+		challengeListMapper.addChallenge(addChallenge);
 	}
 
 	// 챌린지 리스트 페이지
@@ -72,6 +78,14 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	public CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable) {
 	    int rowCnt = challengeListMapper.getCntChallengeList();
 	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
+	    
+	    log.info(">>>>>>>>>> challengeList : {}", challengeList);
+	    
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
+	}
+
+	@Override
+	public boolean isNameDuplicate(String challengeName) {
+		return challengeListMapper.isNameDuplicate(challengeName);
 	}
 }
