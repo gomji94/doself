@@ -23,6 +23,7 @@ public interface TicketMapper {
 	// 티켓 상세내역 조회
 	List<TicketPurchase> getTicketListById(Map<String, Object> paramMap);
 	
-	
+	// 단일 티켓 정보 조회
+	TicketItem getTicketInfoByTicketKey(String ticketKey);
 	
 }
