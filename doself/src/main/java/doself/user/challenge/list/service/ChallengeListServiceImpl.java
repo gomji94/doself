@@ -52,7 +52,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	}
 //	public List<ChallengeDetailView> getChallengeListView(String challengeCode) {
 //		List<ChallengeDetailView> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
-//	    log.info("challengeListDetail: {}", challengeListDetail);
+//	    log.info(">>> location/service >>> challengeListDetail: {}", challengeListDetail);
 //	    return challengeListDetail;
 //	}
 
@@ -69,7 +69,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		
 		//challengeList.setChallengeEndDate(challengeList.getChallengeStartDate());
 		
-		//log.info(">>>>>>>>>> challengeList : {}", challengeList);
+		//log.info(">>> location/service >>> challengeList : {}", challengeList);
 		
 		challengeListMapper.addChallenge(addChallenge);
 	}
@@ -80,7 +80,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	    int rowCnt = challengeListMapper.getCntChallengeList();
 	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
 	    
-	    //log.info(">>>>>>>>>> challengeList : {}", challengeList);
+	    //log.info(">>> location/service >>> challengeList : {}", challengeList);
 	    
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
 	}
