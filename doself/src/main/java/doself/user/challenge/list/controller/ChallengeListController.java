@@ -17,11 +17,15 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.file.domain.Files;
+import doself.file.mapper.FilesMapper;
+import doself.file.service.FileService;
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,15 +37,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChallengeListController {
 	
+	@org.springframework.beans.factory.annotation.Value("${file.path}")
+	private String fileRealPath;
+	
 	// 챌린지 리스트 서비스 → 인스턴스 생성자 메소드
 	private final ChallengeListService challengeListService;
+	private final FileService fileService;
+	private final FilesMapper filesMapper;
 	
 	// 진행중인 챌린지 리스트 조회
 	@GetMapping("/list")
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public String getChallengeList(CardPageable cardPageable, Model model) {
 		var challengeListPageInfo = challengeListService.getChallengeList(cardPageable);
-		//List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		
+		// 챌린지 주제 리스트
+		var topicList = challengeListService.getChallengeTopicList();
+	    // 챌린지 난이도 리스트
+	    var levelList = challengeListService.getChallengeLevelList();
+		
 		List<ChallengeList> challengeList = challengeListPageInfo.getContents();
 		int currentPage = challengeListPageInfo.getCurrentPage();
 		int startPageNum = challengeListPageInfo.getStartPageNum();
@@ -54,6 +68,8 @@ public class ChallengeListController {
 		model.addAttribute("startPageNum", startPageNum);
 		model.addAttribute("endPageNum", endPageNum);
 		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("topicList", topicList);
+		model.addAttribute("levelList", levelList);
 		return "user/challenge/challenge-list";
 	}
 	
@@ -62,34 +78,26 @@ public class ChallengeListController {
 	@ResponseBody
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public ChallengeDetailView getChallengeListView(@RequestParam("challengeCode") String challengeCode) {
-        //log.info("Challenge Code: {}", challengeCode);
+        //log.info(">>> location/controller >>> challengeCode: {}", challengeCode);
         ChallengeDetailView challengeDetail = challengeListService.getChallengeListView(challengeCode);
-        //log.info("Challenge Detail: {}", challengeDetail);
+        //log.info(">>> location/controller >>> challengeDetail: {}", challengeDetail);
         return challengeDetail;
     }
 	
 	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
+	@ResponseBody
 	public String addChallenge(AddChallenge addChallenge,
-			@RequestPart(name = "files", required = false) MultipartFile files, HttpSession session) {
+			@RequestPart(name = "files", required = false) MultipartFile files, HttpSession session, Model model) {
+		
+		// 현재 세션의 아이디 설정
 		addChallenge.setMemberId((String) session.getAttribute("SID"));
-		challengeListService.addChallenge(addChallenge);
+		
+		log.info(">>> location/controller >>> files: {}", files);
 		
 		// 파일 처리
-	    if (files != null && !files.isEmpty()) {
-	        String filePath = "uploads/" + files.getOriginalFilename();
-	        try {
-	            files.transferTo(new File(filePath));
-	            addChallenge.setChallengePicture(filePath);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            return "redirect:/error";
-	        }
-	    }
+		challengeListService.addChallenge(files, addChallenge);
 		
-	    log.info(">>>>>>>>>> addChallenge : {}", addChallenge);
-		log.info(">>>>>>>>>> file : {}", files);
-
 		return "redirect:/challenge/list";
 	}
 	
@@ -99,13 +107,15 @@ public class ChallengeListController {
     public Map<String, Boolean> checkDuplicateName(@RequestBody Map<String, String> request) {
         String challengeName = request.get("challengeName");
         boolean isAvailable = !challengeListService.isNameDuplicate(challengeName);
-        log.info(">>>>>>>>>> challengeName : {}", challengeName);
+        //log.info(">>> location/controller >>> challengeName : {}", challengeName);
         return Collections.singletonMap("available", isAvailable);
     }
 	
+	// 챌린지 참여 폼
 	@PostMapping("list/view/participation")
 	public String challengeParticipation(ChallengeList challengeList) {
 		return "redirect:/challenge/list";
 	}
+	
 	
 }

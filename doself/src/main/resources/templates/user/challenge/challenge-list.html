@@ -52,11 +52,10 @@
 		            <div class="modal-header">
 		                <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
 		                <h2>챌린지 생성</h2>
-		                <!-- <button id="modalCloseBtn">&times;</button> -->
 		                <img id="modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
 		            </div>
 		            <hr id="header-section">
-		           	<form id="addChallenge" th:action="@{/user/list/createchallengerequest}" method="post" enctype="multipart/form-data">
+		           	<form id="addChallenge" th:action="@{/challenge/list/createchallengerequest}" method="post" enctype="multipart/form-data">
 			            <div class="modal-body">
 			                <!-- 이미지 업로드 영역 -->
 			                <div class="upload-section">
@@ -65,7 +64,8 @@
 			                        <p>사진을 끌어서 이곳에 넣어주세요</p>
 			                        <button type="button" class="upload-btn" id="createChallengeUploadButton">파일 불러오기</button>
 			                        <!-- 파일 input 태그 -->
-			                        <input type="file" name="files" class="form-control" id="createChallengeFileInput" accept="image/*" style="display: none;" multiple>
+			                        <input type="file" id="files" name="files" class="form-control" style="display: none;">
+			                        <!-- accept="image/*" -->
 			                    </div>
 			                    <div class="preview-box" id="createChallengePreviewContainer" style="display: none;">
 			                        <img src="" name="challengePicture" alt="업로드된 이미지 미리보기" id="createChallengePreviewImage">
@@ -83,30 +83,25 @@
 			                        </div>
 			                        <!-- 에러 메시지 영역 -->
 			                        <div id="challengeNameError" style="display: none; color: red; font-size: 14px;"></div>
-			                        <div class="input-block">
+			                        <!-- <div class="input-block">
 			                            <span>챌린지 주제</span>
-			                            <select id="selectSubject" class="form-control text-center" name="challengeTopicLevelCode">
-			                            	<!-- todo : DB에서 정보 가져와서 반복문 돌려서 옵션 생성 -->
-			                                <option value="">카테고리를 선택해주세요</option>
-			                                <!-- <option value="diet" th:selected="${challengeTopicLevelCode == 'diet'}">다이어트</option>
-			                                <option value="glutenFree" th:selected="${challengeTopicLevelCode == 'glutenFree'}">글루텐프리</option>
-			                                <option value="highProtein" th:selected="${challengeTopicLevelCode == 'highProtein'}">고단백질</option>
-			                                <option value="vegan" th:selected="${challengeTopicLevelCode == 'vegan'}">비건</option>
-			                                <option value="vegetarian" th:selected="${challengeTopicLevelCode == 'vegetarian'}">채식</option>
-			                                <option value="healthyMeal" th:selected="${challengeTopicLevelCode == 'healthyMeal'}">건강식단</option>
-			                                <option value="lowCarbohydrate" th:selected="${challengeTopicLevelCode == 'lowCarbohydrate'}">저탄고지</option> -->
-			                            </select>
+			                            <select id="selectSubject" class="form-control" name="challengeTopicLevelCode">
+									        <option value="">주제를 선택해주세요</option>
+									        <th:block th:if="${topicList}" th:each="topic : ${topicList}">
+									            <option th:value="${topic.challengeTopicCode}" th:text="${topic.challengeTopicName}"></option>
+									        </th:block>
+									    </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
-			                        </div>
+			                        </div> -->
 			                        <div class="select-level-block input-block">
 			                            <span>난이도</span>
-			                            <select id="selectLevel" class="form-control text-center" name="challengeLevel" th:value="${selectedLevel}">
-			                                <!-- todo : DB에서 정보 가져와서 반복문 돌려서 옵션 생성 -->
-			                                <option value="">난이도를 선택해주세요</option>
-			                                <!-- <option value="easy" th:selected="${selectedLevel == 'easy'}">쉬움</option>
-										    <option value="normal" th:selected="${selectedLevel == 'normal'}">보통</option>
-										    <option value="hard" th:selected="${selectedLevel == 'hard'}">어려움</option> -->
+			                            <select id="selectLevel" class="form-control" name="challengeTopicLevelCode" required>
+			                                <option value="">난이도 선택</option>
+			                                <th:block th:if="${levelList}" th:each="level : ${levelList}">
+			                                	<option th:value="${level.challengeLevelCode}" th:text="${level.challengeLevelContent}"></option>
+			                                </th:block>
 			                            </select>
+			                            <small id="challengeLevelError" style="color: red; display: none;">난이도를 선택해주세요</small>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                        <div class="challenge-start-date-block input-block">
@@ -117,7 +112,7 @@
 			                        </div>
 			                        <div class="participation-member-block input-block">
 			                            <span>참여인원</span>
-			                            <select id="participationMember" class="form-control text-center" name="challengeMaxMember">
+			                            <select id="participationMember" class="form-control" name="challengeMaxMember">
 			                                <option value="5" th:selected="${challengeMaxMember == '5'}">5인(최소인원)</option>
 			                                <option value="6" th:selected="${challengeMaxMember == '6'}">6인</option>
 			                                <option value="7" th:selected="${challengeMaxMember == '7'}">7인</option>
@@ -138,19 +133,21 @@
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                    </div>
-			                    <textarea name="challengeContent" placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
-			                    <div class="text-box-under">
-			                        <button type="button" id="emojiButton">
-			                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
-			                        </button>
-			                        <!-- 이모지 드롭다운 -->
-			                        <div class="emoji-dropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 5px;"></div>
-			                        <div class="text-counter">
-			                            <span id="text-count">0</span>
-			                            <span>/500</span>
-			                        </div>
+			                    <div id="ChallengeInfoInputUnder">
+				                    <textarea name="challengeContent" placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
+				                    <div class="text-box-under">
+				                        <button type="button" id="emojiButton">
+				                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+				                        </button>
+				                        <!-- 이모지 드롭다운 -->
+				                        <div class="emoji-dropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 5px;"></div>
+				                        <div class="text-counter">
+				                            <span id="text-count">0</span>
+				                            <span>/500</span>
+				                        </div>
+				                    </div>
+				                    <button type="submit" class="submit-btn" id="createChallengeSubmitButton"><p>생성</p></button>
 			                    </div>
-			                    <button type="submit" class="submit-btn" id="createChallengeSubmitButton"><p>생성</p></button>
 			                </div>
 			            </div>
 		           	</form>
@@ -174,7 +171,7 @@
 	        <!-- 카드 목록 -->
 	        <section class="card-grid" th:if="${challengeList != null and !challengeList.isEmpty()}">
 	            <div class="card" th:each="cl : ${challengeList}" th:data-code="${cl.challengeCode}" style="border: none;">
-	                <img th:src="${cl.challengePicture}" alt="카드 이미지">
+	                <img th:src="@{|${cl.challengePicture}|}" alt="카드 이미지">
 	                <div class="card-content">
 	                    <div class="tag-container">
 	                        <a href="#" class="tag-a"><h3 th:text="|# ${cl.challengeTopicName}|" class="challenge-tag"></h3></a>

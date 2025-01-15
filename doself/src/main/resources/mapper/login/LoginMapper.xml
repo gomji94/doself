@@ -130,4 +130,17 @@
 		ORDER BY CAST(SUBSTRING_INDEX(mbr_id,'ksmartid',-1) AS UNSIGNED);
 	</select> -->
 	
+	<!-- 멤버로그인이력 추가 -->
+	<insert id="createMemberLoginLog" parameterType="String">
+		INSERT INTO member_login_log (
+			mll_num, 
+			mbr_id, 
+			mll_ip, 
+			mll_date
+		) VALUES (
+			#{keyValue}, 
+			#{memberId}, 
+			#{memberIp}, 
+			NOW())
+	</insert>		
 </mapper>

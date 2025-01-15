@@ -1,5 +1,7 @@
 package doself.user.ticket.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.common.mapper.CommonMapper;
+import doself.user.ticket.domain.Order;
+import doself.user.ticket.domain.RefundRequest;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
 import doself.user.ticket.domain.TicketPurchaseInfo;
@@ -22,7 +26,6 @@ import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -93,21 +96,54 @@ public class TicketController {
 									Model model, HttpSession session) {
 		
 		String memberId = (String) session.getAttribute("SID");
-		TicketPurchaseInfo ditailInfo = ticketService.getPurchaseDitail(memberId, paymentNum);
+
+		TicketPurchaseInfo detailInfo = ticketService.getPurchaseDetail(memberId, paymentNum);
+		String ticketPurchaseDate = detailInfo.getTicketPurchaseDate();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime dateTime = LocalDateTime.parse(ticketPurchaseDate, formatter);
+		LocalDateTime dateTimeAfterWeek = dateTime.plusDays(7);
+		LocalDateTime dateTimeNow = LocalDateTime.now();
+		boolean timeLapse = dateTimeAfterWeek.isAfter(dateTimeNow);
 		
-		model.addAttribute("ditailInfo", ditailInfo);
+		model.addAttribute("detailInfo", detailInfo);
+		model.addAttribute("timeLapse", timeLapse);
 		
 		return "user/ticket/purchase-detail";
 	}
 	
+	@GetMapping("/purchasedetail/refund")
+	public String getPurchaseRefund(@RequestParam(name="paymentNum") String paymentNum, Model model, HttpSession session) {
+		String memberId = (String) session.getAttribute("SID");
+		
+		TicketPurchaseInfo detailInfo = ticketService.getPurchaseDetail(memberId, paymentNum);
+		model.addAttribute("detailInfo", detailInfo);
+		
+		return "user/ticket/purchase-detail-refund";
+	}
+	
+	@PostMapping("/purchasedetail/refund")
+	@ResponseBody
+	public boolean purchaseRefund(RefundRequest refundRequest, HttpSession session) {
+		
+		boolean isReg = false;
+		
+		refundRequest.setMemberId((String) session.getAttribute("SID"));
+		refundRequest.setRefundRequestPkValue(commonMapper.getPrimaryKey("prr_", "payment_refund_request", "prr_num"));
+		int result = ticketMapper.createRefundRequest(refundRequest);
+		if(result > 0) isReg = true; 
+		
+		return isReg;
+	}
+	
 	@PostMapping("/payment")
 	@ResponseBody
-	public Map<String, Object> pamentTest(String ticketKey, HttpSession session) {
+	public Map<String, Object> paymentTest(String ticketKey, HttpSession session) {
 		//TODO: process POST request
 		
 		String memberId = (String) session.getAttribute("SID");
 		String orderKeyValue =  commonMapper.getPrimaryKey("ctph_", "challenge_ticket_payment_history", "ctph_num");
 		TicketItem ticketInfo = ticketMapper.getTicketInfoByTicketKey(ticketKey);
+		session.setAttribute("STK", ticketKey);
 		
 		Map<String, Object> preOrderData = new HashMap<String, Object>();
 		preOrderData.put("memberId", memberId);
@@ -115,16 +151,19 @@ public class TicketController {
 		preOrderData.put("ticketPrice", ticketInfo.getTicketPrice());
 		preOrderData.put("ticketName", ticketInfo.getTicketCategory());
 		
-		
 		return preOrderData;
 	}
 	
 	@PostMapping("/payment/result")
 	@ResponseBody
-	public String paymentResult(@RequestBody String entity) {
+	public boolean paymentResult(Order order, HttpSession session) {
 		//TODO: process POST request
-		System.out.println("=-======================> 확인용 ");
-		return entity;
+		
+		String ticketCode = (String) session.getAttribute("STK");
+		order.setTicketCode(ticketCode);
+		System.out.println("=-======================> 확인용 " + order);
+		
+		return ticketService.createTicketOrder(order);
 	}
 	
 	
