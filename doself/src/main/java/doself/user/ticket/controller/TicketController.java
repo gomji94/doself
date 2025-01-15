@@ -113,7 +113,7 @@ public class TicketController {
 	
 	@PostMapping("/payment")
 	@ResponseBody
-	public Map<String, Object> pamentTest(String ticketKey, HttpSession session) {
+	public Map<String, Object> paymentTest(String ticketKey, HttpSession session) {
 		//TODO: process POST request
 		
 		String memberId = (String) session.getAttribute("SID");
@@ -126,16 +126,15 @@ public class TicketController {
 		preOrderData.put("ticketPrice", ticketInfo.getTicketPrice());
 		preOrderData.put("ticketName", ticketInfo.getTicketCategory());
 		
-		
 		return preOrderData;
 	}
 	
 	@PostMapping("/payment/result")
 	@ResponseBody
-	public String paymentResult(@RequestBody String entity) {
+	public String paymentResult(@RequestBody Map<String, Object> paramMap) {
 		//TODO: process POST request
-		System.out.println("=-======================> 확인용 ");
-		return entity;
+		System.out.println("=-======================> 확인용 " + paramMap);
+		return "redirect:/user/ticket/purchaselist";
 	}
 	
 	
