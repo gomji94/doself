@@ -52,7 +52,6 @@
 		            <div class="modal-header">
 		                <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
 		                <h2>챌린지 생성</h2>
-		                <!-- <button id="modalCloseBtn">&times;</button> -->
 		                <img id="modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
 		            </div>
 		            <hr id="header-section">
@@ -83,26 +82,25 @@
 			                        </div>
 			                        <!-- 에러 메시지 영역 -->
 			                        <div id="challengeNameError" style="display: none; color: red; font-size: 14px;"></div>
-			                        <div class="input-block">
+			                        <!-- <div class="input-block">
 			                            <span>챌린지 주제</span>
-			                            <select id="selectSubject" class="form-control" name="challengeTopicLevelCode"  disabled="disabled">
+			                            <select id="selectSubject" class="form-control" name="challengeTopicLevelCode">
 									        <option value="">주제를 선택해주세요</option>
-									        <!-- 리스트 안뜨는 오류 -->
 									        <th:block th:if="${topicList}" th:each="topic : ${topicList}">
 									            <option th:value="${topic.challengeTopicCode}" th:text="${topic.challengeTopicName}"></option>
 									        </th:block>
 									    </select>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
-			                        </div>
+			                        </div> -->
 			                        <div class="select-level-block input-block">
 			                            <span>난이도</span>
-			                            <select id="selectLevel" class="form-control" name="challengeLevel"  disabled="disabled">
-			                                <!-- 리스트 안뜨는 오류 -->
-			                                <option value="">난이도를 선택해주세요</option>
+			                            <select id="selectLevel" class="form-control" name="challengeTopicLevelCode" required>
+			                                <option value="">난이도 선택</option>
 			                                <th:block th:if="${levelList}" th:each="level : ${levelList}">
 			                                	<option th:value="${level.challengeLevelCode}" th:text="${level.challengeLevelContent}"></option>
 			                                </th:block>
 			                            </select>
+			                            <small id="challengeLevelError" style="color: red; display: none;">난이도를 선택해주세요</small>
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                        <div class="challenge-start-date-block input-block">
@@ -134,19 +132,21 @@
 			                            <img src="https://velog.velcdn.com/images/mekite/post/aaacbe1c-9430-46e6-8842-28fc8ae6417d/image.png" alt="입력 박스">
 			                        </div>
 			                    </div>
-			                    <textarea name="challengeContent" placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
-			                    <div class="text-box-under">
-			                        <button type="button" id="emojiButton">
-			                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
-			                        </button>
-			                        <!-- 이모지 드롭다운 -->
-			                        <div class="emoji-dropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 5px;"></div>
-			                        <div class="text-counter">
-			                            <span id="text-count">0</span>
-			                            <span>/500</span>
-			                        </div>
+			                    <div id="ChallengeInfoInputUnder">
+				                    <textarea name="challengeContent" placeholder="챌린지를 설명할 내용을 입력해주세요" maxlength="500" id="content"></textarea>
+				                    <div class="text-box-under">
+				                        <button type="button" id="emojiButton">
+				                            <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+				                        </button>
+				                        <!-- 이모지 드롭다운 -->
+				                        <div class="emoji-dropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 5px;"></div>
+				                        <div class="text-counter">
+				                            <span id="text-count">0</span>
+				                            <span>/500</span>
+				                        </div>
+				                    </div>
+				                    <button type="submit" class="submit-btn" id="createChallengeSubmitButton"><p>생성</p></button>
 			                    </div>
-			                    <button type="submit" class="submit-btn" id="createChallengeSubmitButton"><p>생성</p></button>
 			                </div>
 			            </div>
 		           	</form>
