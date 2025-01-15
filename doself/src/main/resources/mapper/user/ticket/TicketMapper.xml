@@ -174,13 +174,13 @@
 			ctph.ctph_num = #{paymentNum}
 	</select>
 	
-<<<<<<< HEAD
 	<insert id="createRefundRequest" parameterType="RefundRequest" >
 		INSERT INTO payment_refund_request
 		(prr_num, ctm_code, mbr_id, prr_date)
 		VALUES
 		('#{refundNum}', '#{ticketNum}', '#{memberId}', NOW())
-=======
+	</insert>
+	
 	<!-- 티켓 결제수단 생성 -->
 	<insert id="createTicketPaymentMethod" parameterType="Order">
 		INSERT INTO ticket_payment_method
@@ -200,7 +200,6 @@
 		INSERT INTO challenge_ticket_management
 		(ctm_code, ctph_num, mbr_id)
 		VALUES (#{ctmPkValue}, #{ctphPkValue}, #{memberId})
->>>>>>> refs/heads/develop
 	</insert>
   	
 </mapper>
