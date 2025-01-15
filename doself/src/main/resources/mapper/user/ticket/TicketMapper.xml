@@ -14,7 +14,7 @@
   		<result column="ctc_expl" 			property="ticketExplanation"/>
   	</resultMap>
   	
-  	<resultMap type="TicketPurchase" id="TicketPurchaseResultMap">
+  	<resultMap type="TicketPurchase" id="ticketPurchaseResultMap">
   		<id 	column="mbr_id" 			 property="memeberId"/>
   		<result column="ctph_num" 		     property="paymentNum"/>
   		<result column="ctph_date" 		     property="ticketPurchaseDate"/>
@@ -25,12 +25,13 @@
   		<result column="pmc_name" 			 property="paymentMethod"/>
   	</resultMap>
   	
-  	<resultMap type="TicketPurchaseInfo" id="TicketPurchaseInfoResultMap">
+  	<resultMap type="TicketPurchaseInfo" id="ticketPurchaseInfoResultMap">
   		<id column="ctph_num" 		         property="paymentNum"/>
   		<result column="ctc_category" 		 property="ticketCategory"/>
   		<result column="ctph_date" 		     property="ticketPurchaseDate"/>
   		<result column="ctp_price"			 property="paymentAmount"/>
   		<result column="pmc_name" 			 property="paymentMethod"/>
+  		<result column="ctm_code" 			 property="ticketNum"/>
   	</resultMap>
  
   	<!-- 티켓 아이템 리스트 조회 -->
@@ -48,7 +49,7 @@
 		WHERE ctp_is_deleted = 'active';
   	</select>
   	
-  	<select id="getTicketListById" resultMap="TicketPurchaseResultMap">
+  	<select id="getTicketListById" resultMap="ticketPurchaseResultMap">
   		SELECT 
 			ctph.mbr_id,
 			ctph.ctph_num,
@@ -111,7 +112,7 @@
 		</where>	
 	</select>
 	
-	<select id="getPurchaseListBySearch" resultType="map" resultMap="TicketPurchaseResultMap">
+	<select id="getPurchaseListBySearch" resultType="map" resultMap="ticketPurchaseResultMap">
 		SELECT 
 			ctph.mbr_id,
 			ctph.ctph_num,
@@ -144,13 +145,14 @@
 		ORDER BY ctph_date DESC
 		LIMIT #{rowPerPage}	OFFSET #{offset};	
 	</select>
-	<select id="getPurchaseDitail" parameterType="String" resultMap="TicketPurchaseInfoResultMap">
-	  		SELECT 
+	<select id="getPurchaseDetail" parameterType="String" resultMap="ticketPurchaseInfoResultMap">
+	  	SELECT 
 			ctph.ctph_num, 
 			ctc.ctc_category, 
 			ctph.ctph_date, 
 			ctp.ctp_price, 
-			pmc.pmc_name
+			pmc.pmc_name,
+			ctm.ctm_code
 		FROM 
 			challenge_ticket_payment_history ctph
 		INNER JOIN 
@@ -165,10 +167,20 @@
 		INNER JOIN
 			challenge_ticket_category ctc
 		USING(ctc_code)
+		INNER JOIN
+			challenge_ticket_management ctm
+		USING(ctph_num)
 		WHERE 
 			ctph.ctph_num = #{paymentNum}
 	</select>
 	
+<<<<<<< HEAD
+	<insert id="createRefundRequest" parameterType="RefundRequest" >
+		INSERT INTO payment_refund_request
+		(prr_num, ctm_code, mbr_id, prr_date)
+		VALUES
+		('#{refundNum}', '#{ticketNum}', '#{memberId}', NOW())
+=======
 	<!-- 티켓 결제수단 생성 -->
 	<insert id="createTicketPaymentMethod" parameterType="Order">
 		INSERT INTO ticket_payment_method
@@ -188,6 +200,7 @@
 		INSERT INTO challenge_ticket_management
 		(ctm_code, ctph_num, mbr_id)
 		VALUES (#{ctmPkValue}, #{ctphPkValue}, #{memberId})
+>>>>>>> refs/heads/develop
 	</insert>
   	
 </mapper>

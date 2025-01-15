@@ -25,7 +25,7 @@ public interface TicketService {
 	PageInfo<TicketPurchase> getPurchaseListBySearch(String memberId, Pageable pageable, String dayFilter);
 
 	//티켓 결제상세내역 조회	
-	TicketPurchaseInfo getPurchaseDitail(String memberId, String paymentNum);
+	TicketPurchaseInfo getPurchaseDetail(String memberId, String paymentNum);
 
 	// 티켓 주문 생성
 	boolean createTicketOrder(Order order);

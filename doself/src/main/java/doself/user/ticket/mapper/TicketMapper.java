@@ -30,7 +30,7 @@ public interface TicketMapper {
 	int getCntOfPurchaseBySearch(String memberId, String dayFilter);
 	
 	// 티켓 상세정보 조회
-	TicketPurchaseInfo getPurchaseDitail(String paymentNum);
+	TicketPurchaseInfo getPurchaseDetail(String paymentNum);
 	
 	// 단일 티켓 정보 조회
 	TicketItem getTicketInfoByTicketKey(String ticketKey);
