@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doself.file.mapper.FilesMapper">
+
+	<resultMap type="doself.file.domain.Files" id="fileResultMap">
+		<result property="fileIdx" 			column="file_idx"/>
+		<result property="fileNewName" 		column="file_new_name"/>
+		<result property="fileOriginalName" column="file_original_name"/>
+		<result property="filePath" 		column="file_path"/>
+		<result property="fileRegDate" 		column="file_reg_date"/>
+	</resultMap>
+
+	<delete id="deleteFileByIdx" parameterType="String">
+		DELETE
+		FROM 
+			files
+		WHERE
+			file_idx = #{fileIdx}
+	</delete>
+
+	<select id="getFileInfoByIdx" parameterType="string" resultMap="fileResultMap">
+		SELECT
+		 	`file_idx`,
+			`file_new_name`,
+			`file_original_name`,
+			`file_path`,
+			`file_reg_date`
+		FROM
+			files
+		WHERE
+			file_idx = #{fileIdx}
+	</select>
+	
+	<select id="getFileList" resultMap="fileResultMap">
+		SELECT
+			 file_idx,
+			 file_new_name,
+			 file_original_name,
+			 file_path,
+			 file_reg_date
+		FROM
+			files
+	</select>
+
+	<insert id="addfile" parameterType="doself.file.domain.Files">
+		INSERT INTO files
+		(
+			 file_idx,
+			 file_new_name,
+			 file_original_name,
+			 file_path,
+			 file_reg_date
+		)VALUES( 
+			 #{fileIdx},
+			 #{fileNewName},
+			 #{fileOriginalName},
+			 #{filePath},
+			 CURDATE()
+		)
+	</insert>
+
+	<insert id="addfiles" parameterType="doself.file.domain.Files">
+		INSERT INTO files
+		(
+			 file_idx,
+			 file_new_name,
+			 file_original_name,
+			 file_path,
+			 file_reg_date
+		)VALUES
+		
+		<!-- 동적으로 계속 insert 쿼리 생성 -->
+		<foreach collection="list" item="file" separator=",">
+		( 
+			 #{fileIdx},
+			 #{fileNewName},
+			 #{fileOriginalName},
+			 #{filePath},
+			 CURDATE()
+		)
+		</foreach>
+	</insert>
+</mapper>
+
+
+
+
+
+
+

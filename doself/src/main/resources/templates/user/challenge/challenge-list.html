@@ -55,7 +55,7 @@
 		                <img id="modal-close" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
 		            </div>
 		            <hr id="header-section">
-		           	<form id="addChallenge" th:action="@{/user/list/createchallengerequest}" method="post" enctype="multipart/form-data">
+		           	<form id="addChallenge" th:action="@{/challenge/list/createchallengerequest}" method="post" enctype="multipart/form-data">
 			            <div class="modal-body">
 			                <!-- 이미지 업로드 영역 -->
 			                <div class="upload-section">
@@ -64,7 +64,8 @@
 			                        <p>사진을 끌어서 이곳에 넣어주세요</p>
 			                        <button type="button" class="upload-btn" id="createChallengeUploadButton">파일 불러오기</button>
 			                        <!-- 파일 input 태그 -->
-			                        <input type="file" name="files" class="form-control" id="createChallengeFileInput" accept="image/*" style="display: none;" multiple>
+			                        <input type="file" id="files" name="files" class="form-control" style="display: none;">
+			                        <!-- accept="image/*" -->
 			                    </div>
 			                    <div class="preview-box" id="createChallengePreviewContainer" style="display: none;">
 			                        <img src="" name="challengePicture" alt="업로드된 이미지 미리보기" id="createChallengePreviewImage">
@@ -170,7 +171,7 @@
 	        <!-- 카드 목록 -->
 	        <section class="card-grid" th:if="${challengeList != null and !challengeList.isEmpty()}">
 	            <div class="card" th:each="cl : ${challengeList}" th:data-code="${cl.challengeCode}" style="border: none;">
-	                <img th:src="${cl.challengePicture}" alt="카드 이미지">
+	                <img th:src="@{|${cl.challengePicture}|}" alt="카드 이미지">
 	                <div class="card-content">
 	                    <div class="tag-container">
 	                        <a href="#" class="tag-a"><h3 th:text="|# ${cl.challengeTopicName}|" class="challenge-tag"></h3></a>
