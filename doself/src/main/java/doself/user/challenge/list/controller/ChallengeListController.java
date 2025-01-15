@@ -96,8 +96,8 @@ public class ChallengeListController {
 	        }
 	    }
 	    
-	    log.info(">>>>>>>>>> addChallenge : {}", addChallenge);
-		log.info(">>>>>>>>>> file : {}", files);
+	    log.info(">>> location/controller >>> addChallenge : {}", addChallenge);
+		log.info(">>> location/controller >>> file : {}", files);
 		
 		model.addAttribute("topicList", topicList);
 		model.addAttribute("levelList", levelList);
@@ -111,7 +111,7 @@ public class ChallengeListController {
     public Map<String, Boolean> checkDuplicateName(@RequestBody Map<String, String> request) {
         String challengeName = request.get("challengeName");
         boolean isAvailable = !challengeListService.isNameDuplicate(challengeName);
-        //log.info(">>>>>>>>>> challengeName : {}", challengeName);
+        //log.info(">>> location/controller >>> challengeName : {}", challengeName);
         return Collections.singletonMap("available", isAvailable);
     }
 	
