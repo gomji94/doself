@@ -239,6 +239,13 @@ p.challenge-text {
     display: none;
 }
 
+div#ChallengeInfoInputUnder {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 14px;
+}
+
 #create-challenge-modal {
     position: fixed;
     top: 0;

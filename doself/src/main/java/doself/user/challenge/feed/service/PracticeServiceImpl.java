@@ -3,6 +3,7 @@ package doself.user.challenge.feed.service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -33,10 +34,11 @@ public class PracticeServiceImpl implements PracticeService {
 		
 		
 		
-		// 챌린지내 개인기록	
+		// ...(*￣０￣)ノ챌린지내 개인기록	...(*￣０￣)ノ
+		
 		// 챌린지 피드생성시 실행
 		// 해당아이디의 해당챌린지의 해당날짜에 데이터의 수 조회
-		int ChallengeFeedCount = practiceMapper.getChallengeFeedCountByChallengeFeed(challengeFeed);
+		int challengeFeedCount = practiceMapper.getChallengeFeedCountByChallengeFeed(challengeFeed);
 		
 		// 챌린지내 개인기록 해당아이디, 해당챌린지, 해당날짜에 데이터가 있는지 조회
 		int isDataMemberStat = practiceMapper.isDataMemberStat(challengeFeed);
@@ -53,7 +55,7 @@ public class PracticeServiceImpl implements PracticeService {
 		memberStatMap.put("challengeFeed", challengeFeed);
 		memberStatMap.put("newKey", memberStatKey);
 		memberStatMap.put("topicLevel", topicLevel);
-		memberStatMap.put("ChallengeFeedCount", ChallengeFeedCount);
+		memberStatMap.put("challengeFeedCount", challengeFeedCount);
 		
 		// 챌린지내 개인기록 한개도 존재하지 않을시 insert
 		if(isDataMemberStat == 0) {	
@@ -67,7 +69,8 @@ public class PracticeServiceImpl implements PracticeService {
 		}
 		
 		
-		// 챌린지 개인 점수
+		
+		// ...(*￣０￣)ノ챌린지 개인 점수...(*￣０￣)ノ
 		
 		// 년도,월 분리
 		Date date = challengeFeed.getChallengeFeedDate();
@@ -117,7 +120,8 @@ public class PracticeServiceImpl implements PracticeService {
 		practiceMapper.updateMemberScoreRank();
 		
 		
-		// 챌린지 별 기록
+		
+		// ...(*￣０￣)ノ챌린지 별 기록 ...(*￣０￣)ノ
 		
 		// 해당날짜 해당챌린지의 데이터가 있는지 조회
 		int isDataChallengeStat = practiceMapper.isDataChallengeStat(challengeFeed);
@@ -148,7 +152,9 @@ public class PracticeServiceImpl implements PracticeService {
 		}
 		
 		
-		// 챌린지 점수
+		
+		
+		// ...(*￣０￣)ノ챌린지 점수...(*￣０￣)ノ
 		
 		Map<String, Object> challengeScore = new HashMap<String, Object>();
 		
@@ -195,5 +201,21 @@ public class PracticeServiceImpl implements PracticeService {
 		
 		// 랭킹 update
 		practiceMapper.updateChallengeScoreRank();
+		
+		
+		// ...(*￣０￣)ノ리더가 경고한 내역...(*￣０￣)ノ (리더가 경고누를 때 판별)
+		
+		// 해당챌린지 해당멤버 경고 3번받으면 해당챌린지 퇴장
+		
+		// 퇴장당하지 않은 멤버중 경고 3번받은 멤버 조회
+		List<Map<String, Object>> accumulatedWarningMember = practiceMapper.getAccumulatedWarningMember();
+		
+		// 챌린지 퇴장 처리 (insert)
+		for(Map<String, Object> e : accumulatedWarningMember) {
+			String cgmNumKey = commonMapper.getPrimaryKey("cgm_", "challenge_group_member", "cgm_num");
+			e.put("cgmNumKey", cgmNumKey);
+			
+			practiceMapper.createChallengeMemberCsNum(e);
+		}
 	}
 }

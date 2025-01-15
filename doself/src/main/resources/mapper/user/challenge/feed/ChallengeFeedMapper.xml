@@ -314,9 +314,9 @@
 	<update id ="updatePersonalStat" parameterType="map">
 		UPDATE challenge_member_score_stats
 		<set>
-		cmss_upload_feed_count = #{ChallengeFeedCount},
-		cmss_participation_check = CASE WHEN (#{ChallengeFeedCount}/#{topicLevel}) = 1 THEN 0 ELSE 1 END,
-		cmss_today_achievement_rate =  (#{ChallengeFeedCount}/#{topicLevel})*100
+		cmss_upload_feed_count = #{challengeFeedCount},
+		cmss_participation_check = CASE WHEN (#{challengeFeedCount}/#{topicLevel}) = 1 THEN 0 ELSE 1 END,
+		cmss_today_achievement_rate =  (#{challengeFeedCount}/#{topicLevel})*100
 		</set>
 		<where>
 			cg_num = #{challengeFeed.challengeCode}
@@ -682,5 +682,56 @@
 		    AND monthly_challenge_score_list.mcsl_monthly = ranked_data.mcsl_monthly
 		    AND monthly_challenge_score_list.cg_num = ranked_data.cg_num;	
 	</update>
+	
+	<!-- 퇴장당하지 않은 멤버중 경고 3번받은 멤버 조회 -->
+	<select id="getAccumulatedWarningMember" resultType="map">
+		WITH recentData AS (
+		    SELECT *,
+		           ROW_NUMBER() OVER (PARTITION BY cg_num, mbr_id ORDER BY cgm_date DESC) AS rn
+		    FROM challenge_group_member
+		)
+		SELECT
+		    lcmwl.cg_num AS cgNum,
+		    lcmwl.cgm_num AS cgmNum,
+		    MAX(m.mbr_id) AS mbrId
+		FROM
+		    (SELECT 
+			 	cgm_num,
+		      	cg_num,
+			    mbr_id,
+			    cs_num,
+			    cgm_date
+		    FROM 
+			 	recentData
+		    WHERE 
+			 	rn = 1
+		      	AND 
+				cs_num = 'cs_002'
+		    ORDER BY cgm_date DESC) m
+			JOIN leader_challenge_mbr_warning_log lcmwl
+			ON m.cg_num = lcmwl.cg_num
+		   	AND m.cgm_num = lcmwl.cgm_num
+		GROUP BY lcmwl.cg_num, lcmwl.cgm_num
+		HAVING
+			COUNT(lcmwl.cgm_num) >=3
+	</select>
+	
+	<!-- 챌린지 퇴장처리 -->
+	<insert id="createChallengeMemberCsNum" parameterType="map">
+		INSERT INTO challenge_group_member (
+			cgm_num, 
+			cg_num, 
+			mbr_id, 
+			cs_num, 
+			cgm_date
+			) VALUES (
+			#{cgmNumKey}, 
+			#{cgNum}, 
+			#{mbrId}, 
+			'cs_007', 
+			NOW()
+		)
+	</insert>
+	
   </mapper>
   
