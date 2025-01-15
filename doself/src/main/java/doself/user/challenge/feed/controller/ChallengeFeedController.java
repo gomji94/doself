@@ -42,7 +42,7 @@ public class ChallengeFeedController {
 	    if (challengeCode == null) {
             challengeCode = challengeFeedService.getChallengeCodeByMemberId(loggedInMemberId);
             if (challengeCode == null) {
-            	return "redirect:user/food/list";
+            	return "redirect:user/feed/list";
             }
         }
 	    

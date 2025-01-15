@@ -10,12 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.common.mapper.CommonMapper;
+import doself.user.ticket.domain.Order;
 import doself.user.ticket.domain.RefundRequest;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
@@ -128,8 +128,6 @@ public class TicketController {
 		refundRequest.setMemberId((String) session.getAttribute("SID"));
 		refundRequest.setPaymentNum(paymentNum);
 		
-		
-		
 		return "user/ticket/purchase-list";
 	}
 	
@@ -137,12 +135,13 @@ public class TicketController {
 	
 	@PostMapping("/payment")
 	@ResponseBody
-	public Map<String, Object> pamentTest(String ticketKey, HttpSession session) {
+	public Map<String, Object> paymentTest(String ticketKey, HttpSession session) {
 		//TODO: process POST request
 		
 		String memberId = (String) session.getAttribute("SID");
 		String orderKeyValue =  commonMapper.getPrimaryKey("ctph_", "challenge_ticket_payment_history", "ctph_num");
 		TicketItem ticketInfo = ticketMapper.getTicketInfoByTicketKey(ticketKey);
+		session.setAttribute("STK", ticketKey);
 		
 		Map<String, Object> preOrderData = new HashMap<String, Object>();
 		preOrderData.put("memberId", memberId);
@@ -150,16 +149,19 @@ public class TicketController {
 		preOrderData.put("ticketPrice", ticketInfo.getTicketPrice());
 		preOrderData.put("ticketName", ticketInfo.getTicketCategory());
 		
-		
 		return preOrderData;
 	}
 	
 	@PostMapping("/payment/result")
 	@ResponseBody
-	public String paymentResult(@RequestBody String entity) {
+	public boolean paymentResult(Order order, HttpSession session) {
 		//TODO: process POST request
-		System.out.println("=-======================> 확인용 ");
-		return entity;
+		
+		String ticketCode = (String) session.getAttribute("STK");
+		order.setTicketCode(ticketCode);
+		System.out.println("=-======================> 확인용 " + order);
+		
+		return ticketService.createTicketOrder(order);
 	}
 	
 	

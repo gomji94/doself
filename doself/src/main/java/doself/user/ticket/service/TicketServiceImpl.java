@@ -6,6 +6,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import doself.common.mapper.CommonMapper;
+import doself.user.members.mapper.MembersMapper;
+import doself.user.ticket.domain.Order;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
 import doself.user.ticket.domain.TicketPurchaseInfo;
@@ -23,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TicketServiceImpl implements TicketService{
 
 	private final TicketMapper ticketMapper;
+	private final CommonMapper commonMapper;
+	private final MembersMapper membersMapper;
 	
 	// 티켓 아이템 조회
 	@Override
@@ -74,6 +79,51 @@ public class TicketServiceImpl implements TicketService{
 		//System.out.println("--------svs------------" + ticketMapper.getPurchaseDitail(paymentNum));
 		
 		return ticketMapper.getPurchaseDetail(paymentNum);
+	}
+
+	@Override
+	public boolean createTicketOrder(Order order) {
+		// TODO Auto-generated method stub
+		
+		boolean result = false;
+		
+		// pmc_code 설정
+		String paymentMethod = order.getPaymentMethod();
+		switch (paymentMethod) {
+			case "card" -> {
+				order.setPaymentMethod("pmc_001");
+			}
+		}
+		
+		// 티켓결제수단 insert
+		String formattedpaymentMethodNum = commonMapper.getPrimaryKey("tpm_", "ticket_payment_method", "tpm_num");
+		order.setPaymentMethodNum(formattedpaymentMethodNum);
+		int payMethodResult = ticketMapper.createTicketPaymentMethod(order);
+		
+		// 티켓 결제이력 insert
+		if (payMethodResult > 0) {
+			TicketItem ticketItem = ticketMapper.getTicketInfoByTicketKey(order.getTicketCode());
+			order.setTicketPriceCode(ticketItem.getTicketPriceCode());
+			
+			int payHistoryResult = ticketMapper.createTicketOrder(order);
+			if (payHistoryResult > 0) {
+				
+				// 티켓 관리 insert
+				String formattedticketManagePkNum = commonMapper.getPrimaryKey("ctm_", "challenge_ticket_management", "ctm_code");
+				int ticketManageResult = ticketMapper.createTicketManagement(formattedticketManagePkNum, order.getOrderPkValue(), order.getOrdererId());
+				
+				if (ticketManageResult > 0) {
+					
+					int modifyTicketCnt = membersMapper.getMemebrTicketCntByIdandTicketCode(order) + 1;
+					order.setUpdatedTicketCnt(modifyTicketCnt);
+					membersMapper.modifyMemberTicketCnt(order);
+					result = true;
+				}
+				
+			}
+		}
+		
+		return result;
 	}
 	
 
