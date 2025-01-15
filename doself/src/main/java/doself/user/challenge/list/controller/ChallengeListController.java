@@ -91,7 +91,6 @@ public class ChallengeListController {
 			@RequestPart(name = "files", required = false) MultipartFile files, HttpSession session, Model model) {
 		
 		// 현재 세션의 아이디 설정
-		addChallenge.setChallengeLeaderName((String) session.getAttribute("SID"));
 		addChallenge.setMemberId((String) session.getAttribute("SID"));
 		
 		log.info(">>> location/controller >>> files: {}", files);

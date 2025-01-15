@@ -91,7 +91,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		LocalDate endDate = startDate.plusDays(14);
 	    
 	    // 기본값 설정
-	    addChallenge.setChallengeCurrentMember(0);      // 챌린지 현재 멤버수(기본값 0)
+	    addChallenge.setChallengeCurrentMember(1);      // 챌린지 현재 멤버수(기본값 1)
 	    addChallenge.setChallengeGroupLike(0);			// 챌린지 좋아요(기본값 0)
 	    addChallenge.setChallengeStatusCode("cs_004");  // 챌린지 상태 분류 번호(초기 기본값 cs_004)
 	    addChallenge.setChallengeRewardCheck("");		// 보상 지급 여부(빈값) → 완료시 적합 여부 판단 후 입력
