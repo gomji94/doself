@@ -178,7 +178,7 @@
 		INSERT INTO payment_refund_request
 		(prr_num, ctm_code, mbr_id, prr_date)
 		VALUES
-		('#{refundNum}', '#{ticketNum}', '#{memberId}', NOW())
+		(#{refundRequestPkValue}, #{ticketNum}, #{memberId}, NOW())
 	</insert>
 	
 	<!-- 티켓 결제수단 생성 -->

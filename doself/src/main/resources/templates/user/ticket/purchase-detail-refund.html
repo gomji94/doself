@@ -8,7 +8,8 @@
         <!-- 메인 콘텐츠 -->
 <div id="refund-container">     
 	<th:block th:object ="${detailInfo}">
-	<form>
+	<form id="refundForm" th:href="@{/ticket/purchasedetail/refund}" method="post">
+		<input type="hidden" id="ticketNum" name="ticketNum" th:value="*{ticketNum}"/>
 		<div id="main-title">환불신청</div>
 			<div id="main-content">
 				<div class="main-item-header">
@@ -61,7 +62,7 @@
 					    </div>
 					</div>
 					<div class="refund-result">
-					    <button type="submit" class="refund-request-submit__button" id="refund-request-submit">제출</button>
+					    <button type="button" class="refund-request-submit__button" id="refund-request-submit">제출</button>
 					    <button class="close" id="backBtn">취소</button>
 					</div>
     			</div>
@@ -115,12 +116,12 @@
     
     </th:block> 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+    	<script th:src="@{/assets/js/ticket/refund-item.js}"> </script>
+    </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <script th:inline="javascript">
-
-    
     </script>
 
 </html>
