@@ -1,5 +1,6 @@
 package doself.user.challenge.feed.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -75,4 +76,9 @@ public interface PracticeMapper {
 	int updateChallengeScore(Map<String, Object> challengeScoreMap);
 	// 랭킹 update
 	int updateChallengeScoreRank();
+	
+	// 퇴장당하지 않은 멤버중 경고 3번받은 멤버 조회
+	List<Map<String, Object>> getAccumulatedWarningMember();
+	// 챌린지 퇴장 처리
+	void createChallengeMemberCsNum(Map<String, Object> e);
 }

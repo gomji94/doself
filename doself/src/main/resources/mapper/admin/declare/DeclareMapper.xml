@@ -294,13 +294,49 @@
   		<!-- 부정회원 추가후 회원등급 변경 -->
   		<update id="modifyMgCode" parameterType="Declare">
   			UPDATE `member`
-  			<trim prefix="SET" suffixOverrides=","> 	
+  			<set>
   				mbr_id = #{mbrId},									
-				mg_code = 'mg_003'				  			
-  			</trim>
+				mg_code = 'mg_003'				  			  			  	
+  			</set>	
   			WHERE
   				mbr_id = #{mbrId};
   		</update>
+  		
+  		<!-- 부정회원 추가후 진행중인 챌린지가 있는지 조회후 챌린지 반환 -->
+  		<select id="isDataParticipationChallnege" parameterType="Declare" resultType="String">
+  			WITH recentData AS (
+			   SELECT *,
+			      ROW_NUMBER() OVER (PARTITION BY mbr_id,cg_num ORDER BY cgm_date DESC) AS rn
+			   FROM challenge_group_member
+			)
+			SELECT
+				r.cg_num
+			FROM
+				recentData r
+			WHERE
+				r.rn = 1
+				AND 
+				r.cs_num = 'cs_002'
+				AND 
+				r.mbr_id = #{mbrId}	
+  		</select>
+  		
+  		<!-- 참여중인 챌린지가 있으면 챌린지참여자 insert -->
+  		<insert id="createChallengeMember" parameterType="map">	
+	  		INSERT INTO challenge_group_member (
+		  		cgm_num, 
+		  		cg_num, 
+		  		mbr_id, 
+		  		cs_num, 
+		  		cgm_date
+	  		) VALUES (
+		  		#{challengeMemberKey}, 
+		  		#{cgNum}, 
+		  		#{mbrId}, 
+		  		'cs_008', 
+		  		NOW()
+	  		)
+  		</insert>
   		
   		<!-- 제제기간 지난 유저리스트 가져오기 -->
   		<select id="getSanctionEndList" resultMap="declareUserResultMap">
@@ -339,9 +375,8 @@
   		<update id="everydayCheck" parameterType="DeclareUser">
   			UPDATE
   				`member`
-  			<set>
+  			SET
   				mg_code = 'mg_002'
-  			</set>
   			WHERE
   				mbr_id = #{mbrId}
   		</update>
