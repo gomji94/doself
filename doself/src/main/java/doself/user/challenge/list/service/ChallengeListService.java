@@ -3,6 +3,9 @@ package doself.user.challenge.list.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import doself.file.domain.Files;
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
@@ -18,7 +21,7 @@ public interface ChallengeListService {
 	//List<ChallengeDetailView> getChallengeListView(String challengeCode);
 	
 	// 챌린지 추가(작업중)
-	void addChallenge(AddChallenge addChallenge);
+	void addChallenge(MultipartFile files, AddChallenge addChallenge);
 	
 	// 챌린지 페이지
 	CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable);
@@ -31,4 +34,9 @@ public interface ChallengeListService {
 	
 	// 챌린지 난이도 리스트
 	List<Map<String, String>> getChallengeLevelList();
+	
+	
+	
+	//파일 삭제
+	void deleteFile(Files fileDto);
 }

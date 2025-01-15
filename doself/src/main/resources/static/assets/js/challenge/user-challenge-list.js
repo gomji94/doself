@@ -137,11 +137,11 @@ $(document).ready(function () {
 $(document).ready(function () {
 	// 파일 선택 창 열기
     $('#createChallengeUploadButton').on('click', function () {
-        $('#createChallengeFileInput').click(); // 파일 선택 창 열기
+        $('#files').click(); // 파일 선택 창 열기
     });
 
     // 파일 선택 시 미리보기
-    $('#createChallengeFileInput').on('change', function (event) {
+    $('#files').on('change', function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -167,9 +167,11 @@ $(document).ready(function () {
         $.ajax({
             url: '/challenge/list/createchallengerequest',
             method: 'POST',
-            processData: false,
+			data: formData,
+            async: false,
+            cache: false,
             contentType: false,
-            data: formData,
+            processData: false,
             success: function () {
                 alert('챌린지가 성공적으로 생성되었습니다.');
                 location.reload();
