@@ -1,3 +1,16 @@
+// 날짜 포맷팅 함수
+function formatDate(unixTimestamp) {
+    let date = new Date(unixTimestamp * 1000); // 초 단위를 밀리초 단위로 변환
+    let year = date.getFullYear();
+    let month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    let day = String(date.getDate()).padStart(2, '0');
+    let hours = String(date.getHours()).padStart(2, '0');
+    let minutes = String(date.getMinutes()).padStart(2, '0');
+    let seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 //문서가 준비되면 제일 먼저 실행
 $(document).ready(function(){ 
 	$("#payment").click(function(){ 
@@ -39,21 +52,28 @@ function requestPay(data) {
 		  buyer_name: data.memberId 
 	  }, function (response) { // callback
 	      if (response.success) {
-				console.log(response);
+			console.log(response);	
+			
 	          // jQuery로 HTTP 요청
 	          jQuery.ajax({
 	            url: "/ticket/payment/result", 
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				  // imp_uid와 merchant_uid, 주문 정보를 서버에 전달합니다
-				data: JSON.stringify({
-					imp_uid: response.imp_uid,
-					merchant_uid: response.merchant_uid,
-					paid_amount: response.paid_amount,
-					apply_num: response.apply_num
-				})
+				contentType: 'application/x-www-form-urlencoded',
+				dataType: 'json',
+				data: {
+					orderPkValue : response.merchant_uid,
+					ordererId : response.buyer_name,
+					paymentMethod : response.pay_method,
+					paymentCardName : response.card_name,
+					paymentCardNum : response.card_number,
+					paymentUniqueValue : response.imp_uid,
+					paymentDate : formatDate(response.paid_at)
+				}
 	          }).done(function (data) {
-	        	console.log("구매이력 저장 로직실행")
+	        	console.log("결제 성공")
+				
+				window.location.href = "/ticket/purchaselist";
+				
 	          })
 	      } else {
 	    	  var msg = '결제에 실패하였습니다.';
