@@ -96,6 +96,43 @@ $(document).ready(function () {
 });
 
 
+// --- create challenge input validation warning ---
+$(document).ready(function () {
+    const levelSelect = $('#selectLevel');
+    const levelError = $('#challengeLevelError');
+    const startDateInput = $('#challengeStartDate');
+    const startDateError = $('<small style="color: red; display: none;">시작일을 선택해주세요</small>').insertAfter(startDateInput);
+
+    // 난이도 선택 검증
+    levelSelect.on('change', function () {
+        if (!levelSelect.val()) {
+            levelError.show();
+        } else {
+            levelError.hide();
+        }
+    });
+
+    // 시작일 입력 검증
+    startDateInput.on('change', function () {
+        if (!startDateInput.val()) {
+            startDateError.show();
+        } else {
+            startDateError.hide();
+        }
+    });
+
+    // 폼 제출 시 유효성 검사
+    $('#addChallenge').on('submit', function (e) {
+        if (!levelSelect.val() || !startDateInput.val()) {
+            e.preventDefault();
+            if (!levelSelect.val()) levelError.show();
+            if (!startDateInput.val()) startDateError.show();
+            alert('필수 입력 값을 작성해주세요');
+        }
+    });
+});
+
+
 // --- create challenge image preview & form submit ---
 $(document).ready(function () {
 	// 파일 선택 창 열기

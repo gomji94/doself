@@ -1,5 +1,8 @@
 package doself.user.challenge.list.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -50,26 +53,37 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	public ChallengeDetailView getChallengeListView(String challengeCode) {
 		return challengeListMapper.selectChallengeDetail(challengeCode);
 	}
-//	public List<ChallengeDetailView> getChallengeListView(String challengeCode) {
-//		List<ChallengeDetailView> challengeListDetail = challengeListMapper.getChallengeListView(challengeCode);
-//	    log.info("challengeListDetail: {}", challengeListDetail);
-//	    return challengeListDetail;
-//	}
 
 	// 챌린지 생성(등록)
 	@Override
 	public void addChallenge(AddChallenge addChallenge) {
-		List<AddChallenge> addChallengeList = challengeListMapper.addChallengeList();
+		//List<AddChallenge> addChallengeList = challengeListMapper.addChallengeList();
 		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
 		String formattedKeyNum = commonMapper.getPrimaryKey("cg_", "challenge_group", "cg_num");
 		addChallenge.setChallengeCode(formattedKeyNum);
 		
-		//String addChallengeResult = String.format("ctl_%03d", challengeList.getChallengeTopicCode());
-		//challengeList.setChallengeTopicCode(addChallengeResult);
+		// 챌린지 주제 리스트 번호로 받아오기
+//		String addChallengeResult = String.format("ct_%03d", addChallenge.getChallengeTopicCode());
+//		addChallenge.setChallengeTopicCode(addChallengeResult);
 		
-		//challengeList.setChallengeEndDate(challengeList.getChallengeStartDate());
+		// 챌린지 난이도 리스트 번호로 받아오기(숫자 타입으로 데이터 받아와서 문자열로 변환 후 전송)
+		String addChallengeResult = String.format("ctl_%03d", Integer.parseInt(addChallenge.getChallengeTopicLevelCode()));
+		addChallenge.setChallengeTopicLevelCode(addChallengeResult);
 		
-		//log.info(">>>>>>>>>> challengeList : {}", challengeList);
+		// 종료일 설정 (시작일 + 14일)
+		LocalDate startDate = addChallenge.getChallengeStartDate().toInstant()
+		        .atZone(ZoneId.systemDefault())
+		        .toLocalDate();
+		LocalDate endDate = startDate.plusDays(14);
+	    
+	    // 기본값 설정
+	    addChallenge.setChallengeCurrentMember(0);      // 챌린지 현재 멤버수(기본값 0)
+	    addChallenge.setChallengeGroupLike(0);			// 챌린지 좋아요(기본값 0)
+	    addChallenge.setChallengeStatusCode("cs_004");  // 챌린지 상태 분류 번호(초기 기본값 cs_004)
+	    addChallenge.setChallengeRewardCheck(null);		// 보상 지급 여부(null) → 완료시 적합 여부 판단 후 입력
+	    addChallenge.setChallengeEndDate(Date.valueOf(endDate));
+	    
+		log.info(">>> location/service >>> addChallenge : {}", addChallenge);
 		
 		challengeListMapper.addChallenge(addChallenge);
 	}
@@ -80,7 +94,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	    int rowCnt = challengeListMapper.getCntChallengeList();
 	    List<ChallengeList> challengeList = challengeListMapper.getChallengeList(cardPageable);
 	    
-	    //log.info(">>>>>>>>>> challengeList : {}", challengeList);
+	    //log.info(">>> location/service >>> challengeList : {}", challengeList);
 	    
 	    return new CardPageInfo<>(challengeList, cardPageable, rowCnt);
 	}

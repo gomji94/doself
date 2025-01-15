@@ -41,7 +41,12 @@ public class ChallengeListController {
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public String getChallengeList(CardPageable cardPageable, Model model) {
 		var challengeListPageInfo = challengeListService.getChallengeList(cardPageable);
-		//List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		
+		// 챌린지 주제 리스트
+		var topicList = challengeListService.getChallengeTopicList();
+	    // 챌린지 난이도 리스트
+	    var levelList = challengeListService.getChallengeLevelList();
+		
 		List<ChallengeList> challengeList = challengeListPageInfo.getContents();
 		int currentPage = challengeListPageInfo.getCurrentPage();
 		int startPageNum = challengeListPageInfo.getStartPageNum();
@@ -54,6 +59,8 @@ public class ChallengeListController {
 		model.addAttribute("startPageNum", startPageNum);
 		model.addAttribute("endPageNum", endPageNum);
 		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("topicList", topicList);
+		model.addAttribute("levelList", levelList);
 		return "user/challenge/challenge-list";
 	}
 	
@@ -62,9 +69,9 @@ public class ChallengeListController {
 	@ResponseBody
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public ChallengeDetailView getChallengeListView(@RequestParam("challengeCode") String challengeCode) {
-        //log.info("Challenge Code: {}", challengeCode);
+        //log.info(">>> location/controller >>> challengeCode: {}", challengeCode);
         ChallengeDetailView challengeDetail = challengeListService.getChallengeListView(challengeCode);
-        //log.info("Challenge Detail: {}", challengeDetail);
+        //log.info(">>> location/controller >>> challengeDetail: {}", challengeDetail);
         return challengeDetail;
     }
 	
@@ -74,18 +81,12 @@ public class ChallengeListController {
 			@RequestPart(name = "files", required = false) MultipartFile files,
 			HttpSession session, Model model) {
 		
-		// 챌린지 주제 리스트
-		var topicList = challengeListService.getChallengeTopicList();
-	    log.info(">>> location/controller >>> topicList: {}", topicList); // 챌린지 주제 리스트 확인
-	    // 챌린지 난이도 리스트
-	    var levelList = challengeListService.getChallengeLevelList();
-	    log.info(">>> location/controller >>> levelList: {}", levelList); // 챌린지 난이도 리스트 확인
-		
+		// 현재 세션의 아이디 설정
+		addChallenge.setChallengeLeaderName((String) session.getAttribute("SID"));
 		addChallenge.setMemberId((String) session.getAttribute("SID"));
-		challengeListService.addChallenge(addChallenge);
 		
 		// 파일 처리
-	    if (files != null && !files.isEmpty()) {
+		if (files != null && !files.isEmpty()) {
 	        String filePath = "uploads/" + files.getOriginalFilename();
 	        try {
 	            files.transferTo(new File(filePath));
@@ -95,13 +96,9 @@ public class ChallengeListController {
 	            return "redirect:/error";
 	        }
 	    }
-	    
-	    log.info(">>>>>>>>>> addChallenge : {}", addChallenge);
-		log.info(">>>>>>>>>> file : {}", files);
 		
-		model.addAttribute("topicList", topicList);
-		model.addAttribute("levelList", levelList);
-
+		challengeListService.addChallenge(addChallenge);
+		
 		return "redirect:/challenge/list";
 	}
 	
@@ -111,7 +108,7 @@ public class ChallengeListController {
     public Map<String, Boolean> checkDuplicateName(@RequestBody Map<String, String> request) {
         String challengeName = request.get("challengeName");
         boolean isAvailable = !challengeListService.isNameDuplicate(challengeName);
-        //log.info(">>>>>>>>>> challengeName : {}", challengeName);
+        //log.info(">>> location/controller >>> challengeName : {}", challengeName);
         return Collections.singletonMap("available", isAvailable);
     }
 	
