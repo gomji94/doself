@@ -123,15 +123,17 @@ public class TicketController {
 	
 	@PostMapping("/purchasedetail/refund")
 	@ResponseBody
-	public String purchaseRefund(@RequestParam(name="paymentNum") String paymentNum, RefundRequest refundRequest, HttpSession session) {
+	public boolean purchaseRefund(RefundRequest refundRequest, HttpSession session) {
+		
+		boolean isReg = false;
 		
 		refundRequest.setMemberId((String) session.getAttribute("SID"));
-		refundRequest.setPaymentNum(paymentNum);
+		refundRequest.setRefundRequestPkValue(commonMapper.getPrimaryKey("prr_", "payment_refund_request", "prr_num"));
+		int result = ticketMapper.createRefundRequest(refundRequest);
+		if(result > 0) isReg = true; 
 		
-		return "user/ticket/purchase-list";
+		return isReg;
 	}
-	
-	
 	
 	@PostMapping("/payment")
 	@ResponseBody
