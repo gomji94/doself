@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
+import doself.user.ticket.domain.Order;
 
 @Mapper
 public interface MembersMapper {
@@ -32,6 +33,12 @@ public interface MembersMapper {
 	
 	//회원 포인트이력 총 갯수
 	int getCntPointHistory(String memberId, String startDate, String endDate);
+	
+	// 회원 티켓 갯수 조회
+	int getMemebrTicketCntByIdandTicketCode(Order order);
+	
+	// 결제 후 회원 티켓 갯수 업데이트
+	int modifyMemberTicketCnt(Order order);
 	
 	
 }

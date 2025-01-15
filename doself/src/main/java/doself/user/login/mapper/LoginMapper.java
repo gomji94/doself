@@ -16,4 +16,7 @@ public interface LoginMapper {
 	
 	// 생년월일로 연령대 번호 받아오기
 	int getAgeByBirthDate(String birthDate);
+	
+	// 
+	void createMemberLoginLog(String keyValue, String memberId, String memberIp);
 }

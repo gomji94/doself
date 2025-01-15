@@ -4325,6 +4325,8 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
 }
 #searchBtn{
 	white-space:nowrap;
+	margin-left: 20px;
+	height : 36px;
 }
 
 @media (max-width: 1200px) {

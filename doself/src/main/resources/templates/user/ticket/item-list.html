@@ -4,6 +4,7 @@
       layout:decorate="~{user/layout/default}">
 <head>
 	<link th:href="@{/assets/css/ticket/itemlist.css}" rel="stylesheet" type="text/css" />
+	
 </head>		
 			
 	<th:block layout:fragment="content-body">
@@ -94,10 +95,13 @@
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource"></th:block>
     
+    
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     <script th:src="@{/assets/js/layout.js}"> </script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript">
+    
     
     document.querySelectorAll('.ticketCheck').forEach(radio => {
         radio.addEventListener('change', function() {

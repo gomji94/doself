@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.admin.member.domain.Member;
+import doself.common.mapper.CommonMapper;
+import doself.user.login.mapper.LoginMapper;
 import doself.user.login.service.LoginService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController {
 
 	private final LoginService loginService;
+	private final LoginMapper loginMapper;
+	private final CommonMapper commonMapper;
 	
 	
 	@GetMapping("/logout")
@@ -36,7 +41,7 @@ public class LoginController {
 	@PostMapping("/login/loginPro")
 	public String loginProcess(@RequestParam(value="mbrId") String mbrId,
 			   @RequestParam(value="mbrPw") String mbrPw,
-			   RedirectAttributes reAttr, HttpSession session) {
+			   RedirectAttributes reAttr, HttpSession session,HttpServletRequest request) {
 		
 		String viewName = "redirect:/login";
 		
@@ -49,6 +54,11 @@ public class LoginController {
 			  String membergrade = memberInfo.getMgCode(); 
 			  String memberName = memberInfo.getMbrName(); 
 			  String memberImage = memberInfo.getMbrImage();
+			  
+			  String memberIp = request.getRemoteAddr();
+			  // 로그인이력 키값생성
+			  String memberIpKey = commonMapper.getPrimaryKey("mll_", "member_login_log", "mll_num");
+			  loginMapper.createMemberLoginLog(memberIpKey, mbrId, memberIp);
 		  
 			  session.setAttribute("SID", mbrId);
 			  session.setAttribute("SNAME", memberName);

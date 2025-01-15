@@ -221,4 +221,30 @@
 		SELECT COUNT(*) FROM reward_point;
 		
    	</select>
+   	
+   	<select id="getMemebrTicketCntByIdandTicketCode" parameterType="Order" resultType="int">
+	   	SELECT 
+			<if test="ticketCode == 'ctc_001'">
+				opening_ticket_count
+			</if>
+			<if test="ticketCode == 'ctc_002'">
+				participation_ticket_count
+			</if>
+		FROM member
+		WHERE mbr_id = #{ordererId}
+   	</select>
+   	
+   	<update id="modifyMemberTicketCnt" parameterType="Order">
+   		UPDATE member
+		SET
+			<if test="ticketCode == 'ctc_001'">
+				opening_ticket_count=${updatedTicketCnt}
+			</if>
+			<if test="ticketCode == 'ctc_002'">
+				participation_ticket_count=${updatedTicketCnt}
+			</if>
+			
+		WHERE mbr_id = #{ordererId}
+   		
+   	</update>
   </mapper>
