@@ -90,9 +90,29 @@ public class DeclareServiceImpl implements DeclareService{
 		searchMap.put("newKey", newKey);
 		searchMap.put("declarePeriod", declarePeriod);
 		
+		// 부정회원관리에 회원정보 insert
 		declareMapper.createDeclareUser(searchMap);
+		// 신고접수 처리상태 승인으로 변경
 		declareMapper.modifyScCode(declare);
-		declareMapper.modifyMgCode(declare);		
+		// 멤버등급 부정회원으로 변경
+		declareMapper.modifyMgCode(declare);
+		
+		// 부정회원 등록될때 참여중인 챌린지 탈퇴 처리
+		// 참여중인 챌린지가 있는지 조회
+		String isData = declareMapper.isDataParticipationChallnege(declare);
+		
+		// 참여중인 챌린지가 있으면 챌린지 참여자 insert
+		if(isData != null || isData != "") {
+			Map<String, Object> memberMap = new HashMap<String, Object>();
+			// 부정회원 된 멤버 아이디값
+			String mbrId= declare.getMbrId();
+			// 챌린지 참여자 기본키 생성
+			String challengeMemberKey = commonMapper.getPrimaryKey("cgm_", "challenge_group_member", "cgm_num");
+			memberMap.put("challengeMemberKey", challengeMemberKey);
+			memberMap.put("mbrId", mbrId);
+			memberMap.put("cgNum", isData);
+			declareMapper.createChallengeMember(memberMap);
+		}
 	}
 
 	//신고유형별 제제기간 가져오기
