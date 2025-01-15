@@ -1,80 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<link th:href="@{/assets/css/ticket/purchase-detail-refund-modal.css}" rel="stylesheet" type="text/css" />
-   <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<link th:href="@{/assets/css/ticket/purchase-detail-refund.css}" rel="stylesheet" type="text/css" />
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>			
 <body>	
         <!-- 메인 콘텐츠 -->
 <div id="refund-container">     
-<th:block th:object ="${ditailInfo}">
-<div id="main-title">환불신청</div>
-<div id="main-content">
-<div class="main-item-header">
+	<th:block th:object ="${detailInfo}">
+	<form>
+		<div id="main-title">환불신청</div>
+			<div id="main-content">
+				<div class="main-item-header">
+					<div class="ticketBox">
+						<!-- <input type="radio" class="ticketCheck" th:selected ="selected"> -->
+							<div class="ticketInfo">
+								<div>
+									<div class="ticketName">환불가능한주문 : </div>
+								    <div class="ticketName" th:text=*{ticketCategory}></div>
+								    <input type="hidden" name="ticketCategory" th:value="*{ticketCategory}"/>
+								</div>
+								<div>
+								    <div class="ticketDesc">주문번호 : </div>
+							   		<div class="ticketDesc" th:text=*{paymentNum}></div>
+							   		<input type="hidden" name="paymentNum" th:value="*{paymentNum}"/>
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="refund-contents">
+					<div>
+					    <span class="refund-list">구매날자</span>
+					    <span class="refund-list-sub" th:text=*{ticketPurchaseDate}></span>
+					    <input type="hidden" name="ticketPurchaseDate" th:value="*{ticketPurchaseDate}"/>
+					</div>
+					<div>
+   						<span class="refund-list">환불예정금액</span>
+    					<span class="refund-list-sub" th:text="${#numbers.formatInteger(detailInfo.PaymentAmount, 0)} + ' 원'"></span>
+    					<input type="hidden" name="paymentAmount" th:value="*{paymentAmount}"/>
+					</div>
+					<div>
+					    <span class="refund-list">결제수단</span>
+					    <span class="refund-list-sub" th:text=*{PaymentMethod}></span>
+					    <input type="hidden" name="paymentMethod" th:value="*{paymentMethod}"/>
+					</div>
+				</div>
+				<div>
+					<span class="refund-list">환불 규정</span>
+					<div class="refund-regulation">
+	    				<div id="refund-check">확인해주세요</div>
+					    <div>
+					        <div>환불 요청을 하시기 전 반드시 환불규정을 확인해 주세요.</div>
+					        <div>결제일로부터 7일 이내에 환불 요청이 가능합니다. 이후 요청은 불가합니다</div>
+					        <div>환불 요청 후 3~7영업일 내에 검토 및 환불 처리가 진행됩니다</div>
+					        <div>환불 금액은 원 결제 수단으로 환급됩니다. </div>
+					        <div>환불 시 결제 대행사 수수료가 차감될 수 있습니다. </div>
+					        <div>사용된 서비스의 경우 해당 기간만큼의 금액이 공제됩니다.</div>
+					        <div>본 환불 정책은 대한민국 전자상거래법 및 소비자 보호법을 준수합니다</div>
+					        <div>환불 정책에 대해 궁금한 점은 고객센터 (heldiv@comdivany.com)로 문의 바랍니다</div>
+					    </div>
+					</div>
+					<div class="refund-result">
+					    <button type="submit" class="refund-request-submit__button" id="refund-request-submit">제출</button>
+					    <button class="close" id="backBtn">취소</button>
+					</div>
+    			</div>
+			</div>
+		</form>
+	</th:block> 
+</div>
 
-                
-<div class="ticketBox">
-<input type="radio" class="ticketCheck">
-<div class="ticketInfo">
-    <div class="ticketName">환불가능한주문 : </div>
-    <div class="ticketName" th:text=*{ticketCategory}></div>
-    <div class="ticketDesc">주문번호 : </div>
-    <div class="ticketDesc" th:text=*{paymentNum}></div>
-</div>
-</div>
-</div>
-<div class="refund-contents">
-<div>
-    <span class="refund-list">구매날자</span>
-    <span class="refund-list-sub" th:text=*{ticketPurchaseDate}></span>
-</div>
-<div>
-    <span class="refund-list">환불예정금액</span>
-    <span class="refund-list-sub" th:text="${#numbers.formatInteger(ditailInfo.PaymentAmount, 0)} + ' 원'"></span>
-</div>
-<div>
-    <span class="refund-list">결제수단</span>
-    <span class="refund-list-sub" th:text=*{PaymentMethod}></span>
-    </div>
-</div>
-<div>
-<span class="refund-list">환불사유</span>
-<div class="filter-section-reason">
-    <button>단순변심</button>
-    <button>실수로 구매</button>
-    <button>다른상품구매</button>
-    <button class="active">기타</button>
-</div>
-</div>
-<div>
-<span class="refund-list">환불 규정</span>
-<div class="refund-regulation">
-    <div id="refund-check">확인해주세요</div>
-    <div>
-        <div>환불 요청을 하시기 전 반드시 환불규정을 확인해 주세요.</div>
-        <div>결제일로부터 7일 이내에 환불 요청이 가능합니다. 이후 요청은 불가합니다</div>
-        <div>환불 요청 후 3~7영업일 내에 검토 및 환불 처리가 진행됩니다</div>
-        <div>환불 금액은 원 결제 수단으로 환급됩니다. </div>
-        <div>환불 시 결제 대행사 수수료가 차감될 수 있습니다. </div>
-        <div>사용된 서비스의 경우 해당 기간만큼의 금액이 공제됩니다.</div>
-        <div>본 환불 정책은 대한민국 전자상거래법 및 소비자 보호법을 준수합니다</div>
-        <div>환불 정책에 대해 궁금한 점은 고객센터 (heldiv@comdivany.com)로 문의 바랍니다</div>
-    </div>
-</div>
-<div class="refund-result">
-    <button type="submit" class="refund-request-submit__button" id="refund-request-submit">제출</button>
-    <button class="close" id="backBtn">취소</button>
-</div>
-    </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</th:block> 
- </div>  
     <!-- 모달창 여기부터 복사 -->
 <!-- 모달창 여기부터 복사 -->
 <div class="modal-confirm-container">

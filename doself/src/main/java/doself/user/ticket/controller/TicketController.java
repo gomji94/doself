@@ -1,5 +1,7 @@
 package doself.user.ticket.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.common.mapper.CommonMapper;
+import doself.user.ticket.domain.RefundRequest;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
 import doself.user.ticket.domain.TicketPurchaseInfo;
@@ -22,7 +26,6 @@ import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -93,9 +96,17 @@ public class TicketController {
 									Model model, HttpSession session) {
 		
 		String memberId = (String) session.getAttribute("SID");
-		TicketPurchaseInfo ditailInfo = ticketService.getPurchaseDitail(memberId, paymentNum);
+
+		TicketPurchaseInfo detailInfo = ticketService.getPurchaseDetail(memberId, paymentNum);
+		String ticketPurchaseDate = detailInfo.getTicketPurchaseDate();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime dateTime = LocalDateTime.parse(ticketPurchaseDate, formatter);
+		LocalDateTime dateTimeAfterWeek = dateTime.plusDays(7);
+		LocalDateTime dateTimeNow = LocalDateTime.now();
+		boolean timeLapse = dateTimeAfterWeek.isAfter(dateTimeNow);
 		
-		model.addAttribute("ditailInfo", ditailInfo);
+		model.addAttribute("detailInfo", detailInfo);
+		model.addAttribute("timeLapse", timeLapse);
 		
 		return "user/ticket/purchase-detail";
 	}
@@ -103,12 +114,25 @@ public class TicketController {
 	@GetMapping("/purchasedetail/refund")
 	public String getPurchaseRefund(@RequestParam(name="paymentNum") String paymentNum, Model model, HttpSession session) {
 		String memberId = (String) session.getAttribute("SID");
-		TicketPurchaseInfo ditailInfo = ticketService.getPurchaseDitail(memberId, paymentNum);
 		
-		model.addAttribute("ditailInfo", ditailInfo);
+		TicketPurchaseInfo detailInfo = ticketService.getPurchaseDetail(memberId, paymentNum);
+		model.addAttribute("detailInfo", detailInfo);
 		
 		return "user/ticket/purchase-detail-refund";
 	}
+	
+	@PostMapping("/purchasedetail/refund")
+	@ResponseBody
+	public String purchaseRefund(@RequestParam(name="paymentNum") String paymentNum, RefundRequest refundRequest, HttpSession session) {
+		
+		refundRequest.setMemberId((String) session.getAttribute("SID"));
+		refundRequest.setPaymentNum(paymentNum);
+		
+		
+		
+		return "user/ticket/purchase-list";
+	}
+	
 	
 	
 	@PostMapping("/payment")
