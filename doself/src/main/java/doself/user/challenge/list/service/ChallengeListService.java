@@ -35,8 +35,6 @@ public interface ChallengeListService {
 	// 챌린지 난이도 리스트
 	List<Map<String, String>> getChallengeLevelList();
 	
-	
-	
 	//파일 삭제
 	void deleteFile(Files fileDto);
 }

@@ -92,7 +92,6 @@
   		SELECT
 			cg_num,
 			ctl_num,
-			cg_leader_name,
 			cg_name,
 			cg_picture,
 			cg_content,
@@ -114,7 +113,6 @@
   		INSERT INTO challenge_group(
 			cg_num,
 			ctl_num,
-			cg_leader_name,
 			cg_name,
 			cg_content,
 			cg_creation_date,
@@ -130,7 +128,6 @@
 		) VALUES (
 			#{challengeCode},
 			#{challengeTopicLevelCode},
-			#{challengeLeaderName},
 			#{challengeName},
 			#{challengeContent},
 			CURDATE(),
