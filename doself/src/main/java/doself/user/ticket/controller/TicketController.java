@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import doself.common.mapper.CommonMapper;
+import doself.user.ticket.domain.Order;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
 import doself.user.ticket.domain.TicketPurchaseInfo;
@@ -119,6 +120,7 @@ public class TicketController {
 		String memberId = (String) session.getAttribute("SID");
 		String orderKeyValue =  commonMapper.getPrimaryKey("ctph_", "challenge_ticket_payment_history", "ctph_num");
 		TicketItem ticketInfo = ticketMapper.getTicketInfoByTicketKey(ticketKey);
+		session.setAttribute("STK", ticketKey);
 		
 		Map<String, Object> preOrderData = new HashMap<String, Object>();
 		preOrderData.put("memberId", memberId);
@@ -131,10 +133,14 @@ public class TicketController {
 	
 	@PostMapping("/payment/result")
 	@ResponseBody
-	public String paymentResult(@RequestBody Map<String, Object> paramMap) {
+	public boolean paymentResult(Order order, HttpSession session) {
 		//TODO: process POST request
-		System.out.println("=-======================> 확인용 " + paramMap);
-		return "redirect:/user/ticket/purchaselist";
+		
+		String ticketCode = (String) session.getAttribute("STK");
+		order.setTicketCode(ticketCode);
+		System.out.println("=-======================> 확인용 " + order);
+		
+		return ticketService.createTicketOrder(order);
 	}
 	
 	

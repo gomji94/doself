@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import doself.user.ticket.domain.Order;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
 import doself.user.ticket.domain.TicketPurchaseInfo;
@@ -33,5 +34,14 @@ public interface TicketMapper {
 	
 	// 단일 티켓 정보 조회
 	TicketItem getTicketInfoByTicketKey(String ticketKey);
+	
+	// 티켓 결제수단 생성
+	int createTicketPaymentMethod(Order order);
+	
+	// 티켓 주문 생성
+	int createTicketOrder(Order order);
+	
+	// 티켓 관리에 티켓 생성
+	int createTicketManagement(String ctmPkValue, String ctphPkValue, String memberId);
 	
 }

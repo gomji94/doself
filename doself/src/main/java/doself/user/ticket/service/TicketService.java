@@ -2,6 +2,7 @@ package doself.user.ticket.service;
 
 import java.util.List;
 
+import doself.user.ticket.domain.Order;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
 import doself.user.ticket.domain.TicketPurchaseInfo;
@@ -26,5 +27,6 @@ public interface TicketService {
 	//티켓 결제상세내역 조회	
 	TicketPurchaseInfo getPurchaseDitail(String memberId, String paymentNum);
 
-	
+	// 티켓 주문 생성
+	boolean createTicketOrder(Order order);
 }
