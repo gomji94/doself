@@ -1,5 +1,7 @@
 package doself.user.ticket.domain;
 
-public class Order {
+import lombok.Data;
 
+@Data
+public class Order {
 }
