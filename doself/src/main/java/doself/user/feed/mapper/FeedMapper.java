@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import doself.user.feed.domain.Feed;
+import doself.user.feed.domain.MealNutritionInfo;
 
 @Mapper
 public interface FeedMapper {
@@ -19,4 +20,10 @@ public interface FeedMapper {
 	
 	// 자동완성 검색
 	List<String> findKeywords(String query);
+	
+	// 음식 이름으로 음식 번호 조회
+	String findByName(String mealName);
+
+    // 새 음식 추가
+    void addMeal(MealNutritionInfo mealNutritionInfo);
 }

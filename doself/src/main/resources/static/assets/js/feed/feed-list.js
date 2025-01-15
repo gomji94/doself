@@ -116,7 +116,11 @@ $(document).ready(function () {
 
     // 검색 입력 이벤트
     $searchInput.on('input', function () {
-        const query = $(this).val().trim();
+		const query = encodeURIComponent("");
+		fetch(`/search-food?query=${query}`)
+		    .then(response => response.json())
+		    .then(data => console.log(data))
+		    .catch(error => console.error("Error fetching food suggestions:", error));
 
         if (query.length < 2) {
             $resultsContainer.hide();
@@ -182,12 +186,13 @@ $(document).ready(function () {
     });
 });
 
-// --- 피드 추가 유효성 검사 ---
+// --- 피드 추가 유효성 검사 및 추가 ---
 $(document).ready(function () {
     $('#feed-create-submit-btn').on('click', function () {
         // 값 가져오기
 		const feedPicture = $('#feed-create-file-input')[0].files[0];
 	    const feedContent = $('#feed-create-d-feed-content').val();
+		const searchedFood = $('#searchFood').val().trim(); // 음식 이름 검색 값
 	    const feedFoodIntake = $('#serving').val();
 	    const mealCategoryCode = $('#meal-type').val();
 	    const feedOpenStatus = $('input[name="visibility"]:checked').val() === 'public' ? 1 : 0;
@@ -203,6 +208,11 @@ $(document).ready(function () {
             return;
         }
 
+		if (!searchedFood || searchedFood.length < 2) {
+            alert('음식 이름을 검색하고 선택해주세요.');
+            return;
+        }
+		
         if (!feedFoodIntake) {
             alert('섭취 인분을 선택해주세요.');
             return;
@@ -222,6 +232,7 @@ $(document).ready(function () {
 		const formData = new FormData();
 	    formData.append('feedPicture', feedPicture);
 	    formData.append('feedContent', feedContent);
+		formData.append('searchedFood', searchedFood); // 검색한 음식 이름 추가
 	    formData.append('feedFoodIntake', feedFoodIntake);
 	    formData.append('mealCategoryCode', mealCategoryCode);
 	    formData.append('feedOpenStatus', feedOpenStatus);
@@ -243,6 +254,7 @@ $(document).ready(function () {
 	            console.error(error);
 				console.log('feedPicture:', feedPicture);
 				console.log('feedContent:', feedContent);
+				console.log('searchedFood', searchedFood);
 				console.log('feedFoodIntake:', feedFoodIntake);
 				console.log('mealCategoryCode:', mealCategoryCode);
 				console.log('feedOpenStatus:', feedOpenStatus);

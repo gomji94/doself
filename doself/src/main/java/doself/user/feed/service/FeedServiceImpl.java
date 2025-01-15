@@ -1,11 +1,15 @@
 package doself.user.feed.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import doself.user.feed.domain.Feed;
+import doself.user.feed.domain.MealNutritionInfo;
 import doself.user.feed.mapper.FeedMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,31 +53,38 @@ public class FeedServiceImpl implements FeedService {
 	
 	// 피드 추가
 	@Override
-	public void addFeed(Feed feed) {
-	    // 유효성 검사
-	    if (feed.getFeedPicture() == null || feed.getFeedPicture().isEmpty()) {
-	        throw new IllegalArgumentException("사진을 업로드해주세요.");
-	    }
+    public void addFeed(Feed feed, MultipartFile feedPicture) {
+        // 이미지 저장
+        String uploadPath = "/upload/feed"; // 파일 업로드 경로 설정
+        String fileName = System.currentTimeMillis() + "_" + feedPicture.getOriginalFilename();
+        File destinationFile = new File(uploadPath, fileName);
 
-	    if (feed.getFeedContent() == null || feed.getFeedContent().trim().isEmpty()) {
-	        throw new IllegalArgumentException("내용을 작성해주세요.");
-	    }
+        try {
+            feedPicture.transferTo(destinationFile);
+            feed.setFeedPicture(fileName); // 저장된 파일 이름 설정
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 업로드 중 오류 발생", e);
+        }
 
-	    if (feed.getFeedFoodIntake() == null || feed.getFeedFoodIntake() <= 0) {
-	        throw new IllegalArgumentException("섭취 인분을 선택해주세요.");
-	    }
+        feedMapper.addFeed(feed);
+    }
 
-	    if (feed.getMealCategoryCode() == null || feed.getMealCategoryCode().trim().isEmpty()) {
-	        throw new IllegalArgumentException("식사 분류를 선택해주세요.");
-	    }
+	// 음식이름 조회
+    @Override
+    public String getOrCreateMealNutritionInfo(String mealName) {
+        String mealNutritionInfoCode = feedMapper.findByName(mealName);
 
-	    if (feed.getFeedOpenStatus() == null) {
-	        throw new IllegalArgumentException("공개 여부를 선택해주세요.");
-	    }
+        if (mealNutritionInfoCode == null) {
+            // 새 음식 추가
+            MealNutritionInfo newMeal = new MealNutritionInfo();
+            newMeal.setMniName(mealName);
+            newMeal.setMniPicture("default.jpg"); // 기본 이미지 설정
+            feedMapper.addMeal(newMeal);
 
-	    feedMapper.addFeed(feed);
-	}
-	
-	// 자동완성 검색
+            return newMeal.getMniNum(); // 생성된 번호 반환
+        }
+
+        return mealNutritionInfoCode;
+    }
 }
 	
