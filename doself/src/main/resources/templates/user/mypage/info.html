@@ -59,7 +59,8 @@
 	                </div>    
 	                <div id="profile-info">
 	                    <div id="profile-edit">
-	                        <input type="file" id="btnChangeUplode" style="display:none">
+	                        <input type="file" name="file" id="btnChangeUplode" style="display:none">
+	                        <!-- accept="image/*" -->
 	                        <button type="button" id="btnChangeProfile" >프로필 변경</button>
 	                    </div>
 	                    <div id="profile-userId" th:text="*{memberId}"></div>
