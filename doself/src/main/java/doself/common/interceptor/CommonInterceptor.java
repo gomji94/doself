@@ -19,7 +19,8 @@ public class CommonInterceptor implements HandlerInterceptor {
 	private final static List<String> excludeUri = List.of("/market/purchaseitem", "/ticket/payment", "/challenge/list/view"
 															, "/challenge/feed/memberlist", "/challenge/feed/feedcomment"
 															, "/ticket/payment/result", "/challenge/checkDuplicateName"
-															, "/ticket/purchasedetail/refund");
+															, "/ticket/purchasedetail/refund", "/register/idCheck", "/feed/createFeed");
+
 	
 	
 	//컨트롤러 진입전 

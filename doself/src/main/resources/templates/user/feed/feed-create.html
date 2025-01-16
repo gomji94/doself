@@ -43,9 +43,13 @@
 					       class="feed-create-food-search" 
 					       id="searchFood" 
 					       name="searchValue" 
-					       placeholder="음식 이름을 작성해주세요."/>
+					       placeholder="음식 이름을 작성하거나 선택해주세요."/>
 				<div id="searchResults" class="dropdown-menu" style="display: none;"></div>
 				</div>
+				<div class="input-group">
+                    <label for="intakeDateTime">섭취 날짜 및 시간</label>
+                    <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required />
+                </div>
                 <div class="input-group">
                     <label for="serving">섭취 인분</label>
                     <select id="serving">

@@ -26,4 +26,13 @@ public interface FeedMapper {
 
     // 새 음식 추가
     void addMeal(MealNutritionInfo mealNutritionInfo);
+    
+    // 좋아요 추가
+    void incrementLike(String feedNum);
+
+    // 좋아요 제거
+    void decrementLike(String feedNum);
+    
+    // 피드 수정
+    int modifyFeed(Feed feed);
 }

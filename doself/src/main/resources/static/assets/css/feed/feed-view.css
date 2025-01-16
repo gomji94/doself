@@ -103,6 +103,7 @@ html, body {
         pointer-events: none;
     }
 */
+
 /* 모달 오버레이 */
 .modal-overlay {
     position: fixed;
@@ -113,23 +114,6 @@ html, body {
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 1000;
     display: none;
-}
-
-/* 모달 컨테이너 */
-#feed-mbr-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    width: 330px;
-    height: auto;
-    z-index: 1001;
-    border-radius: 10px;
-    overflow: hidden;
-    /* display: none; */
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-    padding: 20px;
 }
     
 /* 메인 콘텐츠 이동 */
@@ -554,7 +538,7 @@ button.feed-comment-comment-btn {
     white-space: nowrap;
 }
 
-/* feed modal */
+/* myfeed modal */
 .popup-wrap {
     display: none; /* 기본적으로 숨김 */
     position: fixed;
@@ -611,6 +595,148 @@ button.feed-comment-comment-btn {
     cursor: pointer;
     color: red;
 }
+
+/* other members feed modal */
+.other-members-option-modal-wrap {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex; /* Flexbox 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 1000;
+}
+
+.other-members-feed-popup {
+    width: 90%;
+    max-width: 250px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.other-members-feed-popup-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.other-members-feed-popup-body li {
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 0.5px solid #e9e9e9;
+    font-size: 14px;
+    color: #515151;
+}
+
+.other-members-feed-popup-body li:last-child {
+    border-bottom: none;
+    /* margin-bottom: 7px; */
+}
+
+.other-members-feed-popup-body li:hover {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+li#feed-declaration-modal {
+    color: red;
+}
+
+.close:hover {
+    cursor: pointer;
+    color: red;
+}
+
+/* feed-declaration modal */
+.feed-declaration-popup-wrap {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex; /* Flexbox 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 1005;
+}
+
+.feed-declaration-popup {
+    width: 90%;
+    max-width: 250px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.popup-container .popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    margin-bottom: -1px;
+    padding: 0px 5px 10px 5px;
+}
+
+.popup-container .popup-header img {
+    width: 18px;
+    height: 100%;
+    opacity: 0.7;
+}
+
+
+.popup-container .popup-header h2 {
+    font-size: 17px;
+    color: #333;
+    font-weight: bold;
+}
+
+.feed-declaration-popup-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feed-declaration-popup-body li {
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 0.5px solid #e9e9e9;
+    font-size: 14px;
+    color: #515151;
+}
+
+.feed-declaration-popup-body li:last-child {
+    border-bottom: none;
+    /* margin-bottom: 7px; */
+}
+
+.feed-declaration-popup-body li:hover {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.close:hover {
+    cursor: pointer;
+    color: red;
+} 
 	
 /* 정보 입력 영역 */
 .feed-info {

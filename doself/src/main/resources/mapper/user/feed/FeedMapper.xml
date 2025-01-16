@@ -171,40 +171,33 @@
 	
 	<!-- 음식 이름으로 음식 번호 조회 -->
     <select id="findByName" parameterType="String" resultType="String">
-        SELECT mni_num 
-        FROM meal_nutrition_info 
-        WHERE mni_name = #{mealName}
+        SELECT
+        	mni_name
+        FROM
+        	meal_nutrition_info 
+        WHERE
+        	mni_name LIKE CONCAT('%', #{query}, '%');
     </select>
 
-    <!-- 새 음식 추가 -->
-    <insert id="addMeal" parameterType="MealNutritionInfo">
-	    INSERT INTO meal_nutrition_info (
-	        mni_name,
-	        mni_picture,
-	        mni_weight,
-	        mni_kcal,
-	        mni_carbo,
-	        mni_protein,
-	        mni_fat,
-	        mni_sugar,
-	        mni_cholesterol,
-	        mni_sodium,
-	        mni_calcium,
-	        mni_iron
-	    ) VALUES (
-	        #{mniName},
-	        #{mniPicture},
-	        #{mniWeight},
-	        #{mniKcal},
-	        #{mniCarbo},
-	        #{mniProtein},
-	        #{mniFat},
-	        #{mniSugar},
-	        #{mniCholesterol},
-	        #{mniSodium},
-	        #{mniCalcium},
-	        #{mniIron}
-	    )
-	</insert>
+	<!-- 좋아요 수 증가 -->
+	<update id="incrementLike" parameterType="String">
+        UPDATE
+        	feed
+        SET
+        	feed_like = feed_like + 1
+        WHERE
+        	feed_num = #{feedNum}
+    </update>
+	
+	<!-- 좋아요 수 감소 -->
+	<update id="decrementLike" parameterType="String">
+        UPDATE
+        feed
+        SET
+        feed_like = feed_like - 1
+        WHERE
+        feed_num = #{feedNum}
+    </update>
+	
  </mapper>
   
