@@ -35,38 +35,39 @@
                             <div class="mb-3">
                                 <label class="form-label">아이디</label>
                                 <input id="mbrId" name="mbrId" class="form-control w-100" placeholder="아이디를 입력해주세요" type="text" />
+                                <p id="checkId" style="color:red;">아이디를 입력해주세요.</p>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">전화번호</label>
                                 <div class="row gx-2">                                    
-                                    <input id="mbrPhoneNum" name="mbrPhoneNum" class="form-control w-100" placeholder="전화번호를 입력해주세요" type="text" />
+                                    <input id="mbrPhoneNum" name="mbrPhoneNum" class="form-control w-100" placeholder="전화번호를 입력해주세요" type="text" disabled="disabled"/>
                                 </div>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">비밀번호</label>
-                                <input id="mbrPw" name="mbrPw" class="form-control w-100" placeholder="비밀번호를 입력해주세요" type="password" />
+                                <input id="mbrPw" name="mbrPw" class="form-control w-100" placeholder="비밀번호를 입력해주세요" type="password" disabled="disabled"/>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">이름</label>
-                                <input id="mbrName" name="mbrName" class="form-control w-100" placeholder="이름을 입력해주세요" type="text" />
+                                <input id="mbrName" name="mbrName" class="form-control w-100" placeholder="이름을 입력해주세요" type="text" disabled="disabled"/>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">이메일</label>
-                                <input id="mbrEmail" name="mbrEmail" class="form-control w-100" placeholder="이메일을 입력해주세요" type="text" />
+                                <input id="mbrEmail" name="mbrEmail" class="form-control w-100" placeholder="이메일을 입력해주세요" type="text" disabled="disabled"/>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">생년월일</label>
-                                <input id="mbrBirthDate" name="mbrBirthDate" class="form-control w-100" placeholder="생년월일을 입력해주세요" type="date" />
+                                <input id="mbrBirthDate" name="mbrBirthDate" class="form-control w-100" placeholder="생년월일을 입력해주세요" type="date" disabled="disabled"/>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">성별</label>
-                                <select class="form-control w-100" id="mbrGender" name="mbrGender">
+                                <select class="form-control w-100" id="mbrGender" name="mbrGender" disabled="disabled">
                                     <option value="남">남자</option>
                                     <option value="여">여자</option>
                                 </select>
@@ -113,6 +114,51 @@
     		if(msg) alert(msg);
     		//const message = /*[[${message}]]*/ "message";
     		//if(message) alert(message);
+    		
+    		$('#mbrId').on('change',function(){
+	    		const checkMbrId = $('#mbrId').val();
+	    		
+	    		if(checkMbrId == ''){
+    				$('#checkId').text('아이디를 입력해주세요.')
+					 .css({'color': 'red'});
+    				
+    				$('#registerForm').find('input, select')
+					  .not('#mbrId')
+					  .prop('disabled',true);
+    				
+    				return;
+    			}
+	    		//ajax 요청
+	    		const request = $.ajax({
+	    			url : '/register/idCheck',
+	    			method : 'POST',
+	    			data : {'mbrId' : checkMbrId},
+	    			dataType : 'json'
+	    		});
+	    		
+	    		request.done(function(data){
+	    			const isDuplicate = data;
+	    			
+	    			$('#registerForm').find('input, select')
+	    							  .not('#mbrId')
+	    							  .prop('disabled',isDuplicate);
+	    			
+	    			if(isDuplicate){
+	    				$('#checkId').text('이미 사용중인 아이디 입니다.')
+	    							 .css({'color': 'red'});
+	    			}
+	    			else{
+	    				$('#checkId').text('사용가능한 아이디 입니다.')
+	    							 .css({'color': 'skyblue'});	    				
+	    			}
+	    		});
+	    		
+	    		request.fail(function(jQXHR, textStatus, error){
+    				console.log(error);
+    			});	
+	    		
+	    		
+    		});    			    	
     		
     		$(document).ready(function () {               
                 $('#registerForm input').on('input', function () {

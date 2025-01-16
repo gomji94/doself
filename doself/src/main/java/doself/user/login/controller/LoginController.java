@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.admin.member.domain.Member;
@@ -89,6 +90,16 @@ public class LoginController {
 	public String postMethodName() {		
 		
 		return "register";
+	}
+	
+	@PostMapping("/register/idCheck")
+	@ResponseBody
+	public boolean checkId(@RequestParam(value="mbrId") String mbrId) {
+		
+		boolean isDuplicate = false;
+		
+		isDuplicate = loginService.isMemberById(mbrId);
+		return isDuplicate;
 	}
 	
 	@PostMapping("/register")

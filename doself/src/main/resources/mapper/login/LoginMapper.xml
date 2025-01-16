@@ -45,9 +45,18 @@
 	</select>
 	
 	<!-- 생년월일로 나이 받아오기 -->
-	<select id="getAgeByBirthDate" resultType="int">
+	<select id="getAgeByBirthDate" parameterType="string" resultType="int">
 		SELECT
 			TIMESTAMPDIFF(YEAR,#{birthDate},CURDATE())		
+	</select>
+	
+	<!-- 아이디 중복체크 -->
+	<select id="isMemberById" parameterType="string" resultType="boolean">
+		SELECT 
+			COUNT(*)
+		FROM `member`
+		WHERE
+			mbr_id = #{mbrId}
 	</select>
 
 	<!-- 회원등록 -->

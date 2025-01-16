@@ -41,6 +41,13 @@ public class LoginServiceImpl implements LoginService {
 		return resultMap;
 	}
 	
+	//아이디 중복체크
+	@Override
+	public boolean isMemberById(String mbrId) {
+		
+		return loginMapper.isMemberById(mbrId);
+	} 
+	
 	//회원가입
 		@Override
 		public void createMember(Member member) {
@@ -48,7 +55,7 @@ public class LoginServiceImpl implements LoginService {
 			
 			int age = loginMapper.getAgeByBirthDate(birthDate);
 			String acNum="";
-			
+			// 연령대 판별
 			if(age <= 6) {
 				acNum = "ac_001";
 			}
@@ -72,9 +79,8 @@ public class LoginServiceImpl implements LoginService {
 			}
 			
 			member.setAcNum(acNum);
+			
 			loginMapper.createMember(member);
-		} 
+		}
 
-
-	
 }
