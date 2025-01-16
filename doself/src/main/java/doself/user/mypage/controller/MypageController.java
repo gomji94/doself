@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import doself.file.mapper.FilesMapper;
 import doself.file.service.FileService;
 import doself.file.util.FilesUtils;
+import doself.user.members.domain.FeedList;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -37,10 +38,6 @@ public class MypageController {
 	
 	@org.springframework.beans.factory.annotation.Value("${file.path}")
 	private String fileRealPath;
-	
-	private final FileService fileService;
-	private final FilesMapper filesMapper;
-	private final FilesUtils filesUtils;
 
 	//회원정보 수정전 검증 화면이동
 	@GetMapping("/modify")
@@ -71,7 +68,7 @@ public class MypageController {
 		return viewName;
 	}
 	
-	// 회원정보수정
+	// 회원수정 정보조회 
 	@GetMapping("/member/info")   
 	public String getMemberInfoView(@RequestParam(name="memberId") String memberId,
 			                        @RequestParam(name="msg", required = false) String msg, 
@@ -79,6 +76,7 @@ public class MypageController {
 			                        Model model){
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
+		//log.info("memberInfo:{}" , memberInfo );
 		model.addAttribute("memberInfo", memberInfo);
 		if(msg !=null) model.addAttribute("msg", msg);
 		
@@ -86,26 +84,17 @@ public class MypageController {
 	}	
 	
 	@PostMapping("/member/info")
-	public String modifyMemberById(Members member, RedirectAttributes reAttr) {
-		
+	public String modifyMemberById(Members member, RedirectAttributes reAttr, HttpSession session,
+								   @RequestPart(name = "file", required = false) MultipartFile file
+									) {
+		member.setMemberId((String) session.getAttribute("SID"));
 		member.setMemberEmail(removeCommas(member.getMemberEmail())); 
 		member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum()));
-		membersService.modifyMember(member);
-		
+		membersService.modifyMember(member,file);
 		reAttr.addAttribute("memberId", member.getMemberId());
-		return "redirect:/mypage/member/info";
-	}
-	
-	@PostMapping("/member/info/profile")
-	public String modifyProfile(@RequestPart(name = "file", required = false) MultipartFile file,
-								 HttpSession session, Members member) {
-		
-		member.setMemberId((String) session.getAttribute("SID"));
-		membersService.modifyProfile(file, member);
 		
 		return "redirect:/mypage/member/info";
 	}
-	
 	
 	// 공통 메소드 static common 에 작성 할 것.
 	// 유효성검사 js 로 검증 후 데이터 넘겨받기
@@ -202,7 +191,13 @@ public class MypageController {
 	public String getFeedList(@RequestParam(name = "memberId") String memberId, Model model) {
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
+		List<FeedList> feedList= membersService.getMemberFeedListById(memberId);
+		
+		//log.info("feedList:{}" , feedList );
+		//log.info("memberInfo:{}" , memberInfo );
+		
 		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("feedList", feedList);
 		return "user/mypage/feed-list";	
 	}
 

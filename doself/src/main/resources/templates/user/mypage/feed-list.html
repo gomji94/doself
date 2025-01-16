@@ -63,39 +63,22 @@
              </div>    
         </div>
         <div id="main-content-feedList">
+       		<!-- <span th:text="${feedList}"></span> -->
             <ul class="main-container-feedList__items">
-	          <th:block th:if="*{not #lists.isEmpty(feedList)}"
-	          		    th:each="l: *{feedList}">    
+	          <th:block th:if="${not #lists.isEmpty(feedList)}"
+	          		    th:each="l: ${feedList}">    
 				<li class="main-container-feedList__item">
 					<input type="hidden" name="feedNum" th:value="${l.feedNum}"/>
-				    <a th:href="@{/feed/{feedNum}(feedNum=${l.feedNum})}" target="_self">
-				   	  <img class="mcfi__image" th:src="@{|${l.feedImage}|}" alt="피드">  
+				    <a th:href="@{/feed/{feedNum}(feedNum=${l.feedNum})}" target="_self" >
+				   	  <img class="mcfi__image" th:src="@{|${l.feedImage}|}" alt="피드" name="feedImage">  
 				    </a>
 				</li>
 	          </th:block>
-	          <th:block th:unless="*{not #lists.isEmpty(feedList)}">
+	          <th:block th:unless="${not #lists.isEmpty(feedList)}">
 	           		<a>피드 없음</a>
 	          </th:block>
             </ul>
         </div>
-        <!-- 모달창 여기부터 복사 -->
-		<div class="modal-confirm-container">
-		    <div class="confirm-popup-wrap" style="display: none;">
-		        <div class="confirm-popup">
-		            <div class="confirm-popup-body">
-		                <div class="confirm-body-content">
-		                    <div class="confirm-body-titlebox">
-		                        <div id="modal-request-title">DoSelf</div>
-		                        <div id="confirm-message">
-		                            성공적으로 제출 되었습니다.
-		                            <p style="display: none;">요청 상태는 [티켓상세내역조회]을 통해 확인하실 수 있습니다. </p>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		        </div>
-		    </div>
-		</div>
      </th:block>  
     </main>
   </th:block>

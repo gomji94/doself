@@ -7,5 +7,6 @@ public class FeedList {
 	
 	private String feedNum;
 	private String feedImage;
+	private String memberId;
 	
 }
