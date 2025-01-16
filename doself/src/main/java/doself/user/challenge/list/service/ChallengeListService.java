@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import doself.file.domain.Files;
 import doself.user.challenge.list.domain.AddChallenge;
+import doself.user.challenge.list.domain.AddChallengeMember;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.util.CardPageInfo;
@@ -35,6 +36,12 @@ public interface ChallengeListService {
 	// 챌린지 난이도 리스트
 	List<Map<String, String>> getChallengeLevelList();
 	
+	// 챌린지 상태 리스트
+	List<Map<String, Object>> getChallengeStatusList();
+	
 	//파일 삭제
 	void deleteFile(Files fileDto);
+	
+	// 챌린지 멤버 추가(작업중)
+	boolean addChallengeMember(AddChallengeMember addChallengeMember, String challengeCode);
 }
