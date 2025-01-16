@@ -2,6 +2,8 @@ package doself.user.members.service;
 
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -27,6 +29,9 @@ public interface MembersService {
 
 	//회원 포인트내역 조회
 	public PageInfo<PointList> getPointHistory(String memberId, Pageable pageable, String startDate, String endDate);
+
+	//회원 프로필수정
+	public void modifyProfile(MultipartFile file, Members member);
 
 
 	

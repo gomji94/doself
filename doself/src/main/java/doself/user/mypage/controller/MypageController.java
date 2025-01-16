@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.file.mapper.FilesMapper;
 import doself.file.service.FileService;
+import doself.file.util.FilesUtils;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -23,7 +24,6 @@ import doself.user.members.service.MembersService;
 import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -40,6 +40,7 @@ public class MypageController {
 	
 	private final FileService fileService;
 	private final FilesMapper filesMapper;
+	private final FilesUtils filesUtils;
 
 	//회원정보 수정전 검증 화면이동
 	@GetMapping("/modify")
@@ -85,24 +86,26 @@ public class MypageController {
 	}	
 	
 	@PostMapping("/member/info")
-	public String modifyMemberById(Members member, RedirectAttributes reAttr, 
-								   @RequestPart(name = "files", required = false) MultipartFile files) {
-								   //@RequestParam(name="memberId") String memberId, 
-								   //@RequestParam(name="memberEmail") List<String> memberEmail,
-								   //@RequestParam(name="memberPhoneNum") List<String> memberPhone,
-									
+	public String modifyMemberById(Members member, RedirectAttributes reAttr) {
 		
 		member.setMemberEmail(removeCommas(member.getMemberEmail())); 
 		member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum()));
 		membersService.modifyMember(member);
-		fileService.addFile(files);
 		
 		reAttr.addAttribute("memberId", member.getMemberId());
+		return "redirect:/mypage/member/info";
+	}
+	
+	@PostMapping("/member/info/profile")
+	public String modifyProfile(@RequestPart(name = "file", required = false) MultipartFile file,
+								 HttpSession session, Members member) {
 		
-		
+		member.setMemberId((String) session.getAttribute("SID"));
+		membersService.modifyProfile(file, member);
 		
 		return "redirect:/mypage/member/info";
 	}
+	
 	
 	// 공통 메소드 static common 에 작성 할 것.
 	// 유효성검사 js 로 검증 후 데이터 넘겨받기

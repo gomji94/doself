@@ -6,7 +6,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import doself.common.mapper.CommonMapper;
+import doself.file.domain.Files;
+import doself.file.mapper.FilesMapper;
+import doself.file.util.FilesUtils;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -23,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MembersServiceImpl implements MembersService {
 
 	private final MembersMapper membersMapper;
+	private final CommonMapper commonMapper;
+	private final FilesUtils filesUtils;
+	private final FilesMapper filesMapper;
 	
 	// 회원 정보 조회
 	@Override
@@ -87,6 +95,20 @@ public class MembersServiceImpl implements MembersService {
 		List<PointList> pointList = membersMapper.getPointListById(paramMap);
 
 		return new PageInfo<>(pointList, pageable, rowCnt);
+	}
+
+	@Override
+	public void modifyProfile(MultipartFile file, Members member) {
+		// TODO Auto-generated method stub
+		Files fileInfo = filesUtils.uploadFile(file);
+		if(fileInfo != null) {
+			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
+			fileInfo.setFileIdx(formattedKeyNum);
+			filesMapper.addfile(fileInfo);
+		}
+		System.out.println("-----------"+fileInfo);
+		member.setProfileFileIdx(fileInfo.getFileIdx());
+		membersMapper.modifyProfile(member);
 	}
 
 
