@@ -1,5 +1,7 @@
 package doself.user.challenge.list.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -8,8 +10,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import doself.common.mapper.CommonMapper;
+import doself.file.domain.Files;
+import doself.file.mapper.FilesMapper;
+import doself.file.util.FilesUtils;
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
@@ -30,6 +36,8 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	private final ChallengeListMapper challengeListMapper;
 	private final CommonMapper commonMapper;
+	private final FilesUtils filesUtils;
+	private final FilesMapper filesMapper;
 	
 	// 챌린지 조회 리스트 반환
 	@Override
@@ -56,8 +64,14 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 
 	// 챌린지 생성(등록)
 	@Override
-	public void addChallenge(AddChallenge addChallenge) {
-		//List<AddChallenge> addChallengeList = challengeListMapper.addChallengeList();
+	public void addChallenge(MultipartFile files, AddChallenge addChallenge) {
+		
+		Files fileInfo = filesUtils.uploadFile(files);
+		if(fileInfo != null) {
+			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
+			fileInfo.setFileIdx(formattedKeyNum);
+			filesMapper.addfile(fileInfo);
+		}
 		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
 		String formattedKeyNum = commonMapper.getPrimaryKey("cg_", "challenge_group", "cg_num");
 		addChallenge.setChallengeCode(formattedKeyNum);
@@ -77,11 +91,12 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		LocalDate endDate = startDate.plusDays(14);
 	    
 	    // 기본값 설정
-	    addChallenge.setChallengeCurrentMember(0);      // 챌린지 현재 멤버수(기본값 0)
+	    addChallenge.setChallengeCurrentMember(1);      // 챌린지 현재 멤버수(기본값 1)
 	    addChallenge.setChallengeGroupLike(0);			// 챌린지 좋아요(기본값 0)
 	    addChallenge.setChallengeStatusCode("cs_004");  // 챌린지 상태 분류 번호(초기 기본값 cs_004)
-	    addChallenge.setChallengeRewardCheck(null);		// 보상 지급 여부(null) → 완료시 적합 여부 판단 후 입력
+	    addChallenge.setChallengeRewardCheck("");		// 보상 지급 여부(빈값) → 완료시 적합 여부 판단 후 입력
 	    addChallenge.setChallengeEndDate(Date.valueOf(endDate));
+	    addChallenge.setChallengeFileIdx(fileInfo.getFileIdx());
 	    
 		log.info(">>> location/service >>> addChallenge : {}", addChallenge);
 		
@@ -119,5 +134,15 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		List<Map<String, String>> levelList = challengeListMapper.getChallengeLevelList();
 		log.info(">>> location/service >>> levelList: {}", levelList); // 로그로 확인
 	    return levelList;
+	}
+	
+	
+
+	// 파일 삭제
+	@Override
+	public void deleteFile(Files files) {
+		String path = files.getFilePath();
+		Boolean isDelete = filesUtils.deleteFileByPath(path);
+		if(isDelete) filesMapper.deleteFileByIdx(files.getFileIdx());   // 값이 true로 넘어온다면 delete 쿼리문 실행
 	}
 }

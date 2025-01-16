@@ -4,6 +4,9 @@
       layout:decorate="~{user/layout/default}">
 <head>
 	<link th:href="@{/assets/css/ticket/itemlist.css}" rel="stylesheet" type="text/css" />
+  	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+	<script src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+  	<script th:src="@{/assets/js/ticket/import-payment.js}"></script>
 </head>		
 			
 	<th:block layout:fragment="content-body">
@@ -39,6 +42,7 @@
                 <div class="ticketBox" th:each="l:${ticketList}" id="ticketBox" >
                     <input type="radio" name="check" class="ticketCheck" th:value="${l.ticketCategory}" id="ticketchk" >
                    	<div class="ticketInfo" >
+                   		<input class="ticketCode" type="hidden" th:value="${l.ticketCode}">
                         <div class="ticketName" th:text="${l.ticketCategory}" > </div>
                         <div class="ticketDesc" th:text="${l.ticketExplanation}"></div>
                         <div class="ticketprice" th:text="${#numbers.formatInteger(l.ticketPrice,3,'COMMA')+'원'}"></div>
@@ -48,33 +52,36 @@
           </th:block>
 
             <!-- 결제 내역 섹션 -->
-            <div id="payment-result">
-                <div class="payment-summary">
-                    <h2>결제 내역</h2>
-                    <div class="payment-info">
-                        <span>티켓 종류 :</span> 
-                        <span></span>
-                    </div>
-                    <div class="payment-info">
-                        <span>가격 :</span> 
-                        <span></span>
-                    </div>
-                    <div class="payment-info">
-                        <span>상품설명 :</span>
-                        <span></span> 
-                    </div>
-                    <hr>
-                    <div class="total payment-info">
-                    	<span>합계 :</span>
-                    	<span></span> 
-                    </div>
-                </div>
-
-                <!-- 결제 버튼 -->
-                <div class="button-container">
-                    <button class="pay-button"><a href="#">결제하기</a></button>
-                </div>
-            </div>
+	            <div id="payment-result">
+	                <div class="payment-summary">
+	                    <h2>결제 내역</h2>
+	                    <div class="payment-info">
+	                        <span>티켓 종류 :</span> 
+	                        <span></span>
+	                    </div>
+	                    <div class="payment-info">
+	                        <span>가격 :</span> 
+	                        <span></span>
+	                    </div>
+	                    <div class="payment-info">
+	                        <span>상품설명 :</span>
+	                        <span></span> 
+	                    </div>
+	                    <hr>
+	                    <div class="total payment-info">
+	                    	<span>합계 :</span>
+	                    	<span></span> 
+	                    </div>
+	                </div>
+	
+	                <!-- 결제 버튼 -->
+            	<form action="">
+	                <input id="ticketKey" type="hidden" readonly="readonly">
+	                <div class="button-container">
+	                    <button class="pay-button" id="payment">결제하기</button>
+	                </div>
+          		</form>
+	            </div>
         </div>
         <!-- 결제규정내역-->
         <div id="requlation">
@@ -92,12 +99,16 @@
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+    
+	    <script th:src="@{/assets/js/layout.js}"> </script>
+    </th:block>
+    
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"> </script>
     <script type="text/javascript">
+    
     
     document.querySelectorAll('.ticketCheck').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -107,6 +118,7 @@
                 const ticketName = ticketBox.querySelector('.ticketName').textContent.trim();
                 const ticketDesc = ticketBox.querySelector('.ticketDesc').textContent.trim();
                 const ticketprice = ticketBox.querySelector('.ticketprice').textContent.trim();
+                const ticketCode = ticketBox.querySelector('.ticketCode').value;
                 //const price = parseInt(priceText.replace(/[^0-9]/g, '')); // 숫자만 추출
                 
                 // 부가세 계산 (10%)
@@ -119,6 +131,7 @@
                 paymentResult.querySelector('.payment-info:nth-child(3) span:last-child').textContent = ticketprice;
                 paymentResult.querySelector('.payment-info:nth-child(4) span:last-child').textContent = ticketDesc;
                 paymentResult.querySelector('.total span:last-child').textContent = ticketprice;
+                document.getElementById('ticketKey').value = ticketCode;
                 //paymentResult.querySelector('.total span:last-child').textContent = total.toLocaleString() + '원';
                 //paymentResult.querySelector('.payment-info:nth-child(4) span:last-child').textContent = vat.toLocaleString() + '원';
             }

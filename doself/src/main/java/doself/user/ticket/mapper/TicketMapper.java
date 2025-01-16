@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import doself.user.ticket.domain.Order;
+import doself.user.ticket.domain.RefundRequest;
 import doself.user.ticket.domain.TicketItem;
 import doself.user.ticket.domain.TicketPurchase;
 import doself.user.ticket.domain.TicketPurchaseInfo;
@@ -29,8 +30,11 @@ public interface TicketMapper {
 	
 	int getCntOfPurchaseBySearch(String memberId, String dayFilter);
 	
+	// 티켓 환불 생성
+	int createRefundRequest(RefundRequest refundRequest);
+	
 	// 티켓 상세정보 조회
-	TicketPurchaseInfo getPurchaseDitail(String paymentNum);
+	TicketPurchaseInfo getPurchaseDetail(String paymentNum);
 	
 	// 단일 티켓 정보 조회
 	TicketItem getTicketInfoByTicketKey(String ticketKey);

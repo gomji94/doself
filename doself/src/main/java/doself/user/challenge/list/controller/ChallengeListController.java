@@ -17,11 +17,15 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.file.domain.Files;
+import doself.file.mapper.FilesMapper;
+import doself.file.service.FileService;
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +37,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChallengeListController {
 	
+	@org.springframework.beans.factory.annotation.Value("${file.path}")
+	private String fileRealPath;
+	
 	// 챌린지 리스트 서비스 → 인스턴스 생성자 메소드
 	private final ChallengeListService challengeListService;
+	private final FileService fileService;
+	private final FilesMapper filesMapper;
 	
 	// 진행중인 챌린지 리스트 조회
 	@GetMapping("/list")
@@ -77,27 +86,17 @@ public class ChallengeListController {
 	
 	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
+	@ResponseBody
 	public String addChallenge(AddChallenge addChallenge,
-			@RequestPart(name = "files", required = false) MultipartFile files,
-			HttpSession session, Model model) {
+			@RequestPart(name = "files", required = false) MultipartFile files, HttpSession session, Model model) {
 		
 		// 현재 세션의 아이디 설정
-		addChallenge.setChallengeLeaderName((String) session.getAttribute("SID"));
 		addChallenge.setMemberId((String) session.getAttribute("SID"));
 		
-		// 파일 처리
-		if (files != null && !files.isEmpty()) {
-	        String filePath = "uploads/" + files.getOriginalFilename();
-	        try {
-	            files.transferTo(new File(filePath));
-	            addChallenge.setChallengePicture(filePath);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            return "redirect:/error";
-	        }
-	    }
+		log.info(">>> location/controller >>> files: {}", files);
 		
-		challengeListService.addChallenge(addChallenge);
+		// 파일 처리
+		challengeListService.addChallenge(files, addChallenge);
 		
 		return "redirect:/challenge/list";
 	}
@@ -117,5 +116,6 @@ public class ChallengeListController {
 	public String challengeParticipation(ChallengeList challengeList) {
 		return "redirect:/challenge/list";
 	}
+	
 	
 }

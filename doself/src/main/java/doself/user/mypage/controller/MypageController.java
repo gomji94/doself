@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import doself.file.mapper.FilesMapper;
+import doself.file.service.FileService;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -19,6 +23,7 @@ import doself.user.members.service.MembersService;
 import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -29,6 +34,12 @@ public class MypageController {
 
 	private final MembersService membersService;
 	//private final BCryptPasswordEncoder passwordEncoder;    //비밀번호암호화의존성추가
+	
+	@org.springframework.beans.factory.annotation.Value("${file.path}")
+	private String fileRealPath;
+	
+	private final FileService fileService;
+	private final FilesMapper filesMapper;
 
 	//회원정보 수정전 검증 화면이동
 	@GetMapping("/modify")
@@ -41,7 +52,7 @@ public class MypageController {
 	// 회원정보 수정전 검증
 	@PostMapping("/modify")
 	public String modifyMember(@RequestParam(name="memberId") String memberId,  
-			                   @RequestParam(name="memberPw") String memberPw,  
+			                   @RequestParam(name="memberPw") String memberPw,
 			                   RedirectAttributes reAttr,
 			                   Model model) {						
 	
@@ -74,14 +85,17 @@ public class MypageController {
 	}	
 	
 	@PostMapping("/member/info")
-	public String modifyMemberById(Members member, RedirectAttributes reAttr) {
+	public String modifyMemberById(Members member, RedirectAttributes reAttr, 
+								   @RequestPart(name = "files", required = false) MultipartFile files) {
 								   //@RequestParam(name="memberId") String memberId, 
 								   //@RequestParam(name="memberEmail") List<String> memberEmail,
 								   //@RequestParam(name="memberPhoneNum") List<String> memberPhone,
 									
+		
 		member.setMemberEmail(removeCommas(member.getMemberEmail())); 
 		member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum()));
 		membersService.modifyMember(member);
+		fileService.addFile(files);
 		
 		reAttr.addAttribute("memberId", member.getMemberId());
 		

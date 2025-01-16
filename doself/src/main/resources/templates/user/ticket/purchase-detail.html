@@ -26,58 +26,59 @@
         </div>
 
         <!-- 메인 콘텐츠 -->
-        <main id="main-content">
-            <div class="main-container-title">
-                <div id="main-container-title__eng">Payment</div>
-                <div id="main-container-title__kor">결제상세정보</div>
-            </div>
-			
-            <!-- 상세내역 -->
-            <div class="details">
-              <th:block th:object ="${ditailInfo}">
-              	
-                <div class="details-result">
-                    <div class="details-header">
-                        <div class="details-two">
-                            <div id="details-title">상세내역</div>
-                            <div id="details-date" th:text=*{ticketPurchaseDate}></div>
-                        </div>
-                    </div>
+     <main id="main-content">
+         <div class="main-container-title">
+             <div id="main-container-title__eng">Payment</div>
+             <div id="main-container-title__kor">결제상세정보</div>
+         </div>
 
-                    <table class="details-table">
-                        <tbody>
-                            <tr>
-                                <th>결제번호</th>
-                                <td th:text=*{paymentNum}></td>
-                            </tr>
-                            <tr>
-                                <th>티켓이름</th>
-                                <td th:text=*{ticketCategory}></td>
-                            </tr>
-                            <tr>
-                                <th>결제수단</th>
-                                 <td th:text=*{PaymentMethod}></td>
-                            </tr>
-                            <tr>
-                                <th>총 결제금액</th>
-                                <td th:text="${#numbers.formatInteger(ditailInfo.PaymentAmount, 0)} + ' 원'"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <a class="status info-link" th:href="@{/ticket/purchasedetail/refund(paymentNum=${ditailInfo.paymentNum})}" target="_blank">환불신청</a>
-            </div>
-            </th:block>
-        </main>
-    
+         <!-- 상세내역 -->
+         <div class="details">
+           <th:block th:object ="${detailInfo}">
+	           <div class="details-result">
+	               <div class="details-header">
+	                   <div class="details-two">
+	                       <div id="details-title">상세내역</div>
+	                       <div id="details-date" th:text=*{ticketPurchaseDate}></div>
+	                   </div>
+	               </div>
+	               <table class="details-table">
+	                   <tbody>
+	                       <tr>
+	                           <th>결제번호</th>
+	                           <td th:text=*{paymentNum}></td>
+	                       </tr>
+	                       <tr>
+	                           <th>티켓이름</th>
+	                           <td th:text=*{ticketCategory}></td>
+	                       </tr>
+	                       <tr>
+	                           <th>결제수단</th>
+	                            <td th:text=*{PaymentMethod}></td>
+	                       </tr>
+	                       <tr>
+	                           <th>총 결제금액</th>
+	                           <td th:text="${#numbers.formatInteger(detailInfo.PaymentAmount, 0)} + ' 원'"></td>
+	                       </tr>
+	                   </tbody>
+	               </table>
+	           </div>
+             <a class="status" id="info-link" th:href="@{/ticket/purchasedetail/refund(paymentNum=${detailInfo.paymentNum})}" target="_blank" th:if="${timeLapse}" >환불신청</a>
+         </th:block>
+         </div>
+     </main>
+     </th:block>
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+        <script th:src="@{/assets/js/layout.js}"></script>
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    	<script th:src="@{/assets/js/ticket/refund.js}"></script>
+    </th:block>
     
     <!--/* 사용자 추가 js script */-->
-    <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"></script>
-    <script th:src="@{/assets/js/ticket/refund.js}"></script>
-    </th:block> 
+    <th:block layout:fragment="customJs"></th:block> 
+
+    
 </html>

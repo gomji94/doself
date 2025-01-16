@@ -36,12 +36,12 @@
 #refund-container {
     position: relative;
     left: 50px;
-    top: 50px;
+    top: 20px;
     display: flex;
     flex-direction: column;
     border: solid 1px black;
     width: 430px;
-    height: 760px;
+    height: 600px;
 }
 
 #main-title {
@@ -56,33 +56,31 @@
     display: flex;
     justify-content: center;
     gap: 125px;
-    padding: 20px 35px 28px 23px;
+    padding: 10px 10px;
     font-size: 13px;
     box-sizing: border-box;
     border-bottom: solid 1px #d3d3d3;
 }
 
-
-
 .ticketBox {
     display: flex;
     padding: 10px;
     gap: 20px;
-    border: 1px #d3d3d3 solid;
-    border-radius: 5px;
-
+    /* border: 1px #d3d3d3 solid; */
+    /* border-radius: 5px; */
+	width: 330px;
+	
 }
-
+/* 
 .ticketBox:hover {
     border-color: #9ACD32;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
+ */
 .ticketInfo {
     gap: 10px;
     display: flex;
-    flex-direction: column;
-    font-size: 13px;
+    font-size: 15px;	
 }
 
 .refund-contents {
@@ -145,7 +143,7 @@
 }
 
 .refund-result {
-    margin-top: 10px;
+    margin-top: 30px;
     text-align: center;
 }
 

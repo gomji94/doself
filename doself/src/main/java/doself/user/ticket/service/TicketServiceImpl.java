@@ -73,9 +73,8 @@ public class TicketServiceImpl implements TicketService{
 	}
 
 	@Override
-	public TicketPurchaseInfo getPurchaseDitail(String memberId, String paymentNum) {
-		// TODO Auto-generated method stub
-		return ticketMapper.getPurchaseDitail(paymentNum);
+	public TicketPurchaseInfo getPurchaseDetail(String memberId, String paymentNum) {
+		return ticketMapper.getPurchaseDetail(paymentNum);
 	}
 
 	@Override
