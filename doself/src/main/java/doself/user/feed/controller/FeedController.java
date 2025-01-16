@@ -2,6 +2,7 @@ package doself.user.feed.controller;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.service.FeedService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,9 +35,17 @@ public class FeedController {
 	
 	// 메인 피드 조회
 	@GetMapping("/list")
-	public String getFeedList(Model model) {
+	public String getFeedList(HttpSession session, Model model) {
 		
+		// 로그인된 사용자 정보 확인
+	    String loggedInMemberId = (String) session.getAttribute("SID");
+	    
 		List<Feed> feedList = feedService.getFeedList();
+		
+		// 본인 피드 여부 설정
+	    for (Feed feed : feedList) {
+	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
+	    }
 		System.out.println(feedList);
 		log.info("Fetched feed list: {}", feedList); // 로그 추가
 		model.addAttribute("FeedList", feedList);
@@ -141,5 +152,21 @@ public class FeedController {
         return "user/feed/feed-comment";
     }
 	
-	// 자동완성 검색
+	// 피드 좋아요 증감
+	@PostMapping("/like")
+	public ResponseEntity<String> toggleLike(@RequestBody Map<String, Object> payload) {
+        String feedNum = (String) payload.get("feedNum");
+        Boolean liked = (Boolean) payload.get("liked");
+
+        try {
+            if (liked) {
+                feedService.incrementLike(feedNum);
+            } else {
+                feedService.decrementLike(feedNum);
+            }
+            return ResponseEntity.ok("좋아요 상태가 업데이트되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("좋아요 상태 업데이트 중 오류 발생.");
+        }
+    }
 }

@@ -21,4 +21,10 @@ public interface FeedService {
 	
 	// 음식이름 조회
 	String getOrCreateMealNutritionInfo(String mealName);
+	
+	// 피드 좋아요 증가
+	void incrementLike(String feedNum);
+	
+	// 피드 좋아요 감소
+	void decrementLike(String feedNum);
 }
