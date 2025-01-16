@@ -12,6 +12,7 @@ import doself.common.mapper.CommonMapper;
 import doself.file.domain.Files;
 import doself.file.mapper.FilesMapper;
 import doself.file.util.FilesUtils;
+import doself.user.members.domain.FeedList;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -32,19 +33,7 @@ public class MembersServiceImpl implements MembersService {
 	private final FilesUtils filesUtils;
 	private final FilesMapper filesMapper;
 	
-	// 회원 정보 조회
-	@Override
-	public Members getMemberInfoById(String memberId) {
-		return membersMapper.getMemberInfoById(memberId);
-	}
-	
-	// 회원 수정
-	@Override
-	public void modifyMember(Members member) {
-		membersMapper.modifyMember(member);
-	}
-	
-	//회원 검증
+	// 회원 검증
 	@Override
 	public Map<String, Object> matchedMember(String memberId, String memberPw) {
 		
@@ -61,6 +50,26 @@ public class MembersServiceImpl implements MembersService {
 		}
 		resultMap.put("isMatched", isMatched);
 		return resultMap;
+	}
+	
+	// 회원 정보 조회
+	@Override
+	public Members getMemberInfoById(String memberId) {
+		return membersMapper.getMemberInfoById(memberId);
+	}
+	
+	// 회원 수정
+	@Override
+	public void modifyMember(Members member, MultipartFile file) {
+		Files fileInfo = filesUtils.uploadFile(file);
+		if(fileInfo != null) {
+			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
+			fileInfo.setFileIdx(formattedKeyNum);
+			filesMapper.addfile(fileInfo);
+		}
+		member.setProfileFileIdx(fileInfo.getFileIdx());
+		
+		membersMapper.modifyMember(member);
 	}
 	
 	// 회원삭제
@@ -82,7 +91,8 @@ public class MembersServiceImpl implements MembersService {
 		List<TicketList> ticketList = membersMapper.getTicketListById(paramMap);
 		return new PageInfo<>(ticketList, pageable, rowCnt);
 	}
-
+	
+	//회원 포인트정보 조회
 	@Override
 	public PageInfo<PointList> getPointHistory(String memberId, Pageable pageable, String startDate, String endDate) {
 		int rowCnt = membersMapper.getCntPointHistory(memberId, startDate, endDate);
@@ -96,21 +106,17 @@ public class MembersServiceImpl implements MembersService {
 
 		return new PageInfo<>(pointList, pageable, rowCnt);
 	}
-
+	
+	//회원 피드리스트 조회
 	@Override
-	public void modifyProfile(MultipartFile file, Members member) {
-		// TODO Auto-generated method stub
-		Files fileInfo = filesUtils.uploadFile(file);
-		if(fileInfo != null) {
-			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
-			fileInfo.setFileIdx(formattedKeyNum);
-			filesMapper.addfile(fileInfo);
-		}
-		System.out.println("-----------"+fileInfo);
-		member.setProfileFileIdx(fileInfo.getFileIdx());
-		membersMapper.modifyProfile(member);
+	public List<FeedList> getMemberFeedListById(String memberId) {
+		
+		
+		return membersMapper.getMemberFeedListById(memberId);
 	}
 
+	
+	
 
 	
 	
