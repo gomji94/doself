@@ -32,4 +32,7 @@ public interface FeedMapper {
 
     // 좋아요 제거
     void decrementLike(String feedNum);
+    
+    // 피드 수정
+    int modifyFeed(Feed feed);
 }

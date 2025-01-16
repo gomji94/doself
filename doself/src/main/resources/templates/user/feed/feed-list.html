@@ -78,9 +78,13 @@
 		<section th:if="${FeedList != null && !FeedList.isEmpty()}">
             <div class="feed" th:each="f, iterStat : ${FeedList}" 
 						      th:data-is-owner="${f.owner}" 
-						      th:id="'feed-' + ${f.feedCode}" 
-						      th:data-meal-picture="${f.mealPicture}" 
-						      th:data-meal-date="${f.feedDate}" 
+						      th:data-feed-code="${f.feedCode}"
+						      th:data-feed-picture="${f.feedPicture}" 
+						      th:data-feed-comment="${f.feedCommentContent}" 
+						      th:data-meal-date="${f.feedDate}"
+						      th:data-meal-category="${f.mealCategoryCode}"
+         					  th:data-feed-visibility="${f.feedOpenStatus}"
+         					  th:data-meal-picture="${f.mealPicture}" 
 						      th:data-meal-weight="${f.mealWeight}" 
 						      th:data-meal-calories="${f.mealCalories}" 
 						      th:data-meal-carbohydrates="${f.mealCarbohydrates}" 
@@ -91,6 +95,7 @@
 						      th:data-meal-sodium="${f.mealSodium}" 
 						      th:data-meal-calcium="${f.mealCalcium}" 
 						      th:data-meal-iron="${f.mealIron}" 
+						      th:data-member-image="${f.memberProfileImage}" 
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
                     <a href="#">

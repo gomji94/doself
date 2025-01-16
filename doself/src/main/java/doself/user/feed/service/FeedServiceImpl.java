@@ -96,5 +96,11 @@ public class FeedServiceImpl implements FeedService {
     public void decrementLike(String feedNum) {
         feedMapper.decrementLike(feedNum);
     }
+    
+    // 피드 수정
+    @Override
+    public void modifyFeed(Feed feed) {
+    	feedMapper.modifyFeed(feed);
+    }
 }
 	
