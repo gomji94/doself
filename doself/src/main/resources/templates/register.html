@@ -39,15 +39,15 @@
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
-                                <label class="form-label">전화번호</label>
-                                <div class="row gx-2">                                    
-                                    <input id="mbrPhoneNum" name="mbrPhoneNum" class="form-control w-100" placeholder="전화번호를 입력해주세요" type="text" disabled="disabled"/>
-                                </div>
+                                <label class="form-label">비밀번호</label>
+                                <input id="mbrPw" name="mbrPw" class="form-control w-100" placeholder="비밀번호를 입력해주세요" type="password" disabled="disabled"/>
+                                <p id="checkPw" class="hide white-space" style="color:red;">비밀번호는 최소 8글자 이상이면서, 알파벳과 숫자 및 특수문자(@$!%*#?&)가 하나 이상 포함되어야 합니다.</p>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
-                                <label class="form-label">비밀번호</label>
-                                <input id="mbrPw" name="mbrPw" class="form-control w-100" placeholder="비밀번호를 입력해주세요" type="password" disabled="disabled"/>
+                                <label class="form-label">비밀번호 확인</label>
+                                <input id="mbrCheckPw" name="mbrCheckPw" class="form-control w-100" placeholder="비밀번호를 한번 더 입력해주세요" type="password" disabled="disabled"/>
+                                <p id="checkPw2" class="hide white-space" style="color:red;">비밀번호가 같지 않습니다. 다시 입력해주세요</p>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
@@ -58,6 +58,13 @@
                             <div class="mb-3">
                                 <label class="form-label">이메일</label>
                                 <input id="mbrEmail" name="mbrEmail" class="form-control w-100" placeholder="이메일을 입력해주세요" type="text" disabled="disabled"/>
+                            </div>
+                            <!-- form-group// -->
+                            <div class="mb-3">
+                                <label class="form-label">전화번호</label>
+                                <div class="row gx-2">                                    
+                                    <input id="mbrPhoneNum" name="mbrPhoneNum" class="form-control w-100" placeholder="전화번호를 입력해주세요" type="text" disabled="disabled"/>
+                                </div>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
@@ -115,17 +122,49 @@
     		//const message = /*[[${message}]]*/ "message";
     		//if(message) alert(message);
     		
+    		// 아이디 영어, 숫자만 입력가능
+    		function onlyNumberAndEnglish(id) {
+    			
+    			return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(id);
+			}
+    		// 비밀번호 영어, 숫자,특수문자, 8자 이상 입력가능
+    		function strongPassword(pw) {
+    			
+    			return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(pw);
+			}
+    		
+    		
+    		
+    		// 아이디 입력할시 실행
     		$('#mbrId').on('change',function(){
 	    		const checkMbrId = $('#mbrId').val();
 	    		
-	    		if(checkMbrId == ''){
-    				$('#checkId').text('아이디를 입력해주세요.')
+	    		// 아이디 영어,숫자가 아닌 값이 들어갔을경우
+	    		if(onlyNumberAndEnglish(checkMbrId) == false){
+	    			// 출력 텍스트변경
+    				$('#checkId').text('아이디는 영어와 숫자만 입력가능합니다.')
 					 .css({'color': 'red'});
     				
+	    			// 활성화 됬던 인풋태그들 비활성화
     				$('#registerForm').find('input, select')
 					  .not('#mbrId')
 					  .prop('disabled',true);
-    				
+	    			
+	    			// 함수종료;
+	    			return;
+	    		}
+	    		
+	    		
+	    		// 입력했던 아이디 지웠을때
+	    		if(checkMbrId == ''){
+	    			// 출력 텍스트변경
+    				$('#checkId').text('아이디를 입력해주세요.')
+					 .css({'color': 'red'});
+    				// 활성화 됬던 인풋태그들 비활성화
+    				$('#registerForm').find('input, select')
+					  .not('#mbrId')
+					  .prop('disabled',true);
+    				//함수 종료
     				return;
     			}
 	    		//ajax 요청
@@ -135,18 +174,21 @@
 	    			data : {'mbrId' : checkMbrId},
 	    			dataType : 'json'
 	    		});
-	    		
+	    		// ajax 요청 성공
 	    		request.done(function(data){
 	    			const isDuplicate = data;
-	    			
-	    			$('#registerForm').find('input, select')
-	    							  .not('#mbrId')
+	    			// 중복아이디가 존재하면 비밀번호입렵 비활성화, 존재하지 않으면 비밀번호입력 활성화
+	    			$('#registerForm').find('#mbrPw')
 	    							  .prop('disabled',isDuplicate);
+	    			// 비밀번호 조건문구 보여주기
+	    			$('#checkPw').removeClass('hide');
 	    			
+	    			// 중복아이디 존재할시 출력메시지
 	    			if(isDuplicate){
 	    				$('#checkId').text('이미 사용중인 아이디 입니다.')
 	    							 .css({'color': 'red'});
 	    			}
+	    			// 중복아이디 존재하지 않을 시 출력메시지
 	    			else{
 	    				$('#checkId').text('사용가능한 아이디 입니다.')
 	    							 .css({'color': 'skyblue'});	    				
@@ -160,30 +202,83 @@
 	    		
     		});    			    	
     		
-    		$(document).ready(function () {               
+    		$('#mbrPw').on('change',function(){
+    			const mbrPw = $('#mbrPw').val();
+    			//비밀번호 영문,숫자, 특수문자, 8자이상인지 판별 아닐경우
+    			if(strongPassword(mbrPw) == false){
+    				//비밀번호 조건문구 보여주기
+    				$('#checkPw').removeClass('hide');
+    			}
+    			// 비밀번호가 조건에 맞게 입력되면
+    			else{
+    				//비밀번호 조건문구 보여주기
+    				$('#checkPw').text('비밀번호가 조건에 맞습니다.')
+    							 .css({'color':'skyblue'});
+    				$('#registerForm').find('#mbrCheckPw')					  
+					  				  .prop('disabled',false);
+    				// 비밀번호확인 조건문구 보여주기
+	    			$('#checkPw2').removeClass('hide');
+    			}
+    		});
+    		$('#mbrCheckPw').on('change',function(){
+    			const mbrPw = $('#mbrPw').val();
+    			const mbrCheckPw = $(this).val();
+    			// 비밀번호와 비밀번호 확인이 같지 않으면
+    			if(mbrPw != mbrCheckPw){
+    				
+    				// 다른인풋 비활성화
+	    			$('#registerForm').find('input, select')
+					  .not('#mbrId, #mbrPw, #mbrCheckPw')
+					  .prop('disabled',true);
+    			}
+    			else{
+    				// 비밀번호확인 문구보여주기
+	    			$('#checkPw2').text('비밀번호가 일치합니다.')
+    							 .css({'color':'skyblue'});
+    				// 비밀번호 확인이 일치하면 나머지 인풋태그 활성화
+	    			$('#registerForm').find('input, select')
+					  .not('#mbrId, #mbrPw, #mbrCheckPw')
+					  .prop('disabled',false);
+    			}
+    		});
+    		
+    		
+    		$(document).ready(function () {
+    			// 인풋에 값을 입력하면 실행
                 $('#registerForm input').on('input', function () {
                     
                 	let isAllFilled = true;
-                    $('#registerForm input[type="text"]').each(function () {
+                	
+                	//인풋에 값이 다 입력되있는지 조회하는데
+                    $('#registerForm input').each(function () {
+                    	//입력한값이 비어있는 값이 있으면 조건값 false설정
                         if ($(this).val().trim() === '') {
                             isAllFilled = false;
                         }
                     });
+                	// 입력한값이 비어있는 값이 있으면 회원가입버튼 비활성화
+                	// 모든인풋태그에 값이 입력되었으면 회원가입버튼 활성화
                     $('#registerBtn').prop('disabled', !isAllFilled);
                 });
-      
+      			
+    			//회원가입 버튼 클릭시 실행
                 $('#registerBtn').click(function (e) {
                     e.preventDefault();
                     let isSubmit = true;
-       
+       				// 입력값을 다 입력해놓고 다시 지우는 경우도 있어서 회원가입버튼 누를때 한번더 판별
+                    // 인풋태그들을 조회
                     $('#registerForm input[type="text"]').each(function () {
-
+						// 인풋태그들에 입력한값이 빈값이면
                     	if ($(this).val().trim() === '') {
+                    		//조건값 false
                     		isSubmit = false;
+                    		//입력되지않은 인풋태그로 포커스이동
                     		$(this).focus();
+                    		//함수 종료
 	                        return false;
                     	}                  
 	                });
+       				// 모든값이 입력되어 있으면 전송
                     if (isSubmit) {
                     	$('#registerForm').submit();
                     }
