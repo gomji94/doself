@@ -86,5 +86,15 @@ public class FeedServiceImpl implements FeedService {
 
         return mealNutritionInfoCode;
     }
+ 
+    // 좋아요 수 증가
+    public void incrementLike(String feedNum) {
+        feedMapper.incrementLike(feedNum);
+    }
+
+    // 좋아요 수 감소
+    public void decrementLike(String feedNum) {
+        feedMapper.decrementLike(feedNum);
+    }
 }
 	

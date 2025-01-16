@@ -206,5 +206,26 @@
 	        #{mniIron}
 	    )
 	</insert>
+	
+	<!-- 좋아요 수 증가 -->
+	<update id="incrementLike" parameterType="String">
+        UPDATE
+        	feed
+        SET
+        	feed_like = feed_like + 1
+        WHERE
+        	feed_num = #{feedNum}
+    </update>
+	
+	<!-- 좋아요 수 감소 -->
+	<update id="decrementLike" parameterType="String">
+        UPDATE
+        feed
+        SET
+        feed_like = feed_like - 1
+        WHERE
+        feed_num = #{feedNum}
+    </update>
+	
  </mapper>
   
