@@ -230,7 +230,10 @@
 					ac_num = #{acNum},
 				</if>  			
 				<if test="mbrPoint != null and mbrPoint != ''">
-					mbr_point = #{mbrPoint}
+					mbr_point = #{mbrPoint},
+				</if>  			
+				<if test="mbrImage != null and mbrImage != ''">
+					mbr_image = #{mbrImage}
 				</if>  			
   			</trim>
   			WHERE
