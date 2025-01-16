@@ -132,42 +132,72 @@
 	
 	<!-- 음식 이름 검색 -->
 	<select id="findKeywords" parameterType="String" resultType="String">
-	    SELECT mni_name 
-	    FROM meal_nutrition_info 
-	    WHERE mni_name LIKE CONCAT('%', #{query}, '%');
+	    SELECT
+	    	mni_name 
+	    FROM
+	    	meal_nutrition_info 
+	    WHERE
+	    	mni_name LIKE CONCAT('%', #{query}, '%');
 	</select>
 	
 	<!-- 피드 추가 -->
 	<insert id="addFeed" parameterType="Feed">
 		INSERT INTO feed (
-	        feed_num,
-	        mbr_id,
-	        mni_num,
-	        feed_mbr_image,
-	        feed_food_intake,
-	        feed_content,
-	        feed_picture,
-	        mc_num,
-	        feed_date,
-	        feed_intake_date,
-	        feed_like,
-	        feed_open_status,
-	    )
-	    VALUES (
-	        #{feedCode},
-	        #{memberId},
-	        #{mealNutritionInfoCode},
-	        #{memberProfileImage},
-	        #{mealNutritionInfoCode},
-	        #{feedFoodIntake},
-	        #{feedContent},
-	        #{feedPicture},
-	        #{mealCategoryCode},
-	        CURDATE(),
-	        CURDATE(),
-	        0,
-	        #{feedOpenStatus}
-	    )
+		    feed_num,
+		    mbr_id,
+		    mni_num,
+		    feed_food_intake,
+		    feed_content, 
+		    feed_picture,
+		    mc_num,
+		    feed_date,
+		    feed_intake_date, 
+		    feed_like,
+		    feed_open_status
+		) VALUES (
+		    NULL,
+		    #{memberId},
+		    #{mealNutritionInfoCode},
+		    #{feedFoodIntake},
+		    #{feedContent}, 
+		    #{feedPicture},
+		    #{mealCategoryCode},
+		    NOW(),
+		    NOW(), 
+		    0,
+		    #{feedOpenStatus}
+		)
 	</insert>
+	
+	<!-- 음식 이름으로 음식 번호 조회 -->
+    <select id="findByName" parameterType="String" resultType="String">
+        SELECT
+        	mni_name
+        FROM
+        	meal_nutrition_info 
+        WHERE
+        	mni_name LIKE CONCAT('%', #{query}, '%');
+    </select>
+
+	<!-- 좋아요 수 증가 -->
+	<update id="incrementLike" parameterType="String">
+        UPDATE
+        	feed
+        SET
+        	feed_like = feed_like + 1
+        WHERE
+        	feed_num = #{feedNum}
+    </update>
+	
+	<!-- 좋아요 수 감소 -->
+	<update id="decrementLike" parameterType="String">
+        UPDATE
+        feed
+        SET
+        feed_like = feed_like - 1
+        WHERE
+        feed_num = #{feedNum}
+    </update>
+	
  </mapper>
   

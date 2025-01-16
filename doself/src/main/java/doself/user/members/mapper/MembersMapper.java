@@ -39,6 +39,10 @@ public interface MembersMapper {
 	
 	// 결제 후 회원 티켓 갯수 업데이트
 	int modifyMemberTicketCnt(Order order);
+
+	//회원 프로필수정
+	public void modifyProfile(Members member);
 	
+
 	
 }

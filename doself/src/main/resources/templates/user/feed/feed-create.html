@@ -12,7 +12,7 @@
             <!-- 이미지 업로드 영역 -->
 			<div class="feed-create-image-upload">
 			    <div class="feed-create-upload-box">
-			        <input type="file" id="feed-create-file-input" style="display: none;" accept="image/*" />
+			        <input type="file" id="feed-create-file-input" accept="image/*" style="display: none;" />
 			        <img id="plate" src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="빈 접시">
 			        <p>사진을 이곳에 넣어</p>
 			        <p>빈 그릇을 채워주세요!</p>
@@ -43,9 +43,13 @@
 					       class="feed-create-food-search" 
 					       id="searchFood" 
 					       name="searchValue" 
-					       placeholder="Search"/>
+					       placeholder="음식 이름을 작성하거나 선택해주세요."/>
 				<div id="searchResults" class="dropdown-menu" style="display: none;"></div>
 				</div>
+				<div class="input-group">
+                    <label for="intakeDateTime">섭취 날짜 및 시간</label>
+                    <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required />
+                </div>
                 <div class="input-group">
                     <label for="serving">섭취 인분</label>
                     <select id="serving">

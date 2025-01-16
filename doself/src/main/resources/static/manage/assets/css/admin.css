@@ -1734,6 +1734,10 @@ textarea.form-control {
   margin-right: 2% !important;
 }
 
+.white-space{
+	white-space:normal;
+}
+
 /* .date {
   width: 120px; 날짜 필드의 넓이
   padding: 5px; 여백 추가
@@ -2089,6 +2093,9 @@ a.itemside:hover .title {
           flex-grow: 1;
   margin-bottom: 0;
   text-align: right;
+}
+.hide {
+	display:none;
 }
 
 /* -------------------- list.row--------------------- */

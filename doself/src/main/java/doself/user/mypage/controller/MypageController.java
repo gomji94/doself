@@ -10,8 +10,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import doself.file.mapper.FilesMapper;
+import doself.file.service.FileService;
+import doself.file.util.FilesUtils;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -29,6 +34,13 @@ public class MypageController {
 
 	private final MembersService membersService;
 	//private final BCryptPasswordEncoder passwordEncoder;    //비밀번호암호화의존성추가
+	
+	@org.springframework.beans.factory.annotation.Value("${file.path}")
+	private String fileRealPath;
+	
+	private final FileService fileService;
+	private final FilesMapper filesMapper;
+	private final FilesUtils filesUtils;
 
 	//회원정보 수정전 검증 화면이동
 	@GetMapping("/modify")
@@ -41,7 +53,7 @@ public class MypageController {
 	// 회원정보 수정전 검증
 	@PostMapping("/modify")
 	public String modifyMember(@RequestParam(name="memberId") String memberId,  
-			                   @RequestParam(name="memberPw") String memberPw,  
+			                   @RequestParam(name="memberPw") String memberPw,
 			                   RedirectAttributes reAttr,
 			                   Model model) {						
 	
@@ -75,20 +87,25 @@ public class MypageController {
 	
 	@PostMapping("/member/info")
 	public String modifyMemberById(Members member, RedirectAttributes reAttr) {
-								   //@RequestParam(name="memberId") String memberId, 
-								   //@RequestParam(name="memberEmail") List<String> memberEmail,
-								   //@RequestParam(name="memberPhoneNum") List<String> memberPhone,
-									
+		
 		member.setMemberEmail(removeCommas(member.getMemberEmail())); 
 		member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum()));
 		membersService.modifyMember(member);
 		
 		reAttr.addAttribute("memberId", member.getMemberId());
+		return "redirect:/mypage/member/info";
+	}
+	
+	@PostMapping("/member/info/profile")
+	public String modifyProfile(@RequestPart(name = "file", required = false) MultipartFile file,
+								 HttpSession session, Members member) {
 		
-		
+		member.setMemberId((String) session.getAttribute("SID"));
+		membersService.modifyProfile(file, member);
 		
 		return "redirect:/mypage/member/info";
 	}
+	
 	
 	// 공통 메소드 static common 에 작성 할 것.
 	// 유효성검사 js 로 검증 후 데이터 넘겨받기

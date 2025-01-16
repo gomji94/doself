@@ -1,13 +1,26 @@
-// --- feed.list option button ---
+// --- 피드 옵션 모달 ---
 $(document).ready(function () {
     // 옵션 버튼 클릭 시 모달창 표시
     $('.option-button').on('click', function () {
-        $('.feed-option-modal-wrap').fadeIn(); // 모달창 활성화
+		const feedElement = $(this).closest('.feed'); // 현재 피드 요소
+        const isOwner = feedElement.data('is-owner'); // 본인 피드 여부
+
+        if (isOwner) {
+            // 본인 피드 옵션 모달 표시
+            $('.feed-option-modal-wrap').fadeIn();
+        } else {
+            // 다른 멤버 피드 옵션 모달 표시
+            $('.other-members-option-modal-wrap').fadeIn();
+        }
     });
 
     // 닫기 버튼 클릭 시 모달창 닫기
     $('.feed-option-modal-wrap .close').on('click', function () {
         $('.feed-option-modal-wrap').fadeOut(); // 모달창 비활성화
+    });
+	
+	$('.other-members-option-modal-wrap .close').on('click', function () {
+        $('.other-members-option-modal-wrap').fadeOut(); // 다른 멤버 피드 모달창 닫기
     });
 
     // 모달창 바깥을 클릭하면 모달창 닫기
@@ -16,9 +29,33 @@ $(document).ready(function () {
             $(this).fadeOut();
         }
     });
+	
+	$('.other-members-option-modal-wrap').on('click', function (e) {
+	    if ($(e.target).is('.other-members-option-modal-wrap')) {
+	        $(this).fadeOut();
+	    }
+	});
+	
+	// 타멤버 피드 옵션에서 "신고" 클릭 시 신고 모달 열기
+    $('#feed-declaration-modal').on('click', function () {
+        $('.other-members-option-modal-wrap').fadeOut(); // 기존 모달 닫기
+        $('#feed-declaration-modal-overlay').fadeIn(); // 신고 모달 열기
+    });
+
+    // 신고 모달 닫기 버튼 클릭
+    $('#feed-declaration-modal-overlay .close').on('click', function () {
+        $('#feed-declaration-modal-overlay').fadeOut(); // 신고 모달 비활성화
+    });
+
+    // 신고 모달 바깥 클릭 시 닫기
+    $('#feed-declaration-modal-overlay').on('click', function (e) {
+        if ($(e.target).is('#feed-declaration-modal-overlay')) {
+            $(this).fadeOut();
+        }
+    });
 });
 
-// --- feed.view option button ---
+// --- 상세 피드 옵션 모달 ---
 $(document).ready(function () {
     // 옵션 버튼 클릭 시 모달창 표시
     $('.df-option-button').on('click', function () {
@@ -38,7 +75,7 @@ $(document).ready(function () {
     });
 });
 
-// --- feed like button event ---
+// --- 피드 좋아요 증감 ---
 $(document).ready(function () {
     $(document).on('click', '.likeBtn', function (event) {
         event.preventDefault(); // 기본 동작 방지
@@ -46,70 +83,47 @@ $(document).ready(function () {
         const likeImg = $(this).find('.likeImg'); // 버튼 내부의 likeImg 요소 선택
         const likedSrc = 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png'; // "좋아요" 이미지 경로
         const defaultSrc = 'https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png'; // 기본 이미지 경로
-		
-		// 현재 피드 요소를 기준으로 feedDescription 선택
+
         const feedElement = $(this).closest('.feed'); // 현재 버튼이 포함된 피드 요소
         const feedDescription = feedElement.find('#feed-likes'); // 피드의 좋아요 수 표시 요소
-		
-        // 현재 상태 확인 및 업데이트
-        const isLiked = $(this).attr('data-liked') === 'true';
+        const feedNum = feedElement.attr('id').split('-')[1]; // 피드 ID 가져오기
+        const isLiked = $(this).attr('data-liked') === 'true'; // 현재 좋아요 상태 확인
+        const newLikedStatus = !isLiked; // 새 좋아요 상태
 
-        if (!isLiked) {
-            likeImg.attr('src', likedSrc)
-					.css({ 'width': '24.5px', 'height': 'auto' }); // "좋아요" 이미지로 변경
-            $(this).attr('data-liked', 'true'); // 상태 업데이트
-			
-			let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10); // 좋아요 수 파싱
-            currentLikes++;
-            feedDescription.text(`좋아요 ${currentLikes}개`);
-        } else {
-            likeImg.attr('src', defaultSrc); // 기본 이미지로 복원
-            $(this).attr('data-liked', 'false'); // 상태 복원
-			
-			let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10); // 좋아요 수 파싱
-            currentLikes--;
-            feedDescription.text(`좋아요 ${currentLikes}개`);
-        }
+        // AJAX 요청으로 좋아요 상태 업데이트
+        $.ajax({
+            url: '/feed/like', // 서버 엔드포인트
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                feedNum: feedNum,
+                liked: newLikedStatus
+            }),
+            success: () => {
+                let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10); // 현재 좋아요 수 파싱
+
+                if (newLikedStatus) {
+                    // 좋아요 상태로 변경
+                    likeImg.attr('src', likedSrc).css({ 'width': '24.5px', 'height': 'auto' });
+                    currentLikes++; // 좋아요 수 증가
+                } else {
+                    // 기본 상태로 복구
+                    likeImg.attr('src', defaultSrc);
+                    currentLikes--; // 좋아요 수 감소
+                }
+
+                feedDescription.text(`좋아요 ${currentLikes}개`); // UI 업데이트
+                $(this).attr('data-liked', newLikedStatus.toString()); // 새로운 상태 저장
+            },
+            error: (error) => {
+                console.error('좋아요 상태 업데이트 실패:', error);
+                alert('좋아요 상태 업데이트에 실패했습니다. 다시 시도해주세요.');
+            }
+        });
     });
 });
 
-// --- feed comment modal ---
-$(document).ready(function () {
-    // 댓글 버튼 클릭 시
-    $('.commentBtn').on('click', function () {
-        // 클릭한 피드 요소 가져오기
-        const feedElement = $(this).closest('.feed');
-
-        // 피드 데이터 가져오기
-        const mealImage = feedElement.data('meal-picture'); // 피드 이미지
-        const profileImage = feedElement.find('.profile-img').attr('src'); // 작성자 프로필 이미지
-        const userName = feedElement.find('.user-name p').text(); // 작성자 이름
-        const commentContent = feedElement.find('.comments-link').text(); // 댓글 내용
-
-        // 데이터를 댓글 모달에 삽입
-        $('#comment-meal-image').attr('src', mealImage);
-        $('#comment-profile-image').attr('src', profileImage);
-        $('#comment-user-name').text(userName);
-        $('#comment-content').text(commentContent);
-
-        // 모달 열기
-        $('#feed-comment-modalOverlay').fadeIn(300);
-    });
-
-    // 모달 닫기 버튼
-    $('.feed-comment-modalCloseBtn').on('click', function () {
-        $('#feed-comment-modalOverlay').fadeOut(300);
-    });
-
-    // 모달 외부 클릭 시 닫기
-    $('#feed-comment-modalOverlay').on('click', function (e) {
-        if ($(e.target).is('#feed-comment-modalOverlay')) {
-            $(this).fadeOut(300);
-        }
-    });
-});
-
-// --- 음식 이름 검색 ---
+// --- 피드 댓글 모달 ---
 $(document).ready(function () {
     const $searchInput = $('#searchFood');
     const $resultsContainer = $('#searchResults');
@@ -161,7 +175,7 @@ $(document).ready(function () {
     });
 });
 
-// --- feed carete modal ---
+// --- 피드 생성 모달 ---
 $(document).ready(function () {
     // 피드 추가 버튼 클릭 이벤트
     $('#feed-create').on('click', function () {
@@ -182,12 +196,13 @@ $(document).ready(function () {
     });
 });
 
-// --- 피드 추가 유효성 검사 ---
+// --- 피드 추가 유효성 검사 및 추가 ---
 $(document).ready(function () {
     $('#feed-create-submit-btn').on('click', function () {
         // 값 가져오기
 		const feedPicture = $('#feed-create-file-input')[0].files[0];
 	    const feedContent = $('#feed-create-d-feed-content').val();
+		const searchedFood = $('#searchFood').val().trim(); // 음식 이름 검색 값
 	    const feedFoodIntake = $('#serving').val();
 	    const mealCategoryCode = $('#meal-type').val();
 	    const feedOpenStatus = $('input[name="visibility"]:checked').val() === 'public' ? 1 : 0;
@@ -203,6 +218,11 @@ $(document).ready(function () {
             return;
         }
 
+		if (!searchedFood || searchedFood.length < 2) {
+            alert('음식 이름을 검색하고 선택해주세요.');
+            return;
+        }
+		
         if (!feedFoodIntake) {
             alert('섭취 인분을 선택해주세요.');
             return;
@@ -222,9 +242,12 @@ $(document).ready(function () {
 		const formData = new FormData();
 	    formData.append('feedPicture', feedPicture);
 	    formData.append('feedContent', feedContent);
+		formData.append('searchedFood', searchedFood); // 검색한 음식 이름 추가
 	    formData.append('feedFoodIntake', feedFoodIntake);
 	    formData.append('mealCategoryCode', mealCategoryCode);
 	    formData.append('feedOpenStatus', feedOpenStatus);
+		
+		console.log(feedPicture)
 
         // AJAX 요청으로 피드 추가
 		$.ajax({
@@ -243,6 +266,7 @@ $(document).ready(function () {
 	            console.error(error);
 				console.log('feedPicture:', feedPicture);
 				console.log('feedContent:', feedContent);
+				console.log('searchedFood', searchedFood);
 				console.log('feedFoodIntake:', feedFoodIntake);
 				console.log('mealCategoryCode:', mealCategoryCode);
 				console.log('feedOpenStatus:', feedOpenStatus);
@@ -288,7 +312,7 @@ $(document).ready(function () {
     });
 });
 
-// --- modify feed modal ---
+// --- 피드 수정 모달 ---
 $(document).ready(function () {
     // 수정 버튼 클릭 시
     $('#feed-modify-modal').on('click', function () {
@@ -386,10 +410,10 @@ function updateRightSidebar(feed) {
     if (carbElement) carbElement.textContent = `${mealCarbohydrates} kcal`;
 
     const proteinElement = document.querySelector('#protein');
-    if (proteinElement) proteinElement.textContent = `${mealProtein} kcal`;
+    if (proteinElement) proteinElement.textContent = `${mealProtein} g`;
 
     const fatElement = document.querySelector('#fat');
-    if (fatElement) fatElement.textContent = `${mealFat} kcal`;
+    if (fatElement) fatElement.textContent = `${mealFat} g`;
 }
 
 // Intersection Observer 설정
@@ -437,10 +461,10 @@ document.querySelectorAll('.feed').forEach(feed => {
         if (carbElement) carbElement.textContent = `${mealCarbohydrates} kcal`;
 
         const proteinElement = document.querySelector('#protein');
-        if (proteinElement) proteinElement.textContent = `${mealProtein} kcal`;
+        if (proteinElement) proteinElement.textContent = `${mealProtein} g`;
 
         const fatElement = document.querySelector('#fat');
-        if (fatElement) fatElement.textContent = `${mealFat} kcal`;
+        if (fatElement) fatElement.textContent = `${mealFat} g`;
     })
 });
 
