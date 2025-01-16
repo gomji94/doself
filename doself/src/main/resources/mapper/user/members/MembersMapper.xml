@@ -20,6 +20,7 @@
 		<result column="participation_ticket_count"  property="partTicketCnt" />
 		<result column="mbr_point" 	                 property="memberPoint" />
 		<result column="mbr_image" 	                 property="memberImage" />
+		<result column="file_idx" 	                 property="profileFileIdx" />
 			
 			<collection property="feedList" ofType="FeedList">
 				<id 	column="feed_num"  		property="feedNum"/>
@@ -246,5 +247,25 @@
 			
 		WHERE mbr_id = #{ordererId}
    		
+   	</update>
+   	
+   	<!--  -->
+   	<update id="modifyProfile" parameterType="Members">
+   	UPDATE `member`
+	<set>
+      <if test="memberPw != null and memberPw !=''">
+          mbr_pw=#{memberPw},
+      </if>
+      <if test="memberPhoneNum != null and memberPhoneNum != ''">
+          mbr_phone_num=#{memberPhoneNum},
+      </if>
+      <if test="memberEmail != null and memberEmail != ''">
+          mbr_email=#{memberEmail},
+      </if>
+      <if test="profileFileIdx != null and profileFileIdx != ''">
+		  file_idx=#{profileFileIdx}
+      </if>
+	</set>
+	WHERE mbr_id=#{memberId}
    	</update>
   </mapper>

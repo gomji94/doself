@@ -50,25 +50,26 @@
                     <div id="main-container-title__kor">계정센터</div>
             </div>
 		
-            <div id="main-user-info">
             	<!-- multipart/form-data : 모든 문자를 인코딩하지 않음 (원본 데이터가 유지되어 이미지, 파일 등을 서버로 전송할 수 있음) -->
-            	<form th:action="@{/mypage/member/info}" method="POST" id="myPageFrm" enctype="multipart/form-data">
+            <form class="account-form" id="modifyMemberForm" th:action="@{/mypage/member/info}" method="post"  enctype="multipart/form-data">
+	            <div id="main-user-info">
+            	<!-- <form th:action="@{/mypage/member/info}" method="POST" id="myPageFrm"> -->
 	                <div id = "profile-image">
+	                		<!-- 이미지경로 src ="${contextPath(<-수정)}<c:out value='${loginUser.profileURL(<-수정)}' default='/resources/static/assets/imgs/E0rJhxqVUAEFkbG.jpg' />"  -->
 	                        <img th:src="*{memberImage}" 
 	                         id="memberImage" name="memberImage" alt="프로필 이미지" class="profile-image">
 	                </div>    
 	                <div id="profile-info">
 	                    <div id="profile-edit">
-	                        <input type="file" name="file" id="btnChangeUplode" style="display:none">
+	                        <input type="file" name="file" id="btnChangeUplode" style="display:none"  accept="image/*">
 	                        <!-- accept="image/*" -->
 	                        <button type="button" id="btnChangeProfile" >프로필 변경</button>
 	                    </div>
 	                    <div id="profile-userId" th:text="*{memberId}"></div>
 	                </div>
-            	</form>
-            </div>
+            	
+            	</div>
 
-            <form class="account-form" id="modifyMemberForm" th:action="@{/mypage/member/info}" method="post" >
             	<input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
                 <div class="form-group">
                     <label for="name">이름</label>
@@ -137,19 +138,15 @@
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+	    <script th:src="@{/assets/js/layout.js}"></script>
+	    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"></script>
-    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript">
     	
-
-		$('#btnChangeProfile').click(function(){
-			$('#btnChangeUplode').click();
-		});	
-		
 		//유효성 검사 함수 : 빈값여부체크
 		const emptyFn = (element) => { 
 			const value = element.value.trim();
@@ -304,8 +301,34 @@
 		        this.submit();
 		        alert('탈퇴가 완료되었습니다.')
 		   });
+		   
 		 
-		 
+		   $(document).ready(function() {
+				$('#btnChangeProfile').click(function(){
+					$('#btnChangeUplode').click();
+				});	
+				
+				$('#memberImage').click(function(){
+					$('#btnChangeUplode').click();
+				});
+				
+				const btnChangeProfile = $('#btnChangeProfile'); //  button 
+				const btnChangeUplode = $('#btnChangeUplode');   //  input 
+				const memberImage = $('#memberImage');           // scr 
+				
+				btnChangeUplode.on('change', function(e){
+					memberImage.empty();
+					const file = e.target.files[0];
+					if(file) {
+						const reader = new FileReader();
+						reader.onload = function(e) {
+							memberImage.attr('src', e.target.result).show();
+						}
+						reader.readAsDataURL(file);
+					}
+				});
+		   });
+		   
 	</script>
     </th:block> 
 </html>
