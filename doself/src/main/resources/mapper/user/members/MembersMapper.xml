@@ -12,7 +12,7 @@
 		<result column="mbr_pw" 			         property="memberPw" />
 		<result column="mbr_name" 			         property="memberName" />
 		<result column="mbr_email"			         property="memberEmail" />
-		<result column="mbr_birth_date" 	         property="memberBrith" />
+		<result column="mbr_birth_date" 	         property="memberBirth" />
 		<result column="mbr_phone_num" 		         property="memberPhoneNum" />
 		<result column="opening_ticket_count" 	   	 property="openTicketCnt" />
 		<result column="participation_ticket_count"  property="partTicketCnt" />
@@ -25,9 +25,6 @@
 				<id 	column="feed_num"  		property="feedNum"/>
 				<result column="feed_picture" 	property="feedImage"/>
 			</collection> -->
-		
-	
-	
 	<!-- 티켓리스트 -->
 	<resultMap type="TicketList" id="TicketListResultMap">
 		<id 	column="mbr_id" 			         property="memberId"/>
@@ -56,14 +53,12 @@
 		<result column="feed_picture" 	property="feedImage"/>
 	</resultMap> 
 	
-  		
-  	<!-- 회원수정정보 -->	 <!-- 프로필사진 쿼리문 팀원상의 -->
+  	<!-- 회원수정정보 -->
     <select id="getMemberInfoById" parameterType="String" resultMap="membersResultMap">
 		SELECT 
 			m.mbr_id, 
 			m.mbr_pw,
 			m.mbr_name,
-			m.mg_code,
 			m.mbr_email, 
 			m.mbr_birth_date,
 			m.mbr_phone_num,
@@ -108,7 +103,6 @@
         WHERE 
             mbr_id=#{memberId};
     </update>  
-    
     
 	<!-- 회원탈퇴 -->
 	<update id="removeMemberById" parameterType="String">
