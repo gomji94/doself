@@ -14,12 +14,21 @@ function formatDate(unixTimestamp) {
 //문서가 준비되면 제일 먼저 실행
 $(document).ready(function(){ 
 	$("#payment").click(function(){ 
-    	proceedPay(); //버튼 클릭하면 호출 
+		let isValid = true;
+		const ticketKey = $('#ticketKey').val().trim();
+		if(!ticketKey) {
+			alert('결제하실 티켓을 선택해주세요');
+			isValid = false;
+			return;
+		}
+		
+		if(isValid) proceedPay();
+		
     }); 
 })
 
 function proceedPay() {
-			 
+	
 	 // ajax 요청
 	 const request = $.ajax({
 		url : '/ticket/payment',
@@ -40,9 +49,11 @@ function proceedPay() {
 function requestPay(data) {
 	var IMP = window.IMP;
 	
+	console.log(IMP)
+	alert(IMP)
+	
 	IMP.init("imp15443850"); // 예: imp00000000
       	// IMP.request_pay(param, callback) // 결제창 호출
-		
 	  IMP.request_pay({ // param
 	      pg: "uplus.tlgdacomxpay", //결제대행사 설정에 따라 다르며 공식문서 참고
 	      pay_method: "card", //결제방법 설정에 따라 다르며 공식문서 참고
