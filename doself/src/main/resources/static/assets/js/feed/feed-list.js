@@ -123,54 +123,14 @@ $(document).ready(function () {
     });
 });
 
-// --- feed comment modal ---
-$(document).ready(function () {
-    // 댓글 버튼 클릭 시
-    $('.commentBtn').on('click', function () {
-        // 클릭한 피드 요소 가져오기
-        const feedElement = $(this).closest('.feed');
-
-        // 피드 데이터 가져오기
-        const mealImage = feedElement.data('meal-picture'); // 피드 이미지
-        const profileImage = feedElement.find('.profile-img').attr('src'); // 작성자 프로필 이미지
-        const userName = feedElement.find('.user-name p').text(); // 작성자 이름
-        const commentContent = feedElement.find('.comments-link').text(); // 댓글 내용
-
-        // 데이터를 댓글 모달에 삽입
-        $('#comment-meal-image').attr('src', mealImage);
-        $('#comment-profile-image').attr('src', profileImage);
-        $('#comment-user-name').text(userName);
-        $('#comment-content').text(commentContent);
-
-        // 모달 열기
-        $('#feed-comment-modalOverlay').fadeIn(300);
-    });
-
-    // 모달 닫기 버튼
-    $('.feed-comment-modalCloseBtn').on('click', function () {
-        $('#feed-comment-modalOverlay').fadeOut(300);
-    });
-
-    // 모달 외부 클릭 시 닫기
-    $('#feed-comment-modalOverlay').on('click', function (e) {
-        if ($(e.target).is('#feed-comment-modalOverlay')) {
-            $(this).fadeOut(300);
-        }
-    });
-});
-
-// --- 음식 이름 검색 ---
+// --- 피드 댓글 모달 ---
 $(document).ready(function () {
     const $searchInput = $('#searchFood');
     const $resultsContainer = $('#searchResults');
 
     // 검색 입력 이벤트
     $searchInput.on('input', function () {
-		const query = encodeURIComponent("");
-		fetch(`/search-food?query=${query}`)
-		    .then(response => response.json())
-		    .then(data => console.log(data))
-		    .catch(error => console.error("Error fetching food suggestions:", error));
+        const query = $(this).val().trim();
 
         if (query.length < 2) {
             $resultsContainer.hide();

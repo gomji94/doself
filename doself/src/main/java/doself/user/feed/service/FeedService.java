@@ -27,4 +27,7 @@ public interface FeedService {
 	
 	// 피드 좋아요 감소
 	void decrementLike(String feedNum);
+	
+	// 피드 수정
+	void modifyFeed(Feed feed);
 }

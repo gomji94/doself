@@ -36,7 +36,7 @@ public class FeedController {
 	// 메인 피드 조회
 	@GetMapping("/list")
 	public String getFeedList(HttpSession session, Model model) {
-		
+
 		// 로그인된 사용자 정보 확인
 	    String loggedInMemberId = (String) session.getAttribute("SID");
 	    
@@ -46,7 +46,7 @@ public class FeedController {
 	    for (Feed feed : feedList) {
 	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
 	    }
-		System.out.println(feedList);
+		
 		log.info("Fetched feed list: {}", feedList); // 로그 추가
 		model.addAttribute("FeedList", feedList);
 		return "user/feed/feed-list";
@@ -135,13 +135,20 @@ public class FeedController {
         }
     }
     
-	// 피드 수정
+	// 피드 수정 모달 열기
 	@GetMapping("/modifyfeed")
 	public String getModifyFeed(HttpServletRequest request, Model model) {
 		model.addAttribute("currentURI", request.getRequestURI());
 		model.addAttribute("title", "피드 수정");
 		
 		return "user/feed/feed-modify";
+	}
+	
+	// 피드 수정
+	@PostMapping("/modifyfeed")
+	public String modifyFeed(Feed feed) {
+		
+		return "redirect:/feed/feed-list";
 	}
 	
 	// 피드 댓글 조회
@@ -169,4 +176,11 @@ public class FeedController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("좋아요 상태 업데이트 중 오류 발생.");
         }
     }
+	
+	@GetMapping("/nutritioninfo")
+    public String getNutritionInfo(Model model) {
+		model.addAttribute("title", "영양 정보 조회");
+		
+		return "user/feed/nutritioninfo-view";
+	}
 }
