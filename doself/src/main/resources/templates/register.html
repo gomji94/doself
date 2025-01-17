@@ -41,7 +41,7 @@
                             <div class="mb-3">
                                 <label class="form-label">비밀번호</label>
                                 <input id="mbrPw" name="mbrPw" class="form-control w-100" placeholder="비밀번호를 입력해주세요" type="password" disabled="disabled"/>
-                                <p id="checkPw" class="hide white-space" style="color:red;">비밀번호는 최소 8글자 이상이면서, 알파벳과 숫자 및 특수문자(@$!%*#?&)가 하나 이상 포함되어야 합니다.</p>
+                                <p id="checkPw" class="hide white-space" style="color:red;">비밀번호는 영문,숫자 포함 최소 8글자 ~최대 16글자를 입력해야합니다.</p>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
@@ -127,10 +127,10 @@
     			
     			return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(id);
 			}
-    		// 비밀번호 영어, 숫자,특수문자, 8자 이상 입력가능
+    		// 비밀번호 8~16자 입력가능
     		function strongPassword(pw) {
     			
-    			return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(pw);
+    			return /^(?=.*\d)[0-9a-zA-Z]{8,16}$/.test(pw);
 			}
     		
     		
@@ -204,10 +204,12 @@
     		
     		$('#mbrPw').on('change',function(){
     			const mbrPw = $('#mbrPw').val();
-    			//비밀번호 영문,숫자, 특수문자, 8자이상인지 판별 아닐경우
+    			//비밀번호 8자~16 판별 아닐경우
     			if(strongPassword(mbrPw) == false){
     				//비밀번호 조건문구 보여주기
     				$('#checkPw').removeClass('hide');
+    				$('#checkPw').text('비밀번호는 영문,숫자 포함 최소 8글자 ~최대 16글자를 입력해야합니다.')
+					 .css({'color': 'red'});
     			}
     			// 비밀번호가 조건에 맞게 입력되면
     			else{
@@ -218,6 +220,20 @@
 					  				  .prop('disabled',false);
     				// 비밀번호확인 조건문구 보여주기
 	    			$('#checkPw2').removeClass('hide');
+    			}
+    			
+    			if(mbrPw == ''){
+	    			// 출력 텍스트변경
+    				$('#checkPw').text('비밀번호를 입력해주세요.')
+					 .css({'color': 'red'});
+    				// 활성화 됬던 인풋태그들 비활성화
+    				$('#registerForm').find('input, select')
+					  .not('#mbrId, #mbrPw')
+					  .prop('disabled',true);
+    				
+    				$('#checkPw2').addClass('hide');
+    				//함수 종료
+    				return;
     			}
     		});
     		$('#mbrCheckPw').on('change',function(){
