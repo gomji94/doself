@@ -11,7 +11,7 @@ public class Members {
 	private String memberPw;
 	private String memberEmail;
 	private String memberName;
-	private String memberBrith;
+	private String memberBirth;
 	private String memberPhoneNum;
 	private String memberGrdCode;
 	private String memberGender;
@@ -20,6 +20,7 @@ public class Members {
 	private Integer partTicketCnt; //챌린지참여 티켓 갯수
 	private Integer memberPoint;
 	private String memberImage;
+	private String profileFileIdx;
 	
 	private List<FeedList> feedList;   
 }

@@ -44,7 +44,6 @@
                                     <tr>
                                         <th scope="col">챌린지 번호</th>
                                         <th scope="col">챌린지 주제별 난이도</th>
-                                        <th scope="col">챌린지 리더 이름</th>
                                         <th scope="col">챌린지 이름</th>
                                         <!-- <th scope="col">챌린지 사진</th> -->
                                         <th scope="col">챌린지 내용</th>
@@ -66,7 +65,6 @@
 											<th:block th:object="${l.topicLevelInfo}">
 												<td th:text="*{ctlContent}"></td>																			
 											</th:block>	
-											<td th:text="${l.cgLeaderName}"></td>
 											<td th:text="${l.cgName}"></td>
 											<!-- <td th:text="${l.cgPicture}"></td> -->
 											<td th:text="${l.cgContent}"></td>

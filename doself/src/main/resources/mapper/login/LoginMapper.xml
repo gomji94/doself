@@ -13,7 +13,7 @@
 		<result column="mbr_phone_num" 				property="mbrPhoneNum" />
 		<result column="mbr_gender" 				property="mbrGender" />
 		<result column="ac_num" 					property="acNum" />
-		<result column="mbr_image" 					property="mbrImage" />
+		<result column="file_path" 					property="mbrImage" />
 		<result column="opening_ticket_count" 		property="openingTicketCount" />
 		<result column="participation_ticket_count" property="participationTicketCount" />
 		<result column="mbr_point" 					property="mbrPoint" />
@@ -24,23 +24,24 @@
 	<!-- 특정회원 조회 -->
 	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap"> 
 		SELECT 
-			mbr_id,
-			mbr_pw,
-			mbr_name,
-			mg_code,
-			mbr_email,
-			mbr_birth_date,
-			mbr_phone_num,
-			mbr_gender,
-			ac_num,
-			mbr_image,
-			opening_ticket_count,
-			participation_ticket_count,
-			mbr_point,
-			is_deleted
-		FROM `member`
+			m.mbr_id,
+			m.mbr_pw,
+			m.mbr_name,
+			m.mg_code,
+			m.mbr_email,
+			m.mbr_birth_date,
+			m.mbr_phone_num,
+			m.mbr_gender,
+			m.ac_num,
+			f.file_path,
+			m.opening_ticket_count,
+			m.participation_ticket_count,
+			m.mbr_point,
+			m.is_deleted
+		FROM `member` m INNER JOIN	`files` f 
+		     ON m.mbr_file_idx = f.file_idx
 		WHERE 
-			mbr_id = #{mbrId}
+			mbr_id = #{mbrId};
 		
 	</select>
 	

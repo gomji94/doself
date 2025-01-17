@@ -8,58 +8,64 @@ $(document).ready(function () {
 });
 
 
-// --- open create challenge modal ---
+// --- create challenge submit form ---
 $(document).ready(function () {
-    // 생성 버튼 클릭 시 모달 열기
+    // --- 모달 열기/닫기 ---
+    const modalOverlay = $('#createChallengeModalOverlay');
+    const modalContainer = $('#createChallengeModal');
+    const modalClose = $('#modal-close');
+
+    // 모달 열기
     $('#createChallengeOpenButton').on('click', function () {
-        $('#createChallengeModalOverlay').fadeIn(300); // 모달 오버레이 표시
-        $('#createChallengeModal').fadeIn(300); // 모달 표시
+        modalOverlay.fadeIn(300);
+        modalContainer.fadeIn(300);
     });
 
-    // 모달 닫기 버튼 클릭 시
-    $('#modal-close').on('click', function () {
-        $('#createChallengeModalOverlay').fadeOut(300); // 모달 오버레이 숨기기
-        $('#createChallengeModal').fadeOut(300); // 모달 숨기기
-    });
+    // 모달 닫기
+    function closeModal() {
+        modalOverlay.fadeOut(300);
+        modalContainer.fadeOut(300);
+        resetForm(); // 폼 초기화
+    }
 
-    // 오버레이 클릭 시 모달 닫기
-    $('#createChallengeModalOverlay').on('click', function (e) {
-        if ($(e.target).is('#createChallengeModalOverlay')) {
-            $(this).fadeOut(300);
-            $('#createChallengeModal').fadeOut(300);
+    modalClose.on('click', closeModal);
+    modalOverlay.on('click', function (e) {
+        if ($(e.target).is(modalOverlay)) {
+            closeModal();
         }
     });
 
-    // ESC 키 누를 시 모달 닫기
     $(document).on('keydown', function (e) {
         if (e.key === 'Escape') {
-            $('#createChallengeModalOverlay').fadeOut(300);
-            $('#createChallengeModal').fadeOut(300);
+            closeModal();
         }
     });
-});
 
+    // --- 폼 초기화 ---
+    function resetForm() {
+        $('#addChallenge')[0].reset(); // 폼 내용 초기화
+        $('#createChallengePreviewImage').attr('src', '').hide(); // 이미지 미리보기 초기화
+        $('#createChallengePreviewContainer').hide(); // 미리보기 컨테이너 숨기기
+        $('#challengeNameError, #challengeLevelError, small').hide(); // 에러 메시지 숨기기
+        $('#text-count').text('0'); // 글자수 초기화
+    }
 
-
-// --- create challenge input duplicate & validation ---
-$(document).ready(function () {
+    // --- 챌린지 이름 중복 확인 및 유효성 검증 ---
     const challengeNameInput = $('#challengeName');
     const challengeNameError = $('#challengeNameError');
 
     challengeNameInput.on('blur', function () {
         const challengeName = challengeNameInput.val().trim();
-
         if (!challengeName) {
             challengeNameError.text('이름을 입력해주세요').show();
             return;
         }
-
         // 중복 확인 AJAX 요청
         $.ajax({
             url: '/challenge/checkDuplicateName',
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ challengeName: challengeName }),
+            data: JSON.stringify({ challengeName }),
             success: function (response) {
                 if (!response.available) {
                     challengeNameError.text('이미 사용 중인 이름입니다. 다른 이름을 입력해주세요.').show();
@@ -73,37 +79,27 @@ $(document).ready(function () {
         });
     });
 
-    // 입력 중에는 에러 메시지 숨기기
     challengeNameInput.on('input', function () {
         challengeNameError.hide();
     });
-	
-	// 글자수 카운터
-    const content = $('#content'); // 텍스트 입력 박스
-    const textCount = $('#text-count'); // 글자 수 카운터
-    const maxLength = 500; // 최대 글자 수
 
-    content.on('input', function() {
+    // --- 글자수 카운터 ---
+    const content = $('#content');
+    const textCount = $('#text-count');
+    const maxLength = 500;
+
+    content.on('input', function () {
         const currentLength = content.val().length;
         textCount.text(currentLength);
-
-        if (currentLength > maxLength) {
-            textCount.css('color', 'red'); // 초과 시 색상 변경
-        } else {
-            textCount.css('color', ''); // 기본 색상
-        }
+        textCount.css('color', currentLength > maxLength ? 'red' : '');
     });
-});
 
-
-// --- create challenge input validation warning ---
-$(document).ready(function () {
+    // --- 난이도와 시작일 검증 ---
     const levelSelect = $('#selectLevel');
     const levelError = $('#challengeLevelError');
     const startDateInput = $('#challengeStartDate');
-    const startDateError = $('<small style="color: red; display: none;">시작일을 선택해주세요</small>').insertAfter(startDateInput);
+    const startDateError = $('#challengeStrartDateError');
 
-    // 난이도 선택 검증
     levelSelect.on('change', function () {
         if (!levelSelect.val()) {
             levelError.show();
@@ -112,7 +108,6 @@ $(document).ready(function () {
         }
     });
 
-    // 시작일 입력 검증
     startDateInput.on('change', function () {
         if (!startDateInput.val()) {
             startDateError.show();
@@ -121,53 +116,54 @@ $(document).ready(function () {
         }
     });
 
-    // 폼 제출 시 유효성 검사
+    // --- 폼 제출 유효성 검증 ---
     $('#addChallenge').on('submit', function (e) {
-        if (!levelSelect.val() || !startDateInput.val()) {
+        let isValid = true;
+
+        if (!levelSelect.val()) {
+            levelError.show();
+            isValid = false;
+        }
+        if (!startDateInput.val()) {
+            startDateError.show();
+            isValid = false;
+        }
+
+        if (!isValid) {
             e.preventDefault();
-            if (!levelSelect.val()) levelError.show();
-            if (!startDateInput.val()) startDateError.show();
             alert('필수 입력 값을 작성해주세요');
         }
     });
-});
 
-
-// --- create challenge image preview & form submit ---
-$(document).ready(function () {
-	// 파일 선택 창 열기
+    // --- 파일 업로드 및 미리보기 ---
     $('#createChallengeUploadButton').on('click', function () {
-        $('#files').click(); // 파일 선택 창 열기
+        $('#files').click();
     });
 
-    // 파일 선택 시 미리보기
     $('#files').on('change', function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                $('#createChallengePreviewImage').attr('src', e.target.result); // 이미지 미리보기 설정
-                $('#createChallengePreviewContainer').show(); // 미리보기 컨테이너 표시
+                $('#createChallengePreviewImage').attr('src', e.target.result).show();
+                $('#createChallengePreviewContainer').show();
             };
-            reader.readAsDataURL(file); // 파일 읽기
+            reader.readAsDataURL(file);
+        } else {
+            $('#createChallengePreviewImage').attr('src', '').hide();
+            $('#createChallengePreviewContainer').hide();
         }
     });
 
-    // 폼 제출 이벤트
+    // --- 폼 제출 ---
     $('#addChallenge').on('submit', function (e) {
         e.preventDefault();
-
         const formData = new FormData(this);
-
-        // 디버깅용: FormData 내용 확인
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
 
         $.ajax({
             url: '/challenge/list/createchallengerequest',
             method: 'POST',
-			data: formData,
+            data: formData,
             async: false,
             cache: false,
             contentType: false,
@@ -186,23 +182,24 @@ $(document).ready(function () {
 
 
 // --- challenge detail info modal ---
-$(document).on("click", ".card", function () {
+$(document).on('click', '.card', function () {
+	$('#card-modal').find('input, p').val('').text('').attr('src', '');
     const challengeCode = $(this).data("code"); // 카드의 데이터 코드 가져오기
 
     // AJAX 요청
     $.ajax({
         url: `/challenge/list/view?challengeCode=${challengeCode}`,
-        method: "GET",
-        dataType: "json",
+        method: 'GET',
+        dataType: 'json',
         success: function (data) {
             if (data) {
                 // 동적으로 HTML 요소 업데이트
-                $("#challenge-name").text(data.challengeName);
-                $("#image-preview").attr("src", data.challengeImage);
-                $("#profile").attr("src", data.challengeLeaderImage);
-                $("#leader-link").text(data.challengeLeaderId);
+                $('#challenge-name').text(data.challengeName);
+                $('#image-preview').attr("src", data.challengeImage);
+                $('#profile').attr("src", data.challengeLeaderImage);
+                $('#leader-link').text(data.challengeLeaderId);
 
-                $("#info-content-detail").html(`
+                $('#info-content-detail').html(`
                     <p>📌 챌린지 소개 📌</p>
                     <p>🗓 챌린지 일정 : ${formatDate(data.challengeStartDate)} ~ ${formatDate(data.challengeEndDate)}</p>
                     <p>🎯 난이도 : ${data.challengeTopicLevel}</p>
@@ -216,22 +213,22 @@ $(document).on("click", ".card", function () {
                 `);
 
                 // 에러 메시지 숨기기
-                $("#error-message").hide();
+                $('#error-message').hide();
 
                 // 해당 모달만 표시
-                $("#card-modal-overlay").css("display", "block");
-                $("#card-modal").css("display", "block");
+                $('#card-modal-overlay').css('display', 'block');
+                $('#card-modal').css('display', 'block');
             } else {
                 // 데이터가 없을 경우 에러 메시지 표시
-                $("#error-message").text("챌린지 정보를 불러올 수 없습니다.").show();
+                $('#error-message').text('챌린지 정보를 불러올 수 없습니다.').show();
             }
-            console.log("AJAX Response:", data);
-            console.log("Challenge Name:", data.challengeName);
-            console.log("Challenge Image:", data.challengeImage);
+            console.log('AJAX Response:', data);
+            console.log('Challenge Name:', data.challengeName);
+            console.log('Challenge Image:', data.challengeImage);
         },
         error: function (err) {
-            console.error("데이터 로드 실패:", err);
-            $("#error-message").text("데이터를 불러오는데 실패했습니다.").show();
+            console.error('데이터 로드 실패:', err);
+            $('#error-message').text('데이터를 불러오는데 실패했습니다.').show();
         }
     });
 });
@@ -251,6 +248,57 @@ function formatDate(dateString) {
         .toString()
         .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 }
+
+
+// --- challenge card code save ---
+$(document).on('click', '.card', function () {
+    const challengeCode = $(this).data('code');
+    $('#card-modal').data('challengeCode', challengeCode); // 모달에 코드 저장
+});
+
+
+// --- challenge 
+$(document).on('click', '#participationChallenge', function () {
+	// 모달에 저장된 challengeCode 가져오기
+    let challengeCode = $('#card-modal').data('challengeCode');
+    const challengeMemberId = $('#leader-link').text().trim(); // 세션에서 가져오기
+
+    // 서버에서 상태 코드 가져오기
+    $.ajax({
+        url: `/challenge/list/view`,
+        method: 'GET',
+        data: { challengeCode: challengeCode },
+        success: function (response) {
+            const challengeStatusCode = response.challengeStatus; // 서버 응답에서 상태 코드 추출
+
+            // 참여 요청
+            $.ajax({
+                url: '/challenge/list/view/participation',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    challengeCode: response.challengeCode,
+                    challengeMemberId: response.challengeMemberId,
+                    challengeStatusCode: response.challengeStatusCode // 상태 코드 포함
+                }),
+                success: function (response) {
+					if (response.success) {
+			            alert(response.message); // 참여 완료
+						location.reload();
+			        } else {
+			            alert(response.message); // 이미 참여중인 경우 알림
+			        }
+                },
+                error: function () {
+                    alert('참여 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            });
+        },
+        error: function () {
+            alert('상태 코드를 가져오는 중 오류가 발생했습니다.');
+        }
+    });
+});
 
 
 /*

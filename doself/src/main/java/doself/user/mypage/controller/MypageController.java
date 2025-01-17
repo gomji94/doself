@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.file.mapper.FilesMapper;
 import doself.file.service.FileService;
+import doself.file.util.FilesUtils;
+import doself.user.members.domain.FeedList;
 import doself.user.members.domain.Members;
 import doself.user.members.domain.PointList;
 import doself.user.members.domain.TicketList;
@@ -23,7 +25,6 @@ import doself.user.members.service.MembersService;
 import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -37,9 +38,6 @@ public class MypageController {
 	
 	@org.springframework.beans.factory.annotation.Value("${file.path}")
 	private String fileRealPath;
-	
-	private final FileService fileService;
-	private final FilesMapper filesMapper;
 
 	//회원정보 수정전 검증 화면이동
 	@GetMapping("/modify")
@@ -70,7 +68,7 @@ public class MypageController {
 		return viewName;
 	}
 	
-	// 회원정보수정
+	// 회원수정 정보조회 
 	@GetMapping("/member/info")   
 	public String getMemberInfoView(@RequestParam(name="memberId") String memberId,
 			                        @RequestParam(name="msg", required = false) String msg, 
@@ -78,6 +76,7 @@ public class MypageController {
 			                        Model model){
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
+		//log.info("memberInfo:{}" , memberInfo );
 		model.addAttribute("memberInfo", memberInfo);
 		if(msg !=null) model.addAttribute("msg", msg);
 		
@@ -85,21 +84,14 @@ public class MypageController {
 	}	
 	
 	@PostMapping("/member/info")
-	public String modifyMemberById(Members member, RedirectAttributes reAttr, 
-								   @RequestPart(name = "files", required = false) MultipartFile files) {
-								   //@RequestParam(name="memberId") String memberId, 
-								   //@RequestParam(name="memberEmail") List<String> memberEmail,
-								   //@RequestParam(name="memberPhoneNum") List<String> memberPhone,
-									
-		
+	public String modifyMemberById(Members member, RedirectAttributes reAttr, HttpSession session,
+								   @RequestPart(name = "file", required = false) MultipartFile file
+									) {
+		member.setMemberId((String) session.getAttribute("SID"));
 		member.setMemberEmail(removeCommas(member.getMemberEmail())); 
 		member.setMemberPhoneNum(removeCommasPhone(member.getMemberPhoneNum()));
-		membersService.modifyMember(member);
-		fileService.addFile(files);
-		
+		membersService.modifyMember(member,file);
 		reAttr.addAttribute("memberId", member.getMemberId());
-		
-		
 		
 		return "redirect:/mypage/member/info";
 	}
@@ -199,7 +191,14 @@ public class MypageController {
 	public String getFeedList(@RequestParam(name = "memberId") String memberId, Model model) {
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
+		log.info("memberInfo:{}" , memberInfo );
+		List<FeedList> feedList= membersService.getMemberFeedListById(memberId);
+		
+		//log.info("feedList:{}" , feedList );
+		//log.info("memberInfo:{}" , memberInfo );
+		
 		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("feedList", feedList);
 		return "user/mypage/feed-list";	
 	}
 

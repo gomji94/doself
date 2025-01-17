@@ -37,4 +37,10 @@ public interface ChallengeFeedService {
 	
 	// 챌린지 피드 댓글 조회
 	List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode);
+	
+	// 챌린지 참여 멤버수 조회
+	int getCurrentMemberCount(String challengeCode);
+	
+	// 파일 처리
+	String getFilePath(String fileName);
 }

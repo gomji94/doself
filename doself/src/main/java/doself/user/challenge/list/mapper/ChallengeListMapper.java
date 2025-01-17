@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import doself.user.challenge.list.domain.AddChallenge;
+import doself.user.challenge.list.domain.AddChallengeMember;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.util.CardPageable;
@@ -21,6 +24,12 @@ public interface ChallengeListMapper {
 
 	// 챌린지 추가(작업중)
 	void addChallenge(AddChallenge addChallenge);
+	
+	// 멤버 추가(작업중)
+	void addChallengeMember(AddChallengeMember addChallengeMember);
+	
+	// 특정 챌린지 멤버 조회(중복 체크)
+	List<AddChallengeMember> getChallengeMembers(String challengeCode);
 	
 	// 챌린지 페이지
 	List<ChallengeList> getChallengeList(CardPageable cardPageable);
@@ -39,4 +48,20 @@ public interface ChallengeListMapper {
 	
 	// 챌린지 난이도 리스트
 	List<Map<String, String>> getChallengeLevelList();
+	
+	// 챌린지 상태 리스트
+	List<Map<String, Object>> getChallengeStatusList();
+	
+	// 챌린지 상태 코드 조회
+	String selectChallengeStatus(AddChallengeMember addChallengeMember);
+	
+	// 챌린지 상태 업데이트
+	void updateChallengeStatus(@Param("challengeCode") String challengeCode,
+							   @Param("statusCode") String statusCode);
+	
+	// 챌린지 현재 멤버수
+	int getCurrentMemberCount(String challengeCode);
+	
+	// 챌린지 최대 멤버 수 조회
+	int getMaxMemberCount(String challengeCode);
 }

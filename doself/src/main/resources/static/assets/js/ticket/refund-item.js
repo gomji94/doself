@@ -24,5 +24,8 @@ $('#refund-request-submit').click(event => {
 		request.fail((jqXHR, textStatus, error)=>{
 			console.log(textStatus);
 		})
-		
+})
+
+$('#backBtn').click(e =>{
+	window.close();
 })
