@@ -51,5 +51,5 @@ public interface ChallengeListMapper {
 	List<Map<String, Object>> getChallengeStatusList();
 	
 	// 챌린지 상태 코드 조회
-	String selectChallengeStatus(String challengeCode);
+	String selectChallengeStatus(AddChallengeMember addChallengeMember);
 }
