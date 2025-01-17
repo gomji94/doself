@@ -104,7 +104,7 @@
                     <!-- 페이징 -->
   					  <th:block th:with="test=${queryParam + '&'}">
 	                    <div id="pagination" class="pagination" th:if="${not #lists.isEmpty(ticketPurchase)}" >
-		                   <ul class="pagination" >
+		                   <ul class="pagination pagination-sm justify-content-center text-muted" style="color: #515151;">
 		                   	<li th:classappend="${currentPage eq 1} ? 'disabled'">
 		                   		<a class="page-link" th:href="@{/ticket/purchaselist}">
 		                   			<i class="fa-solid fa-angles-left"></i>

@@ -43,4 +43,5 @@ public interface MembersMapper {
 	
 	//회원 피드리스트 조회
 	public List<FeedList> getMemberFeedListById(String memberId);
+	
 }
