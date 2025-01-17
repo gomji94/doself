@@ -8,7 +8,6 @@
   		<resultMap type="Challenge" id="challengeResultMap">
   			<id column="cg_num" property="cgNum" />
   			<result column="ctl_num" property="ctlNum" />
-  			<result column="cg_leader_name" property="cgLeaderName" />
   			<result column="cg_name" property="cgName" />
   			<result column="cg_picture" property="cgPicture" />
   			<result column="cg_content" property="cgContent" />
@@ -46,9 +45,7 @@
 			SELECT 
 				cg_num,
 				ctl_content,
-				cg_leader_name,
-				cg_name, 
-				cg_picture,
+				cg_name,
 				cg_content,
 				cg_creation_date,
 				cg_current_mbr_count,
