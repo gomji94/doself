@@ -64,7 +64,7 @@
 			cg.cg_num,
 			cg.mbr_id,
 			cg.cg_name,
-			f.file_path AS cg_picture,
+			f.file_path,
 			cg.cg_content,
 			cg.cg_start_date,
 			cg.cg_end_date,
@@ -163,7 +163,7 @@
   	<!-- 특정 챌린지 멤버 조회 -->
   	<select id="getChallengeMembers" parameterType="string" resultType="AddChallengeMember">
 		SELECT
-			cgm_num AS challengeMemberCode,
+		   cgm_num AS challengeMemberCode,
 		   cg_num AS challengeCode,
 		   mbr_id AS challengeMemberId,
 		   cs_num AS challengeStatusCode,
@@ -207,7 +207,7 @@
 		   challenge_group cg
 		INNER JOIN challenge_status cs USING(cs_num)
 		WHERE
-		   cg.cg_num = #{challengeName}
+		   cg.cg_num = #{challengeCode}
 		   AND cg_num IS NOT NULL
   	</select>
   	
@@ -232,11 +232,11 @@
   	</select>
   	
   	<!-- 챌린지 상세 정보 모달 -->
-  	<select id="selectChallengeDetail" parameterType="string" resultMap="challengeListDetailMap">
+  	<select id="selectChallengeDetail" parameterType="String" resultMap="challengeListDetailMap">
 		SELECT
 			cg.cg_num,
 			cg.cg_name,
-			cg.cg_file_idx,
+			f.file_path,
 			m.mbr_image,
 			cg.mbr_id,
 			ct.ct_name,
