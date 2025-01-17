@@ -61,14 +61,15 @@ public class MembersServiceImpl implements MembersService {
 	// 회원 수정
 	@Override
 	public void modifyMember(Members member, MultipartFile file) {
-		Files fileInfo = filesUtils.uploadFile(file);
+		Files fileInfo = filesUtils.uploadFile(file); 
 		if(fileInfo != null) {
 			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
 			fileInfo.setFileIdx(formattedKeyNum);
 			filesMapper.addfile(fileInfo);
+			member.setProfileFileIdx(fileInfo.getFileIdx());
+		} else {
+			member.setProfileFileIdx("file_014");
 		}
-		member.setProfileFileIdx(fileInfo.getFileIdx());
-		
 		membersMapper.modifyMember(member);
 	}
 	
@@ -110,7 +111,6 @@ public class MembersServiceImpl implements MembersService {
 	//회원 피드리스트 조회
 	@Override
 	public List<FeedList> getMemberFeedListById(String memberId) {
-		
 		
 		return membersMapper.getMemberFeedListById(memberId);
 	}

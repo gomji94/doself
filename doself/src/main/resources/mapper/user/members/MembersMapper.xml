@@ -65,8 +65,7 @@
 			m.mbr_point,
 			f.file_path AS mbr_image
         FROM 
-            member m INNER	JOIN files f
-				USING(file_idx)
+            member m INNER JOIN files f USING(file_idx)
         WHERE
             mbr_id = #{memberId};
     </select>
@@ -259,4 +258,6 @@
 			
 		WHERE mbr_id = #{ordererId}
    	</update>
+   	
+   	
   </mapper>
