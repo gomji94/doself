@@ -99,7 +99,6 @@ public class ChallengeListController {
 		
 		// 현재 세션의 아이디 설정
 		addChallenge.setMemberId((String) session.getAttribute("SID"));
-		
 		//log.info(">>> location/controller >>> files: {}", files);
 		
 		// 파일 처리

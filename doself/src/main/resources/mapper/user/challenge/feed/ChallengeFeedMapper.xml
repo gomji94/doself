@@ -10,11 +10,10 @@
 	    <id 	column="cg_num" 		   property="challengeCode" />
 	    <result column="mbr_id" 		   property="challengeMemberId" />
 	    <result column="cmf_content"	   property="challengeFeedContent" />
-	    <result column="cmf_picture"	   property="challengeFeedPicture" />
+	    <result column="file_path"	   	   property="challengeFeedPicture" />
 	    <result column="cmf_date"	   	   property="challengeFeedDate" />
 	    <result column="cmf_like"		   property="challengeFeedLike" />
 	    <result column="cmf_warning_check" property="challengeFeedWarningCheck" />
-	    <result column="mbr_image"		   property="memberProfileImage" />
 	    <result column="cfc_num"		   property="challengeFeedCommentCode" javaType="string"/>
 	    <result column="cfc_content"	   property="challengeFeedCommentContent" />
 	</resultMap>
@@ -24,9 +23,9 @@
 		<id 	column="cgm_num"	 property="challengeMemberCode" />
 		<id 	column="cg_num" 	 property="challengeCode" />
 		<result column="mbr_id"		 property="memberId" />
+		<result column="file_path"		 property="memberProfileImage" />
 		<result column="cs_num" 	 property="challengeStatus" />
 		<result column="cgm_date"	 property="challengeMemberInOutDate" />
-		<result column="mbr_image"   property="memberProfileImage" />
 		<result column="cmss_today_participation_rate"  property="todayParticipationRate" javaType="double" />
 	    <result column="cmss_today_achievement_rate" 	property="todayAchievementRate" javaType="double" />
 	    <result column="score" 							property="score" javaType="double" />
@@ -41,8 +40,7 @@
 		<result column="cfc_date" 			property="challengeFeedCommentDate"/>
 		<result column="cfc_like" 			property="challengeFeedCommentLike"/>
 		<result column="cfc_caution_check"  property="challengeFeedCommentCaution"/>
-		<result column="cmf_picture" 		property="challengeFeedImage"/>
-		<result column="mbr_image" 			property="challengeCommentAuthorImage"/>
+		<result column="file_path" 			property="challengeFeedImage"/>
 	</resultMap>
 	
 	<!-- 챌린지 진행 상태 조회 -->
@@ -51,17 +49,29 @@
 		<result column="cg_name" 						property="challengeName"/>
 		<result column="cs_num"							property="challengeStatusCode"/>
 		<result column="mbr_id" 						property="challengeMemberId"/>
-		<result column="mbr_image" 						property="memberProfileImage"/>
 		<result column="cg_creation_date" 				property="challengeCreationDate"/>
 		<result column="cg_start_date" 					property="challengeStartDate"/>
 		<result column="cg_end_date" 					property="challengeEndDate"/>
-		<result column="cg_current_mbr_count"			property="challengeCurrentMember"/>
 		<result column="cg_max_mbr_count"			    property="challengeMaxMember"/>
 		<result column="cmss_today_participation_rate"  property="challengeTodayParticipationRate"/>
 		<result column="cmss_today_achievement_rate" 	property="challengeTodayAchievementRate"/>
 		<result column="cmss_date" 						property="challengeTodayUploadDate"/>
 	</resultMap>
 	
+	<resultMap type="ChallengeUser" id="ChallengeResultMap">
+	    <id 	column="cg_num" property="cgNum" />
+	    <id 	column="cg_name" property="cgName" />
+	    <result column="cg_file_idx" property="cgFileIdx" />
+	    <result column="mbr_id" property="mbrId" />
+	    <result column="ct_name" property="ctName" />
+	    <result column="cg_start_date" property="cgStartDate" />
+	    <result column="cg_end_date" property="cgEndDate" />
+	    <result column="ctl_level" property="ctlLevel" />
+	    <result column="ctl_content" property="ctlContent"/>
+	    <result column="cg_max_mbr_count" property="cgMaxMbrCount" />
+	    <result column="cg_content" property="cgContent" />
+	    <result column="file_path" property="filePath" />
+	</resultMap> 
 	<!-- 로그인된 챌린지 멤버 아이디 -->
 	<select id="getChallengeCodeByMemberId" parameterType="string" resultType="string">
 	    SELECT
@@ -74,27 +84,29 @@
 	</select>
 	
 	<!-- 특정 챌린지 피드 조회 -->
-	<select id="getChallengeFeed" parameterType="map" resultMap="ChallengeFeedResultMap">
+	<select id="getChallengeFeed" parameterType="map" resultMap="ChallengeResultMap">
 		SELECT
-			cmf.cmf_num,
-			cmf.cg_num,
-			cmf.mbr_id,
-			cmf.cmf_content,
-			cmf.cmf_picture,
-			cmf.cmf_date,
-			cmf.cmf_like,
-			cmf.cmf_warning_check,
-			m.mbr_image,
-			cfc.cfc_num,
-			cfc.cfc_content
+			cg.cg_num,
+			cg.cg_name,
+			cg.cg_file_idx,
+			cg.mbr_id,
+			ct.ct_name,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			ctl.ctl_level,
+			ctl.ctl_content,
+			cg.cg_max_mbr_count,
+			cg.cg_content,
+			f.file_path
 		FROM
-			challenge_member_feed cmf
-			INNER JOIN `member` m USING(mbr_id)
-			LEFT JOIN challenge_feed_comments cfc USING(cmf_num)
+			challenge_group cg
+			INNER JOIN challenge_topic_level ctl USING(ctl_num)
+			INNER JOIN challenge_topic ct USING(ct_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
-			cmf.cg_num = #{challengeCode}
-			AND cg_num IS NOT NULL
-		ORDER BY cmf_date DESC
+			cg.mbr_id = #{challengeMemberId}
+		AND cg.cg_num IS NOT NULL
+		ORDER BY cg.cg_creation_date DESC
 		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
 	</select>
 	
@@ -112,30 +124,32 @@
 	
 	<!-- 총 업로드 데이터 합계((총 참여율+총달성률)/2/14(기간)/멤버수/100) -->
   	<select id="getTodayProgressSum" resultType="int" parameterType="string">
-  		SELECT
-		   ROUND(SUM(cmss_today_participation_rate + cmss_today_achievement_rate)/2/14/COUNT(DISTINCT mbr_id)/100, 1) AS result
-		FROM
-			challenge_member_score_stats cmss
-		WHERE
-		   cg_num = #{challengeCode}
-  	</select>
+	    SELECT
+	        ROUND(SUM(cmss_today_participation_rate + cmss_today_achievement_rate)/2, 1) AS result
+	    FROM
+	        challenge_member_score_stats
+	    WHERE
+	        cg_num = #{challengeCode}
+	</select>
   	
-  	<!-- 참여 멤버 점수 -->
-  	<select id="getTopParticipants" parameterType="string" resultType="ChallengeMemberList">
-  		SELECT 
-	        m.mbr_id 							AS memberId,
-	        m.mbr_image 						AS memberProfileImage,
-	        cmss.cmss_today_participation_rate  AS todayParticipationRate,
-	        cmss.cmss_today_achievement_rate 	AS todayAchievementRate,
-	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate)/2/14, 1) AS score
+  	<!-- 참여 멤버 점수 top3 -->
+  	<select id="getTopParticipants" parameterType="string" resultMap="ChallengeMemberListMap">
+	    SELECT 
+	        m.mbr_id                              AS memberId,
+	        f.file_path                          AS memberProfileImage,
+	        cmss.cmss_today_participation_rate    AS todayParticipationRate,
+	        cmss.cmss_today_achievement_rate      AS todayAchievementRate,
+	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate) / 2, 1) AS score
 	    FROM 
 	        challenge_member_score_stats cmss
-	    	INNER JOIN member m USING (mbr_id)
+	        INNER JOIN member m USING (mbr_id)
+	        INNER JOIN files f ON m.mbr_file_idx = f.file_idx
 	    WHERE 
 	        cmss.cg_num = #{challengeCode}
-	    ORDER BY score DESC
+	    ORDER BY 
+	        score DESC
 	    LIMIT 3
-  	</select>
+	</select>
 	
 	<!-- 챌린지 멤버 리스트 조회 -->
   	<select id="getMemberList" resultMap="ChallengeMemberListMap">		
@@ -145,14 +159,15 @@
 			cgm.mbr_id,
 			MAX(cgm.cs_num),
 			MAX(cgm.cgm_date),
-			m.mbr_image
+			f.file_path
 		FROM
 			challenge_group_member cgm
 			LEFT JOIN `member` m USING(mbr_id)
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
 		WHERE
 			cg_num = #{challengeCode}
 		GROUP BY
-			cgm.mbr_id, m.mbr_image
+			cgm.mbr_id, f.file_path
   	</select>
   	
   	<!-- 챌린지 댓글 리스트 조회 -->
@@ -165,12 +180,12 @@
 			cfc.cfc_date,
 			cfc.cfc_like,
 			cfc.cfc_caution_check,
-			cmf.cmf_picture,
-			m.mbr_image
+			f.file_path
 		FROM
 			challenge_feed_comments cfc
 			LEFT JOIN `member` m USING(mbr_id)
 			INNER JOIN challenge_member_feed cmf USING(cmf_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
 			cfc.cmf_num = #{challengeFeedCode}
   	</select>
@@ -182,11 +197,10 @@
 			cg.cg_name,
 			cg.cs_num,
 			cg.mbr_id,
-			m.mbr_image,
+			f.file_path,
 			cg.cg_creation_date,
 			cg.cg_start_date,
 			cg.cg_end_date,
-			cg.cg_current_mbr_count,
 			cg.cg_max_mbr_count,
 			cmss.cmss_today_participation_rate,
 			cmss.cmss_today_achievement_rate,
@@ -195,6 +209,7 @@
 			challenge_group cg
 			INNER JOIN `member` m USING(mbr_id)
 			INNER JOIN challenge_member_score_stats cmss USING(cg_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
 			cg_num = #{challengeCode}
   	</select>
@@ -208,7 +223,12 @@
 	    WHERE cg_num = #{challengeCode}
 	</select>
 	
-	
+	<!-- 특정 챌린지의 현재 참여 멤버 수 조회 -->
+	<select id="getCurrentMemberCount" parameterType="string" resultType="int">
+	    SELECT COUNT(*)
+	    FROM challenge_group_member
+	    WHERE cg_num = #{challengeCode}
+	</select>
 	
 	
 	
@@ -273,7 +293,7 @@
 		<result column="cg_name" 						property="ctNum"/>
 		<result column="cs_num"							property="ctlLevel"/>
 		<result column="mbr_id" 						property="ctlContent"/>
-		<result column="mbr_image" 						property="ctlcount"/>		
+		<result column="file_idx" 						property="ctlcount"/>		
 	</resultMap>
 	
 	
@@ -281,8 +301,10 @@
 	<select id="getTopicLevel" resultType="int" resultMap="ChallengeTopicLevelMap">
 		SELECT
 			ctl.ctl_count
+			f.file_idx
 		FROM 
 			challenge_topic_level ctl
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
 			ct_num = #{cgNum}
 			
@@ -484,7 +506,8 @@
 	<!-- 해당날짜 해당챌린지의 일일참여율 조회 -->
 	<select id="getChallengeParticipationRate" parameterType="ChallengeFeed">
 		SELECT
-			COUNT(*)/(SELECT cg.cg_current_mbr_count FROM challenge_group cg WHERE cg_num = #{challengeCode})*100
+			COUNT(*)/(SELECT COUNT(*) FROM challenge_group cg
+			INNER JOIN challenge_group_member cgm WHERE cg_num = #{challengeCode})*100
 		FROM
 			challenge_member_score_stats cmss
 		WHERE
@@ -496,7 +519,8 @@
 	<!-- 해당날짜 해당챌린지의 일일참여율 조회 -->
 	<select id="getChallengeAchievementRate" parameterType="ChallengeFeed">
 		SELECT
-			SUM(cmss.cmss_today_achievement_rate)/(SELECT cg.cg_current_mbr_count FROM challenge_group cg WHERE cg_num = #{challengeCode})
+			SUM(cmss.cmss_today_achievement_rate)/(SELECT COUNT(*) FROM challenge_group cg
+			INNER JOIN challenge_group_member cgm WHERE cg_num = #{challengeCode})
 		FROM
 			challenge_member_score_stats cmss
 		WHERE

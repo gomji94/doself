@@ -454,12 +454,13 @@
 	            <!-- feed end -->
 	            
 				<!-- feed more view button -->	            
-	            <button class="btn btn-outline-success" id="loadMore" data-current-page="1">더보기 ▾</button>
+	            <button class="btn btn-outline-success load-more-btn" id="loadMore" data-current-page="1">더보기 ▾</button>
 	        </main>
 	        
 	        <!-- challenge progress(right aside) -->
 	        <div class="progress-container"
-	        	 th:if="${challengeProgress != null && !challengeProgress.isEmpty()}" th:each="cp : ${challengeProgress}">
+	        	 th:if="${challengeProgress != null && !challengeProgress.isEmpty()}"
+	        	 th:each="cp : ${challengeProgress}">
 	        	 <!-- th:object="${challengeProgress[0]}" -->
 	            <div class="challenge">
 	                <a href="#">

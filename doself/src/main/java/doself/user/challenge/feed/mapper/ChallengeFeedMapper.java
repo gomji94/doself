@@ -28,10 +28,10 @@ public interface ChallengeFeedMapper {
     List<ChallengeProgress> getChallengeProgress(@Param("challengeCode") String challengeCode);
     
 	// 총 업로드 데이터 합계
-	int getTodayProgressSum(@Param("challengeCode") String challengeCode);
+    Integer getTodayProgressSum(@Param("challengeCode") String challengeCode);
 
 	// 참여 멤버 상위 3명 표시
-	List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
+    List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
 	
 	// 투데이 디데이 계산
 	ChallengeProgress getChallengeProgressByCode(@Param("challengeCode") String challengeCode);
@@ -44,4 +44,7 @@ public interface ChallengeFeedMapper {
     
     // 챌린지 피드 댓글 조회
     List<ChallengeFeedComment> getFeedCommentList(@Param("challengeFeedCode") String challengeFeedCode);
+    
+    // 챌린지 현재 멤버수
+ 	int getCurrentMemberCount(String challengeCode);
 }
