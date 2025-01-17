@@ -17,7 +17,7 @@ public class AddChallenge {
 	private String challengeContent;		// 챌린지 내용
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date   challengeCreationDate;	// 챌린지 생성일(현재시간 CURDATE)
-	private int    challengeCurrentMember;	// 챌린지 현재 멤버수(기본값 0)
+	//private int    challengeCurrentMember;	// 챌린지 현재 멤버수(기본값 0)
 	private int    challengeMaxMember;		// 챌린지 설정 최대 멤버수(옵션 선택값)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date   challengeStartDate;		// 챌린지 시작일(옵션 선택값)

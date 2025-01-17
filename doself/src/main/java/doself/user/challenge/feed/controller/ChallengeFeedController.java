@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 @Controller
-@RequestMapping("challenge/feed")
+@RequestMapping("/challenge/feed")
 @RequiredArgsConstructor
 @Slf4j
 public class ChallengeFeedController {
@@ -42,7 +42,7 @@ public class ChallengeFeedController {
 	    if (challengeCode == null) {
             challengeCode = challengeFeedService.getChallengeCodeByMemberId(loggedInMemberId);
             if (challengeCode == null) {
-            	return "redirect:user/feed/list";
+            	return "redirect:/feed/list";
             }
         }
 	    

@@ -1,5 +1,6 @@
 package doself.user.challenge.list.controller;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +62,14 @@ public class ChallengeListController {
 		int endPageNum = challengeListPageInfo.getEndPageNum();
 		int lastPage = challengeListPageInfo.getLastPage();
 		
-		//log.info("Fetched Challenge List: {}", challengeList);
+		// 참여 멤버 수를 계산하여 ChallengeList에 반영
+	    challengeList.forEach(cl -> {
+	        int memberCount = challengeListService.getCurrentMemberCount(cl.getChallengeCode());
+	        cl.setChallengeCurrentMember(memberCount);
+	    });
+		
+		//log.info(">>> location/controller >>> challengeList : {}", challengeList);
+		
 		model.addAttribute("challengeList", challengeList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
@@ -77,8 +86,7 @@ public class ChallengeListController {
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public ChallengeDetailView getChallengeListView(@RequestParam("challengeCode") String challengeCode) {
         ChallengeDetailView challengeDetail = challengeListService.getChallengeListView(challengeCode);
-        
-        //log.info(">>> location/controller >>> challengeDetail: {}", challengeDetail);
+
         return challengeDetail;
     }
 	
@@ -112,19 +120,49 @@ public class ChallengeListController {
 	
 	// 챌린지 참여 폼
 	@PostMapping("list/view/participation")
+	@ResponseBody
 	public Map<String, Object> challengeParticipation(@RequestBody AddChallengeMember addChallengeMember,
-	        										  HttpSession session, String challengeCode) {
+	        										  HttpSession session, Model model) {
+		
 		Map<String, Object> response = new HashMap<>();
+		String sessionId = (String) session.getAttribute("SID");
+	    if (sessionId == null) {
+	        response.put("success", false);
+	        response.put("message", "세션이 만료되었거나 로그인이 필요합니다.");
+	        return response;
+	    }
+	    addChallengeMember.setChallengeMemberId(sessionId);
 		
-		addChallengeMember.setChallengeMemberId((String) session.getAttribute("SID"));
-		challengeListService.addChallengeMember(addChallengeMember, challengeCode);
-		
-	    boolean isParticipated = challengeListService.addChallengeMember(addChallengeMember, challengeCode);
+	    try {
+	        // 이미 참여 중인지 확인
+	        boolean isAlreadyParticipated = challengeListService.isAlreadyParticipated(addChallengeMember);
+
+	        if (isAlreadyParticipated) {
+	            response.put("success", false);
+	            response.put("message", "이미 참여중인 챌린지입니다.");
+	            return response;
+	        }
+
+	        boolean isParticipated = challengeListService.addChallengeMember(addChallengeMember);
+	        response.put("success", isParticipated);
+	        response.put("message", isParticipated ? "참여가 완료되었습니다." : "참여 처리 중 오류가 발생했습니다.");
+	    } catch (IllegalArgumentException e) {
+	        response.put("success", false);
+	        response.put("message", e.getMessage());
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "참여 처리 중 오류가 발생했습니다.");
+	    }
 	    
-	    log.info(">>> location/controller >>> response: {}", response);
-	    log.info(">>> location/controller >>> addChallengeMember: {}", addChallengeMember);
+	    List<ChallengeList> challengeList = challengeListService.getChallengeList();
+	    for(ChallengeList challengeIdx : challengeList) {
+	    	String statusCode = challengeIdx.getChallengeStatusCode();
+	    	challengeListService.updateChallengeStatuses();
+	    	return response;
+	    }
 	    
-		//return "redirect:/challenge/list";
+	    log.info(">>> location/controller >>> : response {}", response);
+	    
 	    return response;
 	}
 }

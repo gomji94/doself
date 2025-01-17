@@ -33,6 +33,5 @@ public class ChallengeList {
 	private String  challengeStatus;			// 챌린지 상태
 	private String  challengeRewardCheck;		// 보상 지급 여부
 	
-//	private List<ChallengeDetailView> challengeDetailView;
 	private List<AddChallenge> addChallenge;
 }
