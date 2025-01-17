@@ -52,7 +52,8 @@
 
     #profile-info {
         display : flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: center;
         gap : 15px;
     }
     
@@ -69,6 +70,7 @@
 
     #profile-userId {
         font-size: 20px;
+        padding-top: 20px;
     }
     
     .account-form {

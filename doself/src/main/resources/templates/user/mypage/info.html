@@ -55,18 +55,21 @@
 	            <div id="main-user-info">
             	<!-- <form th:action="@{/mypage/member/info}" method="POST" id="myPageFrm"> -->
 	                <div id = "profile-image">
-	                		<!-- 이미지경로 src ="${contextPath(<-수정)}<c:out value='${loginUser.profileURL(<-수정)}' default='/resources/static/assets/imgs/E0rJhxqVUAEFkbG.jpg' />"  -->
-	                        <img th:src="*{memberImage}" 
-	                         id="memberImage" name="memberImage" alt="프로필 이미지" class="profile-image">
+	                	<!-- 프로필이미지가 없으면 기본이미지경로 -->
+	               		<img th:src="${#strings.isEmpty(memberInfo.memberImage) ? '/resources/static/imgs/user.jpg' : memberInfo.memberImage}"
+							  id="memberImage" name="memberImage" alt="프로필 이미지" class="profile-image">
 	                </div>    
 	                <div id="profile-info">
 	                    <div id="profile-edit">
 	                        <input type="file" name="file" id="btnChangeUplode" style="display:none"  accept="image/*">
 	                        <!-- accept="image/*" -->
-	                        <button type="button" id="btnChangeProfile" >프로필 변경</button>
+	                        <button type="button" id="btnChangeProfile">프로필 변경</button>
 	                    </div>
-	                    <div id="profile-userId" th:text="*{memberId}"></div>
+	                    <div id="profile-edit">
+	                        <button type="button" id="btnDeleteProfile">삭제</button>
+	                    </div>
 	                </div>
+	                    <div id="profile-userId" th:text="*{memberId}"></div>
             	
             	</div>
 
@@ -255,11 +258,73 @@
 		    	if(!emptyPhoneFn(e.target)) return;
 		    });
 
-		        
+		   	// 프로필 이미지 변경/삭제
+			const btnChangeProfile = $('#btnChangeProfile'); // button 
+			const btnChangeUplode = $('#btnChangeUplode');   // input 
+			const memberImage = $('#memberImage');           // scr 
+			const deleteProfile = $('#btnDeleteProfile');    // delete
+			
+			let initCheck;         // 초기 프로필 이미지 상태 저장하는 변수 
+			  			           // false 기본이미지, true == 이전 업로드 이미지
+			let deleteCheck = -1;  //프로필 이미지가 새로 업로드 되거나 삭제되었음을 나타내는 변수
+					               //-1 == 초기값, 0 == 프로필 삭제, 1 == 새업로드 이미지
+			let originalImage;     // 초기 프로필 이미지 파일경로 저장
+			
+			if(btnChangeUplode != null) { //화면에 input이 있을 경우
+				
+				originalImage = memberImage.attr('src'); //프로필이미지가 출력되는 img태그의 src속성 저장
+				
+				// 회원 프로필 화면 진입시
+				// 현재 회원의 프로필 이미지 상태 확인
+				if(originalImage == "/attachment/20250117/image/1d220292-7b85-4d20-8538-2c31b1d80efd.jpg"){
+					// 기본이미지인 경우
+					initCheck = false;
+				} else {
+					initCheck = true;
+				}
+			}
+			
+ 	// 프로필 변경
+	   $(document).ready(function() {
+		   	
+		   //input 클릭이벤트 등록
+			$('#btnChangeProfile').click(function(){
+				$('#btnChangeUplode').click();
+			});	
+			
+			$('#memberImage').click(function(){
+				$('#btnChangeUplode').click();
+			});
+								  
+			//프로필이미지 동적변경
+			btnChangeUplode.on('change', function(e){
+				memberImage.empty();		    //이전에 추가된 콘텐츠를 제거
+				
+				console.log(e.target);          //input
+				console.log(e.target.value);    // 업로드된 파일경로
+				console.log(e.target.files);    // 업로드된 파일의 정보가 담긴 배열
+				
+				const file = e.target.files[0]; // 업로드한 파일의 정보가 담긴 객체        
+				if(file) {						
+					const reader = new FileReader();
+					reader.onload = function(e) {
+						memberImage.attr('src', e.target.result).show();
+					}
+					reader.readAsDataURL(file);
+				}
+			});
+			
+			deleteProfile.on("click", function() {
+				memberImage.attr('src', '/attachment/20250117/image/1d220292-7b85-4d20-8538-2c31b1d80efd.jpg');
+				btnChangeUplode.value = ""
+				deleteCheck = 0;
+			});
+	   });
+	    
 		 // 수정버튼 클릭시 유효성검사 후 폼 제출   
 		   document.getElementById('modifyMemberForm').addEventListener('submit', function(e) {
 			   e.preventDefault();
-
+				
 		        if($memberPw.value.trim() !== '' && isPassword($memberPw)){ 
 		        	$memberPw.focus();
 		        	return;
@@ -293,6 +358,20 @@
 		            return; 
 		        }
 		        
+				let flag = true;
+				
+				// 프로필 이미지가 없다 > 있다
+				if(!initCheck && deleteCheck == 1) flag = false;
+				
+				// 이전 프로필 이미지가 있다 > 삭제
+				if(initCheck && deleteCheck == 0) flag = false;
+				
+				// 이전 프로필 이미지가 있다 > 새이미지
+				if(initCheck && deleteCheck == 1) flag = false;
+				
+				if(flag) {
+					e.preventDefault();
+				}
 		        this.submit();
 		        alert('수정되었습니다.')
 		   });
@@ -302,32 +381,6 @@
 		        alert('탈퇴가 완료되었습니다.')
 		   });
 		   
-		 
-		   $(document).ready(function() {
-				$('#btnChangeProfile').click(function(){
-					$('#btnChangeUplode').click();
-				});	
-				
-				$('#memberImage').click(function(){
-					$('#btnChangeUplode').click();
-				});
-				
-				const btnChangeProfile = $('#btnChangeProfile'); //  button 
-				const btnChangeUplode = $('#btnChangeUplode');   //  input 
-				const memberImage = $('#memberImage');           // scr 
-				
-				btnChangeUplode.on('change', function(e){
-					memberImage.empty();
-					const file = e.target.files[0];
-					if(file) {
-						const reader = new FileReader();
-						reader.onload = function(e) {
-							memberImage.attr('src', e.target.result).show();
-						}
-						reader.readAsDataURL(file);
-					}
-				});
-		   });
 		   
 	</script>
     </th:block> 

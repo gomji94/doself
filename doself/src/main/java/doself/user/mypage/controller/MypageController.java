@@ -191,6 +191,7 @@ public class MypageController {
 	public String getFeedList(@RequestParam(name = "memberId") String memberId, Model model) {
 		
 		Members memberInfo = membersService.getMemberInfoById(memberId);
+		log.info("memberInfo:{}" , memberInfo );
 		List<FeedList> feedList= membersService.getMemberFeedListById(memberId);
 		
 		//log.info("feedList:{}" , feedList );
