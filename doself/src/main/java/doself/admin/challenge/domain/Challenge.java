@@ -7,7 +7,6 @@ public class Challenge {
 	
 	private String cgNum;
 	private String ctlNum;
-	private String cgLeaderName;
 	private String cgName;
 	private String cgPicture;
 	private String cgContent;
