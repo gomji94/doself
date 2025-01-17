@@ -13,7 +13,7 @@
 		<result column="mbr_phone_num" 				property="mbrPhoneNum" />
 		<result column="mbr_gender" 				property="mbrGender" />
 		<result column="ac_num" 					property="acNum" />
-		<result column="mbr_image" 					property="mbrImage" />
+		<result column="file_path" 					property="mbrImage" />
 		<result column="opening_ticket_count" 		property="openingTicketCount" />
 		<result column="participation_ticket_count" property="participationTicketCount" />
 		<result column="mbr_point" 					property="mbrPoint" />
@@ -33,12 +33,13 @@
 			m.mbr_phone_num,
 			m.mbr_gender,
 			m.ac_num,
-			f.file_path AS mbr_image,
+			f.file_path,
 			m.opening_ticket_count,
 			m.participation_ticket_count,
 			m.mbr_point,
 			m.is_deleted
-		FROM `member` m INNER JOIN	`files` f USING(file_idx)
+		FROM `member` m INNER JOIN	`files` f 
+		     ON m.mbr_file_idx = f.file_idx
 		WHERE 
 			mbr_id = #{mbrId};
 		
