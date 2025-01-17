@@ -62,7 +62,14 @@ public class ChallengeListController {
 		int endPageNum = challengeListPageInfo.getEndPageNum();
 		int lastPage = challengeListPageInfo.getLastPage();
 		
-		//log.info("Fetched Challenge List: {}", challengeList);
+		// 참여 멤버 수를 계산하여 ChallengeList에 반영
+	    challengeList.forEach(cl -> {
+	        int memberCount = challengeListService.getCurrentMemberCount(cl.getChallengeCode());
+	        cl.setChallengeCurrentMember(memberCount);
+	    });
+		
+		//log.info(">>> location/controller >>> challengeList : {}", challengeList);
+		
 		model.addAttribute("challengeList", challengeList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
@@ -126,22 +133,36 @@ public class ChallengeListController {
 	    }
 	    addChallengeMember.setChallengeMemberId(sessionId);
 		
-	    // 이미 참여 중인지 확인
-	    boolean isAlreadyParticipated = challengeListService.isAlreadyParticipated(addChallengeMember);
+	    try {
+	        // 이미 참여 중인지 확인
+	        boolean isAlreadyParticipated = challengeListService.isAlreadyParticipated(addChallengeMember);
 
-	    if (isAlreadyParticipated) {
+	        if (isAlreadyParticipated) {
+	            response.put("success", false);
+	            response.put("message", "이미 참여중인 챌린지입니다.");
+	            return response;
+	        }
+
+	        boolean isParticipated = challengeListService.addChallengeMember(addChallengeMember);
+	        response.put("success", isParticipated);
+	        response.put("message", isParticipated ? "참여가 완료되었습니다." : "참여 처리 중 오류가 발생했습니다.");
+	    } catch (IllegalArgumentException e) {
 	        response.put("success", false);
-	        response.put("message", "이미 참여중인 챌린지입니다.");
-	        return response;
+	        response.put("message", e.getMessage());
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "참여 처리 중 오류가 발생했습니다.");
 	    }
 	    
-	    boolean isParticipated = challengeListService.addChallengeMember(addChallengeMember);
+	    List<ChallengeList> challengeList = challengeListService.getChallengeList();
+	    for(ChallengeList challengeIdx : challengeList) {
+	    	String statusCode = challengeIdx.getChallengeStatusCode();
+	    	challengeListService.updateChallengeStatuses();
+	    	return response;
+	    }
 	    
-		/* log.info(">>> location/controller >>> response: {}", response); */
-	    log.info(">>> location/controller >>> addChallengeMember: {}", addChallengeMember);
+	    log.info(">>> location/controller >>> : response {}", response);
 	    
-	    response.put("success", isParticipated);
-	    response.put("message", isParticipated ? "참여가 완료되었습니다." : "참여 중 오류가 발생했습니다.");
 	    return response;
 	}
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.AddChallengeMember;
@@ -52,4 +54,14 @@ public interface ChallengeListMapper {
 	
 	// 챌린지 상태 코드 조회
 	String selectChallengeStatus(AddChallengeMember addChallengeMember);
+	
+	// 챌린지 상태 업데이트
+	void updateChallengeStatus(@Param("challengeCode") String challengeCode,
+							   @Param("statusCode") String statusCode);
+	
+	// 챌린지 현재 멤버수
+	int getCurrentMemberCount(String challengeCode);
+	
+	// 챌린지 최대 멤버 수 조회
+	int getMaxMemberCount(String challengeCode);
 }

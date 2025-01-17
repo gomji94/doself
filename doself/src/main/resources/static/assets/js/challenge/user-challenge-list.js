@@ -257,9 +257,11 @@ $(document).on('click', '.card', function () {
 });
 
 
+// --- challenge 
 $(document).on('click', '#participationChallenge', function () {
-    let challengeCode = $('#card-modal').data('challengeCode'); // 모달에 저장된 challengeCode 가져오기
-    const challengeMemberId = $('#leader-link').text().trim();    // 세션에서 가져오기
+	// 모달에 저장된 challengeCode 가져오기
+    let challengeCode = $('#card-modal').data('challengeCode');
+    const challengeMemberId = $('#leader-link').text().trim(); // 세션에서 가져오기
 
     // 서버에서 상태 코드 가져오기
     $.ajax({
@@ -281,7 +283,8 @@ $(document).on('click', '#participationChallenge', function () {
                 }),
                 success: function (response) {
 					if (response.success) {
-			            alert(response.message);
+			            alert(response.message); // 참여 완료
+						location.reload();
 			        } else {
 			            alert(response.message); // 이미 참여중인 경우 알림
 			        }
