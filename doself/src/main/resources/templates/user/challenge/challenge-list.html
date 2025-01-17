@@ -193,15 +193,13 @@
 		            <!-- 처음으로 -->
 		            <li class="page-item" th:classappend="${currentPage eq startPage} ? 'disabled'">
 		                <a class="page-link text-muted" th:href="@{/challenge/list}">
-		                	<!-- <i class="material-icons md-first_page"></i> -->
-		                	<<
+		                	&lt;&lt;
 		                </a>
 		            </li>
 		            <!-- 이전 -->
 		            <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
 		                <a class="page-link text-muted" th:href="@{/challenge/list(currentPage=${currentPage - 1})}">
-		                	<!-- <i class="material-icons md-chevron_left"></i> -->
-		                	<
+		                	&lt;
 		                </a>
 		            </li>
 		            <!-- 동적 페이지 번호 -->
@@ -213,15 +211,13 @@
 		            <!-- 다음 -->
 		            <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
 		                <a class="page-link text-muted" th:href="@{/challenge/list(currentPage=${currentPage + 1})}">
-		                	<!-- <i class="material-icons md-chevron_right"></i> -->
-		                	>
+		                	&gt;
 		                </a>
 		            </li>
 		            <!-- 마지막으로 -->
 		            <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
 		                <a class="page-link text-muted" th:href="@{/challenge/list(currentPage=${lastPage})}">
-		                	<!-- <i class="material-icons md-last_page"></i> -->
-		                	>>
+		                	&gt;&gt;
 		                </a>
 		            </li>
 		        </ul>
