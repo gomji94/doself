@@ -15,7 +15,9 @@
 	    <result column="feed_intake_date" property="feedIntakeDate" />
 	    <result column="feed_like" property="feedLike" />
 	    <result column="feed_open_status" property="feedOpenStatus" />
-	    <result column="mbr_image" property="memberProfileImage" />
+	    <result column="fi.file_path" property="filePath" />
+	    <result column="fi.file_new_name" property="fileNewName" />
+	    <result column="mbr_file_idx" property="memberProfileImage" />
 	    <result column="fc_content" property="feedCommentContent" />
 	    <result column="mni_name" property="mealName" />
 	    <result column="mni_picture" property="mealPicture" />
@@ -45,7 +47,9 @@
 	        f.feed_intake_date,
 	        f.feed_like,
 	        f.feed_open_status,
-	        m.mbr_image,
+	        fi.file_path,
+        	fi.file_new_name,
+	        m.mbr_file_idx,
 	        mll.mni_name,
 	        mll.mni_picture,
 	        mll.mni_weight,
@@ -65,8 +69,12 @@
 	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
 	    INNER JOIN
 	        member m ON f.mbr_id = m.mbr_id
+        LEFT JOIN
+        	files fi ON m.mbr_file_idx = fi.file_idx
 	    LEFT JOIN
-    		feed_comments fc ON f.feed_num = fc.feed_num;;
+    		feed_comments fc ON f.feed_num = fc.feed_num
+		ORDER BY
+        	f.feed_date DESC;
 	</select>
 	
 	<!-- 피드 영양 정보 조회 -->
@@ -86,7 +94,8 @@
 	        mll.mni_calcium,
 	        mll.mni_iron
 		FROM
-		    meal_nutrition_info mll INNER JOIN feed f
+		    meal_nutrition_info mll
+		INNER JOIN feed f
 		    ON mll.mni_num = f.mni_num
 	</select>
 	
@@ -104,7 +113,7 @@
 	        f.feed_intake_date,
 	        f.feed_like,
 	        f.feed_open_status,
-	        m.mbr_image,
+	        m.mbr_file_idx,
 	        fc.fc_content,
 	        mll.mni_name,
 	        mll.mni_picture,
@@ -133,11 +142,11 @@
 	<!-- 음식 이름 검색 -->
 	<select id="findKeywords" parameterType="String" resultType="String">
 	    SELECT
-	    	mni_name 
+	        mni_name
 	    FROM
-	    	meal_nutrition_info 
+	        meal_nutrition_info
 	    WHERE
-	    	mni_name LIKE CONCAT('%', #{query}, '%');
+	        mni_name LIKE CONCAT('%', #{query}, '%');
 	</select>
 	
 	<!-- 피드 추가 -->

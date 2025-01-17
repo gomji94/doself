@@ -1,6 +1,7 @@
 package doself.user.feed.controller;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -46,8 +47,6 @@ public class FeedController {
 	    for (Feed feed : feedList) {
 	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
 	    }
-		
-		log.info("Fetched feed list: {}", feedList); // 로그 추가
 		model.addAttribute("FeedList", feedList);
 		return "user/feed/feed-list";
 	}

@@ -38,6 +38,8 @@ public class Feed {
     private Integer mealSodium;        		// 나트륨
     private Integer mealCalcium;       		// 칼슘
     private Integer mealIron;          		// 철분
+    private String filePath;          		
+    private String fileNewName;          	
     private boolean owner;
 
     // Getter와 Setter 추가
