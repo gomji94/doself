@@ -19,7 +19,6 @@ public interface ChallengeListService {
 	
 	// 특정 챌린지 정보 조회(detail view)
 	ChallengeDetailView getChallengeListView(String challengeCode);
-	//List<ChallengeDetailView> getChallengeListView(String challengeCode);
 	
 	// 챌린지 추가(작업중)
 	void addChallenge(MultipartFile files, AddChallenge addChallenge);
@@ -43,5 +42,8 @@ public interface ChallengeListService {
 	void deleteFile(Files fileDto);
 	
 	// 챌린지 멤버 추가(작업중)
-	boolean addChallengeMember(AddChallengeMember addChallengeMember, String challengeCode);
+	boolean addChallengeMember(AddChallengeMember addChallengeMember);
+	
+	// 이미 참여 중인지 확인
+	boolean isAlreadyParticipated(AddChallengeMember addChallengeMember);
 }

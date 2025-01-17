@@ -258,7 +258,7 @@ $(document).on('click', '.card', function () {
 
 
 $(document).on('click', '#participationChallenge', function () {
-    const challengeCode = $('#card-modal').data('challengeCode'); // 모달에 저장된 challengeCode 가져오기
+    let challengeCode = $('#card-modal').data('challengeCode'); // 모달에 저장된 challengeCode 가져오기
     const challengeMemberId = $('#leader-link').text().trim();    // 세션에서 가져오기
 
     // 서버에서 상태 코드 가져오기
@@ -275,17 +275,16 @@ $(document).on('click', '#participationChallenge', function () {
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    challengeCode: challengeCode,
-                    challengeMemberId: challengeMemberId,
-                    challengeStatusCode: challengeStatusCode // 상태 코드 포함
+                    challengeCode: response.challengeCode,
+                    challengeMemberId: response.challengeMemberId,
+                    challengeStatusCode: response.challengeStatusCode // 상태 코드 포함
                 }),
                 success: function (response) {
-                    if (response.success) {
-                        alert('챌린지에 성공적으로 참여하였습니다.');
-                        location.reload(); // 새로고침
-                    } else {
-                        alert(response.message || '참여 중인 챌린지입니다.');
-                    }
+					if (response.success) {
+			            alert(response.message);
+			        } else {
+			            alert(response.message); // 이미 참여중인 경우 알림
+			        }
                 },
                 error: function () {
                     alert('참여 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
