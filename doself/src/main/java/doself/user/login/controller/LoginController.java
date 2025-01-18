@@ -105,12 +105,26 @@ public class LoginController {
 	
 	@PostMapping("/register")
 	public String postMethodName(Member member) {
-		
+		member.setMbrEmail(removeCommas(member.getMbrEmail()));
+		member.setMbrPhoneNum(removeCommasPhone(member.getMbrPhoneNum()));
 		loginService.createMember(member);
 		
 		return "redirect:/login";
 	}
 	
+	public static String removeCommas(String input) {
+        if (input == null) {
+            return null; // Handle null input gracefully
+        }
+        return input.replace(",", "");
+    }
 	
+	
+	public static String removeCommasPhone(String input) {
+        if (input == null) {
+            return null; // Handle null input gracefully
+        }
+        return input.replace(",", "-");
+    }
 	
 }

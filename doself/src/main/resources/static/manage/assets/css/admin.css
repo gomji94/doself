@@ -1794,6 +1794,13 @@ textarea.form-control {
   opacity: 1;
 }
 
+.phone-input {
+    display: flex;
+}
+.pSize {
+    width: 99px;
+}
+
 /* 날짜 입력 그룹 레이아웃 */
 .searchLeft {
   display: inline-block;
