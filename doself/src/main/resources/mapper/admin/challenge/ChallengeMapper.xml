@@ -9,7 +9,7 @@
   			<id column="cg_num" property="cgNum" />
   			<result column="ctl_num" property="ctlNum" />
   			<result column="cg_name" property="cgName" />
-  			<result column="cg_picture" property="cgPicture" />
+  			<result column="cg_file_idx" property="cgFileIdx" />
   			<result column="cg_content" property="cgContent" />
   			<result column="cg_creation_date" property="cgCreationDate" />
   			<result column="cg_current_mbr_count" property="cgCurrentMbrCount" />
@@ -48,7 +48,6 @@
 				cg_name,
 				cg_content,
 				cg_creation_date,
-				cg_current_mbr_count,
 				cg_max_mbr_count,
 				cg_start_date,
 				cg_end_date,
@@ -66,10 +65,10 @@
 			        AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
 			    </if>
 			    <if test="startDate != null and startDate != ''">
-			        AND cg_start_date > #{startDate}
+			        AND cg_end_date > #{startDate}
 			    </if>
 			    <if test="endDate != null and endDate != ''">
-			        AND cg_start_date <![CDATA[ < ]]> #{endDate}
+			        AND cg_end_date <![CDATA[ < ]]> #{endDate}
 			    </if>			
 			</where>
 		    ORDER BY

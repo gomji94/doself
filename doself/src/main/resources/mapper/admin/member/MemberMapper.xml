@@ -34,11 +34,12 @@
   			<result column="mbr_phone_num" 				property="mbrPhoneNum" />
   			<result column="mbr_gender" 				property="mbrGender" />
   			<result column="ac_num" 					property="acNum" />
-  			<result column="mbr_image" 					property="mbrImage" />
   			<result column="opening_ticket_count" 		property="openingTicketCount" />
   			<result column="participation_ticket_count" property="participationTicketCount" />
   			<result column="mbr_point" 					property="mbrPoint" />
   			<result column="is_deleted" 				property="isDeleted" />
+  			<result column="mbr_file_idx" 				property="mbrFileIdx" />
+  			<result column="mbr_image" 					property="mbrImage" />
 
 	  		<!-- 연령대 카테고리 관계 -->
 	  		<association property="ageInfo" javaType="Age">
@@ -68,6 +69,7 @@
 				m.mbr_phone_num, 
 				m.mbr_gender,
 				ac.ac_name,
+				m.mbr_file_idx,
 				m.mbr_image,
 				m.opening_ticket_count,
 				m.participation_ticket_count,
@@ -200,7 +202,9 @@
 			m.opening_ticket_count,
 			m.participation_ticket_count,
 			m.mbr_point,
-			m.is_deleted
+			m.is_deleted,
+			m.mbr_file_idx,
+			m.mbr_image
 		FROM `member` m
 		WHERE
 			mbr_id = #{mbrId};		
@@ -231,10 +235,7 @@
 				</if>  			
 				<if test="mbrPoint != null and mbrPoint != ''">
 					mbr_point = #{mbrPoint},
-				</if>  			
-				<if test="mbrImage != null and mbrImage != ''">
-					mbr_image = #{mbrImage}
-				</if>  			
+				</if>  			  			
   			</trim>
   			WHERE
   				mbr_id = #{mbrId};

@@ -53,14 +53,15 @@ public class LoginController {
 		  if(isMatched) { 
 			  Member memberInfo = (Member) resultMap.get("memberInfo");
 			  String membergrade = memberInfo.getMgCode(); 
-			  String memberName = memberInfo.getMbrName(); 
+			  String memberName = memberInfo.getMbrName();
+			  	
 			  String memberImage = memberInfo.getMbrImage();
 			  
 			  String memberIp = request.getRemoteAddr();
 			  // 로그인이력 키값생성
 			  String memberIpKey = commonMapper.getPrimaryKey("mll_", "member_login_log", "mll_num");
 			  loginMapper.createMemberLoginLog(memberIpKey, mbrId, memberIp);
-		  
+			  
 			  session.setAttribute("SID", mbrId);
 			  session.setAttribute("SNAME", memberName);
 			  session.setAttribute("SGRD", membergrade);

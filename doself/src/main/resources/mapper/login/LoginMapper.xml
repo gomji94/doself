@@ -18,6 +18,7 @@
 		<result column="participation_ticket_count" property="participationTicketCount" />
 		<result column="mbr_point" 					property="mbrPoint" />
 		<result column="is_deleted" 				property="isDeleted" />
+		<result column="mbr_file_idx" 				property="mbrFileIdx" />
 	</resultMap>
 	
 	
@@ -37,7 +38,8 @@
 			m.opening_ticket_count,
 			m.participation_ticket_count,
 			m.mbr_point,
-			m.is_deleted
+			m.is_deleted,
+			m.mbr_file_idx
 		FROM `member` m INNER JOIN	`files` f 
 		     ON m.mbr_file_idx = f.file_idx
 		WHERE 
@@ -153,4 +155,5 @@
 			#{memberIp}, 
 			NOW())
 	</insert>		
+	
 </mapper>
