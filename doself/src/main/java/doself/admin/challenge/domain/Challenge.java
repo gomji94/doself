@@ -8,10 +8,9 @@ public class Challenge {
 	private String cgNum;
 	private String ctlNum;
 	private String cgName;
-	private String cgPicture;
+	private String cgFileIdx;
 	private String cgContent;
 	private String cgCreationDate;
-	private int cgCurrentMbrCount;
 	private int cgMaxMbrCount;
 	private String cgStartDate;
 	private String cgEndDate;
