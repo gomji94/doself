@@ -1,5 +1,6 @@
 package doself.user.feed.domain;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,6 +51,11 @@ public class Feed {
     public void setOwner(boolean owner) {
         this.owner = owner;
     }
+
+	public void setFeedIntakeDate(LocalDateTime localDateTime) {
+		// TODO Auto-generated method stub
+		
+	}
 		
 	
 }

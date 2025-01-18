@@ -123,66 +123,6 @@ $(document).ready(function () {
     });
 });
 
-// --- 피드 검색 모달 ---
-$(document).ready(function () {
-	const $searchInput = $('#searchFood');
-	const $resultsContainer = $('#searchResults');
-	let debounceTimeout;
-
-	$searchInput.on('input', function () {
-	    clearTimeout(debounceTimeout);
-	    debounceTimeout = setTimeout(() => {
-	        const query = $searchInput.val().trim();
-
-	        if (query.length >= 2) {
-				$.ajax({
-				    url: '/feed/search-food',
-				    type: 'GET',
-				    data: { query: query },
-				    success: function (data) {
-				        console.log("Request URL:", '/feed/search-food');
-				        console.log("Request Data:", { query: query });
-				        console.log("AJAX Success:", data);
-				        if (data && data.length > 0) {
-				            $resultsContainer.empty().show();
-				            data.forEach(item => {
-				                $resultsContainer.append(`<div class="dropdown-item" data-value="${item}">${item}</div>`);
-				            });
-				        } else {
-				            $resultsContainer.hide();
-				        }
-				    },
-				    error: function (jqXHR, textStatus, errorThrown) {
-				        console.error("AJAX Error:", {
-				            status: jqXHR.status,
-				            statusText: jqXHR.statusText,
-				            responseText: jqXHR.responseText,
-				            errorThrown: errorThrown
-				        });
-				        alert("검색 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
-				    }
-				});
-	        } else {
-	            $resultsContainer.hide();
-	        }
-	    }, 300);
-	});
-
-    // 결과 항목 클릭 이벤트
-    $resultsContainer.on('click', '.dropdown-item', function () {
-        const selectedValue = $(this).data('value'); // 선택된 값
-        $searchInput.val(selectedValue); // input에 값 설정
-        $resultsContainer.hide(); // 결과 숨기기
-    });
-
-    // 검색 영역 외부 클릭 시 dropdown 숨기기
-    $(document).on('click', function (e) {
-        if (!$(e.target).closest('.input-group').length) {
-            $resultsContainer.hide();
-        }
-    });
-});
-
 // --- 피드 생성 모달 ---
 $(document).ready(function () {
     // 피드 추가 버튼 클릭 이벤트
@@ -205,117 +145,63 @@ $(document).ready(function () {
 });
 
 // --- 피드 추가 유효성 검사 및 추가 ---
-$(document).ready(function () {
-    $('#feed-create-submit-btn').on('click', function () {
-        // 값 가져오기
-		const feedPicture = $('#feed-create-file-input')[0].files[0];
-	    const feedContent = $('#feed-create-d-feed-content').val();
-		const searchedFood = $('#searchFood').val().trim(); // 음식 이름 검색 값
-	    const feedFoodIntake = $('#serving').val();
-	    const mealCategoryCode = $('#meal-type').val();
-	    const feedOpenStatus = $('input[name="visibility"]:checked').val() === 'public' ? 1 : 0;
+$('#feed-create-submit-btn').on('click', function (e) {
+    e.preventDefault();
 
-        // 유효성 검사
-        if (!feedPicture || feedPicture === '') {
-            alert('사진을 업로드해주세요.');
-            return;
-        }
+    const feedPicture = $('#feed-create-file-input').val();
+    const feedContent = $('#feed-create-d-feed-content').val().trim();
+    const intakeDateTime = $('#intakeDateTime').val();
+    const feedFoodIntake = $('#serving').val();
+    const mealCategoryCode = $('#meal-type').val();
+    const feedOpenStatus = $('input[name="visibility"]:checked').val();
+    const selectedFoodId = $('#selectedFoodId').val();
 
-        if (!feedContent || feedContent.trim().length === 0) {
-            alert('피드 내용을 작성해주세요.');
-            return;
-        }
+    if (!feedPicture) {
+        alert('사진을 업로드해주세요.');
+        return;
+    }
+    if (!feedContent) {
+        alert('내용을 작성해주세요.');
+        return;
+    }
+    if (!intakeDateTime) {
+        alert('섭취 날짜를 설정해주세요.');
+        return;
+    }
+    if (!feedFoodIntake) {
+        alert('섭취 인분을 선택해주세요.');
+        return;
+    }
+    if (!mealCategoryCode) {
+        alert('식사 분류를 선택해주세요.');
+        return;
+    }
+    if (!feedOpenStatus) {
+        alert('공개 여부를 선택해주세요.');
+        return;
+    }
 
-		if (!searchedFood || searchedFood.length < 2) {
-            alert('음식 이름을 검색하고 선택해주세요.');
-            return;
-        }
-		
-        if (!feedFoodIntake) {
-            alert('섭취 인분을 선택해주세요.');
-            return;
-        }
+    const formData = new FormData();
+    formData.append('feedPicture', $('#feed-create-file-input')[0].files[0]);
+    formData.append('feedContent', feedContent);
+    formData.append('intakeDateTime', intakeDateTime);
+    formData.append('feedFoodIntake', feedFoodIntake);
+    formData.append('mealCategoryCode', mealCategoryCode);
+    formData.append('feedOpenStatus', feedOpenStatus);
+    formData.append('mealNutritionInfoCode', selectedFoodId);
 
-        if (!mealCategoryCode) {
-            alert('식사 분류를 선택해주세요.');
-            return;
-        }
-
-		if (!feedOpenStatus) {
-		    alert('공개 여부를 선택해주세요.');
-		    return;
-		}
-
-        // 유효성 검사가 통과되었을 경우
-		const formData = new FormData();
-	    formData.append('feedPicture', feedPicture);
-	    formData.append('feedContent', feedContent);
-		formData.append('searchedFood', searchedFood); // 검색한 음식 이름 추가
-	    formData.append('feedFoodIntake', feedFoodIntake);
-	    formData.append('mealCategoryCode', mealCategoryCode);
-	    formData.append('feedOpenStatus', feedOpenStatus);
-		
-		console.log(feedPicture)
-
-        // AJAX 요청으로 피드 추가
-		$.ajax({
-		        url: '/feed/createFeed',
-		        type: 'POST',
-		        data: formData,
-		        processData: false,
-		        contentType: false,
-		        success: function (response) {
-		            alert(response);
-		            location.reload(); // 페이지 새로고침
-		        },
-		        error: function (error) {
-		            alert('피드 생성에 실패했습니다.');
-					
-	            console.error(error);
-				console.log('feedPicture:', feedPicture);
-				console.log('feedContent:', feedContent);
-				console.log('searchedFood', searchedFood);
-				console.log('feedFoodIntake:', feedFoodIntake);
-				console.log('mealCategoryCode:', mealCategoryCode);
-				console.log('feedOpenStatus:', feedOpenStatus);
-            },
-        });
-    });
-});
-
-// --- 파일 업로드와 글자 수 카운팅 기능 ---
-$(document).ready(function () {
-    // 이미지 업로드 버튼 클릭 시 파일 선택 트리거
-    $('#feed-create-upload-btn').on('click', function () {
-        $('#feed-create-file-input').trigger('click');
-    });
-
-    // 파일 업로드 시 이미지 미리보기
-    $('#feed-create-file-input').on('change', function (e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                $('#feed-create-image-preview')
-                    .attr('src', e.target.result)
-                    .css('display', 'block'); // 미리보기 이미지 표시
-                $('#plate').css('display', 'none'); // 빈 접시 이미지 숨김
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // 글자 수 카운팅
-    const maxLength = 2000; // 최대 글자 수
-    $('#feed-create-d-feed-content').on('input', function () {
-        const textLength = $(this).val().length; // 현재 글자 수
-        $('#feed-create-text-count').text(textLength); // 카운터 업데이트
-
-        // 글자 수 초과 시 스타일 변경
-        if (textLength > maxLength) {
-            $('#feed-create-text-count').css('color', 'red');
-        } else {
-            $('#feed-create-text-count').css('color', '');
+    $.ajax({
+        url: '/feed/createFeed',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            alert('피드가 성공적으로 생성되었습니다.');
+            location.reload();
+        },
+        error: function () {
+            alert('피드 생성 중 오류가 발생했습니다.');
         }
     });
 });

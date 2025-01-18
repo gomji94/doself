@@ -8,11 +8,12 @@
             <img id="feed-create-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
         </div>
         <hr>
+		<form id="feedCreateForm" th:action="@{/feed/createFeed}" method="post" enctype="multipart/form-data">
         <div class="feed-create-modal-body">
             <!-- 이미지 업로드 영역 -->
 			<div class="feed-create-image-upload">
 			    <div class="feed-create-upload-box">
-			        <input type="file" id="feed-create-file-input" accept="image/*" style="display: none;" />
+			        <input type="file" id="feed-create-file-input" accept="image/*" hidden />
 			        <img id="plate" src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="빈 접시">
 			        <p>사진을 이곳에 넣어</p>
 			        <p>빈 그릇을 채워주세요!</p>
@@ -29,57 +30,63 @@
                     <img th:src="${session.IMAGE}" alt="프로필">
                     <a href="#" th:text="${session.SID}" class="user-link"></a>
                 </div>
-                <textarea placeholder="내용을 입력해주세요" maxlength="2000" id="feed-create-d-feed-content"></textarea>
-				
 				<!-- 글자 수 카운팅 -->
 				<div class="feed-create-text-box-under">
-				    <div class="feed-create-text-counter">
-				        <span id="feed-create-text-count">0</span>
-				        <span>/2000</span>
-				    </div>
-				</div>
-				<div class="input-group">
-				    <input type="text" 
-					       class="feed-create-food-search" 
-					       id="searchFood"
-					       name="searchValue" 
-					       placeholder="음식 이름을 작성하거나 선택해주세요."/>
-				<div id="searchResults" class="dropdown-menu" style="display: none;"></div>
-				</div>
-				<div class="input-group">
-                    <label for="intakeDateTime">섭취 날짜 및 시간</label>
-                    <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required />
-                </div>
-                <div class="input-group">
-                    <label for="serving">섭취 인분</label>
-                    <select id="serving">
-                       <option value="1">1</option>
-                       <option value="2">2</option>
-                       <option value="3">3</option>
-                       <option value="4">4</option>
-                       <option value="5">5</option>
-                   </select>
-                </div>
-				<div class="input-group">
-                        <label for="meal-type">식사 분류</label>
-                        <select id="meal-type" name="mealCategoryCode">
-                            <option value="breakfast">아침</option>
-                            <option value="lunch">점심</option>
-                            <option value="dinner">저녁</option>
-                            <option value="snack">간식</option>
-                        </select>
+                    <textarea id="feedContent" name="feedContent" placeholder="내용을 입력해주세요" maxlength="2000" required></textarea>
+                    <div class="text-counter">
+                        <span id="textCount">0</span>/2000
                     </div>
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="visibility" value="public">
-                        <span>공개</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="visibility" value="private">
-                        <span>비공개</span>
-                    </label>
-                    <button type="submit" id="feed-create-submit-btn" class="feed-create-submit-btn">생성</button>
                 </div>
+				<div class="form-group">
+                    <label for="searchedFood">음식 검색</label>
+                    <input type="text"
+						   class="feed-create-food-search" 
+						   id="searchedFood"
+						   name="searchedFood"
+						   placeholder="음식 이름을 검색해주세요"
+						   oninput="searchFood(this.value)">
+                    <div id="searchResults" class="dropdown-menu"></div>
+					<input type="hidden" id="selectedFoodId" name="mealNutritionInfoCode" />
+                </div>
+				<div class="form-group">
+                    <label for="feedIntakeDate">섭취 날짜 및 시간</label>
+                    <input type="datetime-local" id="feedIntakeDate" name="feedIntakeDate" required>
+                </div>
+				<div class="form-group">
+                    <label for="feedFoodIntake">섭취 인분</label>
+                    <select id="feedFoodIntake" name="feedFoodIntake" required>
+                        <option value="">선택하세요</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+				<div class="form-group">
+                    <label for="mealCategoryCode">식사 분류</label>
+                    <select id="mealCategoryCode" name="mealCategoryCode" required>
+                        <option value="">선택하세요</option>
+                        <option value="breakfast">아침</option>
+                        <option value="lunch">점심</option>
+                        <option value="dinner">저녁</option>
+                        <option value="snack">간식</option>
+                    </select>
+                </div>
+				<div class="radio-group">
+                <label>공개 여부</label>
+                <div>
+                    <label>
+                        <input type="radio" name="feedOpenStatus" value="1" required> 공개
+                    </label>
+                    <label>
+                        <input type="radio" name="feedOpenStatus" value="0"> 비공개
+                    </label>
+                </div>
+			</div>
+			<div class="submit-grop">
+                <button type="submit" id="feedCreateSubmitBtn">생성</button>
+				<button type="reset" class="btn btn-secondary">취소</button>
             </div>
         </div>
     </div>
