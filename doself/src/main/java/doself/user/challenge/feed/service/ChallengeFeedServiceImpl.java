@@ -17,7 +17,10 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
+import doself.user.challenge.feed.domain.ParticipateChallengeList;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
+import doself.util.CardPageInfo;
+import doself.util.CardPageable;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -42,17 +45,33 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    return challengeFeedMapper.getChallengeCodeByMemberId(challengeMemberId);
 	}
 	
+	// 로그인된 사용자가 참여 중인 챌린지 리스트 가져오기
+	@Override
+	public List<ParticipateChallengeList> getChallengeListByMemberId(String memberId) {
+		// 사용자가 참여한 챌린지 리스트 조회
+	    List<ParticipateChallengeList> challengeList = challengeFeedMapper.getChallengeListByMemberId(memberId);
+	    
+	    // 현재 멤버 수를 각 챌린지에 설정
+	    challengeList.forEach(challenge -> {
+	        int currentMemberCount = challengeFeedMapper.getCurrentMemberCount(challenge.getChallengeCode());
+	        challenge.setChallengeCurrentMember(currentMemberCount);
+	    });
+
+	    return challengeList;
+	}
+	
 	// 피드 페이징
 	@Override
-	public PageInfo<ChallengeFeed> getChallengeFeedPage(String challengeMemberId, Pageable pageable) {
-		int rowCnt = challengeFeedMapper.getChallengeFeedCount(challengeMemberId);
+	public PageInfo<ChallengeFeed> getChallengeFeedPage(String challengeCode, Pageable pageable) {
+		int rowCnt = challengeFeedMapper.getChallengeFeedCount(challengeCode);
+		
 		Map<String, Object> params = new HashMap<>();
-		params.put("challengeMemberId", challengeMemberId);
+		params.put("challengeCode", challengeCode);
 		params.put("pageable", pageable);
-		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeFeed(params);
 		
+		List<ChallengeFeed> feeds = challengeFeedMapper.getChallengeFeed(params);
 		
-		return new PageInfo<>(challengeFeedList, pageable, rowCnt);
+		return new PageInfo<>(feeds, pageable, rowCnt);
 	}
 	
 	// 챌린지 피드
@@ -78,26 +97,47 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	@Override
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
 		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
-	    log.info("Fetched memberList from Mapper: {}", memberList); // Mapper에서 가져온 데이터 확인
+		
+		// 초기값 설정: 참여율과 달성률, 점수를 0으로 설정
+	    memberList.forEach(member -> {
+	        if (member.getChallengeTodayParticipationRate() == null) {
+	            member.setChallengeTodayParticipationRate(0.0);
+	        }
+	        if (member.getChallengeTodayAchievementRate() == null) {
+	            member.setChallengeTodayAchievementRate(0.0);
+	        }
+	        if (member.getScore() == null) {
+	            member.setScore(0.0);
+	        }
+	    });
+	    
+	    log.info(">>> location/serviceImpl >>> memberList: {}", memberList);
+
 	    return memberList;
 	}
 
 	@Override
-	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatus) {
+	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatusCode) {
 		// 캐시 내 데이터 여부 확인
 //		if (challengeProgressCache.containsKey(challengeCode)) {
 //	        return challengeProgressCache.get(challengeCode); // 캐시된 데이터 반환
 //	    }
 		
-        // 데이터 가져오기
-		List<ChallengeProgress> challengeProgress = challengeFeedMapper.getChallengeProgress(challengeCode);
+		List<ChallengeProgress> challengeProgressList = challengeFeedMapper.getChallengeProgress(challengeCode);
 
-	    // 중복 제거 후 캐시에 저장
-		List<ChallengeProgress> distinctProgress = challengeProgress.stream()
-		        .distinct() // 중복 제거
-		        .collect(Collectors.toList());
+	    // 상태 코드 변환 로직
+	    challengeProgressList.forEach(progress -> {
+	        String statusCode = progress.getChallengeStatusCode();
+	        if ("cs_002".equals(statusCode) || "cs_003".equals(statusCode)) {
+	            progress.setChallengeStatusCode("진행중");
+	        } else if ("cs_004".equals(statusCode)) {
+	            progress.setChallengeStatusCode("대기중");
+	        }
+	    });
+	    
+	    log.info(">>> location/serviceImpl >>> challengeProgressList: {}", challengeProgressList);
 
-	    return distinctProgress;
+	    return challengeProgressList;
 	}
 	
 	// 불필요한 캐시 초기화
@@ -108,29 +148,49 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	@Override
 	public Map<String, String> calculateDPlusAndDMinus(String challengeCode) {
 		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
-        if (progress == null) {
-            return Map.of("dPlus", "N/A", "dMinus", "N/A");
-        }
+		
+		log.info(">>> location/serviceImpl >>> progress: {}", progress);
+		
+	    if (progress == null) {
+	        return Map.of("dPlus", "N/A", "dMinus", "N/A");
+	    }
 
-        LocalDate today = LocalDate.now();
-        LocalDate startDate = progress.getChallengeStartDate().toInstant()
-                                      .atZone(ZoneId.of("Asia/Seoul"))
-                                      .toLocalDate();
-        LocalDate endDate = progress.getChallengeEndDate().toInstant()
-                                    .atZone(ZoneId.of("Asia/Seoul"))
-                                    .toLocalDate();
+	    LocalDate today = LocalDate.now();
+	    LocalDate startDate = progress.getChallengeStartDate().toInstant()
+	                                  .atZone(ZoneId.of("Asia/Seoul"))
+	                                  .toLocalDate();
+	    LocalDate endDate = progress.getChallengeEndDate().toInstant()
+	                                .atZone(ZoneId.of("Asia/Seoul"))
+	                                .toLocalDate();
 
-        long dPlus = ChronoUnit.DAYS.between(startDate, today);
-        long dMinus = ChronoUnit.DAYS.between(today, endDate);
+	    long dPlus = ChronoUnit.DAYS.between(startDate, today);
+	    long dMinus = ChronoUnit.DAYS.between(today, endDate);
 
-        log.info("Start Date from progress: {}", progress.getChallengeStartDate());
-        log.info("End Date from progress: {}", progress.getChallengeEndDate());
-        
-        
-        return Map.of(
-            "dPlus", "D+" + Math.max(0, dPlus),
-            "dMinus", "D-" + Math.max(0, dMinus)
-        );
+	    return Map.of(
+	        "dPlus", "D+" + Math.max(0, dPlus),
+	        "dMinus", "D-" + Math.max(0, dMinus)
+	    );
+	    
+		//		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
+//        if (progress == null) {
+//            return Map.of("dPlus", "N/A", "dMinus", "N/A");
+//        }
+//
+//        LocalDate today = LocalDate.now();
+//        LocalDate startDate = progress.getChallengeStartDate().toInstant()
+//                                      .atZone(ZoneId.of("Asia/Seoul"))
+//                                      .toLocalDate();
+//        LocalDate endDate = progress.getChallengeEndDate().toInstant()
+//                                    .atZone(ZoneId.of("Asia/Seoul"))
+//                                    .toLocalDate();
+//
+//        long dPlus = ChronoUnit.DAYS.between(startDate, today);
+//        long dMinus = ChronoUnit.DAYS.between(today, endDate);
+//        
+//        return Map.of(
+//            "dPlus", "D+" + Math.max(0, dPlus),
+//            "dMinus", "D-" + Math.max(0, dMinus)
+//        );
 	}
 
 	// 챌린지 피드별 댓글 리스트
@@ -154,5 +214,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
         }
         return "/uploaded_files/" + fileName; // 실제 경로 반환
 	}
+
 
 }

@@ -10,14 +10,20 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
-import doself.util.Pageable;
+import doself.user.challenge.feed.domain.ParticipateChallengeList;
+import doself.util.CardPageable;
 
 @Mapper
 public interface ChallengeFeedMapper {
 	// 로그인된 챌린지 멤버 아이디
 	String getChallengeCodeByMemberId(String memberId);
-	//String getChallengeCodeByMemberId(@Param("challengeMemberId") String challengeMemberId);
-
+	
+	// 현재 참여중인 챌린지 리스트 조회
+	//List<ParticipateChallengeList> getChallengeList();
+	
+	// 로그인된 사용자가 참여 중인 챌린지 리스트 가져오기
+	List<ParticipateChallengeList> getChallengeListByMemberId(@Param("memberId") String memberId);
+	
 	// 챌린지 피드
 	List<ChallengeFeed> getChallengeFeed(Map<String, Object> params);
 	
