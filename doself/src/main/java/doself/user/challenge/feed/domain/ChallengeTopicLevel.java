@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ChallengeTopicLevel {
-
 	String ctlNum;
 	String ctNum;
 	String ctlLevel;

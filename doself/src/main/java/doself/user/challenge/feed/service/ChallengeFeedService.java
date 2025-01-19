@@ -7,12 +7,18 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
+import doself.user.challenge.feed.domain.ParticipateChallengeList;
+import doself.util.CardPageInfo;
+import doself.util.CardPageable;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 
 public interface ChallengeFeedService {	
 	// 로그인된 챌린지 멤버 아이디
 	String getChallengeCodeByMemberId(String challengeMemberId);
+	
+	// 로그인된 사용자가 참여 중인 챌린지 리스트 가져오기
+	List<ParticipateChallengeList> getChallengeListByMemberId(String memberId);
 	
 	// 챌린지 피드 조회
 	List<ChallengeFeed> getChallengeFeed(Map<String, Object> params);
@@ -21,7 +27,7 @@ public interface ChallengeFeedService {
 	PageInfo<ChallengeFeed> getChallengeFeedPage(String challengeCode, Pageable pageable);
 	
 	// 챌린지 진행 상태 조회
-	List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatus);
+	List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatusCode);
 
 	// 챌린지 진행도 계산
 	int calculateTotalProgress(String challengeCode);

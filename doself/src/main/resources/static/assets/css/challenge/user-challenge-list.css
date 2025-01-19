@@ -110,6 +110,21 @@ section.content-main {
     padding-bottom: 30px;
 }
 
+#participateCardList {
+    margin-top: 25px;
+    
+}
+
+h5#participateChallenge {
+    margin: 25px 0px 13px 10px;
+    opacity: 0.8;
+}
+
+img#cardSection {
+    width: 100%;
+    height: 2px;
+}
+
 /* 카드 스타일 */
 .card {
     background-color: #fff;
