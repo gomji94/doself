@@ -4,6 +4,23 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
   <mapper namespace="doself.user.challenge.feed.mapper.ChallengeFeedMapper">
+  	<!-- 특정 챌린지 리스트 조회 -->
+  	<resultMap type="ParticipateChallengeList" id="ParticipateChallengeListMap">
+	    <id 	column="cg_num" 			  property="challengeCode"/>
+	    <result column="mbr_id"				  property="memberId"/>
+	    <result column="cg_name" 			  property="challengeName"/>
+	    <result column="file_path"			  property="challengePicture"/>
+	    <result column="cg_content"			  property="challengeContent"/>
+	    <result column="cg_start_date"		  property="challengeStartDate"/>
+	    <result column="cg_end_date" 		  property="challengeEndDate"/>
+	    <result column="cg_max_mbr_count"	  property="challengeMaxMember"/>
+	    <result column="ctl_level"			  property="challengeTopicLevel"/>
+	    <result column="ct_num"				  property="challengeTopicCode"/>
+	    <result column="ct_name" 			  property="challengeTopicName"/>
+	    <result column="cs_num"			 	  property="challengeStatusCode"/>
+	    <result column="cs_status"			  property="challengeStatus"/>
+	</resultMap>
+  
   	<!-- 특정 챌린지 피드 조회 -->
   	<resultMap type="ChallengeFeed" id="ChallengeFeedResultMap">
 	    <id 	column="cmf_num"		   property="challengeFeedCode" />
@@ -20,12 +37,12 @@
 	
 	<!-- 챌린지 멤버 리스트 조회 -->
 	<resultMap type="ChallengeMemberList" id="ChallengeMemberListMap">
-		<id 	column="cgm_num"	 property="challengeMemberCode" />
-		<id 	column="cg_num" 	 property="challengeCode" />
-		<result column="mbr_id"		 property="memberId" />
-		<result column="file_path"		 property="memberProfileImage" />
-		<result column="cs_num" 	 property="challengeStatus" />
-		<result column="cgm_date"	 property="challengeMemberInOutDate" />
+		<id 	column="cgm_num"						property="challengeMemberCode" />
+		<id 	column="cg_num" 	 					property="challengeCode" />
+		<result column="mbr_id"		 					property="memberId" />
+		<result column="file_path"		 				property="memberProfileImage" />
+		<result column="cs_num" 						property="challengeStatus" />
+		<result column="cgm_date"	 					property="challengeMemberInOutDate" />
 		<result column="cmss_today_participation_rate"  property="todayParticipationRate" javaType="double" />
 	    <result column="cmss_today_achievement_rate" 	property="todayAchievementRate" javaType="double" />
 	    <result column="score" 							property="score" javaType="double" />
@@ -49,13 +66,11 @@
 		<result column="cg_name" 						property="challengeName"/>
 		<result column="cs_num"							property="challengeStatusCode"/>
 		<result column="mbr_id" 						property="challengeMemberId"/>
-		<result column="cg_creation_date" 				property="challengeCreationDate"/>
 		<result column="cg_start_date" 					property="challengeStartDate"/>
 		<result column="cg_end_date" 					property="challengeEndDate"/>
 		<result column="cg_max_mbr_count"			    property="challengeMaxMember"/>
 		<result column="cmss_today_participation_rate"  property="challengeTodayParticipationRate"/>
 		<result column="cmss_today_achievement_rate" 	property="challengeTodayAchievementRate"/>
-		<result column="cmss_date" 						property="challengeTodayUploadDate"/>
 	</resultMap>
 	
 	<resultMap type="ChallengeUser" id="ChallengeResultMap">
@@ -83,6 +98,35 @@
         LIMIT 1
 	</select>
 	
+	<!-- 현재 참여중인 챌린지 리스트 조회 -->
+  	<select id="getChallengeListByMemberId" parameterType="string" resultMap="ParticipateChallengeListMap">
+	    SELECT
+	        cg.cg_num,
+	        cg.mbr_id,
+	        cg.cg_name,
+	        f.file_path,
+	        cg.cg_content,
+	        cg.cg_start_date,
+	        cg.cg_end_date,
+	        cg.cg_max_mbr_count,
+	        stl.ctl_level,
+	        ct.ct_num,
+	        ct.ct_name,
+	        cs.cs_num,
+	        cs.cs_status
+	    FROM
+	        challenge_group cg
+	        INNER JOIN challenge_topic_level stl USING(ctl_num)
+	        INNER JOIN challenge_status cs USING(cs_num)
+	        INNER JOIN challenge_topic ct USING(ct_num)
+	        INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+	        INNER JOIN challenge_group_member cgm ON cg.cg_num = cgm.cg_num
+	    WHERE
+	        cgm.mbr_id = #{memberId}
+	    ORDER BY 
+	        cg_start_date DESC
+	</select>
+  	
 	<!-- 특정 챌린지 피드 조회 -->
 	<select id="getChallengeFeed" parameterType="map" resultMap="ChallengeResultMap">
 		SELECT
@@ -104,7 +148,7 @@
 			INNER JOIN challenge_topic ct USING(ct_num)
 			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
-			cg.mbr_id = #{challengeMemberId}
+			cg.cg_num = #{challengeCode}
 		AND cg.cg_num IS NOT NULL
 		ORDER BY cg.cg_creation_date DESC
 		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
@@ -136,7 +180,7 @@
   	<select id="getTopParticipants" parameterType="string" resultMap="ChallengeMemberListMap">
 	    SELECT 
 	        m.mbr_id                              AS memberId,
-	        f.file_path                          AS memberProfileImage,
+	        f.file_path                           AS memberProfileImage,
 	        cmss.cmss_today_participation_rate    AS todayParticipationRate,
 	        cmss.cmss_today_achievement_rate      AS todayAchievementRate,
 	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate) / 2, 1) AS score
@@ -198,13 +242,11 @@
 			cg.cs_num,
 			cg.mbr_id,
 			f.file_path,
-			cg.cg_creation_date,
 			cg.cg_start_date,
 			cg.cg_end_date,
 			cg.cg_max_mbr_count,
 			cmss.cmss_today_participation_rate,
-			cmss.cmss_today_achievement_rate,
-			cmss.cmss_date
+			cmss.cmss_today_achievement_rate
 		FROM
 			challenge_group cg
 			INNER JOIN `member` m USING(mbr_id)

@@ -244,6 +244,14 @@ img#section-bar {
     margin-right: 9px;
 }
 
+select#serving {
+    height: 35px !important;
+}
+
+select#meal-type {
+    height: 35px !important;
+}s
+
 .img-progress-container {
     position: relative;
     width: 100%;
@@ -1200,6 +1208,7 @@ textarea::-webkit-resizer {
 .input-group label {
     font-size: 14px;
     color: #515151;
+    margin: 0px;
 }
 
 input[type="number"] {
@@ -1208,6 +1217,14 @@ input[type="number"] {
     border-radius: 5px;
     text-align: center;
     padding: 6px 12px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center !important;
+    width: 100%;
 }
 
 select {
