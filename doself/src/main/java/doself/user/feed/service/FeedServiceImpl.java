@@ -2,6 +2,7 @@ package doself.user.feed.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -46,46 +47,47 @@ public class FeedServiceImpl implements FeedService {
     }
 	
 	// 음식 이름 검색
-	@Override
-	public List<String> findKeywords(String query) {
-	    return feedMapper.findKeywords(query);
-	}
+	/*
+	 * @Override public List<String> findKeywords(String query) { try { List<String>
+	 * results = feedMapper.findKeywords(query);
+	 * log.info("Database query executed. Results: {}", results); return results !=
+	 * null ? results : Collections.emptyList(); } catch (Exception e) {
+	 * log.error("Database error during findKeywords: {}", e.getMessage(), e);
+	 * return Collections.emptyList(); } }
+	 */
 	
 	// 피드 추가
 	@Override
-    public void addFeed(Feed feed, MultipartFile feedPicture) {
-        // 이미지 저장
-        String uploadPath = "/upload/feed"; // 파일 업로드 경로 설정
-        String fileName = System.currentTimeMillis() + "_" + feedPicture.getOriginalFilename();
-        File destinationFile = new File(uploadPath, fileName);
+	public void addFeed(Feed feed, MultipartFile feedPicture) {
+	    String uploadPath = "C:/upload/feed"; // 실제 경로로 수정
+	    String fileName = System.currentTimeMillis() + "_" + feedPicture.getOriginalFilename();
+	    File destinationFile = new File(uploadPath, fileName);
 
-        try {
-            feedPicture.transferTo(destinationFile);
-            feed.setFeedPicture(fileName); // 저장된 파일 이름 설정
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 업로드 중 오류 발생", e);
-        }
+	    try {
+	        feedPicture.transferTo(destinationFile);
+	        feed.setFeedPicture(fileName);
+	    } catch (IOException e) {
+	        log.error("이미지 업로드 중 오류 발생", e);
+	        throw new RuntimeException("이미지 업로드 실패");
+	    }
 
-        feedMapper.addFeed(feed);
-    }
+	    feedMapper.addFeed(feed);
+	}
 
 	// 음식이름 조회
-    @Override
-    public String getOrCreateMealNutritionInfo(String mealName) {
-        String mealNutritionInfoCode = feedMapper.findByName(mealName);
-
-        if (mealNutritionInfoCode == null) {
-            // 새 음식 추가
-            MealNutritionInfo newMeal = new MealNutritionInfo();
-            newMeal.setMniName(mealName);
-            newMeal.setMniPicture("default.jpg"); // 기본 이미지 설정
-            feedMapper.addMeal(newMeal);
-
-            return newMeal.getMniNum(); // 생성된 번호 반환
-        }
-
-        return mealNutritionInfoCode;
-    }
+	/*
+	 * @Override public String getOrCreateMealNutritionInfo(String mealName) {
+	 * String mealNutritionInfoCode = feedMapper.findByName(mealName);
+	 * 
+	 * if (mealNutritionInfoCode == null) { // 새 음식 추가 MealNutritionInfo newMeal =
+	 * new MealNutritionInfo(); newMeal.setMniName(mealName);
+	 * newMeal.setMniPicture("default.jpg"); // 기본 이미지 설정
+	 * feedMapper.addMeal(newMeal);
+	 * 
+	 * return newMeal.getMniNum(); // 생성된 번호 반환 }
+	 * 
+	 * return mealNutritionInfoCode; }
+	 */
  
     // 좋아요 수 증가
     public void incrementLike(String feedNum) {

@@ -19,10 +19,10 @@ public interface FeedMapper {
 	int addFeed(Feed feed);
 	
 	// 자동완성 검색
-	List<String> findKeywords(String query);
+	/* List<String> findKeywords(String query); */
 	
 	// 음식 이름으로 음식 번호 조회
-	String findByName(String mealName);
+	/* String findByName(String mealName); */
 
     // 새 음식 추가
     void addMeal(MealNutritionInfo mealNutritionInfo);

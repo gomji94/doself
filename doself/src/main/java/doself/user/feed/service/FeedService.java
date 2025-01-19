@@ -1,6 +1,7 @@
 package doself.user.feed.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,10 +18,10 @@ public interface FeedService {
 	void addFeed(Feed feed,  MultipartFile feedPicture);
 
 	// 자동완성 검색
-	List<String> findKeywords(String query);
+	/* List<String> findKeywords(String query); */
 	
 	// 음식이름 조회
-	String getOrCreateMealNutritionInfo(String mealName);
+	/* String getOrCreateMealNutritionInfo(String mealName); */
 	
 	// 피드 좋아요 증가
 	void incrementLike(String feedNum);
