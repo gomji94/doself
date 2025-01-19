@@ -2,7 +2,7 @@ package doself.user.feed.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import doself.user.feed.domain.Feed;
-import doself.user.feed.domain.MealNutritionInfo;
 import doself.user.feed.mapper.FeedMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +58,9 @@ public class FeedServiceImpl implements FeedService {
 	// 피드 추가
 	@Override
 	public void addFeed(Feed feed, MultipartFile feedPicture) {
+		if (feed.getFeedIntakeDate() == null) {
+	        feed.setFeedIntakeDate(LocalDateTime.now()); // 서버에서 현재 시간 기본 설정
+	    }
 	    String uploadPath = "C:/upload/feed"; // 실제 경로로 수정
 	    String fileName = System.currentTimeMillis() + "_" + feedPicture.getOriginalFilename();
 	    File destinationFile = new File(uploadPath, fileName);

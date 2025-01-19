@@ -20,7 +20,7 @@ public class Feed {
 	private String feedContent;				// 피드 내용
 	private String feedPicture;			  	// 피드 이미지
 	private LocalDateTime feedDate;	  		// 피드 등록 날짜
-	private Date feedIntakeDate;			// 섭취 날짜
+	private LocalDateTime feedIntakeDate;	// 섭취 날짜
 	private Integer	feedLike;			  	// 피드 좋아요(null과 비교 후 카운트)
 	private Integer feedOpenStatus;	  		// 공개여부
 	private String memberProfileImage;  	// 작성자 프로필 이미지
