@@ -1,7 +1,7 @@
 package doself.user.feed.controller;
 
-import java.io.File;
-import java.util.Collections;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import doself.user.feed.domain.Feed;
@@ -43,6 +43,16 @@ public class FeedController {
 	    
 		List<Feed> feedList = feedService.getFeedList();
 		
+		 // 날짜 포맷터 생성
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		
+		 // 각 피드의 날짜를 포맷팅하여 새로운 필드에 설정
+		    feedList.forEach(feed -> {
+		        if (feed.getFeedDate() != null) {
+		            feed.setFormattedDate(feed.getFeedDate().format(formatter));
+		        }
+		    });
+	    
 		// 본인 피드 여부 설정
 	    for (Feed feed : feedList) {
 	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
@@ -66,71 +76,33 @@ public class FeedController {
     }
     
     // 음식 이름 검색
-    @GetMapping("/search-food")
-    @ResponseBody
-    public List<String> searchFood(@RequestParam("query") String query) {
-        return feedService.findKeywords(query);
-    }
+	/*
+	 * @GetMapping("/search-food")
+	 * 
+	 * @ResponseBody public List<String> searchFood(@RequestParam("query") String
+	 * query) { log.info("Search query received: {}", query);
+	 * 
+	 * if (query == null || query.trim().isEmpty()) {
+	 * log.warn("Empty or null query received."); return Collections.emptyList(); //
+	 * 빈 리스트 반환 }
+	 * 
+	 * try { List<String> keywords = feedService.findKeywords(query);
+	 * log.info("Search results: {}", keywords); return keywords; } catch (Exception
+	 * e) { log.error("Error during search-food query: {}", e.getMessage(), e);
+	 * return Collections.emptyList(); } }
+	 */
     
-	// 피드 추가
     @PostMapping("/createFeed")
-    public ResponseEntity<?> addFeed(
-            @RequestParam("feedPicture") MultipartFile feedPicture,
-            @RequestParam("feedContent") String feedContent,
-            @RequestParam("searchedFood") String searchedFood,
-            @RequestParam("feedFoodIntake") Integer feedFoodIntake,
-            @RequestParam("mealCategoryCode") String mealCategoryCode,
-            @RequestParam("feedOpenStatus") Integer feedOpenStatus,
-            HttpServletRequest request) {
-
+    public String createFeed(@ModelAttribute Feed feed,
+                             @RequestParam MultipartFile feedPicture,
+                             HttpSession session, Model model) {
         try {
-            // 유효성 검사
-            if (feedPicture == null || feedPicture.isEmpty()) {
-                return ResponseEntity.badRequest().body("사진을 업로드해주세요.");
-            }
-            if (feedContent == null || feedContent.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("내용을 작성해주세요.");
-            }
-            if (searchedFood == null || searchedFood.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("음식 이름을 검색하고 선택해주세요.");
-            }
-            if (feedFoodIntake == null || feedFoodIntake <= 0) {
-                return ResponseEntity.badRequest().body("섭취 인분을 선택해주세요.");
-            }
-            if (mealCategoryCode == null || mealCategoryCode.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("식사 분류를 선택해주세요.");
-            }
-            if (feedOpenStatus == null) {
-                return ResponseEntity.badRequest().body("공개 여부를 선택해주세요.");
-            }
-
-            // 현재 로그인된 사용자 정보 가져오기
-            String memberId = (String) request.getSession().getAttribute("memberId");
-            String profileImage = (String) request.getSession().getAttribute("profileImage");
-
-            // Feed 객체 생성
-            Feed feed = new Feed();
-            feed.setMemberId(memberId);
-            feed.setFeedPicture(feedPicture.getOriginalFilename());
-            feed.setFeedContent(feedContent);
-            feed.setFeedFoodIntake(feedFoodIntake);
-            feed.setMealCategoryCode(mealCategoryCode);
-            feed.setFeedOpenStatus(feedOpenStatus);
-
-            // 음식 정보 처리 (없으면 추가하고 번호 반환)
-            String mealNutritionInfoCode = feedService.getOrCreateMealNutritionInfo(searchedFood);
-            feed.setMealNutritionInfoCode(mealNutritionInfoCode);
-
-            // 프로필 이미지 설정
-            feed.setMemberProfileImage(profileImage);
-
-            // 피드 생성
-            feedService.addFeed(feed, feedPicture);
-
-            return ResponseEntity.ok("피드가 성공적으로 생성되었습니다.");
+            feed.setMemberId((String) session.getAttribute("SID")); // 로그인한 사용자 ID
+            feedService.addFeed(feed, feedPicture); // 서비스 호출
+            return "redirect:/feed/list"; // 피드 리스트로 리다이렉트
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("피드 생성 중 오류 발생");
+            model.addAttribute("errorMessage", "피드 생성 중 오류가 발생했습니다.");
+            return "user/feed/feed-create";
         }
     }
     
