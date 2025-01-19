@@ -37,7 +37,7 @@ public class PracticeServiceImpl implements PracticeService {
 		// ...(*￣０￣)ノ챌린지내 개인기록	...(*￣０￣)ノ
 		
 		// 챌린지 피드생성시 실행
-		// 해당아이디의 해당챌린지의 해당날짜에 데이터의 수 조회
+		// 해당아이디의 해당챌린지의 해당날짜에 데이터의 수(챌린지피드 수) 조회
 		int challengeFeedCount = practiceMapper.getChallengeFeedCountByChallengeFeed(challengeFeed);
 		
 		// 챌린지내 개인기록 해당아이디, 해당챌린지, 해당날짜에 데이터가 있는지 조회

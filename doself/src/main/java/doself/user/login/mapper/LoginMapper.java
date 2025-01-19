@@ -22,4 +22,5 @@ public interface LoginMapper {
 	
 	// 회원 로그인 이력 insert
 	void createMemberLoginLog(String keyValue, String memberId, String memberIp);
+	
 }

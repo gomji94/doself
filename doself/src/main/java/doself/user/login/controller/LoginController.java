@@ -53,14 +53,15 @@ public class LoginController {
 		  if(isMatched) { 
 			  Member memberInfo = (Member) resultMap.get("memberInfo");
 			  String membergrade = memberInfo.getMgCode(); 
-			  String memberName = memberInfo.getMbrName(); 
+			  String memberName = memberInfo.getMbrName();
+			  	
 			  String memberImage = memberInfo.getMbrImage();
 			  
 			  String memberIp = request.getRemoteAddr();
 			  // 로그인이력 키값생성
 			  String memberIpKey = commonMapper.getPrimaryKey("mll_", "member_login_log", "mll_num");
 			  loginMapper.createMemberLoginLog(memberIpKey, mbrId, memberIp);
-		  
+			  
 			  session.setAttribute("SID", mbrId);
 			  session.setAttribute("SNAME", memberName);
 			  session.setAttribute("SGRD", membergrade);
@@ -104,12 +105,26 @@ public class LoginController {
 	
 	@PostMapping("/register")
 	public String postMethodName(Member member) {
-		
+		member.setMbrEmail(removeCommas(member.getMbrEmail()));
+		member.setMbrPhoneNum(removeCommasPhone(member.getMbrPhoneNum()));
 		loginService.createMember(member);
 		
 		return "redirect:/login";
 	}
 	
+	public static String removeCommas(String input) {
+        if (input == null) {
+            return null; // Handle null input gracefully
+        }
+        return input.replace(",", "");
+    }
 	
+	
+	public static String removeCommasPhone(String input) {
+        if (input == null) {
+            return null; // Handle null input gracefully
+        }
+        return input.replace(",", "-");
+    }
 	
 }

@@ -57,13 +57,27 @@
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">이메일</label>
-                                <input id="mbrEmail" name="mbrEmail" class="form-control w-100" placeholder="이메일을 입력해주세요" type="text" disabled="disabled"/>
+                                <!-- <input id="mbrEmail" name="mbrEmail" class="form-control w-100" placeholder="이메일을 입력해주세요" type="text" disabled="disabled"/> -->
+                                <div class="row gx-2 phone-input">
+                                <input type="text" name="mbrEmail" id="mbrEmail" class="form-control" maxlength="20" placeholder="이메일을 입력해주세요" style="width: 175px;" disabled="disabled">
+	                            <input type="text" name="mbrEmail" value="@" readonly="readonly" style="border:none; width: 35px; ">
+	                            <select name="mbrEmail" class="form-control" style="width: 100px;" disabled="disabled"> 
+	                                <option value="gmail.com">gmail.com</option>
+	                                <option value="naver.com">naver.com</option>
+	                                <option value="daum.net">daum.net</option>
+	                            </select>
+	                            </div>
                             </div>
                             <!-- form-group// -->
                             <div class="mb-3">
                                 <label class="form-label">전화번호</label>
-                                <div class="row gx-2">                                    
-                                    <input id="mbrPhoneNum" name="mbrPhoneNum" class="form-control w-100" placeholder="전화번호를 입력해주세요" type="text" disabled="disabled"/>
+                                <div class="row gx-2 phone-input">       
+			                        <input type="text" id="phone-number1" name="mbrPhoneNum" maxlength="3" class="form-control pSize" 
+			                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" disabled="disabled"> -
+			                        <input type="text" id="phone-number2" name="mbrPhoneNum" maxlength="4" class="form-control pSize"
+			                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" disabled="disabled"> -
+			                        <input type="text" id="phone-number3" name="mbrPhoneNum" maxlength="4" class="form-control pSize"
+			                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" disabled="disabled">
                                 </div>
                             </div>
                             <!-- form-group// -->

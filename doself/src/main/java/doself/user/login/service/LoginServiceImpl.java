@@ -83,4 +83,5 @@ public class LoginServiceImpl implements LoginService {
 			loginMapper.createMember(member);
 		}
 
+
 }
