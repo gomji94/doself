@@ -172,7 +172,7 @@
 		    #{feedPicture},
 		    #{mealCategoryCode},
 		    NOW(),
-		    NOW(), 
+		    #{feedIntakeDate}, 
 		    0,
 		    #{feedOpenStatus}
 		)

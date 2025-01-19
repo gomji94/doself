@@ -44,13 +44,13 @@
 						   id="searchedFood"
 						   name="searchedFood"
 						   placeholder="음식 이름을 검색해주세요"
-						   oninput="searchFood(this.value)">
+						   oninput="customSearchFood(this.value)">
                     <div id="searchResults" class="dropdown-menu"></div>
 					<input type="hidden" id="selectedFoodId" name="mealNutritionInfoCode" />
                 </div>
 				<div class="form-group">
                     <label for="feedIntakeDate">섭취 날짜 및 시간</label>
-                    <input type="datetime-local" id="feedIntakeDate" name="feedIntakeDate" required>
+                    <input type="date" id="intakeDateTime" name="feedIntakeDate">
                 </div>
 				<div class="form-group">
                     <label for="feedFoodIntake">섭취 인분</label>
@@ -74,7 +74,7 @@
                     </select>
                 </div>
 				<div class="radio-group">
-                <label>공개 여부</label>
+                <label for="feedOpenStatus">공개 여부</label>
                 <div>
                     <label>
                         <input type="radio" name="feedOpenStatus" value="1" required> 공개
@@ -86,9 +86,59 @@
 			</div>
 			<div class="submit-grop">
                 <button type="submit" id="feedCreateSubmitBtn">생성</button>
-				<button type="reset" class="btn btn-secondary">취소</button>
+				<a href="/feed/list" class="btn btn-secondary" id="cancelBtn">취소</a>
             </div>
         </div>
     </div>
 </div>
+
+<!--/* 사용자 추가 js file */-->
+<th:block layout:fragment="customJsResource">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/assets/js/feed/feed-list.js}"></script>
+</th:block>
+
+<!--/* 사용자 추가 js script */-->
+<th:block layout:fragment="customJs">
+	<script>
+        // 생성 버튼 클릭 시 유효성 검사 및 폼 제출
+        document.getElementById('feedCreateForm').addEventListener('submit', function (e) {
+            const feedPicture = document.getElementById('feed-create-file-input').value;
+            const feedContent = document.getElementById('feedContent').value.trim();
+            const intakeDateTime = document.getElementById('intakeDateTime').value;
+            const feedFoodIntake = document.getElementById('feedFoodIntake').value;
+            const mealCategoryCode = document.getElementById('mealCategoryCode').value;
+            const feedOpenStatus = document.querySelector('input[name="feedOpenStatus"]:checked');
+
+            // 유효성 검사
+            if (!feedPicture) {
+                alert('사진을 업로드해주세요.');
+                e.preventDefault();
+                return;
+            }
+            if (!feedContent) {
+                alert('내용을 입력해주세요.');
+                e.preventDefault();
+                return;
+            }
+            if (!intakeDateTime) {
+                alert('섭취 날짜를 선택해주세요.');
+                e.preventDefault();
+                return;
+            }
+            if (!feedFoodIntake) {
+                alert('섭취 인분을 선택해주세요.');
+                e.preventDefault();
+                return;
+            }
+            if (!mealCategoryCode) {
+                alert('식사 분류를 선택해주세요.');
+                e.preventDefault();
+                return;
+            }
+
+            // 유효성 검사를 통과하면 폼을 제출
+        });
+	</script>
+</th:block>
 </html>

@@ -144,13 +144,108 @@ $(document).ready(function () {
     });
 });
 
+// 음식 이름 검색
+/*window.customSearchFood = function(query) {
+    if (query.trim() === '') {
+        console.warn('Empty query entered.');
+        $('#searchResults').hide().empty();
+        return;
+    }
+
+    $.ajax({
+        url: '/feed/search-food',
+        type: 'GET',
+        data: { query },
+        success: function (data) {
+            console.log('Server response:', data); // 서버 응답 로그 출력
+            if (Array.isArray(data)) {
+                const results = data.map(item =>
+                    `<div class="dropdown-item" onclick="selectFood('${item}', '${item}')">${item}</div>`
+                ).join('');
+                $('#searchResults').html(results).show();
+            } else {
+                console.error('Unexpected response format:', data);
+                $('#searchResults').hide().empty();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:');
+            console.error('Status:', status);
+            console.error('Error:', error);
+            console.error('Response Text:', xhr.responseText);
+            $('#searchResults').hide().empty();
+        }
+    });
+};*/
+
+// 글자 수 카운트 증가
+$(document).ready(function () {
+    const maxLength = 2000;
+
+    $('#feedContent').on('input', function () {
+        const textLength = $(this).val().length;
+        $('#textCount').text(textLength);
+
+        // 글자 수 초과 시 스타일 변경
+        if (textLength > maxLength) {
+            $('#textCount').css('color', 'red');
+        } else {
+            $('#textCount').css('color', '');
+        }
+    });
+});
+
+// --- 피드 생성 업로드 이벤트 ---
+$(document).ready(function () {
+    // 파일 업로드 버튼 클릭 이벤트
+    $('#feed-create-upload-btn').on('click', function (e) {
+        e.preventDefault(); // 기본 동작 방지
+        $('#feed-create-file-input').trigger('click'); // 파일 입력 필드 클릭 트리거
+    });
+
+    // 파일 입력 필드 변경 이벤트
+    $('#feed-create-file-input').on('change', function (e) {
+        const file = e.target.files[0]; // 선택된 파일 가져오기
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                // 이미지 미리보기 업데이트
+                $('#feed-create-image-preview')
+                    .attr('src', e.target.result)
+                    .css('display', 'block'); // 이미지 미리보기 표시
+                $('#plate').css('display', 'none'); // 기본 이미지 숨기기
+            };
+            reader.readAsDataURL(file); // 파일 읽기
+        }
+    });
+});
+
+// --- 초기값과 유효성 검사 충돌 방지 ---
+document.addEventListener('DOMContentLoaded', () => {
+    const intakeDateTime = document.getElementById('intakeDateTime');
+    if (intakeDateTime) {
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000;
+        const localISOTime = new Date(now - offset).toISOString().slice(0, 16);
+        intakeDateTime.value = localISOTime; // 초기값 설정
+    }
+
+    // 폼 제출 이벤트
+	document.getElementById('feedCreateForm').addEventListener('submit', function (e) {
+	    const intakeDateTime = document.getElementById('intakeDateTime').value;
+	    if (!intakeDateTime) {
+	        alert('섭취 날짜 및 시간을 선택해주세요.');
+	        e.preventDefault();
+	    }
+	});
+});
+
 // --- 피드 추가 유효성 검사 및 추가 ---
 $('#feed-create-submit-btn').on('click', function (e) {
     e.preventDefault();
 
     const feedPicture = $('#feed-create-file-input').val();
     const feedContent = $('#feed-create-d-feed-content').val().trim();
-    const intakeDateTime = $('#intakeDateTime').val();
     const feedFoodIntake = $('#serving').val();
     const mealCategoryCode = $('#meal-type').val();
     const feedOpenStatus = $('input[name="visibility"]:checked').val();
@@ -162,10 +257,6 @@ $('#feed-create-submit-btn').on('click', function (e) {
     }
     if (!feedContent) {
         alert('내용을 작성해주세요.');
-        return;
-    }
-    if (!intakeDateTime) {
-        alert('섭취 날짜를 설정해주세요.');
         return;
     }
     if (!feedFoodIntake) {
@@ -184,7 +275,6 @@ $('#feed-create-submit-btn').on('click', function (e) {
     const formData = new FormData();
     formData.append('feedPicture', $('#feed-create-file-input')[0].files[0]);
     formData.append('feedContent', feedContent);
-    formData.append('intakeDateTime', intakeDateTime);
     formData.append('feedFoodIntake', feedFoodIntake);
     formData.append('mealCategoryCode', mealCategoryCode);
     formData.append('feedOpenStatus', feedOpenStatus);
@@ -207,13 +297,11 @@ $('#feed-create-submit-btn').on('click', function (e) {
 });
 
 // --- 피드 수정(데이터 불러오기) ---
-let selectedFeed = null;
-
 $(document).ready(function () {
-    // --- 피드 옵션 모달 ---
+	let selectedFeed = null;
+    // 피드 옵션 모달
     $('.option-button').on('click', function () {
-        // 클릭된 버튼의 가장 가까운 `.feed` 요소를 저장
-        selectedFeed = $(this).closest('.feed');
+        selectedFeed = $(this).closest('.feed'); // 현재 클릭한 피드를 selectedFeed에 저장
 
         if (!selectedFeed.length) {
             console.error('피드를 찾을 수 없습니다.');
@@ -228,30 +316,19 @@ $(document).ready(function () {
         }
     });
 
-    // 옵션 모달 닫기
-    $('.feed-option-modal-wrap .close, .other-members-option-modal-wrap .close').on('click', function () {
-        $('.feed-option-modal-wrap, .other-members-option-modal-wrap').fadeOut();
-        selectedFeed = null; // 선택된 피드 초기화
-    });
-
-    // --- 피드 수정 모달 ---
+    // 피드 수정 모달
     $('#feed-modify-modal').on('click', function () {
         if (!selectedFeed) {
             console.error('선택된 피드가 없습니다.');
             return;
         }
 
-        // 선택된 피드 데이터 추출
+        // 선택된 피드 데이터를 가져옵니다.
         const feedImage = selectedFeed.data('feed-picture');
         const feedContent = selectedFeed.data('feed-content');
         const feedServing = selectedFeed.data('meal-weight');
         const mealCategoryCode = selectedFeed.data('meal-category');
         const feedVisibility = selectedFeed.data('feed-visibility');
-
-        if (!feedImage || !feedContent) {
-            console.error('피드 데이터를 찾을 수 없습니다.', selectedFeed.data());
-            return;
-        }
 
         // 수정 모달에 데이터 삽입
         $('#feed-modify-image-preview').attr('src', feedImage).show();
@@ -266,7 +343,6 @@ $(document).ready(function () {
 
         // 수정 모달 열기
         $('#feed-modify-modal-overlay').fadeIn(300);
-
         // 옵션 모달 닫기
         $('.feed-option-modal-wrap').fadeOut();
     });
