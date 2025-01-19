@@ -1,6 +1,5 @@
 package doself.user.feed.controller;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -94,16 +93,16 @@ public class FeedController {
     
     @PostMapping("/createFeed")
     public String createFeed(@ModelAttribute Feed feed,
-                             @RequestParam MultipartFile feedPicture,
-                             HttpSession session, Model model) {
-        try {
-            feed.setMemberId((String) session.getAttribute("SID")); // 로그인한 사용자 ID
-            feedService.addFeed(feed, feedPicture); // 서비스 호출
-            return "redirect:/feed/list"; // 피드 리스트로 리다이렉트
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "피드 생성 중 오류가 발생했습니다.");
+				             @RequestParam(required = false) MultipartFile feedPicture, // Optional 처리
+				             HttpSession session,
+				             Model model) {
+    	if (feedPicture == null || feedPicture.isEmpty()) {
+            model.addAttribute("errorMessage", "사진을 업로드하세요.");
             return "user/feed/feed-create";
         }
+        feed.setMemberId((String) session.getAttribute("SID")); // 로그인한 사용자 ID
+        feedService.addFeed(feed, feedPicture); // 서비스 호출
+        return "redirect:/feed/list"; // 피드 리스트로 리다이렉트
     }
     
 	// 피드 수정 모달 열기

@@ -220,24 +220,15 @@ $(document).ready(function () {
     });
 });
 
-// --- 초기값과 유효성 검사 충돌 방지 ---
+// --- 섭취 날짜 초기값 설정 ---
 document.addEventListener('DOMContentLoaded', () => {
     const intakeDateTime = document.getElementById('intakeDateTime');
     if (intakeDateTime) {
         const now = new Date();
-        const offset = now.getTimezoneOffset() * 60000;
+        const offset = now.getTimezoneOffset() * 60000; // Timezone offset
         const localISOTime = new Date(now - offset).toISOString().slice(0, 16);
-        intakeDateTime.value = localISOTime; // 초기값 설정
+        intakeDateTime.value = localISOTime; // 올바른 초기값 설정
     }
-
-    // 폼 제출 이벤트
-	document.getElementById('feedCreateForm').addEventListener('submit', function (e) {
-	    const intakeDateTime = document.getElementById('intakeDateTime').value;
-	    if (!intakeDateTime) {
-	        alert('섭취 날짜 및 시간을 선택해주세요.');
-	        e.preventDefault();
-	    }
-	});
 });
 
 // --- 피드 추가 유효성 검사 및 추가 ---
