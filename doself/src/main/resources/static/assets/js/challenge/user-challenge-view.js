@@ -425,22 +425,16 @@ $(document).ready(function () {
 // --- modify feed ---
 $(document).ready(function() {
     // 이미지 업로드 및 미리보기
-    const uploadBtn = $('#cf-modify-upload-btn');
-    const fileInput = $('#cf-modify-file-input');
-    const imagePreview = $('#image-preview');
-    const previewContainer = $('#cf-modify-preview-container');
+	$('#cf-modify-upload-btn').click(function () {
+        $('#feedFiles').click();
+	});
 
-    uploadBtn.on('click', function() {
-        fileInput.trigger('click'); // 파일 선택 창 열기
-    });
-
-    fileInput.on('change', function(event) {
-        const file = event.target.files[0];
+	$('#feedFiles').change(function (e) {
+        const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.attr('src', e.target.result); // 미리보기 설정
-                previewContainer.show(); // 미리보기 보이기
+            reader.onload = function (e) {
+                $('#createChallengeModifyFeedPreviewImage').attr('src', e.target.result);
             };
             reader.readAsDataURL(file);
         }
