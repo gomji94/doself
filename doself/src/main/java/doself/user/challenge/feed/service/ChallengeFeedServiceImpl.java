@@ -290,12 +290,13 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 챌린지 피드 수정
 	@Override
 	public void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
-		Files fileInfo = filesUtils.uploadFile(files);
-		if(fileInfo != null) {
-			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
-			fileInfo.setFileIdx(formattedKeyNum);
-			filesMapper.addfile(fileInfo);
-		}
+		if (files != null && !files.isEmpty()) {
+	        Files uploadedFile = filesUtils.uploadFile(files);
+	        if (uploadedFile != null) {
+	            uploadedFile.setFileIdx(addChallengeFeed.getChallengeFeedFileIdx()); // 기존 file_idx 유지
+	            filesMapper.updateFilePath(uploadedFile); // file_path만 업데이트
+	        }
+	    }
 		
 		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
 	}

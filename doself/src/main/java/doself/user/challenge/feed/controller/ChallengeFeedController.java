@@ -197,12 +197,12 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 수정 폼
 	@PostMapping("/modifychallengefeed")
-	public String postMethodName(AddChallengeFeed addChallengeFeed,
-								 @RequestPart(name = "files", required = false) MultipartFile files,
-								 HttpSession session, RedirectAttributes reAttr) {
+	public String postMethodName(@RequestPart(name = "files", required = false) MultipartFile files,
+            					 AddChallengeFeed addChallengeFeed, HttpSession session) {
 		String memberId = (String) session.getAttribute("SID");
-		
-		challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
+	    addChallengeFeed.setChallengeMemberId(memberId);
+
+	    challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
 		 
 		return "redirect:/challenge/feed/list";
 	}
