@@ -202,4 +202,15 @@
 		VALUES (#{ctmPkValue}, #{ctphPkValue}, #{memberId})
 	</insert>
   	
+  	<!-- 티켓상세내역 환불중복체크 -->
+  	<select id="cntDuplicate" parameterType="String">
+  		SELECT	
+			COUNT(*)
+		FROM
+			payment_refund_request
+  		WHERE
+  			ctm_code = #{ctmPkValue}
+  	</select>
+  	
+  	
 </mapper>

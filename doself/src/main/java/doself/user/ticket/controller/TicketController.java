@@ -96,7 +96,8 @@ public class TicketController {
 									Model model, HttpSession session) {
 		
 		String memberId = (String) session.getAttribute("SID");
-
+		
+		//구매일기준 7일초과 환불신청가능창 비활성화
 		TicketPurchaseInfo detailInfo = ticketService.getPurchaseDetail(memberId, paymentNum);
 		String ticketPurchaseDate = detailInfo.getTicketPurchaseDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -104,6 +105,7 @@ public class TicketController {
 		LocalDateTime dateTimeAfterWeek = dateTime.plusDays(7);
 		LocalDateTime dateTimeNow = LocalDateTime.now();
 		boolean timeLapse = dateTimeAfterWeek.isAfter(dateTimeNow);
+		
 		
 		model.addAttribute("detailInfo", detailInfo);
 		model.addAttribute("timeLapse", timeLapse);
@@ -135,10 +137,19 @@ public class TicketController {
 		return isReg;
 	}
 	
+	@PostMapping("/purchasedetail/isCheck")
+	@ResponseBody
+	public boolean isCheckDuplicate(String ticketNum) {
+		boolean isCheck = false;
+		int result = ticketMapper.cntDuplicate(ticketNum);
+		if(result> 0) isCheck = true;
+		
+		return isCheck;
+	}
+	
 	@PostMapping("/payment")
 	@ResponseBody
 	public Map<String, Object> paymentTest(String ticketKey, HttpSession session) {
-		//TODO: process POST request
 		
 		String memberId = (String) session.getAttribute("SID");
 		String orderKeyValue =  commonMapper.getPrimaryKey("ctph_", "challenge_ticket_payment_history", "ctph_num");
@@ -157,11 +168,10 @@ public class TicketController {
 	@PostMapping("/payment/result")
 	@ResponseBody
 	public boolean paymentResult(Order order, HttpSession session) {
-		//TODO: process POST request
 		
 		String ticketCode = (String) session.getAttribute("STK");
 		order.setTicketCode(ticketCode);
-		System.out.println("=-======================> 확인용 " + order);
+		//System.out.println("=-======================> 확인용 " + order);
 		
 		return ticketService.createTicketOrder(order);
 	}
