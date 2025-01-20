@@ -409,7 +409,7 @@
 		            		<div class="feed" id="feed" th:each="cf : ${challengeFeedList}">
 							    <div class="feed-header">
 							        <a href="#">
-							            <img th:src="${cf.memberProfileImage}" alt="작성자 프로필">
+							            <img th:src="@{|${cf.memberProfileImage}|}" alt="작성자 프로필">
 							        </a>
 							        <div class="user-name">
 							            <a href="#"><p th:text="${cf.challengeMemberId}"></p></a>
@@ -421,7 +421,7 @@
 							        </div>
 							    </div>
 							    <div class="feed-main-img">                    
-							        <img th:src="${cf.challengeFeedPicture}" class="feed-upload-img" alt="게시글 이미지">
+							        <img th:src="@{|${cf.pictureFileImage}|}" class="feed-upload-img" alt="게시글 이미지">
 							    </div>
 							    <div class="feed-action">
 							        <div class="action-icons">

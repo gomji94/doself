@@ -103,7 +103,7 @@ public class ChallengeFeedController {
 	    model.addAttribute("challengeMemberList", challengeMemberList);
 	    
 	    //log.info(">>> location/controller >>> challengeCode: {}", challengeCode);
-	    //log.info(">>> location/controller >>> challengeFeedList: {}", challengeFeedList);
+	    log.info(">>> location/controller >>> challengeFeedList: {}", challengeFeedList);
 	    //log.info(">>> location/controller >>> challengeProgress: {}", challengeProgress);
 	    //log.info(">>> location/controller >>> Total Progress: {}", challengeFeedService.calculateTotalProgress(challengeCode));
 	    //log.info(">>> location/controller >>> Top Participants: {}", challengeFeedService.getTopParticipants(challengeCode));

@@ -31,6 +31,12 @@
 	    <result column="cmf_date"	   	   property="challengeFeedDate" />
 	    <result column="cmf_like"		   property="challengeFeedLike" />
 	    <result column="cmf_warning_check" property="challengeFeedWarningCheck" />
+	    <result column="cmf_file_idx"	   property="pictureFileIdx" />
+	    <result column="cmf_feed_img" 	   property="pictureFileImage" />
+	    <result column="mbr_file_idx" 	   property="memberProfileIdx" />
+	    <result column="mbr_profile_img"   property="memberProfileImage" />
+	    <result column="cmf_food_intake"   property="challengeFeedFoodIntake" />
+	    <result column="mc_num" 		   property="challengeMealCategory" />
 	    <result column="cfc_num"		   property="challengeFeedCommentCode" javaType="string"/>
 	    <result column="cfc_content"	   property="challengeFeedCommentContent" />
 	</resultMap>
@@ -95,6 +101,29 @@
         WHERE
         	mbr_id = #{memberId}
         LIMIT 1
+	</select>
+	
+	<!-- 챌린지 피드 리스트 -->
+	<select id="getChallengeList" resultMap="ChallengeFeedResultMap">
+		SELECT
+			cmf.cmf_num,
+			cmf.cg_num,
+			cmf.mbr_id,
+			cmf.cmf_content,
+			cmf.cmf_date,
+			cmf.cmf_like,
+			cmf.cmf_warning_check,
+			cmf.cmf_file_idx,
+			cmf.cmf_food_intake,
+			cmf.mc_num,
+			m.mbr_file_idx,
+			f.file_path AS mbr_profile_img,
+			ff.file_path AS cmf_feed_img
+		FROM
+			challenge_member_feed cmf
+			INNER JOIN `member` m ON cmf.mbr_id = m.mbr_id
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
 	</select>
 	
 	<!-- 현재 참여중인 챌린지 리스트 조회 -->
@@ -290,7 +319,7 @@
 	        #{challengeCode},
 	        #{challengeMemberId},
 	        #{challengeFeedContent},
-	        #{challengeFeedDate},
+	        NOW(),
 	        #{challengeFeedLike},
 	        #{challengeFeedWarningCheck},
 	        #{challengeFeedFileIdx},

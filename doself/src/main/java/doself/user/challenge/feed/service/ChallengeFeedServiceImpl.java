@@ -76,9 +76,10 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		params.put("challengeCode", challengeCode);
 		params.put("pageable", pageable);
 		
-		List<ChallengeFeed> feeds = challengeFeedMapper.getChallengeFeed(params);
+		//List<ChallengeFeed> feeds = challengeFeedMapper.getChallengeFeed(params);
+		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeList();
 		
-		return new PageInfo<>(feeds, pageable, rowCnt);
+		return new PageInfo<>(challengeFeedList, pageable, rowCnt);
 	}
 	
 	// 챌린지 피드
@@ -260,7 +261,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
 		String formattedKeyNum = commonMapper.getPrimaryKey("cmf_", "challenge_member_feed", "cmf_num");
 		addChallengeFeed.setChallengeFeedCode(formattedKeyNum);
-		
+		addChallengeFeed.setChallengeFeedFileIdx(fileInfo.getFileIdx());
 	    addChallengeFeed.setChallengeFeedDate(new Date());  // 현재 시간
 	    addChallengeFeed.setChallengeFeedLike(0); 			// 기본값 0
 	    addChallengeFeed.setChallengeFeedWarningCheck("N"); // 기본값 'N'
