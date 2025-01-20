@@ -21,7 +21,7 @@
         <a th:href="@{/community/list}">커뮤니티</a>
     </nav>
 	    <div class="profile">
-	        <a id="member-profile" th:href="@{/mypage/feedlist(memberId=${session.SID})}"><img th:src="${@{|${session.IMAGE}|}}" alt="프로필"></a>
+	        <a id="member-profile" th:href="@{/mypage/feedlist(memberId=${session.SID})}"><img th:src="@{|${session.IMAGE}|}" alt="프로필"></a>
 	        <a th:if="${session.SID == null}" class="dropdown-item text-primary" th:href="@{/login}">
 				<i class="material-icons md-perm_identity"></i>Login
 			</a>
