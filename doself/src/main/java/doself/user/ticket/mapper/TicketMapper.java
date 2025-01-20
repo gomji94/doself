@@ -48,4 +48,7 @@ public interface TicketMapper {
 	// 티켓 관리에 티켓 생성
 	int createTicketManagement(String ctmPkValue, String ctphPkValue, String memberId);
 	
+	//티켓 환불중복체크
+	int cntDuplicate(String ctmPkValue);
+
 }
