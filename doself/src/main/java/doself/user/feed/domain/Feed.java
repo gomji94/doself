@@ -38,6 +38,7 @@ public class Feed {
     private Integer mealSodium;        		// 나트륨
     private Integer mealCalcium;       		// 칼슘
     private Integer mealIron;          		// 철분
+    private String feedFileIdx;				// 피드 파일 idx
     private String feedFilePath;    		// 피드 이미지 파일 경로
     private String feedFileName;    		// 피드 이미지 파일 이름
     private String memberFilePath;  		// 멤버 프로필 이미지 파일 경로

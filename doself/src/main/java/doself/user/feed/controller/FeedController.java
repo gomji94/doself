@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.admin.nutrition.service.NutritionService;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.service.FeedService;
+import doself.util.Pageable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -32,15 +34,19 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedController {
 	
 	private final FeedService feedService;
+	private final NutritionService nutritionService;
 	
 	// 메인 피드 조회
 	@GetMapping("/list")
-	public String getFeedList(HttpSession session, Model model) {
+	public String getFeedList(HttpSession session, Model model, Pageable pageable) {
 
 		// 로그인된 사용자 정보 확인
 	    String loggedInMemberId = (String) session.getAttribute("SID");
 	    
 		List<Feed> feedList = feedService.getFeedList();
+		pageable.setRowPerPage(100);
+		var foodNutrition = nutritionService.getFoodNutritionList("mniName", "", pageable);
+		var foodNutritionList = foodNutrition.getContents();
 		
 		 // 날짜 포맷터 생성
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -57,6 +63,7 @@ public class FeedController {
 	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
 	    }
 		model.addAttribute("FeedList", feedList);
+		model.addAttribute("foodNutritionList", foodNutritionList);
 		return "user/feed/feed-list";
 	}
 	
@@ -73,23 +80,6 @@ public class FeedController {
         model.addAttribute("feed", feed); // 모델에 피드 데이터를 추가
         return "user/feed/feed-view"; // 상세 정보 페이지로 이동
     }
-    
-    // 음식 이름 검색
-	/*
-	 * @GetMapping("/search-food")
-	 * 
-	 * @ResponseBody public List<String> searchFood(@RequestParam("query") String
-	 * query) { log.info("Search query received: {}", query);
-	 * 
-	 * if (query == null || query.trim().isEmpty()) {
-	 * log.warn("Empty or null query received."); return Collections.emptyList(); //
-	 * 빈 리스트 반환 }
-	 * 
-	 * try { List<String> keywords = feedService.findKeywords(query);
-	 * log.info("Search results: {}", keywords); return keywords; } catch (Exception
-	 * e) { log.error("Error during search-food query: {}", e.getMessage(), e);
-	 * return Collections.emptyList(); } }
-	 */
     
     @PostMapping("/createFeed")
     public String createFeed(@ModelAttribute Feed feed,

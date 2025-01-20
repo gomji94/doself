@@ -144,39 +144,7 @@ $(document).ready(function () {
     });
 });
 
-// 음식 이름 검색
-/*window.customSearchFood = function(query) {
-    if (query.trim() === '') {
-        console.warn('Empty query entered.');
-        $('#searchResults').hide().empty();
-        return;
-    }
 
-    $.ajax({
-        url: '/feed/search-food',
-        type: 'GET',
-        data: { query },
-        success: function (data) {
-            console.log('Server response:', data); // 서버 응답 로그 출력
-            if (Array.isArray(data)) {
-                const results = data.map(item =>
-                    `<div class="dropdown-item" onclick="selectFood('${item}', '${item}')">${item}</div>`
-                ).join('');
-                $('#searchResults').html(results).show();
-            } else {
-                console.error('Unexpected response format:', data);
-                $('#searchResults').hide().empty();
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:');
-            console.error('Status:', status);
-            console.error('Error:', error);
-            console.error('Response Text:', xhr.responseText);
-            $('#searchResults').hide().empty();
-        }
-    });
-};*/
 
 // 글자 수 카운트 증가
 $(document).ready(function () {

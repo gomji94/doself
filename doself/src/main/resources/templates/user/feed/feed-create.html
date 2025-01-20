@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div class="feed-create-modal-overlay" id="feed-create-modal-overlay" style="display: none;" th:fragment="feed-create">
+<div class="feed-create-modal-overlay" id="feed-create-modal-overlay" style="display: none;" th:fragment="feed-create(mniList)">
     <div class="feed-create-modal-container">
         <div class="feed-create-modal-header">
             <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
@@ -8,7 +8,7 @@
             <img id="feed-create-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
         </div>
         <hr>
-		<form id="feedCreateForm" th:action="@{/feed/createFeed}" method="post" enctype="multipart/form-data" novalidate>
+		<form id="feedCreateForm" th:action="@{/feed/createFeed}" method="post" enctype="multipart/form-data">
 	        <div class="feed-create-modal-body">
 	            <!-- 이미지 업로드 영역 -->
 				<div class="feed-create-image-upload">
@@ -36,20 +36,17 @@
 	                        <span id="textCount">0</span>/2000
 	                    </div>
 	                </div>
-					<!-- <div class="form-group">
-	                    <label for="searchedFood">음식 검색</label>
-	                    <input type="text"
-							   class="feed-create-food-search" 
-							   id="searchedFood"
-							   name="searchedFood"
-							   placeholder="음식 이름을 검색해주세요"
-							   oninput="customSearchFood(this.value)">
-	                    <div id="searchResults" class="dropdown-menu"></div>
-						<input type="hidden" id="selectedFoodId" name="mealNutritionInfoCode" />
-	                </div> -->
 					<div class="form-group">
 	                    <label for="feedIntakeDate">섭취 날짜 및 시간</label>
 	                    <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required th:value="${currentDateTime}">
+	                </div>
+	                <div th:if="${mniList != null}" class="form-group">
+	                    <label for="feedFoodIntake">영양정보선택</label>
+	                    <select id="feed-modify-serving" name="mealNutritionInfoCode" required>
+	                        <option th:each="l : ${mniList}"
+	                        		th:value="${l.mniNum}"
+	                        		th:text="${l.mniName}">선택하세요</option>
+	                    </select>
 	                </div>
 					<div class="form-group">
 	                    <label for="feedFoodIntake">섭취 인분</label>
@@ -66,10 +63,10 @@
 	                    <label for="mealCategoryCode">식사 분류</label>
 	                    <select id="mealCategoryCode" name="mealCategoryCode" required>
 	                        <option value="">선택하세요</option>
-	                        <option value="breakfast">아침</option>
-	                        <option value="lunch">점심</option>
-	                        <option value="dinner">저녁</option>
-	                        <option value="snack">간식</option>
+	                        <option value="mc001">아침</option>
+	                        <option value="mc002">점심</option>
+	                        <option value="mc003">저녁</option>
+	                        <option value="mc004">간식</option>
 	                    </select>
 	                </div>
 					<div class="radio-group">
