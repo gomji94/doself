@@ -29,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
 				.addPathPatterns("/**")
 				.excludePathPatterns("/assets/**")
 				.excludePathPatterns("/error/**")
+				.excludePathPatterns("/attachment/**")
 				.excludePathPatterns("/manage/**");
 				
 		registry.addInterceptor(loginInterceptor)
@@ -36,6 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 				.excludePathPatterns("/manage/**")
 				.excludePathPatterns("/")
 				.excludePathPatterns("/assets/**")
+				.excludePathPatterns("/attachment/**")
 				.excludePathPatterns("/mainpage")
 				.excludePathPatterns("/login")
 				.excludePathPatterns("/login/loginPro")
