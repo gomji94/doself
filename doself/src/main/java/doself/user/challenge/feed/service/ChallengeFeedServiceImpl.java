@@ -249,6 +249,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
         return "/uploaded_files/" + fileName; // 실제 경로 반환
 	}
 
+	// 챌린지 피드 생성
 	@Override
 	public void addChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
 		Files fileInfo = filesUtils.uploadFile(files);
@@ -266,7 +267,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    addChallengeFeed.setChallengeFeedLike(0); 			// 기본값 0
 	    addChallengeFeed.setChallengeFeedWarningCheck("N"); // 기본값 'N'
 
-	    // 데이터베이스에 추가
 	    challengeFeedMapper.addChallengeFeed(addChallengeFeed);
 	}
 	
@@ -285,5 +285,18 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 새로운 점수 계산 로직 예시
 	private double calculateNewScore(ChallengeMemberList member) {
 	    return (member.getChallengeTodayParticipationRate() + member.getChallengeTodayAchievementRate()) / 2;
+	}
+
+	// 챌린지 피드 수정
+	@Override
+	public void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
+		Files fileInfo = filesUtils.uploadFile(files);
+		if(fileInfo != null) {
+			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
+			fileInfo.setFileIdx(formattedKeyNum);
+			filesMapper.addfile(fileInfo);
+		}
+		
+		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
 	}
 }
