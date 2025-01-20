@@ -10,16 +10,16 @@ import lombok.Data;
 @Data
 public class ChallengeUser {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	String cgNum;
-    String cgName;
-    String cgFileIdx;
-    String mbrId;
-    String ctName;
-    Date cgStartDate;
-    Date cgEndDate;
-    String ctlLevel;
-    String ctlContent;
-    int cgMaxMbrCount;
-    String cgContent;
-    String filePath;
+	private String challengeCode;
+	private String challengeName;
+	private String challengeMemberId;
+	private String challengeTopic;
+	private Date   challengeStartDate;
+	private Date   challengeEndDate;
+	private String challengeTopicLevel;
+	private String challengeTopicLevelContent;
+	private int    challengeMaxMemberCount;
+	private String challengeContent;
+	private String challengeImage;
+	private Date   challengeFeedUploadDate;
 }

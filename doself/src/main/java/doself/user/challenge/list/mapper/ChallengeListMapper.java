@@ -20,15 +20,14 @@ public interface ChallengeListMapper {
 	
 	// 특정 챌린지 정보 조회(detail view)
 	ChallengeDetailView selectChallengeDetail(String challengeCode);
-	//List<ChallengeDetailView> getChallengeListView(@Param("challengeCode") String challengeCode);
 
-	// 챌린지 추가(작업중)
+	// 챌린지 추가
 	void addChallenge(AddChallenge addChallenge);
 	
-	// 멤버 추가(작업중)
+	// 멤버 추가
 	void addChallengeMember(AddChallengeMember addChallengeMember);
 	
-	// 특정 챌린지 멤버 조회(중복 체크)
+	// 특정 챌린지 멤버 조회
 	List<AddChallengeMember> getChallengeMembers(String challengeCode);
 	
 	// 챌린지 페이지

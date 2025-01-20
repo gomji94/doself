@@ -74,18 +74,17 @@
 	</resultMap>
 	
 	<resultMap type="ChallengeUser" id="ChallengeResultMap">
-	    <id 	column="cg_num" property="cgNum" />
-	    <id 	column="cg_name" property="cgName" />
-	    <result column="cg_file_idx" property="cgFileIdx" />
-	    <result column="mbr_id" property="mbrId" />
-	    <result column="ct_name" property="ctName" />
-	    <result column="cg_start_date" property="cgStartDate" />
-	    <result column="cg_end_date" property="cgEndDate" />
-	    <result column="ctl_level" property="ctlLevel" />
-	    <result column="ctl_content" property="ctlContent"/>
-	    <result column="cg_max_mbr_count" property="cgMaxMbrCount" />
-	    <result column="cg_content" property="cgContent" />
-	    <result column="file_path" property="filePath" />
+	    <id 	column="cg_num" 			property="challengeCode" />
+	    <id 	column="cg_name"			property="challengeName" />
+	    <result column="mbr_id"				property="challengeMemberId" />
+	    <result column="ct_name" 			property="challengeTopic" />
+	    <result column="cg_start_date" 		property="challengeStartDate" />
+	    <result column="cg_end_date" 		property="challengeEndDate" />
+	    <result column="ctl_level" 			property="challengeTopicLevel" />
+	    <result column="ctl_content" 		property="challengeTopicLevelContent"/>
+	    <result column="cg_max_mbr_count" 	property="challengeMaxMemberCount" />
+	    <result column="cg_content" 		property="challengeContent" />
+	    <result column="file_path" 			property="challengeImage" />
 	</resultMap> 
 	<!-- 로그인된 챌린지 멤버 아이디 -->
 	<select id="getChallengeCodeByMemberId" parameterType="string" resultType="string">
@@ -132,7 +131,6 @@
 		SELECT
 			cg.cg_num,
 			cg.cg_name,
-			cg.cg_file_idx,
 			cg.mbr_id,
 			ct.ct_name,
 			cg.cg_start_date,
@@ -146,11 +144,11 @@
 			challenge_group cg
 			INNER JOIN challenge_topic_level ctl USING(ctl_num)
 			INNER JOIN challenge_topic ct USING(ct_num)
+			INNER JOIN challenge_member_feed cmf USING(cg_num)
 			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
 			cg.cg_num = #{challengeCode}
 		AND cg.cg_num IS NOT NULL
-		ORDER BY cg.cg_creation_date DESC
 		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
 	</select>
 	
@@ -198,20 +196,22 @@
 	<!-- 챌린지 멤버 리스트 조회 -->
   	<select id="getMemberList" resultMap="ChallengeMemberListMap">		
 		SELECT
-			MAX(cgm.cgm_num),
-			MAX(cgm.cg_num),
-			cgm.mbr_id,
-			MAX(cgm.cs_num),
-			MAX(cgm.cgm_date),
-			f.file_path
-		FROM
-			challenge_group_member cgm
-			LEFT JOIN `member` m USING(mbr_id)
-			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
-		WHERE
-			cg_num = #{challengeCode}
-		GROUP BY
-			cgm.mbr_id, f.file_path
+	        MAX(cgm.cgm_num),
+	        MAX(cgm.cg_num),
+	        cgm.mbr_id,
+	        MAX(cgm.cs_num),
+	        MAX(cgm.cgm_date),
+	        f.file_path
+	    FROM
+	        challenge_group_member cgm
+	        LEFT JOIN `member` m USING(mbr_id)
+	        INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+	    WHERE
+	        cg_num = #{challengeCode}
+	    GROUP BY
+	        cgm.mbr_id, f.file_path
+	    ORDER BY
+	        cgm.cgm_date ASC
   	</select>
   	
   	<!-- 챌린지 댓글 리스트 조회 -->
@@ -272,8 +272,39 @@
 	    WHERE cg_num = #{challengeCode}
 	</select>
 	
+	<!-- 챌린지 피드 생성 -->
+	<insert id="addChallengeFeed" parameterType="AddChallengeFeed">
+	    INSERT INTO challenge_member_feed (
+	        cmf_num,
+	        cg_num,
+	        mbr_id,
+	        cmf_content,
+	        cmf_date,
+	        cmf_like,
+	        cmf_warning_check,
+	        cmf_file_idx,
+	        cmf_food_intake,
+	        mc_num
+	    ) VALUES (
+	        #{challengeFeedCode},
+	        #{challengeCode},
+	        #{challengeMemberId},
+	        #{challengeFeedContent},
+	        #{challengeFeedDate},
+	        #{challengeFeedLike},
+	        #{challengeFeedWarningCheck},
+	        #{challengeFeedFileIdx},
+	        #{challengeFeedFoodIntake},
+	        #{challengeMealCategory}
+	    )
+	</insert>
 	
-	
+	<!-- 멤버 점수 업데이트 -->
+	<update id="updateMemberScore" parameterType="map">
+	    UPDATE challenge_member_score_stats
+	    SET cmss_score = #{score}
+	    WHERE cg_num = #{challengeCode} AND mbr_id = #{memberId}
+	</update>
 	
 	
 	

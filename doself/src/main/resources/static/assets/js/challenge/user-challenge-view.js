@@ -321,44 +321,82 @@ $(document).ready(function () {
 
 
 // --- create feed ---
-$(document).ready(function() {
-    // 이미지 업로드 및 미리보기
-    const uploadBtn = $('.cf-upload-btn');
-    const imagePreview = $('#cf-image-preview');
+$(document).ready(function () {
+    // --- 모달 열기/닫기 ---
+    const modalOverlay = $('#cf-modal-overlay');
+    const modalContainer = $('.cf-modal-container');
+    const modalClose = $('#cf-modal-closeBtn');
 
-    uploadBtn.on('click', function() {
-        const input = $('<input>', {
-            type: 'file',
-            accept: 'image/*'
-        });
-
-        input.on('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    imagePreview.attr('src', reader.result);
-                    imagePreview.show();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        input.trigger('click');
+    // 모달 열기
+	$('#createChallengeFeed').on('click', function (e) {
+        e.preventDefault(); // 기본 동작 막기
+        $('#cf-modal-overlay').fadeIn(300);
+        $('.cf-modal-container').fadeIn(300);
     });
 
-    // 글자수 카운터
+    // 모달 닫기
+    function closeModal() {
+        modalOverlay.fadeOut(300);
+        modalContainer.fadeOut(300);
+        resetForm(); // 폼 초기화
+    }
+
+    modalClose.on('click', closeModal);
+    modalOverlay.on('click', function (e) {
+        if ($(e.target).is(modalOverlay)) {
+            closeModal();
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // --- 폼 초기화 ---
+    function resetForm() {
+        $('#AddChallengeFeed')[0].reset(); // 폼 내용 초기화
+        $('#createChallengeFeedPreviewImage').attr('src', '').hide(); // 이미지 미리보기 초기화
+        $('.cf-preview-box').hide(); // 미리보기 박스 숨기기
+        $('#cf-content').text(''); // 글자 초기화
+    }
+
+    // --- 글자수 카운트 ---
     const content = $('#cf-content');
     const textCount = $('#cf-text-count');
+    const maxLength = 2000;
 
-    content.on('input', function() {
-        textCount.text(content.val().length);
+    content.on('input', function () {
+        const currentLength = content.val().length;
+        textCount.text(currentLength);
+        textCount.css('color', currentLength > maxLength ? 'red' : '');
+    });
+
+    // --- 파일 업로드 및 미리보기 ---
+	$('#cf-upload-btn').on('click', function () {
+        $('#feedFiles').click();
+    });
+
+    $('#feedFiles').on('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#createChallengeFeedPreviewImage').attr('src', e.target.result).show();
+                $('#createChallengeFeedPreviewContainer').show();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            $('#createChallengeFeedPreviewImage').attr('src', '').hide();
+            $('#createChallengeFeedPreviewContainer').hide();
+        }
     });
 });
 
 
 // --- create feed modal ---
-$(document).ready(function () {
+/*$(document).ready(function () {
     // 모달 열기
     $("#cf-create").on("click", function () {
         $("#cf-modal-overlay").fadeIn(300); // 부드럽게 모달 열기
@@ -382,7 +420,7 @@ $(document).ready(function () {
         }
     });
 });
-
+*/
 
 // --- modify feed ---
 $(document).ready(function() {

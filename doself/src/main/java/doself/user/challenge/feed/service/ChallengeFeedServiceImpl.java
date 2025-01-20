@@ -3,24 +3,28 @@ package doself.user.challenge.feed.service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import doself.common.mapper.CommonMapper;
+import doself.file.domain.Files;
+import doself.file.mapper.FilesMapper;
+import doself.file.util.FilesUtils;
+import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
-import doself.util.CardPageInfo;
-import doself.util.CardPageable;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +42,9 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	private final ChallengeFeedMapper challengeFeedMapper;
 	// 요청 데이터 한번만 가져오도록 캐싱 적용
 	private final ConcurrentMap<String, List<ChallengeProgress>> challengeProgressCache = new ConcurrentHashMap<>();
+	private final CommonMapper commonMapper;
+	private final FilesUtils filesUtils;
+	private final FilesMapper filesMapper;
 	
 	// 로그인된 챌린지 멤버 아이디
 	@Override
@@ -90,7 +97,33 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 참여 멤버 상위 3명 표시
 	@Override
 	public List<ChallengeMemberList> getTopParticipants(String challengeCode) {
-	    return challengeFeedMapper.getTopParticipants(challengeCode);
+		// 초기값: 참여 일자 순으로 정렬된 멤버 리스트 조회
+	    List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
+
+	    // 참여율 및 점수 초기화
+	    memberList.forEach(member -> {
+	        if (member.getChallengeTodayParticipationRate() == null) {
+	            member.setChallengeTodayParticipationRate(0.0); // 기본 참여율
+	        }
+	        if (member.getChallengeTodayAchievementRate() == null) {
+	            member.setChallengeTodayAchievementRate(0.0); // 기본 달성률
+	        }
+	        if (member.getScore() == null) {
+	            member.setScore(
+	                (member.getChallengeTodayParticipationRate() + member.getChallengeTodayAchievementRate()) / 2
+	            ); // 점수 계산
+	        }
+	    });
+
+	    // 점수가 있는 경우만 정렬: 점수가 없는 경우는 기본 순서(참여 일자) 유지
+	    memberList.sort((m1, m2) -> Double.compare(
+	            (m2.getScore() != null ? m2.getScore() : 0.0),
+	            (m1.getScore() != null ? m1.getScore() : 0.0)
+	    ));
+
+	    //log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
+
+	    return memberList;
 	}
 
 	// 챌린지 멤버 조회(참여자 번호, 챌린지 번호, 챌린지 참여 및 퇴장 일시 기록 → 추후, 유효성 검사 로직 추가)
@@ -99,7 +132,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
 		
 		// 초기값 설정: 참여율과 달성률, 점수를 0으로 설정
-	    memberList.forEach(member -> {
+		memberList.forEach(member -> {
 	        if (member.getChallengeTodayParticipationRate() == null) {
 	            member.setChallengeTodayParticipationRate(0.0);
 	        }
@@ -111,13 +144,13 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	        }
 	    });
 	    
-	    log.info(">>> location/serviceImpl >>> memberList: {}", memberList);
+	    //log.info(">>> location/serviceImpl >>> memberList: {}", memberList);
 
 	    return memberList;
 	}
 
 	@Override
-	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatusCode) {
+	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode) {
 		// 캐시 내 데이터 여부 확인
 //		if (challengeProgressCache.containsKey(challengeCode)) {
 //	        return challengeProgressCache.get(challengeCode); // 캐시된 데이터 반환
@@ -135,7 +168,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	        }
 	    });
 	    
-	    log.info(">>> location/serviceImpl >>> challengeProgressList: {}", challengeProgressList);
+	    //log.info(">>> location/serviceImpl >>> challengeProgressList: {}", challengeProgressList);
 
 	    return challengeProgressList;
 	}
@@ -149,7 +182,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public Map<String, String> calculateDPlusAndDMinus(String challengeCode) {
 		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
 		
-		log.info(">>> location/serviceImpl >>> progress: {}", progress);
+		//log.info(">>> location/serviceImpl >>> progress: {}", progress);
 		
 	    if (progress == null) {
 	        return Map.of("dPlus", "N/A", "dMinus", "N/A");
@@ -215,5 +248,41 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
         return "/uploaded_files/" + fileName; // 실제 경로 반환
 	}
 
+	@Override
+	public void addChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
+		Files fileInfo = filesUtils.uploadFile(files);
+		if(fileInfo != null) {
+			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
+			fileInfo.setFileIdx(formattedKeyNum);
+			filesMapper.addfile(fileInfo);
+		}
+		
+		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
+		String formattedKeyNum = commonMapper.getPrimaryKey("cmf_", "challenge_member_feed", "cmf_num");
+		addChallengeFeed.setChallengeFeedCode(formattedKeyNum);
+		
+	    addChallengeFeed.setChallengeFeedDate(new Date());  // 현재 시간
+	    addChallengeFeed.setChallengeFeedLike(0); 			// 기본값 0
+	    addChallengeFeed.setChallengeFeedWarningCheck("N"); // 기본값 'N'
 
+	    // 데이터베이스에 추가
+	    challengeFeedMapper.addChallengeFeed(addChallengeFeed);
+	}
+	
+	// 멤버 점수 계산
+	@Override
+	public void updateMemberScores(String challengeCode) {
+	    // 피드 업로드 이벤트 발생 시 점수 갱신 로직
+	    List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
+
+	    memberList.forEach(member -> {
+	        double newScore = calculateNewScore(member); // 새로운 점수 계산 로직
+	        challengeFeedMapper.updateMemberScore(member.getMemberId(), challengeCode, newScore);
+	    });
+	}
+
+	// 새로운 점수 계산 로직 예시
+	private double calculateNewScore(ChallengeMemberList member) {
+	    return (member.getChallengeTodayParticipationRate() + member.getChallengeTodayAchievementRate()) / 2;
+	}
 }

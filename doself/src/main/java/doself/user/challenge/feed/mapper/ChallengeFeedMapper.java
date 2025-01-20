@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
@@ -53,4 +54,10 @@ public interface ChallengeFeedMapper {
     
     // 챌린지 현재 멤버수
  	int getCurrentMemberCount(String challengeCode);
+ 	
+ 	// 챌린지 피드 생성
+ 	void addChallengeFeed(AddChallengeFeed addChallengeFeed);
+
+ 	// 멤버 점수 업데이트
+	void updateMemberScore(String memberId, String challengeCode, double newScore);
 }
