@@ -18,7 +18,6 @@ public class Feed {
 	private String mealCategoryCode;		// 식사 카테고리
 	private Integer feedFoodIntake;			// 섭취 인분
 	private String feedContent;				// 피드 내용
-	private String feedPicture;			  	// 피드 이미지
 	private LocalDateTime feedDate;	  		// 피드 등록 날짜
 	private LocalDateTime feedIntakeDate;	// 섭취 날짜
 	private Integer	feedLike;			  	// 피드 좋아요(null과 비교 후 카운트)
@@ -39,10 +38,12 @@ public class Feed {
     private Integer mealSodium;        		// 나트륨
     private Integer mealCalcium;       		// 칼슘
     private Integer mealIron;          		// 철분
-    private String filePath;          		
-    private String fileNewName;          	
-    private boolean owner;
-    private String formattedDate;
+    private String feedFilePath;    		// 피드 이미지 파일 경로
+    private String feedFileName;    		// 피드 이미지 파일 이름
+    private String memberFilePath;  		// 멤버 프로필 이미지 파일 경로
+    private String memberFileName;  		// 멤버 프로필 이미지 파일 이름
+    private boolean owner;					// 작성자 여부
+    private String formattedDate;			// 포맷된 날짜
 
     public boolean isOwner() {
         return owner;
