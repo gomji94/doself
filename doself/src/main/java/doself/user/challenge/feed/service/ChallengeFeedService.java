@@ -3,13 +3,14 @@ package doself.user.challenge.feed.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
-import doself.util.CardPageInfo;
-import doself.util.CardPageable;
 import doself.util.PageInfo;
 import doself.util.Pageable;
 
@@ -27,7 +28,7 @@ public interface ChallengeFeedService {
 	PageInfo<ChallengeFeed> getChallengeFeedPage(String challengeCode, Pageable pageable);
 	
 	// 챌린지 진행 상태 조회
-	List<ChallengeProgress> getProcessChallengeStatus(String challengeCode, String challengeStatusCode);
+	List<ChallengeProgress> getProcessChallengeStatus(String challengeCode);
 
 	// 챌린지 진행도 계산
 	int calculateTotalProgress(String challengeCode);
@@ -49,4 +50,10 @@ public interface ChallengeFeedService {
 	
 	// 파일 처리
 	String getFilePath(String fileName);
+	
+	// 멤버 점수 계산
+	void updateMemberScores(String challengeCode);
+	
+	// 챌린지 피드 생성
+	void addChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed);
 }

@@ -17,7 +17,7 @@
 	        <section id="participateCardList" class="card-grid" th:if="${participateChallengeList != null and !participateChallengeList.isEmpty()}">
 			    <div class="card" th:each="pcl : ${participateChallengeList}" 
 				     th:data-code="${pcl.challengeCode}" 
-				     th:href="@{/challenge/feed/view/{challengeCode}(challengeCode=${pcl.challengeCode}, challengeStatus=${pcl.challengeStatus != null ? pcl.challengeStatus : 'default'})}"
+				     th:href="@{/challenge/feed/view/{challengeCode}(challengeCode=${pcl.challengeCode}, challengeStatusCode=${pcl.challengeStatusCode != null ? pcl.challengeStatusCode : 'default'})}"
 				     style="border: none;">
 			        <img th:src="@{|${pcl.challengePicture}|}" alt="카드 이미지">
 			        <div class="card-content">
