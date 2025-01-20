@@ -74,6 +74,7 @@ public class TicketServiceImpl implements TicketService{
 
 	@Override
 	public TicketPurchaseInfo getPurchaseDetail(String memberId, String paymentNum) {
+			
 		return ticketMapper.getPurchaseDetail(paymentNum);
 	}
 
