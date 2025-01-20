@@ -4,7 +4,7 @@
 	layout:decorate="~{user/layout/feed-default}">
 
 <!-- container -->
-<div:block layout:fragment="content-body" class="feed-container">
+<div layout:fragment="content-body" class="feed-container">
 	<div class="feed-sidebar-container"></div>
 	<!-- Main Content -->
 	<main class="main">
@@ -63,7 +63,7 @@
 		   </div>
 	        
 			<!-- 챌린지 생성 모달 -->
-            <div th:replace="~{user/feed/feed-create :: feed-create}"></div>
+            <div th:replace="~{user/feed/feed-create :: feed-create(mniList=${foodNutritionList})}"></div>
 			
 	        <!-- 피드 수정 모달 -->
             <div th:replace="~{user/feed/feed-modify :: feed-modify}"></div>
@@ -85,7 +85,7 @@
 						      th:data-feed-feedIntakdate="${f.feedIntakeDate}"
 							  th:data-meal-category="${f.mealCategoryCode}"
          					  th:data-feed-visibility="${f.feedOpenStatus}"
-         					  th:data-meal-picture="${f.mealPicture}" 
+         					  th:data-meal-picture="${f.feedFilePath}" 
 						      th:data-meal-weight="${f.mealWeight}" 
 						      th:data-meal-calories="${f.mealCalories}" 
 						      th:data-meal-carbohydrates="${f.mealCarbohydrates}" 
@@ -101,7 +101,7 @@
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
                     <a href="#">
-                       <img class="profile-img" th:src="@{${f.memberFilePath}}" alt="프로필 이미지">
+                       <img class="profile-img" th:src="@{|${f.memberFilePath}|}" alt="프로필 이미지">
                     </a>
                     <div class="user-name">
                         <a href="#"><p th:text="${f.memberId}"></p></a>
@@ -113,8 +113,8 @@
                     </div>
                 </div>
 				<div class="feed-main-img">
-				    <a th:href="@{'/feed/' + ${f.feedCode}}"> <!-- feedCode를 경로에 전달 -->
-				        <img class="meal-img" th:src="@{${f.feedFilePath}}" alt="피드 이미지">
+				    <a th:href="@{|/feed/${f.feedCode}|}"> <!-- feedCode를 경로에 전달 -->
+				        <img class="meal-img" th:src="@{|${f.feedFilePath}|}" alt="피드 이미지">
 				    </a>
 				</div>
                 <div class="feed-action">
@@ -147,7 +147,7 @@
 		<div class="analysis-table">
 			<p class="analysis-title">식단 영양 정보 분석표</p>
 			<div id="analysis-img">
-	            <img th:src="@{'${f.feedPicture}'}" alt="피드 이미지">
+	            <img src="" alt="피드 이미지">
 	        </div>
 	    </div>
 	    <div class="analysis-info">
@@ -178,7 +178,7 @@
 	        <p>※ 표시된 영양성분은 산출근거에 따른 표준 값으로 실제 제품과 차이가 있을 수 있습니다.</p>
 	    </div>
 	</div>
-</div:block>
+</div>
 
 
 <!--/* 사용자 추가 js file */-->
