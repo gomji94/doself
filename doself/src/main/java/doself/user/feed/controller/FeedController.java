@@ -93,16 +93,16 @@ public class FeedController {
     
     @PostMapping("/createFeed")
     public String createFeed(@ModelAttribute Feed feed,
-				             @RequestParam(required = false) MultipartFile feedPicture, // Optional 처리
+				             @RequestParam(value="files", required = false) MultipartFile feedPicture, // Optional 처리
 				             HttpSession session,
 				             Model model) {
     	if (feedPicture == null || feedPicture.isEmpty()) {
             model.addAttribute("errorMessage", "사진을 업로드하세요.");
             return "user/feed/feed-create";
         }
-        feed.setMemberId((String) session.getAttribute("SID")); // 로그인한 사용자 ID
-        feedService.addFeed(feed, feedPicture); // 서비스 호출
-        return "redirect:/feed/list"; // 피드 리스트로 리다이렉트
+        feed.setMemberId((String) session.getAttribute("SID"));
+        feedService.addFeed(feed, feedPicture);
+        return "redirect:/feed/list";
     }
     
 	// 피드 수정 모달 열기

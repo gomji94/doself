@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.common.mapper.CommonMapper;
+import doself.file.domain.Files;
+import doself.file.mapper.FilesMapper;
+import doself.file.util.FilesUtils;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.mapper.FeedMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedServiceImpl implements FeedService {
 
 	private final FeedMapper feedMapper;
+	private final FilesUtils filesUtils;
+	private final FilesMapper filesMapper;
+	private final CommonMapper commonMapper;
 	
 	// 피드 조회
 	@Override
@@ -61,19 +68,15 @@ public class FeedServiceImpl implements FeedService {
 		if (feed.getFeedIntakeDate() == null) {
 	        feed.setFeedIntakeDate(LocalDateTime.now()); // 서버에서 현재 시간 기본 설정
 	    }
-	    String uploadPath = "C:/upload/feed"; // 실제 경로로 수정
-	    String fileName = System.currentTimeMillis() + "_" + feedPicture.getOriginalFilename();
-	    File destinationFile = new File(uploadPath, fileName);
+		Files fileInfo = filesUtils.uploadFile(feedPicture);
+		if(fileInfo != null) {
+			String fileIdx = commonMapper.getPrimaryKey("file_", "files", "file_idx");
+			fileInfo.setFileIdx(fileIdx);
+			//filesMapper.addfile(fileInfo);
+			
+			//feedMapper.addFeed(feed);
+		}
 
-	    try {
-	        feedPicture.transferTo(destinationFile);
-	        feed.setFeedPicture(fileName);
-	    } catch (IOException e) {
-	        log.error("이미지 업로드 중 오류 발생", e);
-	        throw new RuntimeException("이미지 업로드 실패");
-	    }
-
-	    feedMapper.addFeed(feed);
 	}
 
 	// 음식이름 조회

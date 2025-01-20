@@ -92,7 +92,7 @@ $(document).ready(function () {
 
         // AJAX 요청으로 좋아요 상태 업데이트
         $.ajax({
-            url: '/feed/like', // 서버 엔드포인트
+            url: '/feed/like',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -240,7 +240,6 @@ $('#feed-create-submit-btn').on('click', function (e) {
     const feedFoodIntake = $('#serving').val();
     const mealCategoryCode = $('#meal-type').val();
     const feedOpenStatus = $('input[name="visibility"]:checked').val();
-    const selectedFoodId = $('#selectedFoodId').val();
 
     if (!feedPicture) {
         alert('사진을 업로드해주세요.');
@@ -269,7 +268,6 @@ $('#feed-create-submit-btn').on('click', function (e) {
     formData.append('feedFoodIntake', feedFoodIntake);
     formData.append('mealCategoryCode', mealCategoryCode);
     formData.append('feedOpenStatus', feedOpenStatus);
-    formData.append('mealNutritionInfoCode', selectedFoodId);
 
     $.ajax({
         url: '/feed/createFeed',
@@ -288,8 +286,8 @@ $('#feed-create-submit-btn').on('click', function (e) {
 });
 
 // --- 피드 수정(데이터 불러오기) ---
+let selectedFeed = null;
 $(document).ready(function () {
-	let selectedFeed = null;
     // 피드 옵션 모달
     $('.option-button').on('click', function () {
         selectedFeed = $(this).closest('.feed'); // 현재 클릭한 피드를 selectedFeed에 저장
@@ -308,11 +306,12 @@ $(document).ready(function () {
     });
 
     // 피드 수정 모달
-    $('#feed-modify-modal').on('click', function () {
-        if (!selectedFeed) {
-            console.error('선택된 피드가 없습니다.');
-            return;
-        }
+	$('#feed-modify-modal').on('click', function () {
+	    console.log('Feed modify modal button clicked');
+	    if (!selectedFeed) {
+	        console.error('선택된 피드가 없습니다.');
+	        return;
+	    }
 
         // 선택된 피드 데이터를 가져옵니다.
         const feedImage = selectedFeed.data('feed-picture');

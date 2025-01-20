@@ -79,7 +79,6 @@
             <div class="feed" th:each="f, iterStat : ${FeedList}" 
 						      th:data-is-owner="${f.owner}" 
 						      th:data-feed-code="${f.feedCode}"
-						      th:data-feed-picture="${f.feedPicture}" 
 						      th:data-feed-content="${f.feedContent}" 
 						      th:data-feed-comment="${f.feedCommentContent}" 
 						      th:data-meal-date="${f.feedDate}"
@@ -97,11 +96,12 @@
 						      th:data-meal-sodium="${f.mealSodium}" 
 						      th:data-meal-calcium="${f.mealCalcium}" 
 						      th:data-meal-iron="${f.mealIron}" 
-						      th:data-mbr_file_idx="${f.filePath}" 
+						      th:data-mbr_file_idx="${f.memberFilePath}" 
+						      th:data-feed_file_idx="${f.feedFilePath}" 
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
                     <a href="#">
-                        <img class="profile-img" th:src="@{${f.filePath}}" alt="프로필 이미지">
+                       <img class="profile-img" th:src="@{${f.memberFilePath}}" alt="프로필 이미지">
                     </a>
                     <div class="user-name">
                         <a href="#"><p th:text="${f.memberId}"></p></a>
@@ -114,7 +114,7 @@
                 </div>
 				<div class="feed-main-img">
 				    <a th:href="@{'/feed/' + ${f.feedCode}}"> <!-- feedCode를 경로에 전달 -->
-				        <img class="meal-img" th:src="${f.feedPicture}" alt="피드 이미지">
+				        <img class="meal-img" th:src="@{${f.feedFilePath}}" alt="피드 이미지">
 				    </a>
 				</div>
                 <div class="feed-action">
