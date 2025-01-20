@@ -37,50 +37,50 @@
 	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
 	    SELECT
-	    f.feed_num,
-	    f.mbr_id,
-	    f.mni_num,
-	    f.feed_food_intake,
-	    f.feed_content,
-	    f.mc_num,
-	    f.feed_date,
-	    f.feed_intake_date,
-	    f.feed_like,
-	    f.feed_open_status,
-	    fi_feed.file_path AS feed_file_path,
-	    fi_feed.file_new_name AS feed_file_name,
-	    fi_member.file_path AS member_file_path,
-	    fi_member.file_new_name AS member_file_name,
-	
-	    mll.mni_name,
-	    mll.mni_picture,
-	    mll.mni_weight,
-	    mll.mni_kcal,
-	    mll.mni_carbo,
-	    mll.mni_protein,
-	    mll.mni_fat,
-	    mll.mni_sugar,
-	    mll.mni_cholesterol,
-	    mll.mni_sodium,
-	    mll.mni_calcium,
-	    mll.mni_iron,
-	    fc.fc_content
-	
-	FROM
-	    feed f
-	INNER JOIN
-	    meal_nutrition_info mll ON f.mni_num = mll.mni_num
-	LEFT JOIN
-	    files fi_feed ON f.feed_file_index = fi_feed.file_idx
-	LEFT JOIN
-	    member m ON f.mbr_id = m.mbr_id
-	LEFT JOIN
-	    files fi_member ON m.mbr_file_idx = fi_member.file_idx
-	LEFT JOIN
-	    feed_comments fc ON f.feed_num = fc.feed_num
-	
-	ORDER BY
-	    f.feed_date DESC;
+		    f.feed_num,
+		    f.mbr_id,
+		    f.mni_num,
+		    f.feed_food_intake,
+		    f.feed_content,
+		    f.mc_num,
+		    f.feed_date,
+		    f.feed_intake_date,
+		    f.feed_like,
+		    f.feed_open_status,
+		    fi_feed.file_path AS feed_file_path,
+		    fi_feed.file_new_name AS feed_file_name,
+		    fi_member.file_path AS member_file_path,
+		    fi_member.file_new_name AS member_file_name,
+		
+		    mll.mni_name,
+		    mll.mni_picture,
+		    mll.mni_weight,
+		    mll.mni_kcal,
+		    mll.mni_carbo,
+		    mll.mni_protein,
+		    mll.mni_fat,
+		    mll.mni_sugar,
+		    mll.mni_cholesterol,
+		    mll.mni_sodium,
+		    mll.mni_calcium,
+		    mll.mni_iron,
+		    fc.fc_content
+		
+		FROM
+		    feed f
+		INNER JOIN
+		    meal_nutrition_info mll ON f.mni_num = mll.mni_num
+		LEFT JOIN
+		    files fi_feed ON f.feed_file_index = fi_feed.file_idx
+		LEFT JOIN
+		    member m ON f.mbr_id = m.mbr_id
+		LEFT JOIN
+		    files fi_member ON m.mbr_file_idx = fi_member.file_idx
+		LEFT JOIN
+		    feed_comments fc ON f.feed_num = fc.feed_num
+		
+		ORDER BY
+		    f.feed_date DESC;
 	</select>
 	
 	<!-- 피드 영양 정보 조회 -->
@@ -162,37 +162,27 @@
 		    mbr_id,
 		    mni_num,
 		    feed_food_intake,
-		    feed_content, 
-		    feed_picture,
+		    feed_content,
 		    mc_num,
 		    feed_date,
 		    feed_intake_date, 
 		    feed_like,
-		    feed_open_status
+		    feed_open_status,
+		    feed_file_index
 		) VALUES (
-		    NULL,
+		    #{feedCode},
 		    #{memberId},
 		    #{mealNutritionInfoCode},
 		    #{feedFoodIntake},
-		    #{feedContent}, 
-		    #{feedPicture},
+		    #{feedContent},
 		    #{mealCategoryCode},
 		    NOW(),
 		    #{feedIntakeDate}, 
 		    0,
-		    #{feedOpenStatus}
+		    #{feedOpenStatus},
+		    #{feedFileIdx}
 		)
 	</insert>
-	
-	<!-- 음식 이름으로 음식 번호 조회 -->
-    <select id="findByName" parameterType="String" resultType="String">
-        SELECT
-        	mni_name
-        FROM
-        	meal_nutrition_info 
-        WHERE
-        	mni_name LIKE CONCAT('%', #{query}, '%');
-    </select>
 
 	<!-- 좋아요 수 증가 -->
 	<update id="incrementLike" parameterType="String">

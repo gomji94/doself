@@ -72,9 +72,11 @@ public class FeedServiceImpl implements FeedService {
 		if(fileInfo != null) {
 			String fileIdx = commonMapper.getPrimaryKey("file_", "files", "file_idx");
 			fileInfo.setFileIdx(fileIdx);
-			//filesMapper.addfile(fileInfo);
-			
-			//feedMapper.addFeed(feed);
+			filesMapper.addfile(fileInfo);
+			String feedCode = commonMapper.getPrimaryKey("feed_", "feed", "feed_num");
+			feed.setFeedCode(feedCode);
+			feed.setFeedFileIdx(fileIdx);
+			feedMapper.addFeed(feed);
 		}
 
 	}
