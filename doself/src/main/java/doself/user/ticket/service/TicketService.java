@@ -29,4 +29,6 @@ public interface TicketService {
 
 	// 티켓 주문 생성
 	boolean createTicketOrder(Order order);
+	
+	
 }
