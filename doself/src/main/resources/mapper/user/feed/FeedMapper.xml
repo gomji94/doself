@@ -10,13 +10,14 @@
 	    <id column="mc_num" property="mealCategoryCode" />
 	    <result column="feed_food_intake" property="feedFoodIntake" />
 	    <result column="feed_content" property="feedContent" />
-	    <result column="feed_picture" property="feedPicture" />
 	    <result column="feed_date" property="feedDate" />
 	    <result column="feed_intake_date" property="feedIntakeDate" />
 	    <result column="feed_like" property="feedLike" />
 	    <result column="feed_open_status" property="feedOpenStatus" />
-	    <result column="fi.file_path" property="filePath" />
-	    <result column="fi.file_new_name" property="fileNewName" />
+	    <result column="feed_file_path" property="feedFilePath" />
+		<result column="feed_file_name" property="feedFileName" />
+		<result column="member_file_path" property="memberFilePath" />
+		<result column="member_file_name" property="memberFileName" />
 	    <result column="mbr_file_idx" property="memberProfileImage" />
 	    <result column="fc_content" property="feedCommentContent" />
 	    <result column="mni_name" property="mealName" />
@@ -36,45 +37,50 @@
 	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
 	    SELECT
-	        f.feed_num,
-	        f.mbr_id,
-	        f.mni_num,
-	        f.feed_food_intake,
-	        f.feed_content,
-	        f.feed_picture,
-	        f.mc_num,
-	        f.feed_date,
-	        f.feed_intake_date,
-	        f.feed_like,
-	        f.feed_open_status,
-	        fi.file_path,
-        	fi.file_new_name,
-	        m.mbr_file_idx,
-	        mll.mni_name,
-	        mll.mni_picture,
-	        mll.mni_weight,
-	        mll.mni_kcal,
-	        mll.mni_carbo,
-	        mll.mni_protein,
-	        mll.mni_fat,
-	        mll.mni_sugar,
-	        mll.mni_cholesterol,
-	        mll.mni_sodium,
-	        mll.mni_calcium,
-	        mll.mni_iron,
-	        fc.fc_content
-	    FROM
-	        feed f
-	    INNER JOIN
-	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
-	    INNER JOIN
-	        member m ON f.mbr_id = m.mbr_id
-        LEFT JOIN
-        	files fi ON m.mbr_file_idx = fi.file_idx
-	    LEFT JOIN
-    		feed_comments fc ON f.feed_num = fc.feed_num
-		ORDER BY
-        	f.feed_date DESC;
+	    f.feed_num,
+	    f.mbr_id,
+	    f.mni_num,
+	    f.feed_food_intake,
+	    f.feed_content,
+	    f.mc_num,
+	    f.feed_date,
+	    f.feed_intake_date,
+	    f.feed_like,
+	    f.feed_open_status,
+	    fi_feed.file_path AS feed_file_path,
+	    fi_feed.file_new_name AS feed_file_name,
+	    fi_member.file_path AS member_file_path,
+	    fi_member.file_new_name AS member_file_name,
+	
+	    mll.mni_name,
+	    mll.mni_picture,
+	    mll.mni_weight,
+	    mll.mni_kcal,
+	    mll.mni_carbo,
+	    mll.mni_protein,
+	    mll.mni_fat,
+	    mll.mni_sugar,
+	    mll.mni_cholesterol,
+	    mll.mni_sodium,
+	    mll.mni_calcium,
+	    mll.mni_iron,
+	    fc.fc_content
+	
+	FROM
+	    feed f
+	INNER JOIN
+	    meal_nutrition_info mll ON f.mni_num = mll.mni_num
+	LEFT JOIN
+	    files fi_feed ON f.feed_file_index = fi_feed.file_idx
+	LEFT JOIN
+	    member m ON f.mbr_id = m.mbr_id
+	LEFT JOIN
+	    files fi_member ON m.mbr_file_idx = fi_member.file_idx
+	LEFT JOIN
+	    feed_comments fc ON f.feed_num = fc.feed_num
+	
+	ORDER BY
+	    f.feed_date DESC;
 	</select>
 	
 	<!-- 피드 영양 정보 조회 -->
