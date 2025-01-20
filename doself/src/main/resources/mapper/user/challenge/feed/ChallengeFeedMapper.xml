@@ -335,6 +335,35 @@
 	    WHERE cg_num = #{challengeCode} AND mbr_id = #{memberId}
 	</update>
 	
+	<update id="modifyChallengeFeed" parameterType="AddChallengeFeed">
+		UPDATE challenge_member_feed
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="challengeFeedContent != null and challengeFeedContent != ''">
+				cmf_content=#{challengeFeedContent},
+			</if>
+			<if test="challengeFeedDate != null and challengeFeedDate != ''">
+				cmf_date=#{challengeFeedDate},
+			</if>
+			<if test="challengeFeedLike != null and challengeFeedLike != ''">
+				cmf_like=#{challengeFeedLike},
+			</if>
+			<if test="challengeFeedWarningCheck != null and challengeFeedWarningCheck != ''">
+				cmf_warning_check=#{challengeFeedWarningCheck},
+			</if>
+			<if test="memberProfileIdx != null and memberProfileIdx != ''">
+				cmf_file_idx=#{pictureFileIdx},
+			</if>
+			<if test="challengeFeedFoodIntake != null and challengeFeedFoodIntake != ''">
+				cmf_food_intake=#{challengeFeedFoodIntake},
+			</if>
+		</trim>
+		WHERE
+			cmf_num=#{challengeFeedCode}
+			AND cg_num=#{challengeCode}
+			AND mbr_id=#{challengeMemberId}
+			AND mc_num=#{challengeMealCategory}
+	</update>
+	
 	
 	
 	

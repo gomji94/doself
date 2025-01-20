@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.file.mapper.FilesMapper;
 import doself.file.service.FileService;
@@ -179,7 +180,7 @@ public class ChallengeFeedController {
 
 	    challengeFeedService.addChallengeFeed(files, addChallengeFeed);
 
-	    log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
+	    //log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
 	    
 	    return "redirect:/challenge/feed/list";
 	}
@@ -193,4 +194,17 @@ public class ChallengeFeedController {
 		
 		return "user/challenge/modify-challenge-feed";
 	}
+	
+	// 챌린지 피드 수정 폼
+	@PostMapping("/modifychallengefeed")
+	public String postMethodName(AddChallengeFeed addChallengeFeed,
+								 @RequestPart(name = "files", required = false) MultipartFile files,
+								 HttpSession session, RedirectAttributes reAttr) {
+		String memberId = (String) session.getAttribute("SID");
+		
+		challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
+		 
+		return "redirect:/challenge/feed/list";
+	}
+	
 }

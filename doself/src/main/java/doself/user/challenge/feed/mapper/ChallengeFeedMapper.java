@@ -60,4 +60,7 @@ public interface ChallengeFeedMapper {
 
  	// 멤버 점수 업데이트
 	void updateMemberScore(String memberId, String challengeCode, double newScore);
+	
+	// 챌린지 피드 수정
+	void modifyChallengeFeed(AddChallengeFeed addChallengeFeed);
 }
