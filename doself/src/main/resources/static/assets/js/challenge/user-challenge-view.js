@@ -495,6 +495,122 @@ $(document).ready(function () {
     });
 });
 
+// 해결X
+/*$(document).ready(function () {
+    // 수정 버튼 클릭 이벤트 처리
+    $('#cl-modify-modal').click(function (e) {
+        const challengeFeedCode = $(this).data('challengeFeedCode');
+
+        if (!challengeFeedCode) {
+            alert('챌린지 피드 코드가 없습니다.');
+            return;
+        }
+
+        // AJAX 요청으로 데이터 가져오기
+        $.ajax({
+            url: '/challenge/feed/modifychallengefeed',
+            method: 'GET',
+            data: { challengeFeedCode: challengeFeedCode },
+            success: function (data) {
+                console.log('AJAX 응답 데이터:', data);
+                $('#cf-modify-content').val(data.challengeFeedContent);
+                $('#serving').val(data.challengeFeedFoodIntake);
+                $('#meal-type').val(data.challengeMealCategory);
+
+                if (data.cmfFileIdx) {
+                    $('#createChallengeModifyFeedPreviewImage').attr(
+                        'src',
+                        `/upload/challenge_feed/${data.cmfFileIdx}`
+                    );
+                }
+
+                // 수정 모달 열기
+                $('#cf-modify-modal-overlay').show();
+            },
+            error: function (err) {
+                alert('데이터를 불러오는 데 실패했습니다.');
+                console.error('Error:', err);
+            },
+        });
+    });
+
+    // 이미지 업로드 및 미리보기
+    $('#cf-modify-upload-btn').click(function () {
+        $('#feedFiles').click();
+    });
+
+    $('#feedFiles').change(function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                $('#createChallengeModifyFeedPreviewImage').attr('src', event.target.result);
+                $('#previewImagePath').val(event.target.result);
+                //console.log('Preview Image Path:', $('#previewImagePath').val());
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 글자수 카운터
+    const content = $('#cf-modify-content');
+    const textCount = $('#cf-modify-text-count');
+    const maxLength = 2000;
+
+    content.on('input', function () {
+        const currentLength = content.val().length;
+        textCount.text(currentLength);
+
+        if (currentLength > maxLength) {
+            textCount.css('color', 'red');
+        } else {
+            textCount.css('color', '');
+        }
+    });
+
+    // 수정 폼 제출 이벤트
+    $('#ModifyChallengeFeedForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert('수정이 완료되었습니다.');
+                window.location.href = `/challenge/feed/view/${response.challengeCode}`;
+            },
+            error: function (error) {
+                console.error('폼 제출 실패:', error);
+                alert('수정에 실패했습니다.');
+            },
+        });
+    });
+
+    // 모달 닫기
+    $('#cf-modify-modal-closeBtn').click(function () {
+        $('#cf-modify-modal-overlay').fadeOut();
+    });
+
+    // 오버레이 바깥쪽 클릭 시 모달 닫기
+    $(document).on('click', function (e) {
+        if ($(e.target).is('#cf-modify-modal-overlay')) {
+            $('#cf-modify-modal-overlay').fadeOut();
+        }
+    });
+
+    // ESC 키로 모달 닫기
+    $(document).on('keydown', function (e) {
+        if (e.key === "Escape") {
+            $('#cf-modify-modal-overlay').fadeOut();
+        }
+    });
+});*/
+
 
 // --- delete challenge feed ---
 $(document).on("click", "#cl-delete-modal", function () {

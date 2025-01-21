@@ -484,20 +484,12 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    if (files != null && !files.isEmpty()) {
 	        Files uploadedFile = filesUtils.uploadFile(files);
 	        if (uploadedFile != null) {
-	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx()); // 새 파일의 IDX 설정
+	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx());
 	        }
 	    }
 	    
 	    String challengeFeedCode = addChallengeFeed.getChallengeFeedCode();
 	    addChallengeFeed.setChallengeFeedCode(challengeFeedCode);
-	    
-//		if (files != null && !files.isEmpty()) {
-//	        Files uploadedFile = filesUtils.uploadFile(files);
-//	        if (uploadedFile != null) {
-//	            uploadedFile.setFileIdx(addChallengeFeed.getChallengeFeedFileIdx()); // 기존 file_idx 유지
-//	            filesMapper.updateFilePath(uploadedFile); // file_path만 업데이트
-//	        }
-//	    }
 	    
 	    // 파일의 idx 경로를 가져와서 delete가 이뤄지면(리턴 값이 true이면) 업로드
 	    // 업로드가 되면 fileinfo → 다시 올린 경로/오리지널네임 → 기존의 idx만 세팅(파일인포)
@@ -507,6 +499,31 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		
 		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
 	}
+	
+	// 챌린지 피드 수정(해결X)
+//	@Override
+//	public void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
+//		if (files != null && !files.isEmpty()) {
+//	        // 기존 파일 경로 제거
+//	        Files existingFile = filesMapper.getFileInfoByIdx(addChallengeFeed.getChallengeFeedFileIdx());
+//	        if (existingFile != null) {
+//	            filesUtils.deleteFileByPath(existingFile.getFilePath());
+//	        }
+//
+//	        // 새로운 파일 업로드
+//	        Files uploadedFile = filesUtils.uploadFile(files);
+//	        if (uploadedFile != null) {
+//	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx());
+//	        }
+//	    }
+//	    
+//	    String challengeFeedCode = addChallengeFeed.getChallengeFeedCode();
+//	    addChallengeFeed.setChallengeFeedCode(challengeFeedCode);
+//	    
+//		log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
+//		
+//		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
+//	}
 
 	// 챌린지 피드 코드
 	@Override

@@ -1727,9 +1727,25 @@ select #meal-type option:checked {
 }
 
 .cf-modify-upload-box img {
-    width: 63px;
+    width: 53px;
     opacity: 0.7;
     margin-left: -2px;
+    position: absolute;
+    left: 11.5px;
+    bottom: 4px;
+}
+
+img#modifyFeedImage {
+    mix-blend-mode: hard-light;
+    opacity: 0.6;
+}
+
+div#modifyFeedButtonBlock {
+    z-index: 1010;
+    position: relative;
+    mix-blend-mode: hard-light;
+    left: 386px;
+    bottom: -189px;
 }
 
 .cf-modify-upload-box p {
@@ -1741,15 +1757,14 @@ select #meal-type option:checked {
 #cf-modify-upload-btn {
     position: relative;
     display: flex;
-    background-color: #CACACA;
-    color: #fff;
+    background-color: #525252;
+    color: #c7c7c7;
     border: none;
     border-radius: 5px 0px 0px 0px;
     cursor: pointer;
-    z-index: 1010;
-    mix-blend-mode: hard-light;
-    left: 386px;
-    bottom: -189px;
+    width: 72.5px;
+    height: 63px;
+    mix-blend-mode: color-burn;
 }
 
 /* #cf-modify-upload-btn:hover {
