@@ -63,4 +63,8 @@ public interface ChallengeFeedMapper {
 	
 	// 챌린지 피드 수정
 	void modifyChallengeFeed(AddChallengeFeed addChallengeFeed);
+	
+	// 챌린지 피드 코드
+	AddChallengeFeed getChallengeFeedByCode(@Param("challengeCode") String challengeCode);
+
 }

@@ -59,4 +59,7 @@ public interface ChallengeFeedService {
 	
 	// 챌린지 피드 수정
 	void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed);
+	
+	// 챌린지 피드 코드
+	AddChallengeFeed getChallengeFeedByCode(String challengeFeedCode);
 }

@@ -395,35 +395,66 @@ $(document).ready(function () {
 });
 
 
-// --- create feed modal ---
-/*$(document).ready(function () {
-    // 모달 열기
-    $("#cf-create").on("click", function () {
-        $("#cf-modal-overlay").fadeIn(300); // 부드럽게 모달 열기
-    });
+// --- modify feed ---
+$(document).ready(function() {
+    const feedCode = $('#challengeFeedCode').val(); // 챌린지 피드 코드 가져오기
 
-    // 모달 닫기 (닫기 버튼)
-    $("#cf-modal-closeBtn").on("click", function () {
-        $("#cf-modal-overlay").fadeOut(300); // 부드럽게 모달 닫기
-    });
+    // Ajax로 기존 피드 데이터를 가져옴
+    $.ajax({
+        url: '/modifychallengefeed',
+        method: 'GET',
+        data: { challengeFeedCode: feedCode },
+        success: function(data) {
+            // 데이터를 화면에 렌더링
+            $('#cf-modify-content').val(data.challengeFeedContent);
+            $('#serving').val(data.challengeFeedFoodIntake);
+            $('#meal-type').val(data.challengeMealCategory);
 
-    // 모달 닫기 (오버레이 클릭)
-    $("#cf-modal-overlay").on("click", function (e) {
-        if ($(e.target).is("#cf-modal-overlay")) {
-            $(this).fadeOut(300); // 오버레이 배경 클릭 시 닫기
+            if (data.challengeFeedFileIdx) {
+                $('#createChallengeModifyFeedPreviewImage').attr('src', `/upload/challenge_feed/${data.challengeFeedFileIdx}`);
+            }
+        },
+        error: function(err) {
+            alert('데이터를 불러오는 데 실패했습니다.');
+            console.error(err);
         }
     });
-	$(document).on('keydown', function (e) {
-        if (e.key === "Escape") {
-            $('#cf-mbr-modal-overlay').fadeOut();
-            $('#cf-warning-modal-overlay').fadeOut();
+
+    // 이미지 업로드 및 미리보기
+    $('#cf-modify-upload-btn').click(function() {
+        $('#feedFiles').click();
+    });
+
+    $('#feedFiles').change(function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#createChallengeModifyFeedPreviewImage').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 글자수 카운터
+    const content = $('#cf-modify-content');
+    const textCount = $('#cf-modify-text-count');
+    const maxLength = 2000;
+
+    content.on('input', function() {
+        const currentLength = content.val().length;
+        textCount.text(currentLength);
+
+        // 글자수 초과 시 스타일 변경
+        if (currentLength > maxLength) {
+            textCount.css('color', 'red');
+        } else {
+            textCount.css('color', '');
         }
     });
 });
-*/
 
-// --- modify feed ---
-$(document).ready(function() {
+/*$(document).ready(function() {
     // 이미지 업로드 및 미리보기
 	$('#cf-modify-upload-btn').click(function () {
         $('#feedFiles').click();
@@ -456,11 +487,11 @@ $(document).ready(function() {
             textCount.css('color', '');
         }
     });
-});
+});*/
 
 
 // --- modify feed modal ---
-$(document).ready(function () {
+/*$(document).ready(function () {
     // 모달 열기
     $('#cl-modify-modal').on('click', function () {
       $('#cf-modify-modal-overlay').fadeIn(200);
@@ -483,7 +514,7 @@ $(document).ready(function () {
 	        $('#cf-warning-modal-overlay').fadeOut();
 	    }
 	});
-});
+});*/
 
 
 // --- feed option button ---

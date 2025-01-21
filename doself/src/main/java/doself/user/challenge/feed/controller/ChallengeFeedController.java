@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import doself.file.mapper.FilesMapper;
-import doself.file.service.FileService;
 import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
@@ -40,8 +38,6 @@ public class ChallengeFeedController {
 	
 	private final ChallengeFeedService challengeFeedService;
 	private final ChallengeListService challengeListService;
-	private final FileService fileService;
-	private final FilesMapper filesMapper;
 	
 	// 접속 아이디가 참여중인 챌린지 리스트 조회
 	@GetMapping("/list")
@@ -104,7 +100,7 @@ public class ChallengeFeedController {
 	    model.addAttribute("challengeMemberList", challengeMemberList);
 	    
 	    //log.info(">>> location/controller >>> challengeCode: {}", challengeCode);
-	    log.info(">>> location/controller >>> challengeFeedList: {}", challengeFeedList);
+	    //log.info(">>> location/controller >>> challengeFeedList: {}", challengeFeedList);
 	    //log.info(">>> location/controller >>> challengeProgress: {}", challengeProgress);
 	    //log.info(">>> location/controller >>> Total Progress: {}", challengeFeedService.calculateTotalProgress(challengeCode));
 	    //log.info(">>> location/controller >>> Top Participants: {}", challengeFeedService.getTopParticipants(challengeCode));
@@ -182,29 +178,43 @@ public class ChallengeFeedController {
 
 	    //log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
 	    
-	    return "redirect:/challenge/feed/list";
+	    //return "redirect:/challenge/feed/list";
+	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 	
 	// 챌린지 피드 수정 화면 조회
 	@GetMapping("/modifychallengefeed")
-	public String getModifyChallengeFeed(HttpServletRequest request, Model model) {
+	@ResponseBody
+	public String getModifyChallengeFeed(@RequestParam("challengeFeedCode") String challengeFeedCode) {
+		AddChallengeFeed challengeFeed = challengeFeedService.getChallengeFeedByCode(challengeFeedCode);		
 		
-		model.addAttribute("currentURI", request.getRequestURI());
-		model.addAttribute("title", "챌린지 피드 수정");
-		
-		return "user/challenge/modify-challenge-feed";
+		//return challengeFeed;
+		return null;
 	}
 	
 	// 챌린지 피드 수정 폼
 	@PostMapping("/modifychallengefeed")
 	public String postMethodName(@RequestPart(name = "files", required = false) MultipartFile files,
-            					 AddChallengeFeed addChallengeFeed, HttpSession session) {
+								 @ModelAttribute AddChallengeFeed addChallengeFeed, HttpSession session) {
 		String memberId = (String) session.getAttribute("SID");
 	    addChallengeFeed.setChallengeMemberId(memberId);
 
 	    challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
-		 
-		return "redirect:/challenge/feed/list";
+	    
+	    log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
+	    
+		//return "redirect:/challenge/feed/list";
+	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 	
+	@PostMapping("/deletechallengefeedrequest")
+	public String deleteChallengeFeed(@RequestPart(name = "files", required = false) MultipartFile files,
+									  @ModelAttribute AddChallengeFeed addChallengeFeed, HttpSession session) {
+		String memberId = (String) session.getAttribute("SID");
+	    addChallengeFeed.setChallengeMemberId(memberId);
+		
+	    //challengeFeedService.deleteChallengeFeed(files, addChallengeFeed);
+		
+		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+	}
 }
