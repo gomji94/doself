@@ -663,7 +663,7 @@
 		</resultMap>
 		
 		<!-- 챌린지 보상받을 멤버와 얼마 받아야하는지 가져오기 -->
-		<select id="getRewardMember" resultType="map">
+		<select id="getRewardMember" resultType="string">
 			SELECT
 				cpsl.mbr_id AS mbrId,
 				rh.rh_point AS rhPoint
@@ -721,12 +721,16 @@
 			FROM
 				reward_history rh INNER JOIN monthly_challenge_score_list mcsl
 				ON rh.rh_rank = mcsl.mcsl_rank
+				INNER JOIN challenge_group cg
+				ON mcsl.cg_num = cg.cg_num
 			WHERE
 				rh.rh_target = '챌린지'
 				AND
 				mcsl.mcsl_year = #{year}
 				AND 
 				mcsl.mcsl_monthly = #{month}
+				AND 
+				cg.cs_num = #{cgNum}
 		</select>
 		
 		<!-- 보상받을 챌린지 멤버 가져오기 -->

@@ -56,4 +56,16 @@ public interface ChallengeFeedService {
 	
 	// 챌린지 피드 생성
 	void addChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed);
+	
+	// 챌린지 피드 수정
+	void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed);
+	
+	// 챌린지 피드 코드
+	AddChallengeFeed getChallengeFeedByCode(String challengeFeedCode);
+	
+	// 챌린지 피드 삭제
+	public void deleteChallengeFeed(String challengeFeedCode, String memberId);
+	
+	// 챌린지 피드 댓글 등록
+	void addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
 }

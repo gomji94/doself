@@ -90,9 +90,9 @@
 	                        <div class="popup-body" id="feedOptionButton">
 	                            <div class="body-content">
 	                                <div class="body-titlebox">
-	                                    <ul>
-	                                        <li class="pop" id="cl-modify-modal">챌린지 피드 수정</li>
-	                                        <li class="pop" id="cl-delete-modal">챌린지 피드 삭제</li>
+	                                    <ul th:if="${challengeFeedList != null and !challengeFeedList.isEmpty()}">
+	                                        <li class="pop" id="cl-modify-modal" th:data-challenge-feed-code="${challengeFeedList[0].challengeFeedCode}">챌린지 피드 수정</li>
+	                                        <li class="pop" id="cl-delete-modal" th:data-challenge-feed-code="${challengeFeedList[0].challengeFeedCode}">챌린지 피드 삭제</li>
 	                                        <li class="pop" id="cl-link-copy">챌린지 피드 링크 복사</li>
 	                                        <!-- 위 내용 그냥 복붙하면 자동으로 증가 -->
 	                                        <li class="pop close">취소</li>
@@ -232,9 +232,9 @@
 					    
 					                <!-- 정보 입력 영역 -->
 					                <div class="cf-feed-info">
-					                    <div class="cf-user-block" th:if="${currentUserList != null && !currentUserList.isEmpty()}" th:each="cm : ${currentUserList}">
-										    <img th:src="${cm.memberProfileImage}" alt="프로필" onerror="this.src='/images/default-profile.png'">
-										    <a href="#" class="user-link"><p th:text="${cm.memberId}"></p></a>
+					                    <div class="cf-user-block" th:if="${challengeFeedList != null and !challengeFeedList.isEmpty()}">
+										    <img th:src="@{|${challengeFeedList[0].memberProfileImage}|}" alt="프로필" onerror="this.src='/images/default-profile.png'">
+										    <a href="#" class="user-link"><p th:text="${challengeFeedList[0].challengeMemberId}"></p></a>
 										</div>
 					                    <textarea id="cf-content" name="challengeFeedContent" placeholder="내용을 입력해주세요" maxlength="2000"></textarea>
 					                    <div class="cf-text-box-under">
@@ -260,7 +260,7 @@
 					    
 					                    <div class="input-group">
 					                        <label for="meal-type">식사 분류</label>
-					                        <select id="meal-type"  name="challengeMealCategory">
+					                        <select id="meal-type" name="challengeMealCategory">
 					                            <option value="mc001">아침</option>
 					                            <option value="mc002">점심</option>
 					                            <option value="mc003">저녁</option>
@@ -277,71 +277,78 @@
 	
 	                <!-- challenge feed modify modal 챌린지 피드 수정 모달 -->
 	                <div class="modal-overlay" id="cf-modify-modal-overlay" style="display: none;">
-				       <div class="cf-modify-modal-container">
-				           <div class="cf-modify-modal-header cf-modify-header-display">
-				               <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
-				               <h2>피드 수정</h2>
-				               <img id="cf-modify-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
-				           </div>
-				           <hr>
-				           <div class="cf-modify-modal-body">
-				               <!-- 이미지 업로드 영역 -->
-				               <div class="cf-modify-image-upload">
-				                   <div class="cf-modify-preview-box" id="cf-modify-preview-container">
-				                       <input type="file" id="cf-modify-file-input" accept="image/*" style="display: none;">
-				                       <!-- 업로드된 이미지가 표시될 컨테이너 -->
-				                       <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
-				                   </div>
-				                   <div class="cf-modify-upload-box">
-				                       <!-- 기본 메시지(사진 삽입 전) -->
-				                       <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="빈 접시">
-				                       <p>사진을 이곳에 넣어</p>
-				                       <p>빈 그릇을 채워주세요!</p>
-				                       <button id="cf-modify-upload-btn">파일 불러오기</button>
-				                   </div>
-				               </div>
-				   
-				               <!-- 정보 입력 영역 -->
-				               <div class="cf-modify-feed-info">
-				                   <div class="cf-modify-user-block">
-				                       <img src="https://buly.kr/EdsBkqu" alt="프로필">
-				                       <a href="#" class="cf-modify-user-link">아이디</a>
-				                   </div>
-				                   <textarea id="cf-modify-content" placeholder="내용을 입력해주세요" maxlength="2000"></textarea>
-				                   <div class="cf-modify-text-box-under">
-				                       <button type="button" id="emoji-btn">
-				                           <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
-				                       </button>
-				                       <div class="cf-modify-text-counter">
-				                           <span id="cf-modify-text-count">0</span>
-				                           <span>/2000</span>
-				                       </div>
-				                   </div>
-				   
-				                   <div class="input-group">
-				                       <label for="serving">섭취 인분</label>
-				                       <select id="serving">
-				                           <option value="1">1</option>
-				                           <option value="2">2</option>
-				                           <option value="3">3</option>
-				                           <option value="4">4</option>
-				                           <option value="5">5</option>
-				                       </select>
-				                   </div>
-				   
-				                   <div class="input-group">
-				                       <label for="meal-type">식사 분류</label>
-				                       <select id="meal-type">
-				                           <option value="breakfast">아침</option>
-				                           <option value="lunch">점심</option>
-				                           <option value="dinner">저녁</option>
-				                           <option value="snack">간식</option>
-				                       </select>
-				                       <button type="submit" class="cf-modify-submit-btn">수정</button>
-				                   </div>
-				               </div>
-				           </div>
-				       </div>
+	                   <form id="ModifyChallengeFeedForm" th:action="@{/challenge/feed/modifychallengefeedrequest}"
+	                   		 method="post" enctype="multipart/form-data">
+	                   	   <input type="hidden" name="challengeFeedCode" th:value="${challengeFeedList[0].challengeFeedCode}" />
+    					   <input type="hidden" name="challengeCode" id="challengeCode" th:value="${challengeCode}" />
+						   <input type="hidden" name="pictureFileIdx" th:value="${challengeFeedList[0].pictureFileIdx}" />
+					       <div class="cf-modify-modal-container" id="challengeModifyFeedContainer">
+					           <div class="cf-modify-modal-header cf-modify-header-display">
+					               <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+					               <h2>피드 수정</h2>
+					               <img id="cf-modify-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+					           </div>
+					           <hr>
+					           <div class="cf-modify-modal-body" th:if="${challengeFeedList != null and !challengeFeedList.isEmpty()}">
+					               <!-- 이미지 업로드 영역 -->
+					               <div class="cf-modify-image-upload">
+					                   <div class="cf-modify-preview-box" id="cf-modify-preview-container">
+					                       <input type="file" id="cf-modify-file-input" accept="image/*" style="display: none;">
+					                       <!-- 업로드된 이미지가 표시될 컨테이너 -->
+					                       <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+					                   </div>
+					                   <div class="cf-modify-upload-box">
+					                       <img id="createChallengeModifyFeedPreviewImage"
+									            th:src="@{|${challengeFeedList[0].pictureFileImage}|}" alt="피드 이미지">
+									       <button type="button" id="cf-modify-upload-btn">
+									       	  <img id="modifyFeedImage" src="https://velog.velcdn.com/images/mekite/post/75193fd9-682c-40ce-a215-911b778e3d70/image.png" alt="이미지 변경" />
+									       </button>
+									       <input type="file" id="feedFiles" name="files" accept="image/*" style="display: none;">
+					                   </div>
+					               </div>
+					   
+					               <!-- 정보 입력 영역 -->
+					               <div class="cf-modify-feed-info">
+					                   <div class="cf-modify-user-block">
+					                       <img th:src="@{|${challengeFeedList[0].memberProfileImage}|}" alt="프로필">
+					                       <a href="#" class="cf-modify-user-link"><p th:text="${challengeFeedList[0].challengeMemberId}"></p></a>
+					                   </div>
+					                   <textarea id="cf-modify-content" name="challengeFeedContent" th:text="${challengeFeedList[0].challengeFeedContent}" placeholder="내용을 입력해주세요" maxlength="2000"></textarea>
+					                   <div class="cf-modify-text-box-under">
+					                       <button type="button" id="emoji-btn">
+					                           <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+					                       </button>
+					                       <div class="cf-modify-text-counter">
+					                           <span id="cf-modify-text-count">0</span>
+					                           <span>/2000</span>
+					                       </div>
+					                   </div>
+					   
+					                   <div class="input-group">
+					                       <label for="serving">섭취 인분</label>
+					                       <select id="serving" name="challengeFeedFoodIntake">
+					                           <option value="1" th:selected="${challengeFeedFoodIntake == 1}">1</option>
+										       <option value="2" th:selected="${challengeFeedFoodIntake == 2}">2</option>
+										       <option value="3" th:selected="${challengeFeedFoodIntake == 3}">3</option>
+										       <option value="4" th:selected="${challengeFeedFoodIntake == 4}">4</option>
+										       <option value="5" th:selected="${challengeFeedFoodIntake == 5}">5</option>
+					                       </select>
+					                   </div>
+					   
+					                   <div class="input-group">
+					                       <label for="meal-type">식사 분류</label>
+					                       <select id="meal-type" name="challengeMealCategory">
+										       <option value="mc001" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc001'}">아침</option>
+										       <option value="mc002" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc002'}">점심</option>
+										       <option value="mc003" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc003'}">저녁</option>
+										       <option value="mc004" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc004'}">간식</option>
+										   </select>
+					                       <button type="submit" class="cf-modify-submit-btn">수정</button>
+					                   </div>
+					               </div>
+					           </div>
+					       </div>
+	                   </form>
 				   </div>
 				   <!-- challenge feed modify modal end -->
 	                
@@ -440,11 +447,13 @@
 							        <p class="comments-link" th:text="${cf.challengeFeedCommentContent}"></p>
 							    </div>
 							    <hr>
-							    <div class="add-comment">
-							        <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-							        <input type="text" placeholder="댓글 달기...">
-							        <button class="comment-submit">게시</button>
-							    </div>
+							    <form id="AddChallengeFeedCommentForm" th:action="@{/challenge/feed/createcommentrequest}">
+								    <div class="add-comment">
+								        <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+								        <input id="addChallengeFeedCommentContent" type="text" placeholder="댓글 달기...">
+								        <button type="submit" class="comment-submit" id="addChallengeFeedCommentButton">게시</button>
+								    </div>
+							    </form>
 							</div>
 		            	</div>
 	            	</div>
@@ -456,7 +465,7 @@
 	        </main>
 	        
 	        <!-- challenge progress(right aside) -->
-	        <div class="progress-container" th:if="${challengeProgress != null}" th:each="cp : ${challengeProgress}">
+	        <div class="progress-container" th:each="cp : ${challengeProgress}">
 	        	<!-- th:object="${challengeProgress[0]}" -->
 	            <div class="challenge">
 	                <a href="#">
