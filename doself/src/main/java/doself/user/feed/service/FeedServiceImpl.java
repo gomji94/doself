@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import doself.common.mapper.CommonMapper;
 import doself.file.domain.Files;
 import doself.file.mapper.FilesMapper;
+import doself.file.service.FileService;
 import doself.file.util.FilesUtils;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.mapper.FeedMapper;
@@ -80,21 +81,6 @@ public class FeedServiceImpl implements FeedService {
 		}
 
 	}
-
-	// 음식이름 조회
-	/*
-	 * @Override public String getOrCreateMealNutritionInfo(String mealName) {
-	 * String mealNutritionInfoCode = feedMapper.findByName(mealName);
-	 * 
-	 * if (mealNutritionInfoCode == null) { // 새 음식 추가 MealNutritionInfo newMeal =
-	 * new MealNutritionInfo(); newMeal.setMniName(mealName);
-	 * newMeal.setMniPicture("default.jpg"); // 기본 이미지 설정
-	 * feedMapper.addMeal(newMeal);
-	 * 
-	 * return newMeal.getMniNum(); // 생성된 번호 반환 }
-	 * 
-	 * return mealNutritionInfoCode; }
-	 */
  
     // 좋아요 수 증가
     public void incrementLike(String feedNum) {
@@ -111,5 +97,7 @@ public class FeedServiceImpl implements FeedService {
     public void modifyFeed(Feed feed) {
     	feedMapper.modifyFeed(feed);
     }
+    
+    // 피드 댓글 추가
 }
 	

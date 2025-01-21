@@ -8,18 +8,22 @@
 	    <id column="mbr_id" property="memberId" />
 	    <id column="mni_num" property="mealNutritionInfoCode" />
 	    <id column="mc_num" property="mealCategoryCode" />
+	    <id column="fc_num" property="feedCommentCode" />
 	    <result column="feed_food_intake" property="feedFoodIntake" />
 	    <result column="feed_content" property="feedContent" />
 	    <result column="feed_date" property="feedDate" />
 	    <result column="feed_intake_date" property="feedIntakeDate" />
 	    <result column="feed_like" property="feedLike" />
 	    <result column="feed_open_status" property="feedOpenStatus" />
+	    <result column="feed_file_Index" property="feedFileIdx" />
 	    <result column="feed_file_path" property="feedFilePath" />
 		<result column="feed_file_name" property="feedFileName" />
 		<result column="member_file_path" property="memberFilePath" />
 		<result column="member_file_name" property="memberFileName" />
 	    <result column="mbr_file_idx" property="memberProfileImage" />
 	    <result column="fc_content" property="feedCommentContent" />
+	    <result column="fc_date" property="feedCommentDate" />
+	    <result column="fc_like" property="feedCommentLike" />
 	    <result column="mni_name" property="mealName" />
 	    <result column="mni_picture" property="mealPicture" />
 	    <result column="mni_weight" property="mealWeight" />
@@ -51,7 +55,6 @@
 		    fi_feed.file_new_name AS feed_file_name,
 		    fi_member.file_path AS member_file_path,
 		    fi_member.file_new_name AS member_file_name,
-		
 		    mll.mni_name,
 		    mll.mni_picture,
 		    mll.mni_weight,
@@ -105,6 +108,24 @@
 		    ON mll.mni_num = f.mni_num
 	</select>
 	
+	<!-- 특정 피드 댓글 조회 -->
+	<!-- <select id="getFeedComment" resultMap="Feed">
+	    SELECT 
+		    fc.fc_num,
+		    fc.feed_num,
+		    fc.mbr_id,
+		    fc.fc_content,
+		    fc.fc_date,
+		    fc.fc_like,
+		    m.mbr_file_idx
+		FROM 
+		    feed_comments fc
+		LEFT JOIN 
+		    member m ON fc.mbr_id = m.mbr_id
+		WHERE 
+		    fc.feed_num = #{feedNum};
+	</select> -->
+	
 	<!-- 특정 피드 상세 조회 -->
 	<select id="getFeedDetail" parameterType="String" resultMap="FeedResultMap">
 	    SELECT
@@ -113,13 +134,15 @@
 	        f.mni_num,
 	        f.feed_food_intake,
 	        f.feed_content,
-	        f.feed_picture,
 	        f.mc_num,
 	        f.feed_date,
 	        f.feed_intake_date,
 	        f.feed_like,
 	        f.feed_open_status,
+	        f.feed_file_index,
 	        m.mbr_file_idx,
+			fi_feed.file_path AS feedFilePath,
+		    fi_feed.file_new_name AS feedFileName,
 	        fc.fc_content,
 	        mll.mni_name,
 	        mll.mni_picture,
@@ -137,6 +160,8 @@
 	        feed f
 	    INNER JOIN
 	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
+        LEFT JOIN
+	    	files fi_feed ON f.feed_file_index = fi_feed.file_idx
 	    INNER JOIN
 	        member m ON f.mbr_id = m.mbr_id
 	    LEFT JOIN
@@ -184,6 +209,29 @@
 		)
 	</insert>
 
+	<!-- 특정 피드 수정 -->
+	<update id="modifyFeed" parameterType="Feed">
+	    UPDATE feed
+        <trim prefix="SET" suffixOverrides=",">
+	        <if test="feedContent != null">
+	            feed_content = #{feedContent},
+	        </if>
+	        <if test="feedIntakeDate != null">
+	            feed_intake_date = #{feedIntakeDate},
+	        </if>
+	        <if test="feedFoodIntake != null">
+	            feed_food_intake = #{feedFoodIntake},
+	        </if>
+	        <if test="mealCategoryCode != null">
+	            mc_num = #{mealCategoryCode},
+	        </if>
+	        <if test="feedOpenStatus != null">
+	            feed_open_status = #{feedOpenStatus},
+	        </if>
+	    </trim>
+	    WHERE feed_num = #{feedCode};
+	</update>
+
 	<!-- 좋아요 수 증가 -->
 	<update id="incrementLike" parameterType="String">
         UPDATE
@@ -203,6 +251,22 @@
         WHERE
         feed_num = #{feedNum}
     </update>
+	
+	<!-- 피드 댓글 추가 -->
+	<!-- <insert id="addComment" parameterType="Feed">
+	    INSERT INTO feed_comments (
+	    	fc_num,
+	    	feed_num,
+	    	mbr_id,
+	    	fc_content,
+	    	fc_date
+    	) VALUES (
+    		#{commentCode},
+    		#{feedCode},
+    		#{memberId},
+    		#{commentContent},
+    		NOW());
+	</insert> -->
 	
  </mapper>
   

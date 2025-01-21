@@ -1,5 +1,6 @@
 package doself.user.feed.controller;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ import doself.admin.nutrition.service.NutritionService;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.service.FeedService;
 import doself.util.Pageable;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +39,6 @@ public class FeedController {
 	// 메인 피드 조회
 	@GetMapping("/list")
 	public String getFeedList(HttpSession session, Model model, Pageable pageable) {
-
-		// 로그인된 사용자 정보 확인
 	    String loggedInMemberId = (String) session.getAttribute("SID");
 	    
 		List<Feed> feedList = feedService.getFeedList();
@@ -48,39 +46,37 @@ public class FeedController {
 		var foodNutrition = nutritionService.getFoodNutritionList("mniName", "", pageable);
 		var foodNutritionList = foodNutrition.getContents();
 		
-		 // 날짜 포맷터 생성
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		
-		 // 각 피드의 날짜를 포맷팅하여 새로운 필드에 설정
 		    feedList.forEach(feed -> {
 		        if (feed.getFeedDate() != null) {
 		            feed.setFormattedDate(feed.getFeedDate().format(formatter));
 		        }
 		    });
 	    
-		// 본인 피드 여부 설정
 	    for (Feed feed : feedList) {
 	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
 	    }
 		model.addAttribute("FeedList", feedList);
 		model.addAttribute("foodNutritionList", foodNutritionList);
+		
+		Feed feed = new Feed(); // 예: 빈 객체 생성 또는 기본 값 설정
+	    model.addAttribute("feed", feed);
+	    
 		return "user/feed/feed-list";
 	}
 	
 	// 특정 피드 상세 조회
     @GetMapping("/{feedCode}")
     public String getFeedDetail(@PathVariable String feedCode, Model model) {
-        log.info("Fetching feed detail for feedCode: {}", feedCode);
-
         Feed feed = feedService.getFeedDetail(feedCode);
-        if (feed == null) {
-            throw new RuntimeException("피드 정보를 찾을 수 없습니다.");
-        }
 
-        model.addAttribute("feed", feed); // 모델에 피드 데이터를 추가
-        return "user/feed/feed-view"; // 상세 정보 페이지로 이동
+        model.addAttribute("feed", feed);
+        return "user/feed/feed-view";
     }
     
+    
+    // 피드 추가
     @PostMapping("/createFeed")
     public String createFeed(@ModelAttribute Feed feed,
 				             @RequestParam(value="files", required = false) MultipartFile feedPicture, // Optional 처리
@@ -96,19 +92,31 @@ public class FeedController {
     }
     
 	// 피드 수정 모달 열기
-	@GetMapping("/modifyfeed")
-	public String getModifyFeed(HttpServletRequest request, Model model) {
-		model.addAttribute("currentURI", request.getRequestURI());
-		model.addAttribute("title", "피드 수정");
-		
-		return "user/feed/feed-modify";
-	}
+    @GetMapping("/modifyfeed/{feedCode}")
+    public String getModifyFeed(@PathVariable String feedCode, Model model) {
+        Feed feed = feedService.getFeedDetail(feedCode);
+        if (feed == null) {
+            throw new RuntimeException("해당 피드 정보를 찾을 수 없습니다.");
+        }
+        
+        if (feed.getFeedIntakeDate() == null) {
+            feed.setFeedIntakeDate(LocalDateTime.now());
+        }
+        model.addAttribute("feed", feed);
+        return "user/feed/feed-modify";
+    }
 	
 	// 피드 수정
 	@PostMapping("/modifyfeed")
-	public String modifyFeed(Feed feed) {
-		
-		return "redirect:/feed/feed-list";
+	public String modifyFeed(@ModelAttribute Feed feed) {
+		try {
+	        feedService.modifyFeed(feed);
+	        return "redirect:/user/feed/" + feed.getFeedCode();
+	    } catch (Exception e) {
+	        // 에러 처리 로직
+	        e.printStackTrace();
+	        return "redirect:/error";
+	    }
 	}
 	
 	// 피드 댓글 조회
@@ -137,10 +145,13 @@ public class FeedController {
         }
     }
 	
+	// 음식 영양 정보 조회
 	@GetMapping("/nutritioninfo")
     public String getNutritionInfo(Model model) {
 		model.addAttribute("title", "영양 정보 조회");
 		
 		return "user/feed/nutritioninfo-view";
 	}
+	
+	// 피드 댓글 추가
 }
