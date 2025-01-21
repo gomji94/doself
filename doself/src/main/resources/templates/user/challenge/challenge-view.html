@@ -275,7 +275,7 @@
 				    </div>
 				    <!-- create challenge feed modal end -->
 	
-	                <!-- challenge feed modify modal 챌린지 피드 수정 모달 -->
+	                <!-- challenge feed modify modal 챌린지 피드 수정 모달(이전코드) -->
 	                <div class="modal-overlay" id="cf-modify-modal-overlay" style="display: none;">
 	                   <form id="ModifyChallengeFeedForm" th:action="@{/challenge/feed/modifychallengefeedrequest}"
 	                   		 method="post" enctype="multipart/form-data">
@@ -350,6 +350,81 @@
 					       </div>
 	                   </form>
 				   </div>
+	                <!-- <div class="modal-overlay" id="cf-modify-modal-overlay" style="display: none;">
+	                   <form id="ModifyChallengeFeedForm" th:action="@{/challenge/feed/modifychallengefeedrequest}" method="post" enctype="multipart/form-data">
+						   <input type="hidden" name="challengeFeedCode" th:value="${challengeFeedList[0].challengeFeedCode}" />
+						   <input type="hidden" name="challengeCode" id="challengeCode" th:value="${challengeCode}" />
+						   <input type="hidden" name="pictureFileIdx" th:value="${challengeFeedList[0].pictureFileIdx}" />
+						   <input type="hidden" name="previewImagePath" id="previewImagePath" value="" />
+					       <div class="cf-modify-modal-container" id="challengeModifyFeedContainer">
+					           <div class="cf-modify-modal-header cf-modify-header-display">
+					               <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
+					               <h2>피드 수정</h2>
+					               <img id="cf-modify-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
+					           </div>
+					           <hr>
+					           <div class="cf-modify-modal-body" th:if="${challengeFeedList != null and !challengeFeedList.isEmpty()}">
+					               이미지 업로드 영역
+					               <div class="cf-modify-image-upload">
+					                   <div class="cf-modify-preview-box" id="cf-modify-preview-container">
+					                       <input type="file" id="cf-modify-file-input" accept="image/*" style="display: none;">
+					                       업로드된 이미지가 표시될 컨테이너
+					                       <img src="https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png" alt="업로드된 이미지 미리보기" id="image-preview">
+					                   </div>
+					                   <div class="cf-modify-upload-box">
+					                       <img id="createChallengeModifyFeedPreviewImage"
+									            th:src="@{|${challengeFeedList[0].pictureFileImage}|}" alt="피드 이미지">
+									       <div id="modifyFeedButtonBlock">
+									       	  <img id="modifyFeedImage" src="https://velog.velcdn.com/images/mekite/post/c9787a76-a939-47a3-b816-657390b346e4/image.png" alt="이미지 변경" />
+										      <button type="button" id="cf-modify-upload-btn"></button>
+									       </div>
+									       <input type="file" id="feedFiles" name="files" accept="image/*" style="display: none;">
+					                   </div>
+					               </div>
+					   
+					               정보 입력 영역
+					               <div class="cf-modify-feed-info">
+					                   <div class="cf-modify-user-block">
+					                       <img th:src="@{|${challengeFeedList[0].memberProfileImage}|}" alt="프로필">
+					                       <a href="#" class="cf-modify-user-link"><p th:text="${challengeFeedList[0].challengeMemberId}"></p></a>
+					                   </div>
+					                   <textarea id="cf-modify-content" name="challengeFeedContent" th:text="${challengeFeedList[0].challengeFeedContent}" placeholder="내용을 입력해주세요" maxlength="2000"></textarea>
+					                   <div class="cf-modify-text-box-under">
+					                       <button type="button" id="emoji-btn">
+					                           <img src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
+					                       </button>
+					                       <div class="cf-modify-text-counter">
+					                           <span id="cf-modify-text-count">0</span>
+					                           <span>/2000</span>
+					                       </div>
+					                   </div>
+					   
+					                   <div class="input-group">
+					                       <label for="serving">섭취 인분</label>
+					                       <select id="serving" name="challengeFeedFoodIntake">
+					                           <option value="1" th:selected="${challengeFeedFoodIntake == 1}">1</option>
+										       <option value="2" th:selected="${challengeFeedFoodIntake == 2}">2</option>
+										       <option value="3" th:selected="${challengeFeedFoodIntake == 3}">3</option>
+										       <option value="4" th:selected="${challengeFeedFoodIntake == 4}">4</option>
+										       <option value="5" th:selected="${challengeFeedFoodIntake == 5}">5</option>
+					                       </select>
+					                   </div>
+					   
+					                   <div class="input-group">
+					                       <label for="meal-type">식사 분류</label>
+					                       <select id="meal-type" name="challengeMealCategory">
+										       <option value="mc001" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc001'}">아침</option>
+										       <option value="mc002" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc002'}">점심</option>
+										       <option value="mc003" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc003'}">저녁</option>
+										       <option value="mc004" th:selected="${challengeFeedList[0].challengeMealCategory == 'mc004'}">간식</option>
+										   </select>
+					                       <button type="submit" class="cf-modify-submit-btn">수정</button>
+					                   </div>
+					               </div>
+					           </div>
+					       </div>
+	                   </form>
+				   </div> -->
 				   <!-- challenge feed modify modal end -->
 	                
 	                <!-- challenge feed comment modal 챌린지 피드 댓글 모달 -->
@@ -410,7 +485,8 @@
 				    <p>피드가 없습니다.</p>
 				</div>
 	            <section>
-	            	<input type="hidden" id="challengeCode" th:value="${challengeCode != null ? challengeCode : ''}" />
+	            	<input type="hidden" id="challengeCode" name="challengeCode" th:value="${challengeCode != null ? challengeCode : ''}" />
+	            	<input type="hidden" id="challengeFeedCode" name="challengeFeedCode" th:value="${challengeFeedCode != null ? challengeFeedCode : ''}" />
 	            	<div class="feed-container">
 		            	<div class="container" id="feedContainer">
 		            		<div class="feed" id="feed" th:each="cf : ${challengeFeedList}">

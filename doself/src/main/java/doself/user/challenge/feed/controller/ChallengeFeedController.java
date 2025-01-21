@@ -131,16 +131,6 @@ public class ChallengeFeedController {
 		return "user/challenge/challenge-member-warning";
 	}
 	
-	// 챌린지 피드 댓글 조회(모달 안 열림/추후 수정필요)
-	@GetMapping("/feedcomment")
-	@ResponseBody
-	public List<ChallengeFeedComment> getFeedComment(@RequestParam(value = "challengeFeedCode") String challengeFeedCode, Model model) {
-		List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
-		//log.info("Feed Comment List: {}", feedCommentList);
-		
-		return feedCommentList;
-	}
-	
 	// 챌린지 생성 화면 조회
 	@GetMapping("/createchallenge")
 	public String getCreateChallenge(HttpServletRequest request, Model model) {
@@ -190,7 +180,7 @@ public class ChallengeFeedController {
 		return challengeFeedService.getChallengeFeedByCode(challengeFeedCode);
 	}
 	
-	// 챌린지 피드 수정 폼
+	// 챌린지 피드 수정 폼(이전 코드)
 	@PostMapping("/modifychallengefeedrequest")
 	public String postMethodName(@RequestPart(name = "files", required = false) MultipartFile files,
 								 @ModelAttribute AddChallengeFeed addChallengeFeed, HttpSession session) {
@@ -204,6 +194,24 @@ public class ChallengeFeedController {
 		//return "redirect:/challenge/feed/list";
 	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
+	
+	// 챌린지 피드 수정 폼(해결X)
+//	@PostMapping("/modifychallengefeedrequest")
+//	public String postMethodName(@RequestPart(name = "files", required = false) MultipartFile files,
+//								 @ModelAttribute AddChallengeFeed addChallengeFeed,
+//								 @RequestParam(value = "previewImagePath", required = false) String previewImagePath,
+//								 HttpSession session) {
+//		String memberId = (String) session.getAttribute("SID");
+//	    addChallengeFeed.setChallengeMemberId(memberId);
+//
+//	    
+//	    log.info("Preview Image Path: {}", previewImagePath);
+//	    log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
+//	    
+//	    challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
+//		//return "redirect:/challenge/feed/list";
+//	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+//	}
 	
 	// 챌린지 피드 삭제
 	@PostMapping("/deletechallengefeedrequest")
@@ -235,5 +243,15 @@ public class ChallengeFeedController {
 	    //log.info(">>> location/controller >>> comment: {}", comment);
 	    
 		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+	}
+	
+	// 챌린지 피드 댓글 조회(모달 안 열림/추후 수정필요)
+	@GetMapping("/feedcomment")
+	@ResponseBody
+	public List<ChallengeFeedComment> getFeedComment(@RequestParam(value = "challengeFeedCode") String challengeFeedCode, Model model) {
+		List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
+		//log.info("Feed Comment List: {}", feedCommentList);
+		
+		return feedCommentList;
 	}
 }
