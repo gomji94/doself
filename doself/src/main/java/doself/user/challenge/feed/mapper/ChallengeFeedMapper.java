@@ -64,9 +64,13 @@ public interface ChallengeFeedMapper {
 	void modifyChallengeFeed(AddChallengeFeed addChallengeFeed);
 
 	// 챌린지 피드 코드
-	AddChallengeFeed getChallengeFeedByCode(@Param("challengeCode") String challengeCode);
-
+	AddChallengeFeed getChallengeFeedByCode(Map<String, Object> params);
 	
+	// 챌린지 피드 삭제
+	void deleteChallengeFeed(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
+
+	// 챌린지 피드 댓글 등록
+	int addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
 	
 	
 	
@@ -74,7 +78,7 @@ public interface ChallengeFeedMapper {
 	// 관리자
 	// 멤버기록
 		// 해당아이디, 해당챌린지, 해당날짜에 챌린지 피드 개수 조회 
-		int getChallengeFeedCountByChallengeFeed(AddChallengeFeed challengeFeed);
+		Integer getChallengeFeedCountByChallengeFeed(AddChallengeFeed challengeFeed);
 		// 해당아이디, 해당챌린지, 해당날짜에 챌린지 개인기록 개수 조회 
 		int isDataMemberStat(AddChallengeFeed challengeFeed);
 		// 피드난이도별 개수 가져오기

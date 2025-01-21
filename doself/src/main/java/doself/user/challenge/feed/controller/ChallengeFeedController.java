@@ -27,6 +27,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+
 @Controller
 @RequestMapping("/challenge/feed")
 @RequiredArgsConstructor
@@ -185,15 +187,12 @@ public class ChallengeFeedController {
 	// 챌린지 피드 수정 화면 조회
 	@GetMapping("/modifychallengefeed")
 	@ResponseBody
-	public String getModifyChallengeFeed(@RequestParam("challengeFeedCode") String challengeFeedCode) {
-		AddChallengeFeed challengeFeed = challengeFeedService.getChallengeFeedByCode(challengeFeedCode);		
-		
-		//return challengeFeed;
-		return null;
+	public AddChallengeFeed getModifyChallengeFeed(@RequestParam("challengeFeedCode") String challengeFeedCode) {
+		return challengeFeedService.getChallengeFeedByCode(challengeFeedCode);
 	}
 	
 	// 챌린지 피드 수정 폼
-	@PostMapping("/modifychallengefeed")
+	@PostMapping("/modifychallengefeedrequest")
 	public String postMethodName(@RequestPart(name = "files", required = false) MultipartFile files,
 								 @ModelAttribute AddChallengeFeed addChallengeFeed, HttpSession session) {
 		String memberId = (String) session.getAttribute("SID");
@@ -207,14 +206,30 @@ public class ChallengeFeedController {
 	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 	
+	// 챌린지 피드 삭제
 	@PostMapping("/deletechallengefeedrequest")
-	public String deleteChallengeFeed(@RequestPart(name = "files", required = false) MultipartFile files,
+	public String deleteChallengeFeed(@RequestParam("challengeFeedCode") String challengeFeedCode, 
 									  @ModelAttribute AddChallengeFeed addChallengeFeed, HttpSession session) {
 		String memberId = (String) session.getAttribute("SID");
-	    addChallengeFeed.setChallengeMemberId(memberId);
-		
+	    challengeFeedService.deleteChallengeFeed(challengeFeedCode, memberId);
+	     	    
 	    //challengeFeedService.deleteChallengeFeed(files, addChallengeFeed);
 		
+		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+	}
+	
+	// 챌린지 피드 댓글 등록
+	@PostMapping("/createcommentrequest")
+	public String addChallengeFeedComment(@RequestParam("challengeFeedCode") String challengeFeedCode,
+										  AddChallengeFeed addChallengeFeed,
+										  @ModelAttribute ChallengeFeedComment challengeFeedComment, HttpSession session) {
+		String memberId = (String) session.getAttribute("SID");
+		challengeFeedComment.setChallengeFeedCommentAuthor(memberId);
+		
+		challengeFeedService.addChallengeFeedComment(challengeFeedComment);
+
+	    log.info(">>> location/controller >>> challengeFeedComment: {}", challengeFeedComment);
+	    
 		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 }
