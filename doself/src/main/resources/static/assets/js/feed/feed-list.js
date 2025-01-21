@@ -145,7 +145,6 @@ $(document).ready(function () {
 });
 
 
-
 // 글자 수 카운트 증가
 $(document).ready(function () {
     const maxLength = 2000;
@@ -253,88 +252,46 @@ $('#feed-create-submit-btn').on('click', function (e) {
     });
 });
 
-// --- 피드 수정(데이터 불러오기) ---
-let selectedFeed = null;
+// --- 피드 수정 모달 ---
 $(document).ready(function () {
-    // 피드 옵션 모달
-    $('.option-button').on('click', function () {
-        selectedFeed = $(this).closest('.feed'); // 현재 클릭한 피드를 selectedFeed에 저장
-
-        if (!selectedFeed.length) {
-            console.error('피드를 찾을 수 없습니다.');
-            return;
-        }
-
-        const isOwner = selectedFeed.data('is-owner'); // 본인 피드 여부
-        if (isOwner) {
-            $('.feed-option-modal-wrap').fadeIn();
-        } else {
-            $('.other-members-option-modal-wrap').fadeIn();
-        }
-    });
-
-    // 피드 수정 모달
 	$('#feed-modify-modal').on('click', function () {
-	    console.log('Feed modify modal button clicked');
-	    if (!selectedFeed) {
-	        console.error('선택된 피드가 없습니다.');
-	        return;
-	    }
-
-        // 선택된 피드 데이터를 가져옵니다.
-        const feedImage = selectedFeed.data('feed-picture');
-        const feedContent = selectedFeed.data('feed-content');
-        const feedServing = selectedFeed.data('meal-weight');
-        const mealCategoryCode = selectedFeed.data('meal-category');
-        const feedVisibility = selectedFeed.data('feed-visibility');
-
-        // 수정 모달에 데이터 삽입
-        $('#feed-modify-image-preview').attr('src', feedImage).show();
-        $('#feed-modify-content').val(feedContent);
-        $('#feed-modify-serving').val(feedServing);
-        $('#feed-modify-meal-type').val(mealCategoryCode);
-        $(`.radio-group input[name="visibility"][value="${feedVisibility === 1 ? 'public' : 'private'}"]`).prop('checked', true);
-
-        // 글자수 카운터 업데이트
-        const textLength = feedContent.length || 0;
-        $('#feed-modify-text-count').text(textLength);
-
-        // 수정 모달 열기
-        $('#feed-modify-modal-overlay').fadeIn(300);
-        // 옵션 모달 닫기
-        $('.feed-option-modal-wrap').fadeOut();
+        $('#feed-modify-modal-overlay').fadeIn(300); // 모달 오버레이 표시
+		const feedCode = $(this).data('feed-code'); // li 요소의 data-feed-code 속성에서 값을 가져옴
+        if (feedCode) {
+            openModifyModal(feedCode);
+        } else {
+            console.error('Feed code not found for this element.');
+        }
     });
 
-    // 수정 모달 닫기
     $('#feed-modify-modal-closeBtn').on('click', function () {
-        $('#feed-modify-modal-overlay').fadeOut(300);
+        $('#feed-modify-modal-overlay').fadeOut(300); // 모달 오버레이 숨기기
     });
 
-    // 수정 모달 외부 클릭 시 닫기
     $('#feed-modify-modal-overlay').on('click', function (e) {
         if ($(e.target).is('#feed-modify-modal-overlay')) {
             $(this).fadeOut(300);
         }
     });
+});
 
-    // 파일 업로드 버튼
-    $('#feed-modify-upload-btn').on('click', function () {
-        $('#feed-modify-file-input').trigger('click');
-    });
+function openModifyModal(feedCode) {
+    fetch(`/feed/modifyfeed/${feedCode}`)
+        .then(response => response.json())
+        .then(data => {
+            // 피드 데이터를 모달의 필드에 채워넣기
+            document.getElementById('feed-modify-content').value = data.feedContent || '';
+            const intakeDate = data.feedIntakeDate ? new Date(data.feedIntakeDate).toISOString().slice(0, 16) : '';
+            document.getElementById('intakeDateTime').value = intakeDate;
+            document.getElementById('feedFoodIntake').value = data.feedFoodIntake || '';
+            document.querySelector(`input[name="feedOpenStatus"][value="${data.feedOpenStatus}"]`).checked = true;
+            document.getElementById('feed-modify-image-preview').src = data.feedFilePath || '';
+            $('#feed-modify-modal-overlay').fadeIn(300);
+        })
+        .catch(error => console.error('Error fetching feed data:', error));
+}
 
-    // 파일 업로드 시 이미지 미리보기
-    $('#feed-modify-file-input').on('change', function (e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                $('#feed-modify-image-preview').attr('src', e.target.result).show();
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // 글자수 카운터
+    /*// 글자수 카운터
     const content = $('#feed-modify-content');
     const textCount = $('#feed-modify-text-count');
     const maxLength = 2000;
@@ -348,6 +305,25 @@ $(document).ready(function () {
             textCount.css('color', 'red');
         } else {
             textCount.css('color', '');
+        }
+    });*/
+	
+// --- 피드 댓글 모달 ---
+$(document).ready(function () {
+    // 옵션 버튼 클릭 시 모달창 표시
+    $('.commentBtn').on('click', function () {
+        $('.feed-comment-modal-overlay').fadeIn(); // 모달창 활성화
+    });
+
+    // 닫기 버튼 클릭 시 모달창 닫기
+    $('.feed-comment-modal-overlay .close').on('click', function () {
+        $('.feed-comment-modal-overlay').fadeOut(); // 모달창 비활성화
+    });
+
+    // 모달창 바깥을 클릭하면 모달창 닫기
+    $('.feed-comment-modal-overlay').on('click', function (e) {
+        if ($(e.target).is('.feed-comment-modal-overlay')) {
+            $(this).fadeOut();
         }
     });
 });
@@ -400,38 +376,8 @@ document.addEventListener('DOMContentLoaded', () => {
     feeds.forEach(feed => observer.observe(feed));
 });
 
-// --- 오른쪽 사이드바 영양 정보 테이블 업데이트 ---
-/*document.querySelectorAll('.feed').forEach(feed => {
-    feed.addEventListener('click', function () {
-        // 데이터 속성 읽기
-        const mealPicture = this.getAttribute('data-meal-picture') || '/images/default-food.png';
-        const mealWeight = this.getAttribute('data-meal-weight') || '0';
-        const mealCalories = this.getAttribute('data-meal-calories') || '0';
-        const mealCarbohydrates = this.getAttribute('data-meal-carbohydrates') || '0';
-        const mealProtein = this.getAttribute('data-meal-protein') || '0';
-        const mealFat = this.getAttribute('data-meal-fat') || '0';
 
-        // 데이터 업데이트
-        const imgElement = document.querySelector('#analysis-img img').src = mealPicture;
-        if (imgElement) imgElement.src = mealPicture;
-
-		const weightElement = document.querySelector('#weight');
-		if (weightElement) weightElement.textContent = `${mealWeight} g`;
-		
-        const caloriesElement = document.querySelector('#calories');
-        if (caloriesElement) caloriesElement.textContent = `${mealCalories} kcal`;
-
-        const carbElement = document.querySelector('#carb');
-        if (carbElement) carbElement.textContent = `${mealCarbohydrates} kcal`;
-
-        const proteinElement = document.querySelector('#protein');
-        if (proteinElement) proteinElement.textContent = `${mealProtein} g`;
-
-        const fatElement = document.querySelector('#fat');
-        if (fatElement) fatElement.textContent = `${mealFat} g`;
-    })
-});
-
+/*
 document.addEventListener("DOMContentLoaded", () => {
 	    const calendarBody = document.getElementById("calendar-body");
 	    const currentMonthElement = document.querySelector(".current-month");

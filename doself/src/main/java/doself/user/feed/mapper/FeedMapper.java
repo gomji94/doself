@@ -17,12 +17,6 @@ public interface FeedMapper {
 
 	// 피드 추가
 	int addFeed(Feed feed);
-	
-	// 자동완성 검색
-	/* List<String> findKeywords(String query); */
-	
-	// 음식 이름으로 음식 번호 조회
-	/* String findByName(String mealName); */
 
     // 새 음식 추가
     void addMeal(MealNutritionInfo mealNutritionInfo);
@@ -35,4 +29,6 @@ public interface FeedMapper {
     
     // 피드 수정
     int modifyFeed(Feed feed);
+    
+    // 피드 댓글 추가
 }
