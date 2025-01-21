@@ -27,7 +27,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/challenge/feed")
@@ -221,14 +220,19 @@ public class ChallengeFeedController {
 	// 챌린지 피드 댓글 등록
 	@PostMapping("/createcommentrequest")
 	public String addChallengeFeedComment(@RequestParam("challengeFeedCode") String challengeFeedCode,
+            							  @RequestParam("challengeFeedCommentContent") String commentContent,
 										  AddChallengeFeed addChallengeFeed,
-										  @ModelAttribute ChallengeFeedComment challengeFeedComment, HttpSession session) {
+										  HttpSession session) {
 		String memberId = (String) session.getAttribute("SID");
-		challengeFeedComment.setChallengeFeedCommentAuthor(memberId);
 		
-		challengeFeedService.addChallengeFeedComment(challengeFeedComment);
+		ChallengeFeedComment comment = new ChallengeFeedComment();
+	    comment.setChallengeFeedCode(challengeFeedCode);
+	    comment.setChallengeFeedCommentAuthor(memberId);
+	    comment.setChallengeFeedCommentContent(commentContent);
 
-	    log.info(">>> location/controller >>> challengeFeedComment: {}", challengeFeedComment);
+	    challengeFeedService.addChallengeFeedComment(comment);
+
+	    //log.info(">>> location/controller >>> comment: {}", comment);
 	    
 		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}

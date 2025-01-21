@@ -577,6 +577,24 @@ $(document).ready(function () {
 });
 
 
+// --- feed comment submit ---
+$(document).ready(function () {
+    // 댓글 작성 버튼 클릭 시 폼 검증
+    $("#addChallengeFeedCommentButton").on("click", function (e) {
+        const commentContent = $("#addChallengeFeedCommentContent").val().trim();
+        
+        if (!commentContent) {
+            alert("댓글을 입력해주세요.");
+            e.preventDefault(); // 폼 전송 방지
+            return false;
+        }
+        
+        $("#AddChallengeFeedCommentForm").submit();
+    });
+});
+
+
+
 // --- feed comment modal ---
 $(document).ready(function () {
     // 댓글 버튼 클릭 이벤트
