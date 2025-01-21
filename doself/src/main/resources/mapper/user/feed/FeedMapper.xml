@@ -108,7 +108,7 @@
 		    ON mll.mni_num = f.mni_num
 	</select>
 	
-	<!-- 피드 댓글 조회 -->
+	<!-- 특정 피드 댓글 조회 -->
 	<!-- <select id="getFeedComment" resultMap="Feed">
 	    SELECT 
 		    fc.fc_num,
