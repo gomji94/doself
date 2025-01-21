@@ -139,7 +139,7 @@
     		// 아이디 영어, 숫자만 입력가능
     		function onlyNumberAndEnglish(id) {
     			
-    			return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(id);
+    			return /^[A-Za-z0-9][A-Za-z0-9]{1,20}$/.test(id);
 			}
     		// 비밀번호 8~16자 입력가능
     		function strongPassword(pw) {
@@ -156,7 +156,7 @@
 	    		// 아이디 영어,숫자가 아닌 값이 들어갔을경우
 	    		if(onlyNumberAndEnglish(checkMbrId) == false){
 	    			// 출력 텍스트변경
-    				$('#checkId').text('아이디는 영어와 숫자만 입력가능합니다.')
+    				$('#checkId').text('아이디는 총 20자 영어와 숫자만 입력가능합니다.')
 					 .css({'color': 'red'});
     				
 	    			// 활성화 됬던 인풋태그들 비활성화
