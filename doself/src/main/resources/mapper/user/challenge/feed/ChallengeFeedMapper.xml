@@ -406,6 +406,21 @@
 	      AND mbr_id = #{memberId}
 	</delete>
 	
+	<!-- 챌린지 피드 댓글 조회(1개 화면 노출) -->
+	<select id="">
+		SELECT
+			cmf.cmf_num,
+			cfc.cfc_num,
+			cfc.mbr_id,
+			cfc.cfc_content
+		FROM
+			challenge_member_feed cmf
+			INNER JOIN challenge_feed_comments cfc ON cmf.cmf_num = cfc.cmf_num
+		WHERE
+			cfc.cfc_num = #{challengeFeedCommentCode}
+		LIMIT
+			1
+	</select>
 	
 	
 	
