@@ -1,6 +1,7 @@
 package doself.user.feed.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -29,6 +30,9 @@ public interface FeedMapper {
     
     // 피드 수정
     int modifyFeed(Feed feed);
+    
+    // 피드 코드 조회
+    Feed getFeedByCode(Map<String, Object> params);
     
     // 피드 댓글 추가
 }

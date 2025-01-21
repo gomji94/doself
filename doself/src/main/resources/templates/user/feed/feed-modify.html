@@ -8,19 +8,27 @@
 	            <img id="feed-modify-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
         	</div>
 	        <hr>
-	        <form id="modifyFeedForm" th:action="@{/user/feed/modifyfeed}" method="post" enctype="multipart/form-data" th:object="${feed}">
-                <div class="feed-modify-modal-body">
+	        <form id="modifyFeedForm" th:action="@{/feed/modifyfeed}" method="post" enctype="multipart/form-data" th:object="${feed}">
+				<input type="hidden" id="feedCode" name="feedCode" value="" />
+				<div class="feed-modify-modal-body">
                     <!-- 이미지 업로드 영역 -->
                     <div class="feed-modify-image-upload">
-				    <div class="feed-modify-preview-box">
-				        <input type="file" class="feed-modify-upload-btn" name="files" id="feed-modify-file-input" accept="image/*" required/>
-				        <img th:src="@{|${feed.feedFilePath}|}" alt="업로드된 이미지 미리보기" id="feed-modify-image-preview">
-				    </div>
-				</div>
-        
+					    <div class="feed-modify-preview-box">
+					        <input type="file" class="feed-modify-upload-btn" name="files" id="feed-modify-file-input" accept="image/*">
+							<img th:src="'https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png'" alt="업로드된 이미지 미리보기" id="image-preview">
+						</div>
+						<div class="feed-modify-upload-box">
+	                       <img th:src="@{|${feed.feedFilePath}|}" alt="피드 이미지">
+					       <button type="button" id="feed-modify-upload-btn">
+					       	  <img id="modifyFeedImage" src="https://velog.velcdn.com/images/mekite/post/75193fd9-682c-40ce-a215-911b778e3d70/image.png" alt="이미지 변경" />
+					       </button>
+					       <input type="file" id="feedFiles" name="files" accept="image/*" style="display: none;" required>
+	                   </div>
+					</div>
+				
                     <!-- 정보 입력 영역 -->
                     <div class="feed-modify-feed-info">
-                        <textarea id="feed-modify-content" name="feedContent" placeholder="내용을 입력해주세요" maxlength="2000" required th:text="${feed.feedContent}"></textarea>
+                        <textarea id="feed-modify-content" name="feedContent" maxlength="2000" required></textarea>
                         <div class="feed-modify-text-box-under">
                             <div class="feed-modify-text-counter">
                                 <span id="feed-modify-text-count">0</span>
@@ -30,7 +38,7 @@
                     </div>
                     <div class="input-group">
                         <label for="feedIntakeDate">섭취 날짜 및 시간</label>
-                        <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required th:value="${feed.feedIntakeDate}">
+                        <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required>
                     </div>
                     <div class="input-group">
                         <label for="feedFoodIntake">섭취 인분</label>
@@ -45,7 +53,7 @@
                     </div>
                     <div class="input-group">
                         <label for="mealCategoryCode">식사 분류</label>
-                        <select id="mealCategoryCode" name="mealCategoryCode" required>
+                        <select id="mealCategoryCode" name="mealCategoryCode">
                             <option value="">선택하세요</option>
                             <option value="mc001" th:selected="${feed.mealCategoryCode == 'mc001'}">아침</option>
                             <option value="mc002" th:selected="${feed.mealCategoryCode == 'mc002'}">점심</option>
@@ -57,10 +65,10 @@
                         <label for="feedOpenStatus">공개 여부</label>
                         <div>
                             <label>
-                                <input type="radio" name="feedOpenStatus" value="1" th:checked="${feed.feedOpenStatus == 1}"> 공개
+                                <input type="radio" name="feedOpenStatus" value="1" th:selected="${feed.feedOpenStatus == 1}"> 공개
                             </label>
                             <label>
-                                <input type="radio" name="feedOpenStatus" value="0" th:checked="${feed.feedOpenStatus == 0}"> 비공개
+                                <input type="radio" name="feedOpenStatus" value="0" th:selected="${feed.feedOpenStatus == 0}"> 비공개
                             </label>
                         </div>
                     </div>
