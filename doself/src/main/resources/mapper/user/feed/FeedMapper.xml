@@ -129,21 +129,21 @@
 	<!-- 특정 피드 상세 조회 -->
 	<select id="getFeedDetail" parameterType="String" resultMap="FeedResultMap">
 	    SELECT
-	        f.feed_num,
-	        f.mbr_id,
-	        f.mni_num,
-	        f.feed_food_intake,
-	        f.feed_content,
-	        f.mc_num,
-	        f.feed_date,
-	        f.feed_intake_date,
-	        f.feed_like,
-	        f.feed_open_status,
+	        f.feed_num AS feedCode,
+	        f.mbr_id AS memberId,
+	        f.mni_num AS mealNutritionInfoCode,
+	        f.feed_food_intake AS feedFoodIntake,
+	        f.feed_content AS feedContent,
+	        f.mc_num AS mealCategoryCode,
+	        f.feed_date AS feedDate,
+	        f.feed_intake_date AS feedIntakeDate,
+	        f.feed_like AS feedLike,
+	        f.feed_open_status AS feedOpenStatus,
+	        fi_feed.file_path AS feedFilePath,
+	        fi_feed.file_new_name AS feedFileName,
+	        fc.fc_content AS feedCommentContent,
 	        f.feed_file_index,
 	        m.mbr_file_idx,
-			fi_feed.file_path AS feedFilePath,
-		    fi_feed.file_new_name AS feedFileName,
-	        fc.fc_content,
 	        mll.mni_name,
 	        mll.mni_picture,
 	        mll.mni_weight,
@@ -212,7 +212,7 @@
 	<!-- 특정 피드 수정 -->
 	<update id="modifyFeed" parameterType="Feed">
 	    UPDATE feed
-        <trim prefix="SET" suffixOverrides=",">
+        <set>
 	        <if test="feedContent != null">
 	            feed_content = #{feedContent},
 	        </if>
@@ -228,9 +228,30 @@
 	        <if test="feedOpenStatus != null">
 	            feed_open_status = #{feedOpenStatus},
 	        </if>
-	    </trim>
+	        <if test="feedFileIdx != null">
+	        	feed_file_idx = #{feedFileIdx},
+        	</if>
+	    </set>
 	    WHERE feed_num = #{feedCode};
 	</update>
+
+	<!-- 피드 코드 조회 -->
+	<select id="getFeedByCode" parameterType="map" resultMap="FeedResultMap">
+		SELECT
+	        feed_num AS feedCode,
+	        mbr_id AS memberId,
+	        mni_num AS mealNutritionInfoCode,
+	        feed_food_intake AS feedFoodIntake,
+	        feed_content AS feedContent,
+	        mc_num AS mealCategoryCode,
+	        feed_intake_date AS feedIntakeDate,
+	        feed_like AS feedLike,
+	        feed_open_status AS feedOpenStatus
+	    FROM
+	        feed
+	    WHERE
+	        feed_num = #{feedCode}
+    </select>
 
 	<!-- 좋아요 수 증가 -->
 	<update id="incrementLike" parameterType="String">

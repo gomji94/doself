@@ -24,7 +24,10 @@ public interface FeedService {
 	void decrementLike(String feedNum);
 	
 	// 피드 수정
-	void modifyFeed(Feed feed);
+	void modifyFeed(Feed feed, MultipartFile feedPicture);
+	
+	// 피드 코드 조회
+	Feed getFeedByCode(String feedCode);
 	
 	// 피드 댓글 추가
 }

@@ -1502,14 +1502,17 @@ img#feed-modify-image-preview {
 }
 
 .feed-modify-upload-btn {
-    display: inline-block;
-    padding: 10px 20px;
+	position: relative;
+    display: flex;
     background-color: #CACACA;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 5px 0px 0px 0px;
     cursor: pointer;
-    margin-top: 15px;
+    z-index: 1010;
+    mix-blend-mode: hard-light;
+    left: 386px;
+    bottom:-189px;
 }
 .feed-modify-upload-btn:hover {
     background-color: #C6DA70;

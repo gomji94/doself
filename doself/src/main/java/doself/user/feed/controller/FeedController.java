@@ -1,6 +1,5 @@
 package doself.user.feed.controller;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import doself.admin.nutrition.service.NutritionService;
@@ -93,31 +94,28 @@ public class FeedController {
     
 	// 피드 수정 모달 열기
     @GetMapping("/modifyfeed/{feedCode}")
-    public String getModifyFeed(@PathVariable String feedCode, Model model) {
-        Feed feed = feedService.getFeedDetail(feedCode);
-        if (feed == null) {
-            throw new RuntimeException("해당 피드 정보를 찾을 수 없습니다.");
-        }
-        
-        if (feed.getFeedIntakeDate() == null) {
-            feed.setFeedIntakeDate(LocalDateTime.now());
-        }
-        model.addAttribute("feed", feed);
-        return "user/feed/feed-modify";
+    @ResponseBody
+    public Feed getFeedModifyData(@RequestParam("feedCode") String feedCode) {
+    	return feedService.getFeedByCode(feedCode);
     }
 	
 	// 피드 수정
-	@PostMapping("/modifyfeed")
-	public String modifyFeed(@ModelAttribute Feed feed) {
-		try {
-	        feedService.modifyFeed(feed);
-	        return "redirect:/user/feed/" + feed.getFeedCode();
-	    } catch (Exception e) {
-	        // 에러 처리 로직
-	        e.printStackTrace();
-	        return "redirect:/error";
-	    }
-	}
+    @PostMapping("/modifyfeed")
+    public String modifyFeed(
+        @RequestPart(name = "files", required = false) MultipartFile files,
+        @ModelAttribute Feed feed,
+        HttpSession session
+    ) {
+        String memberId = (String) session.getAttribute("SID");
+        feed.setMemberId(memberId); // 세션에서 작성자 아이디를 설정
+
+        feedService.modifyFeed(feed, files);
+
+        log.info("Modified feed: {}", feed);
+
+        // 수정 완료 후 상세 페이지로 리다이렉트
+        return "redirect:/feed/" + feed.getFeedCode();
+    }
 	
 	// 피드 댓글 조회
 	@GetMapping("/{feedCode}/comments")

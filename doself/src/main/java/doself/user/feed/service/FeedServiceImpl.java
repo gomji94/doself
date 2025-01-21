@@ -1,9 +1,9 @@
 package doself.user.feed.service;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import doself.common.mapper.CommonMapper;
 import doself.file.domain.Files;
 import doself.file.mapper.FilesMapper;
-import doself.file.service.FileService;
 import doself.file.util.FilesUtils;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.mapper.FeedMapper;
@@ -46,22 +45,15 @@ public class FeedServiceImpl implements FeedService {
 	// 특정 피드 조회
 	@Override
     public Feed getFeedDetail(String feedCode) {
+		log.info("Fetching feed detail for feedCode: {}", feedCode);
         Feed feed = feedMapper.getFeedDetail(feedCode);
         if (feed == null) {
+        	log.warn("Feed not found for feedCode: {}", feedCode);
             throw new RuntimeException("피드 정보를 찾을 수 없습니다.");
         }
+        log.info("Feed detail retrieved: {}", feed);
         return feed;
     }
-	
-	// 음식 이름 검색
-	/*
-	 * @Override public List<String> findKeywords(String query) { try { List<String>
-	 * results = feedMapper.findKeywords(query);
-	 * log.info("Database query executed. Results: {}", results); return results !=
-	 * null ? results : Collections.emptyList(); } catch (Exception e) {
-	 * log.error("Database error during findKeywords: {}", e.getMessage(), e);
-	 * return Collections.emptyList(); } }
-	 */
 	
 	// 피드 추가
 	@Override
@@ -94,9 +86,32 @@ public class FeedServiceImpl implements FeedService {
     
     // 피드 수정
     @Override
-    public void modifyFeed(Feed feed) {
-    	feedMapper.modifyFeed(feed);
+    public void modifyFeed(Feed feed, MultipartFile feedPicture) {
+    	if (feedPicture != null && !feedPicture.isEmpty()) {
+            String oldFileIdx = feed.getFeedFileIdx();
+            if (oldFileIdx != null) {
+                filesMapper.deleteFileByIdx(oldFileIdx);
+            }
+
+            Files newFile = filesUtils.uploadFile(feedPicture);
+            if (newFile != null) {
+                String newFileIdx = commonMapper.getPrimaryKey("file_", "files", "file_idx");
+                newFile.setFileIdx(newFileIdx);
+                filesMapper.addfile(newFile);
+                feed.setFeedFileIdx(newFileIdx);
+            }
+        }
+
+        feedMapper.modifyFeed(feed);
     }
+    
+    // 피드 코드 조회
+    @Override
+	public Feed getFeedByCode(String feedCode) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("FeedCode", feedCode);
+	    return feedMapper.getFeedByCode(params);
+	}
     
     // 피드 댓글 추가
 }
