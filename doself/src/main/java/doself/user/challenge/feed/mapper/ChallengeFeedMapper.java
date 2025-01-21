@@ -72,6 +72,9 @@ public interface ChallengeFeedMapper {
 	// 챌린지 피드 댓글 등록
 	int addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
 	
+	// 챌린지 피드 댓글 1개 조회
+	String ChallengeFeedCommentView(@Param("challengeFeedCommentCode") String challengeFeedCommentCode);
+	
 	
 	
 	

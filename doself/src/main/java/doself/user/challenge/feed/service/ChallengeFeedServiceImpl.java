@@ -498,6 +498,10 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 //	            filesMapper.updateFilePath(uploadedFile); // file_path만 업데이트
 //	        }
 //	    }
+	    
+	    // 파일의 idx 경로를 가져와서 delete가 이뤄지면(리턴 값이 true이면) 업로드
+	    // 업로드가 되면 fileinfo → 다시 올린 경로/오리지널네임 → 기존의 idx만 세팅(파일인포)
+	    // 파일 매퍼에
 		
 		log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
 		
@@ -521,7 +525,13 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 챌린지 피드 댓글 등록
 	@Override
 	public void addChallengeFeedComment(ChallengeFeedComment challengeFeedComment) {
-		int commentResult = challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
+		String formattedKeyNum = commonMapper.getPrimaryKey("cfc_", "challenge_feed_comments", "cfc_num");
+		challengeFeedComment.setChallengeFeedCommentCode(formattedKeyNum);
+	    challengeFeedComment.setChallengeFeedCommentDate(new Date()); // 현재 날짜 설정
+	    challengeFeedComment.setChallengeFeedCommentLike(0); 		  // 좋아요 기본값 0
+	    challengeFeedComment.setChallengeFeedCommentCaution("N");	  // 경고 기본값 N
+
+	    challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
 	}
 
 }

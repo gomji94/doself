@@ -14,5 +14,5 @@ public interface FilesMapper {
 	List<Files> getFileList();
 	int addfile(Files fileDto);
 	int addfiles(List<Files> fileDto);
-	void updateFilePath(Files file);
+	int updateFileByIdx(Files file);
 }
