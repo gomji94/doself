@@ -92,6 +92,19 @@
 	    <result column="cg_content" 		property="challengeContent" />
 	    <result column="file_path" 			property="challengeImage" />
 	</resultMap> 
+	
+	<resultMap type="AddChallengeFeed" id="ModifyChallengeFeedResultMap">
+		<id 	column="cmf_num" 		  	property="challengeFeedCode" />
+		<result column="cg_num" 		  	property="challengeCode" />
+		<result column="mbr_id"  		  	property="challengeMemberId" />
+		<result column="cmf_content"  	  	property="challengeFeedContent" />
+		<result column="cmf_like"  		  	property="challengeFeedLike" />
+		<result column="cmf_warning_check"  property="challengeFeedWarningCheck" />
+		<result column="cmf_file_idx"  		property="challengeFeedFileIdx" />
+		<result column="cmf_food_intake"    property="challengeFeedFoodIntake" />
+		<result column="mc_num"  			property="challengeMealCategory" />
+	</resultMap>
+	
 	<!-- 로그인된 챌린지 멤버 아이디 -->
 	<select id="getChallengeCodeByMemberId" parameterType="string" resultType="string">
 	    SELECT
@@ -263,6 +276,27 @@
 			cfc.cmf_num = #{challengeFeedCode}
   	</select>
   	
+  	<!-- 챌린지 피드 댓글 등록 -->
+  	<insert id="addChallengeFeedComment" parameterType="ChallengeFeedComment">
+  		INSERT INTO challenge_feed_comments	(
+			cfc_num,
+			cmf_num,
+			mbr_id,
+			cfc_content,
+			cfc_date,
+			cfc_like,
+			cfc_caution_check
+		) VALUES (
+			#{challengeFeedCommentCode},
+			#{challengeFeedCode},
+			#{challengeFeedCommentAuthor},
+			#{challengeFeedCommentContent},
+			NOW(),
+			#{challengeFeedCommentLike},
+			#{challengeFeedCommentCaution}
+		)
+  	</insert>
+  	
   	<!-- 챌린지 진행 상태 조회 -->
   	<select id="getChallengeProgress" resultMap="ChallengeProcessMap">
   		SELECT DISTINCT
@@ -335,50 +369,20 @@
 	    WHERE cg_num = #{challengeCode} AND mbr_id = #{memberId}
 	</update>
 	
+	<!-- 챌린지 피드 수정 -->
 	<update id="modifyChallengeFeed" parameterType="AddChallengeFeed">
 	    UPDATE challenge_member_feed
 	    <set>
-	        <if test="challengeFeedCode != null">
-	            cmf_num = #{challengeFeedCode},
-	        </if>
-	        <if test="challengeCode != null">
-	            cg_num = #{challengeCode},
-	        </if>
-	        <if test="challengeMemberId != null">
-	            mbr_id = #{challengeMemberId},
-	        </if>
-	        <choose>
-	            <when test="challengeFeedContent != null">
-	                cmf_content = #{challengeFeedContent},
-	            </when>
-	            <otherwise>
-	                cmf_content = NULL,
-	            </otherwise>
-	        </choose>
-	        <if test="challengeFeedDate != null">
-	            cmf_date = #{challengeFeedDate},
-	        </if>
-	        <if test="challengeFeedLike != null">
-	            cmf_like = #{challengeFeedLike},
-	        </if>
-	        <if test="challengeFeedWarningCheck != null">
-	            cmf_warning_check = #{challengeFeedWarningCheck},
-	        </if>
-	        <if test="challengeFeedFileIdx != null">
-	            cmf_file_idx = #{challengeFeedFileIdx},
-	        </if>
-	        <if test="challengeFeedFoodIntake != null">
-	            cmf_food_intake = #{challengeFeedFoodIntake},
-	        </if>
-	        <if test="challengeMealCategory != null">
-	            mc_num = #{challengeMealCategory}
-	        </if>
+	        <if test="challengeFeedContent != null">cmf_content = #{challengeFeedContent},</if>
+	        <if test="challengeFeedFileIdx != null">cmf_file_idx = #{challengeFeedFileIdx},</if>
+	        <if test="challengeFeedFoodIntake != null">cmf_food_intake = #{challengeFeedFoodIntake},</if>
+	        <if test="challengeMealCategory != null">mc_num = #{challengeMealCategory}</if>
 	    </set>
 	    WHERE cmf_num = #{challengeFeedCode}
-	    AND cmf_num IS NOT NULL
 	</update>
 	
-	<select id="getChallengeFeedByCode" resultMap="ChallengeFeedResultMap">
+	<!-- 챌린지 피드 코드 -->
+	<select id="getChallengeFeedByCode" parameterType="map" resultMap="ModifyChallengeFeedResultMap">
 	    SELECT
 	        cmf_num,
 	        cg_num,
@@ -389,11 +393,18 @@
 	        cmf_file_idx,
 	        cmf_food_intake,
 	        mc_num
-	    FROM challenge_member_feed
-	    WHERE cmf_num = #{challengeFeedCode}
+	    FROM
+	        challenge_member_feed
+	    WHERE
+	        cmf_num = #{challengeFeedCode}
 	</select>
 	
-	
+	<!-- 챌린지 피드 삭제 -->
+	<delete id="deleteChallengeFeed">
+	    DELETE FROM challenge_member_feed
+	    WHERE cmf_num = #{challengeFeedCode}
+	      AND mbr_id = #{memberId}
+	</delete>
 	
 	
 	

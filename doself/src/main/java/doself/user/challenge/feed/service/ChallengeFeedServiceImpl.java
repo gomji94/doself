@@ -487,7 +487,10 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx()); // 새 파일의 IDX 설정
 	        }
 	    }
-		
+	    
+	    String challengeFeedCode = addChallengeFeed.getChallengeFeedCode();
+	    addChallengeFeed.setChallengeFeedCode(challengeFeedCode);
+	    
 //		if (files != null && !files.isEmpty()) {
 //	        Files uploadedFile = filesUtils.uploadFile(files);
 //	        if (uploadedFile != null) {
@@ -504,7 +507,21 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 챌린지 피드 코드
 	@Override
 	public AddChallengeFeed getChallengeFeedByCode(String challengeFeedCode) {
-		return challengeFeedMapper.getChallengeFeedByCode(challengeFeedCode);
+		Map<String, Object> params = new HashMap<>();
+	    params.put("challengeFeedCode", challengeFeedCode);
+	    return challengeFeedMapper.getChallengeFeedByCode(params);
+	}
+
+	// 챌린지 피드 삭제
+	@Override
+	public void deleteChallengeFeed(String challengeFeedCode, String memberId) {
+		challengeFeedMapper.deleteChallengeFeed(challengeFeedCode, memberId);
+	}
+
+	// 챌린지 피드 댓글 등록
+	@Override
+	public void addChallengeFeedComment(ChallengeFeedComment challengeFeedComment) {
+		int commentResult = challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
 	}
 
 }
