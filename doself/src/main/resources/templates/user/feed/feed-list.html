@@ -16,7 +16,7 @@
 	                    <div class="body-content">
 	                        <div class="body-titlebox">
 	                            <ul>
-	                                <li class="pop" id="feed-modify-modal">피드 수정</li>
+	                                <li class="pop" id="feed-modify-modal" data-feed-code="${f.feedCode}">피드 수정</li>
 	                                <li class="pop" id="feed-delete-modal">피드 삭제</li>
 	                                <li class="pop" id="my-feed-link-copy"> 피드 링크 복사</li>
 	                                <li class="pop close">취소</li>
@@ -97,7 +97,7 @@
 						      th:data-meal-calcium="${f.mealCalcium}" 
 						      th:data-meal-iron="${f.mealIron}" 
 						      th:data-mbr_file_idx="${f.memberFilePath}" 
-						      th:data-feed_file_idx="${f.feedFilePath}" 
+						      th:data-feed_file_idx="${f.feedFileIdx}" 
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
                     <a href="#">

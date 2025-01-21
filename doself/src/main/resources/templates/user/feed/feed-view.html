@@ -42,7 +42,7 @@
 					<hr>
 					<div class="df-feed-content">
 						<div class="df-feed-main-img">
-							<img class="df-meal-img" th:src="${feed.mealPicture}">
+							<img class="df-meal-img" th:src="@{|${feed.feedFilePath}|}">
 						</div>
 						<div class="df-progress-container">
 							<div class="df-analysis-table">

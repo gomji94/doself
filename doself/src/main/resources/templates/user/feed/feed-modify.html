@@ -8,77 +8,68 @@
 	            <img id="feed-modify-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
         	</div>
 	        <hr>
-	        <form id="modifyFeedForm" th:action="@{/user/feed/modifyfeed}" method="post" th:object="${feed}">
-		        <div class="feed-modify-modal-body">
-					<!-- 이미지 업로드 영역 -->
-		            <div class="feed-modify-image-upload">
-		                <div class="feed-modify-preview-box" id="feed-modify-preview-container">
-	    					<input type="file" id="feed-modify-file-input" accept="image/*" style="display: none;">
-		                    <img src="" alt="업로드된 이미지 미리보기" id="feed-modify-image-preview">
-		                </div>
-		            </div>
-		
-		            <!-- 정보 입력 영역 -->
-					<div class="feed-modify-feed-info">
-		                <textarea id="feed-modify-content" placeholder="내용을 입력해주세요" maxlength="2000"></textarea>
-		                <div class="feed-modify-text-box-under">
-		                    <div class="feed-modify-text-counter">
-		                        <span id="feed-modify-text-count">0</span>
-		                        <span>/2000</span>
-		                    </div>
-		                </div>
-	                </div>
-						<!-- <div class="input-group">
-						    <input type="text" 
-							       class="feed-create-food-search" 
-							       id="searchFood" 
-							       name="searchValue" 
-							       placeholder="음식 이름을 작성하거나 선택해주세요."/>
-						<div id="searchResults" class="dropdown-menu" style="display: none;"></div>
-						</div> -->
-					<div class="input-group">
-                        <label for="feedIntakeDate">섭취 날짜 및 시간</label>
-                        <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required />
-                    </div>
-	                <div class="input-group">
-	                    <label for="feedFoodIntake">섭취 인분</label>
-	                    <select id="feed-modify-serving" name="feedFoodIntake" required>
-	                        <option value="">선택하세요</option>
-	                        <option value="1">1</option>
-	                        <option value="2">2</option>
-	                        <option value="3">3</option>
-	                        <option value="4">4</option>
-	                        <option value="5">5</option>
-	                    </select>
-	                </div>
-	                
-	                <div class="input-group">
-	                    <label for="mealCategoryCode">식사 분류</label>
-	                    <select id="feed-modify-meal-type" name="mealCategoryCode" required>
-	                    	<option value="">선택하세요</option>
-	                        <option value="breakfast">아침</option>
-	                        <option value="lunch">점심</option>
-	                        <option value="dinner">저녁</option>
-	                        <option value="snack">간식</option>
-	                    </select>
-	                </div>
-	                <div class="radio-group">
-	                    <label for="feedOpenStatus">공개 여부</label>
-		                <div>
-		                    <label>
-		                        <input type="radio" name="feedOpenStatus" value="1" required> 공개
-		                    </label>
-		                    <label>
-		                        <input type="radio" name="feedOpenStatus" value="0"> 비공개
-		                    </label>
-		                </div>
-	                </div>
-	            </div>
-				<div class="fm-submit-btn">
-                	<button type="submit" class="feed-modify-submit-btn">수정</button>
-                	<button type="submit" class="feed-modify-cancel-submit-btn">취소</button>
+	        <form id="modifyFeedForm" th:action="@{/user/feed/modifyfeed}" method="post" enctype="multipart/form-data" th:object="${feed}">
+                <div class="feed-modify-modal-body">
+                    <!-- 이미지 업로드 영역 -->
+                    <div class="feed-modify-image-upload">
+				    <div class="feed-modify-preview-box">
+				        <input type="file" class="feed-modify-upload-btn" name="files" id="feed-modify-file-input" accept="image/*" required/>
+				        <img th:src="@{|${feed.feedFilePath}|}" alt="업로드된 이미지 미리보기" id="feed-modify-image-preview">
+				    </div>
 				</div>
-        	</form>
+        
+                    <!-- 정보 입력 영역 -->
+                    <div class="feed-modify-feed-info">
+                        <textarea id="feed-modify-content" name="feedContent" placeholder="내용을 입력해주세요" maxlength="2000" required th:text="${feed.feedContent}"></textarea>
+                        <div class="feed-modify-text-box-under">
+                            <div class="feed-modify-text-counter">
+                                <span id="feed-modify-text-count">0</span>
+                                <span>/2000</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="feedIntakeDate">섭취 날짜 및 시간</label>
+                        <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required th:value="${feed.feedIntakeDate}">
+                    </div>
+                    <div class="input-group">
+                        <label for="feedFoodIntake">섭취 인분</label>
+                        <select id="feedFoodIntake" name="feedFoodIntake" required>
+                            <option value="">선택하세요</option>
+                            <option value="1" th:selected="${feed.feedFoodIntake == 1}">1</option>
+                            <option value="2" th:selected="${feed.feedFoodIntake == 2}">2</option>
+                            <option value="3" th:selected="${feed.feedFoodIntake == 3}">3</option>
+                            <option value="4" th:selected="${feed.feedFoodIntake == 4}">4</option>
+                            <option value="5" th:selected="${feed.feedFoodIntake == 5}">5</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="mealCategoryCode">식사 분류</label>
+                        <select id="mealCategoryCode" name="mealCategoryCode" required>
+                            <option value="">선택하세요</option>
+                            <option value="mc001" th:selected="${feed.mealCategoryCode == 'mc001'}">아침</option>
+                            <option value="mc002" th:selected="${feed.mealCategoryCode == 'mc002'}">점심</option>
+                            <option value="mc003" th:selected="${feed.mealCategoryCode == 'mc003'}">저녁</option>
+                            <option value="mc004" th:selected="${feed.mealCategoryCode == 'mc004'}">간식</option>
+                        </select>
+                    </div>
+                    <div class="radio-group">
+                        <label for="feedOpenStatus">공개 여부</label>
+                        <div>
+                            <label>
+                                <input type="radio" name="feedOpenStatus" value="1" th:checked="${feed.feedOpenStatus == 1}"> 공개
+                            </label>
+                            <label>
+                                <input type="radio" name="feedOpenStatus" value="0" th:checked="${feed.feedOpenStatus == 0}"> 비공개
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="fm-submit-btn">
+                    <button type="submit" id="modifyFeedBtn" class="feed-modify-submit-btn">수정</button>
+                    <a href="/feed/list" class="feed-modify-cancel-submit-btn" id="feed-modify-cancel-btn">취소</a>
+                </div>
+            </form>
         </div>
     </div>
 </html>
