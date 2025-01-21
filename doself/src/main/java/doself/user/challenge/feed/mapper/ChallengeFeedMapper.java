@@ -12,7 +12,6 @@ import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
-import doself.util.CardPageable;
 
 @Mapper
 public interface ChallengeFeedMapper {
@@ -63,7 +62,10 @@ public interface ChallengeFeedMapper {
 	
 	// 챌린지 피드 수정
 	void modifyChallengeFeed(AddChallengeFeed addChallengeFeed);
-	
+
+	// 챌린지 피드 코드
+	AddChallengeFeed getChallengeFeedByCode(@Param("challengeCode") String challengeCode);
+
 	
 	
 	

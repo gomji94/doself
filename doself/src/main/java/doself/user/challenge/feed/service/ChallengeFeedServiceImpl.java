@@ -481,15 +481,30 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 챌린지 피드 수정
 	@Override
 	public void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
-		if (files != null && !files.isEmpty()) {
+	    if (files != null && !files.isEmpty()) {
 	        Files uploadedFile = filesUtils.uploadFile(files);
 	        if (uploadedFile != null) {
-	            uploadedFile.setFileIdx(addChallengeFeed.getChallengeFeedFileIdx()); // 기존 file_idx 유지
-	            filesMapper.updateFilePath(uploadedFile); // file_path만 업데이트
+	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx()); // 새 파일의 IDX 설정
 	        }
 	    }
 		
+//		if (files != null && !files.isEmpty()) {
+//	        Files uploadedFile = filesUtils.uploadFile(files);
+//	        if (uploadedFile != null) {
+//	            uploadedFile.setFileIdx(addChallengeFeed.getChallengeFeedFileIdx()); // 기존 file_idx 유지
+//	            filesMapper.updateFilePath(uploadedFile); // file_path만 업데이트
+//	        }
+//	    }
+		
+		log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
+		
 		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
 	}
-	
+
+	// 챌린지 피드 코드
+	@Override
+	public AddChallengeFeed getChallengeFeedByCode(String challengeFeedCode) {
+		return challengeFeedMapper.getChallengeFeedByCode(challengeFeedCode);
+	}
+
 }
