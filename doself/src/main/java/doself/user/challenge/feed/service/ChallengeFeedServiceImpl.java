@@ -3,6 +3,7 @@ package doself.user.challenge.feed.service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -268,6 +269,196 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    addChallengeFeed.setChallengeFeedWarningCheck("N"); // 기본값 'N'
 
 	    challengeFeedMapper.addChallengeFeed(addChallengeFeed);
+	    
+	    
+	    
+	    
+	    
+	    
+	    // 관리자
+	 // ...(*￣０￣)ノ챌린지내 개인기록	...(*￣０￣)ノ
+		
+	 		// 챌린지 피드생성시 실행
+	 		// 해당아이디의 해당챌린지의 해당날짜에 데이터의 수(챌린지피드 수) 조회
+	 		int challengeFeedCount = challengeFeedMapper.getChallengeFeedCountByChallengeFeed(addChallengeFeed);
+	 		
+	 		// 챌린지내 개인기록 해당아이디, 해당챌린지, 해당날짜에 데이터가 있는지 조회
+	 		int isDataMemberStat = challengeFeedMapper.isDataMemberStat(addChallengeFeed);
+	 		
+	 		// 챌린지 번호
+	 		String cgNum = addChallengeFeed.getChallengeCode();
+	 		
+	 		// 해당 챌린지의 난이도 별 개수 확인
+	 		int topicLevel =  challengeFeedMapper.getTopicLevel(cgNum);
+	 		// 개인기록 키생성
+	 		String memberStatKey = commonMapper.getPrimaryKey("cmss_", "challenge_member_score_stats", "cmss_num");
+	 		
+	 		Map<String, Object> memberStatMap = new HashMap<String, Object>();
+	 		memberStatMap.put("challengeFeed", addChallengeFeed);
+	 		memberStatMap.put("newKey", memberStatKey);
+	 		memberStatMap.put("topicLevel", topicLevel);
+	 		memberStatMap.put("challengeFeedCount", challengeFeedCount);
+	 		
+	 		// 챌린지내 개인기록 한개도 존재하지 않을시 insert
+	 		if(isDataMemberStat == 0) {	
+	 			
+	 			challengeFeedMapper.createPersonalStat(memberStatMap);
+	 		}
+	 		//한개이상 존재할때 update
+	 		else {
+	 			
+	 			challengeFeedMapper.updatePersonalStat(memberStatMap);			
+	 		}
+	 		
+	 		
+	 		
+	 		// ...(*￣０￣)ノ챌린지 개인 점수...(*￣０￣)ノ
+	 		
+	 		// 년도,월 분리
+	 		Date date = addChallengeFeed.getChallengeFeedDate();
+	 		// Calendar 객체로 날짜 처리
+	 		Calendar calendar = Calendar.getInstance();
+	 		calendar.setTime(date);
+	 		// 년도와 월 추출
+	 		int year = calendar.get(Calendar.YEAR);
+	 		int month = calendar.get(Calendar.MONTH) + 1;
+	 		// 해당멤버의 누적달성률 추출
+	 		double achievementRate = challengeFeedMapper.getAchievementRate(addChallengeFeed);
+	 		// 해당멤버의 누적참여율 추출
+	 		double participationRate = challengeFeedMapper.getParticipationRate(addChallengeFeed);
+	 		// 챌린지 보상기준에 따른 달성률 점수 추출
+	 		int achievementScore = challengeFeedMapper.getAchievementScore(achievementRate);
+	 		// 챌린지 보상기준에 따른 참여율 점수 추출
+	 		int participationScore = challengeFeedMapper.getParticipationScore(participationRate);
+	 		
+	 		
+	 		Map<String, Object> memberScoreMap = new HashMap<String, Object>();
+	 		memberScoreMap.put("challengeFeed", addChallengeFeed);
+	 		memberScoreMap.put("year", year);
+	 		memberScoreMap.put("month", month);
+	 		memberScoreMap.put("achievementRate", achievementRate);
+	 		memberScoreMap.put("participationRate", participationRate);
+	 		memberScoreMap.put("achievementScore", achievementScore);
+	 		memberScoreMap.put("participationScore", participationScore);
+	 		
+	 		// 해당아이디의 해당챌린지의 챌린지개인점수 데이터가 있는지 조회
+	 		int isDataMemberScore = challengeFeedMapper.isDataMemberScore(memberScoreMap);
+	 		
+	 		// 챌린지 개인점수 키 생성
+	 		String memberScoreKey = commonMapper.getPrimaryKey("cpsl_", "challenge_personal_score_list", "cpsl_num");
+	 		memberScoreMap.put("memberScoreKey", memberScoreKey);
+	 		
+	 		// 데이터가 없으면 insert
+	 		if(isDataMemberScore == 0) {
+	 			
+	 			challengeFeedMapper.createPersonalScore(memberScoreMap);
+	 		}
+	 		// 데이터가 있으면 update
+	 		else {
+	 			
+	 			challengeFeedMapper.updatePersonalScore(memberScoreMap);
+	 		}		
+	 		// 랭킹 update
+	 		challengeFeedMapper.updateMemberScoreRank();
+	 		
+	 		
+	 		
+	 		// ...(*￣０￣)ノ챌린지 별 기록 ...(*￣０￣)ノ
+	 		
+	 		// 해당날짜 해당챌린지의 데이터가 있는지 조회
+	 		int isDataChallengeStat = challengeFeedMapper.isDataChallengeStat(addChallengeFeed);
+	 		
+	 		// 해당날짜 해당챌린지의 일일참여율 조회
+	 		double challengeParticipationRate = challengeFeedMapper.getChallengeParticipationRate(addChallengeFeed); 
+	 		// 해당날짜 해당챌린지의 일일당설률 조회
+	 		double challengeAchievementRate = challengeFeedMapper.getChallengeAchievementRate(addChallengeFeed);
+	 		
+	 		Map<String, Object> challengeStatMap = new HashMap<String, Object>();
+	 		
+	 		challengeStatMap.put("challengeFeed", addChallengeFeed);
+	 		challengeStatMap.put("challengeParticipationRate", challengeParticipationRate);
+	 		challengeStatMap.put("challengeAchievementRate", challengeAchievementRate);
+	 		
+	 		// 없으면 insert
+	 		if(isDataChallengeStat == 0) {
+	 			//챌린지 기록 키생성
+	 			String challengeStatKey = commonMapper.getPrimaryKey("ctps_", "challenge_today_participation_stats", "ctps_num");
+	 			challengeStatMap.put("challengeStatKey", challengeStatKey);
+	 			
+	 			challengeFeedMapper.createChallengeStat(challengeStatMap);
+	 		}
+	 		// 있으면 update
+	 		else {
+	 			
+	 			challengeFeedMapper.updateChallengeStat(challengeStatMap);
+	 		}
+	 		
+	 		
+	 		
+	 		
+	 		// ...(*￣０￣)ノ챌린지 점수...(*￣０￣)ノ
+	 		
+	 		Map<String, Object> challengeScore = new HashMap<String, Object>();
+	 		
+	 		// 해당챌린지의 데이터가 있는지 조회
+	 		int isDataChallengeScore = challengeFeedMapper.isDataChallengeScore(addChallengeFeed);
+	 		
+	 		// 챌린지 난이도 가져오기
+	 		String challengeLevel = challengeFeedMapper.getChallengeLevel(addChallengeFeed);
+	 		// 챌린지보상기준에 따른 난이도 점수
+	 		int challengeLevelScore = challengeFeedMapper.getChallengeLevelScore(challengeLevel);
+	 		// 해당챌린지의 누적달성률 추출
+	 		double challengeCumulativeAchievementRate = challengeFeedMapper.getChallengeCumulativeAchievementRate(addChallengeFeed);
+	 		// 해당챌린지의 누적참여율 추출
+	 		double challengeCumulativeParticipationRate = challengeFeedMapper.getChallengeCumulativeParticipationRate(addChallengeFeed);
+	 		// 챌린지보상기준에 따른 누적달성률 점수
+	 		int challengeAchievementScore = challengeFeedMapper.getChallengeAchievementScore(challengeCumulativeAchievementRate);
+	 		// 챌린지보상기준에 따른 누적참여율 점수
+	 		int challengeParticipationScore = challengeFeedMapper.getChallengeParticipationScore(challengeCumulativeParticipationRate);
+	 		
+	 		challengeScore.put("challengeFeed", addChallengeFeed);
+	 		challengeScore.put("year", year);
+	 		challengeScore.put("month", month);
+	 		challengeScore.put("challengeLevel", challengeLevel);
+	 		challengeScore.put("challengeLevelScore", challengeLevelScore);
+	 		challengeScore.put("challengeCumulativeAchievementRate", challengeCumulativeAchievementRate);
+	 		challengeScore.put("challengeCumulativeParticipationRate", challengeCumulativeParticipationRate);
+	 		challengeScore.put("challengeAchievementScore", challengeAchievementScore);
+	 		challengeScore.put("challengeParticipationScore", challengeParticipationScore);
+	 		
+	 		
+	 		// 데이터가 존재하지 않으면 insert
+	 		if(isDataChallengeScore == 0) {
+	 			//챌린지점수 기본키 생성
+	 			String challengeScoreKey = commonMapper.getPrimaryKey("mcsl_", "monthly_challenge_score_list", "mcsl_num");
+	 			challengeScore.put("memberScoreKey", challengeScoreKey);
+	 			
+	 			challengeFeedMapper.createChallengeScore(challengeScore);
+	 		}
+	 		// 데이터가 존재하면 update
+	 		else {
+	 			
+	 			challengeFeedMapper.updateChallengeScore(challengeScore);
+	 		}
+	 		
+	 		// 랭킹 update
+	 		challengeFeedMapper.updateChallengeScoreRank();
+	 		
+	 		
+	 		// ...(*￣０￣)ノ리더가 경고한 내역...(*￣０￣)ノ (리더가 경고누를 때 판별)
+	 		
+	 		// 해당챌린지 해당멤버 경고 3번받으면 해당챌린지 퇴장
+	 		
+	 		// 퇴장당하지 않은 멤버중 경고 3번받은 멤버 조회
+	 		List<Map<String, Object>> accumulatedWarningMember = challengeFeedMapper.getAccumulatedWarningMember();
+	 		
+	 		// 챌린지 퇴장 처리 (insert)
+	 		for(Map<String, Object> e : accumulatedWarningMember) {
+	 			String cgmNumKey = commonMapper.getPrimaryKey("cgm_", "challenge_group_member", "cgm_num");
+	 			e.put("cgmNumKey", cgmNumKey);
+	 			
+	 			challengeFeedMapper.createChallengeMemberCsNum(e);
+	 		}
 	}
 	
 	// 멤버 점수 계산
@@ -300,4 +491,5 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		
 		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
 	}
+	
 }
