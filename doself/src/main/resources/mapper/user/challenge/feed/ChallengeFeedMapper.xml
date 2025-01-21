@@ -368,7 +368,7 @@
 	
 	<!-- 관리자 -->
 	<!-- 해당챌린지, 해당아이디, 해당날짜의 챌린지 피드 개수 조회 -->
-	<select id="getChallengeFeedCountByChallengeFeed" parameterType="ChallengeFeed" resultMap="ChallengeFeedResultMap">
+	<select id="getChallengeFeedCountByChallengeFeed" parameterType="AddChallengeFeed" resultMap="ChallengeFeedResultMap">
 		SELECT
 			COUNT(*)
 		FROM
@@ -394,7 +394,7 @@
 	
 	
 	<!-- 해당아이디, 해당챌린지, 해당날짜에 챌린지 개인기록 개수 조회  -->
-	<select id="isDataMemberStat" parameterType="ChallengeFeed" resultMap="PersonalStatResultMap">
+	<select id="isDataMemberStat" parameterType="AddChallengeFeed" resultMap="PersonalStatResultMap">
 		SELECT
 			COUNT(*)
 		FROM
@@ -470,7 +470,7 @@
 	</update>
 	
 	<!-- 해당멤버의 누적 달성률 추출 -->
-	<select id="getAchievementRate" parameterType="ChallengeFeed">
+	<select id="getAchievementRate" parameterType="AddChallengeFeed">
 		SELECT 
 			SUM(cmss.cmss_today_achievement_rate)/COUNT(*)
 		FROM
@@ -482,7 +482,7 @@
 	</select>
 	
 	<!-- 해당멤버의 누적 참여율 추출 -->
-	<select id="getParticipationRate" parameterType="ChallengeFeed">
+	<select id="getParticipationRate" parameterType="AddChallengeFeed">
 		SELECT 
 			SUM(cmss.cmss_today_participation_rate)/COUNT(*)
 		FROM
@@ -522,7 +522,7 @@
 	</select>
 	
 	<!-- 해당아이디의 해당챌린지의 챌린지개인점수 데이터가 있는지 조회 -->
-	<select id="isDataMemberScore" parameterType="ChallengeFeed">
+	<select id="isDataMemberScore" parameterType="AddChallengeFeed">
 		SELECT
 			COUNT(*)
 		FROM
@@ -612,7 +612,7 @@
 	</update>
 	
 	<!-- 해당날짜 해당챌린지의 데이터가 있는지 조회 -->
-	<select id="isDataChallengeStat" parameterType="ChallengeFeed">
+	<select id="isDataChallengeStat" parameterType="AddChallengeFeed">
 		SELECT 
 			COUNT(*)
 		FROM challenge_today_participation_stats
@@ -624,7 +624,7 @@
 	</select>
 	
 	<!-- 해당날짜 해당챌린지의 일일참여율 조회 -->
-	<select id="getChallengeParticipationRate" parameterType="ChallengeFeed">
+	<select id="getChallengeParticipationRate" parameterType="AddChallengeFeed">
 		SELECT
 			COUNT(*)/(SELECT COUNT(*) FROM challenge_group cg
 			INNER JOIN challenge_group_member cgm WHERE cg_num = #{challengeCode})*100
@@ -637,7 +637,7 @@
 	</select>
 	
 	<!-- 해당날짜 해당챌린지의 일일참여율 조회 -->
-	<select id="getChallengeAchievementRate" parameterType="ChallengeFeed">
+	<select id="getChallengeAchievementRate" parameterType="AddChallengeFeed">
 		SELECT
 			SUM(cmss.cmss_today_achievement_rate)/(SELECT COUNT(*) FROM challenge_group cg
 			INNER JOIN challenge_group_member cgm WHERE cg_num = #{challengeCode})
@@ -650,7 +650,7 @@
 	</select>
 	
 	<!-- 데이터가 없으면 insert -->
-	<insert id="createChallengeStat" parameterType="ChallengeFeed">
+	<insert id="createChallengeStat" parameterType="AddChallengeFeed">
 		INSERT INTO challenge_today_participation_stats (
 			ctps_num, 
 			cg_num, 
@@ -679,7 +679,7 @@
 	</update>
 	
 	<!-- 해당챌린지의 데이터가 있는지 조회 -->
-	<select id="isDataChallengeScore" parameterType="ChallengeFeed">
+	<select id="isDataChallengeScore" parameterType="AddChallengeFeed">
 		SELECT 
 			COUNT(*)
 		FROM monthly_challenge_score_list
@@ -688,7 +688,7 @@
 	</select>
 	
 	<!-- 챌린지 난이도 가져오기 -->
-	<select id="getChallengeLevel" parameterType="ChallengeFeed">
+	<select id="getChallengeLevel" parameterType="AddChallengeFeed">
 		SELECT
 			ctl.ctl_level
 		FROM
@@ -713,7 +713,7 @@
 	</select>
 	
 	<!-- 해당챌린지의 누적달성률 출력 -->
-	<select id="getChallengeCumulativeAchievementRate" parameterType="ChallengeFeed">
+	<select id="getChallengeCumulativeAchievementRate" parameterType="AddChallengeFeed">
 		SELECT 
 			SUM(ctps.ctps_achievement_rate)/COUNT(*)
 		FROM 
@@ -723,7 +723,7 @@
 	</select>
 	
 	<!-- 해당챌린지의 누적참여율 출력 -->
-	<select id="challengeCumulativeParticipationRate" parameterType="ChallengeFeed">
+	<select id="challengeCumulativeParticipationRate" parameterType="AddChallengeFeed">
 		SELECT 
 			SUM(ctps.ctps_participation)/COUNT(*)
 		FROM 
