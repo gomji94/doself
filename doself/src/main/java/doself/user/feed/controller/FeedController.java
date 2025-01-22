@@ -96,11 +96,11 @@ public class FeedController {
     @GetMapping("/modifyfeed/{feedCode}")
     @ResponseBody
     public Feed getFeedModifyData(@PathVariable String feedCode) {
-    	log.info("Fetching data for feed modification, feedCode: {}", feedCode);
+        log.info("Fetching data for feed modification, feedCode: {}", feedCode);
 
         Feed feed = feedService.getFeedByCode(feedCode);
         if (feed == null) {
-            throw new RuntimeException("피드를 찾을 수 없습니다.");
+            throw new RuntimeException("Feed not found.");
         }
 
         return feed;
@@ -146,18 +146,18 @@ public class FeedController {
     }
 	
 	// 피드 댓글 추가
-		@PostMapping("/{feedCode}/addComment")
-		@ResponseBody
-		public ResponseEntity<String> addComment(
-	        @PathVariable String feedCode,
-	        @RequestBody Map<String, String> payload,
-	        HttpSession session) {
-	    String memberId = (String) session.getAttribute("SID");
-	    String commentContent = payload.get("commentContent");
+	@PostMapping("/{feedCode}/addComment")
+	@ResponseBody
+	public ResponseEntity<String> addComment(
+        @PathVariable String feedCode,
+        @RequestBody Map<String, String> payload,
+        HttpSession session) {
+    String memberId = (String) session.getAttribute("SID");
+    String commentContent = payload.get("commentContent");
 
-	    if (commentContent == null || commentContent.trim().isEmpty()) {
-	        return ResponseEntity.badRequest().body("댓글 내용이 비어있습니다.");
-	    }
+    if (commentContent == null || commentContent.trim().isEmpty()) {
+        return ResponseEntity.badRequest().body("댓글 내용이 비어있습니다.");
+    }
 
 	    try {
 	        feedService.addComment(feedCode, memberId, commentContent);

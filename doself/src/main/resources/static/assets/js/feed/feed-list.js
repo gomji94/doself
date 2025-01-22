@@ -254,59 +254,41 @@ $('#feed-create-submit-btn').on('click', function (e) {
 
 // --- 피드 수정 모달 ---
 $(document).ready(function () {
-    $('#feed-modify-modal').on('click', function () {
-		$('#feed-modify-modal').on('click', function () {
-	        const feedElement = $(this).data('.feed'); // 현재 클릭된 버튼의 부모 요소에서 feed 찾기
-	        
-			if (!feedCode) {
-	            console.error('Feed code not found.');
-	            alert('피드 정보를 불러올 수 없습니다.');
-	            return;
-	        }
+	$(document).on("click", ".feed-modify-modal", function () {
+	    const feedCode = $(this).data("feed-code");
 
-			 // AJAX 요청으로 피드 데이터를 가져옴
-        	 $.ajax({
-	            url: `/feed/modifyfeed/${feedCode}`, // URL에 feedCode 포함
-	            type: 'GET',
-	            dataType: 'json',
-	            success: function (feed) {
-	                if (!feed) {
-	                    alert('피드 정보를 찾을 수 없습니다.');
-	                    return;
-	                }
+		 // AJAX 요청으로 피드 데이터를 가져옴
+    	 $.ajax({
+            url: `/feed/modifyfeed/${encodeURIComponent(feedCode)}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (feed) {
+				 // 데이터 바인딩
+                $('#feed-modify-content').val(feed.feedContent || '');
+                $('#intakeDateTime').val(feed.feedIntakeDate ? feed.feedIntakeDate.slice(0, 16) : '');
+                $('#feedFoodIntake').val(feed.feedFoodIntake);
+                $('#mealCategoryCode').val(feed.mealCategoryCode);
+                $(`input[name="feedOpenStatus"][value="${feed.feedOpenStatus}"]`).prop('checked', true);
 
-	                // 데이터 바인딩
-	                $('#feed-modify-content').val(feed.feedContent || '');
-	                $('#intakeDateTime').val(feed.feedIntakeDate ? feed.feedIntakeDate.slice(0, 16) : '');
-	                $('#feedFoodIntake').val(feed.feedFoodIntake);
-	                $('#mealCategoryCode').val(feed.mealCategoryCode);
-	                $(`input[name="feedOpenStatus"][value="${feed.feedOpenStatus}"]`).prop('checked', true);
-
-					const imagePath = feed.feedFilePath || '/path/to/default-image.png'; // 기본 이미지 경로 설정
-			        $('#image-preview').attr('src', imagePath); // 미리보기 이미지 업데이트
-			        $('#image-preview').css('display', 'block'); // 이미지 표시
-			        $('#plate').css('display', 'none'); // 기본 플레이트 이미지 숨기기
-					
-	                // 모달 열기
-	                $('#feed-modify-modal-overlay').fadeIn(300);
-	            },
-	            error: function (error) {
-	                console.error('Error fetching feed data:', error);
-	                alert('피드 정보를 불러오는 데 실패했습니다.');
-	            }
-	        });
-	    });
-
-	    // 모달 닫기
-	    $('#feed-modify-modal-closeBtn').on('click', function () {
-	        $('#feed-modify-modal-overlay').fadeOut(300);
-	    });
-	});
-
-    // 모달 닫기 버튼
-    $("#feed-modify-modal-closeBtn").on("click", function () {
-        $("#feed-modify-modal-overlay").fadeOut(300);
+				const imagePath = feed.feedFilePath || '/path/to/default-image.png'; // 기본 이미지 경로 설정
+		        $('#image-preview').attr('src', imagePath); // 미리보기 이미지 업데이트
+		        $('#image-preview').css('display', 'block'); // 이미지 표시
+		        $('#plate').css('display', 'none'); // 기본 플레이트 이미지 숨기기
+				
+                // 모달 열기
+                $('#feed-modify-modal-overlay').fadeIn(300);
+            },
+            error: function (error) {
+                console.error('Error fetching feed data:', error);
+                alert('피드 정보를 불러오는 데 실패했습니다.');
+            }
+        });
     });
+});
+
+// 모달 닫기 버튼
+$("#feed-modify-modal-closeBtn").on("click", function () {
+    $("#feed-modify-modal-overlay").fadeOut(300);
 });
 
     /*// 글자수 카운터
@@ -354,43 +336,20 @@ $('#feed-delete-modal').on('click', function () {
 $(document).ready(function () {
     // 옵션 버튼 클릭 시 모달창 표시
     $('.commentBtn').on('click', function () {
-		const feedCode = $(this).data('feed-code');
-        const commentContent = $('#newComment').val().trim();
-
-        if (!commentContent) {
-            alert('댓글 내용을 입력하세요.');
-            return;
-        }
-
-        $.ajax({
-            url: `/feed/${feedCode}/addComment`,
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ commentContent: commentContent }),
-            success: function (response) {
-                // 댓글 목록 갱신
-                loadComments(feedCode);
-                $('#newComment').val(''); // 입력 필드 초기화
-            },
-            error: function () {
-                alert('댓글 작성 중 오류가 발생했습니다.');
-            }
-        });
+        $('.feed-comment-modal-overlay').fadeIn(); // 모달창 활성화
     });
 
-    // 댓글 목록 불러오기
-    function loadComments(feedCode) {
-        $.ajax({
-            url: `/feed/${feedCode}/comments`,
-            type: 'GET',
-            success: function (response) {
-                $('.feed-comment-feed-info').html(response); // 댓글 영역 갱신
-            },
-            error: function () {
-                alert('댓글 목록을 불러오는 데 실패했습니다.');
-            }
-        });
-    }
+    // 닫기 버튼 클릭 시 모달창 닫기
+    $('.feed-comment-modal-overlay .close').on('click', function () {
+        $('.feed-comment-modal-overlay').fadeOut(); // 모달창 비활성화
+    });
+
+    // 모달창 바깥을 클릭하면 모달창 닫기
+    $('.feed-comment-modal-overlay').on('click', function (e) {
+        if ($(e.target).is('.feed-comment-modal-overlay')) {
+            $(this).fadeOut();
+        }
+    });
 });
 
 // 오른쪽 사이드바 업데이트

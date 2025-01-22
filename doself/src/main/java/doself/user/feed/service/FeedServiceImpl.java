@@ -108,9 +108,12 @@ public class FeedServiceImpl implements FeedService {
     // 피드 코드 조회
     @Override
 	public Feed getFeedByCode(String feedCode) {
-		Map<String, Object> params = new HashMap<>();
-	    params.put("feedCode", feedCode);
-	    return feedMapper.getFeedByCode(params);
+    	Feed feed = feedMapper.getFeedByCode(Map.of("feedCode", feedCode));
+	    if (feed == null) {
+	        log.warn("Feed not found for feedCode: {}", feedCode);
+	        throw new RuntimeException("Feed not found.");
+	    }
+	    return feed;
 	}
     
     // 피드 삭제

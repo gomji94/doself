@@ -16,7 +16,7 @@
 	                    <div class="body-content">
 	                        <div class="body-titlebox">
 	                            <ul>
-	                                <li class="pop" id="feed-modify-modal" data-feed-code="${feedCode}">피드 수정</li>
+	                                <li class="pop feed-modify-modal" id="feed-modify-modal" data-feed-code="${feedCode}">피드 수정</li>
 	                                <li class="pop" id="feed-delete-modal" data-feed-code="${feedCode}">피드 삭제</li>
 	                                <li class="pop" id="my-feed-link-copy"> 피드 링크 복사</li>
 	                                <li class="pop close">취소</li>
@@ -76,7 +76,7 @@
 		</div>
 		<!-- 피드 리스트 -->
 		<section>
-			<input type="hidden" id="feedCode" th:value="${feedCode != null ? feedCode : ''}" />
+			<input type="hidden" id="feedCode" th:value="${feedCode ?: ''}" />
             <div class="feed" th:each="f, iterStat : ${FeedList}" 
 						      th:data-is-owner="${f.owner}" 
 						      th:data-feed-code="${f.feedCode}"

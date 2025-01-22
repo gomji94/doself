@@ -9,7 +9,7 @@
         	</div>
 	        <hr>
 	        <form id="modifyFeedForm" th:action="@{/feed/modifyfeed}" method="post" enctype="multipart/form-data" th:object="${feed}">
-				<input type="hidden" id="feedCode" name="feedCode" value="" />
+				<input type="hidden" id="feedCode" name="feedCode" />
 				<div class="feed-modify-modal-body">
                     <!-- 이미지 업로드 영역 -->
                     <div class="feed-modify-image-upload">
@@ -28,7 +28,7 @@
 				
                     <!-- 정보 입력 영역 -->
                     <div class="feed-modify-feed-info">
-                        <textarea id="feed-modify-content" name="feedContent" maxlength="2000" required></textarea>
+                        <textarea id="feedContent" name="feedContent" maxlength="2000" required></textarea>
                         <div class="feed-modify-text-box-under">
                             <div class="feed-modify-text-counter">
                                 <span id="feed-modify-text-count">0</span>
