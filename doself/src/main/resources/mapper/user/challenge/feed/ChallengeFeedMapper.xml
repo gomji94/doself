@@ -56,14 +56,17 @@
 	
 	<!-- 챌린지 댓글 리스트 조회 -->
 	<resultMap type="ChallengeFeedComment"  id="ChallengeFeedCommentMap">
-		<id 	column="cgm_num" 			property="challengeFeedCommentCode" />
-		<id 	column="cmf_num"			property="challengeFeedCode" />
-		<result column="mbr_id" 			property="challengeFeedCommentAuthor" />
-		<result column="cfc_content" 		property="challengeFeedCommentContent"/>
-		<result column="cfc_date" 			property="challengeFeedCommentDate"/>
-		<result column="cfc_like" 			property="challengeFeedCommentLike"/>
-		<result column="cfc_caution_check"  property="challengeFeedCommentCaution"/>
-		<result column="file_path" 			property="challengeFeedImage"/>
+		<id 	column="cfc_num" 				property="challengeFeedCommentCode" />
+		<id 	column="cmf_num"				property="challengeFeedCode" />
+		<result column="mbr_id" 				property="challengeFeedCommentAuthor" />
+		<result column="cfc_content" 			property="challengeFeedCommentContent"/>
+		<result column="cfc_date" 				property="challengeFeedCommentDate"/>
+		<result column="cfc_like" 				property="challengeFeedCommentLike"/>
+		<result column="cfc_caution_check"  	property="challengeFeedCommentCaution"/>
+		<result column="mbr_file_idx" 			property="challengeCommentAuthorImageIdx"/>
+		<result column="cmf_file_idx" 			property="challengeFeedImageIdx"/>
+		<result column="mbr_profile_image" 		property="challengeCommentAuthorImage"/>
+		<result column="cmf_picture_image" 		property="challengeFeedImage"/>
 	</resultMap>
 	
 	<!-- 챌린지 진행 상태 조회 -->
@@ -257,7 +260,7 @@
   	</select>
   	
   	<!-- 챌린지 댓글 리스트 조회 -->
-  	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
+  	<!-- <select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
   		SELECT
 			cfc.cfc_num,
 			cfc.cmf_num,
@@ -266,15 +269,19 @@
 			cfc.cfc_date,
 			cfc.cfc_like,
 			cfc.cfc_caution_check,
-			f.file_path
+			m.mbr_file_idx,
+			cmf.cmf_file_idx,
+			f.file_path AS mbr_profile_image,
+			ff.file_path AS cmf_picture_image
 		FROM
 			challenge_feed_comments cfc
-			LEFT JOIN `member` m USING(mbr_id)
+			INNER JOIN `member` m USING(mbr_id)       
 			INNER JOIN challenge_member_feed cmf USING(cmf_num)
-			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
 		WHERE
 			cfc.cmf_num = #{challengeFeedCode}
-  	</select>
+  	</select> -->
   	
   	<!-- 챌린지 피드 댓글 등록 -->
   	<insert id="addChallengeFeedComment" parameterType="ChallengeFeedComment">
@@ -421,6 +428,23 @@
 		LIMIT
 			1
 	</select>
+	
+	<!-- 댓글 리스트 조회 -->
+	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
+	    SELECT 
+	        cfc.cfc_num,
+	        cfc.mbr_id,
+	        cfc.cfc_content,
+	        cfc.cfc_date,
+	        m.mbr_file_idx,
+	        f.file_path AS mbr_profile_image
+	    FROM challenge_feed_comments cfc
+	    INNER JOIN `member` m ON cfc.mbr_id = m.mbr_id
+	    LEFT JOIN files f ON m.mbr_file_idx = f.file_idx
+	    WHERE cfc.cmf_num = #{challengeFeedCode}
+	    ORDER BY cfc.cfc_date DESC
+	</select>
+		
 	
 	
 	

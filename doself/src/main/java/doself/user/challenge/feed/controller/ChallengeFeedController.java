@@ -48,7 +48,6 @@ public class ChallengeFeedController {
 	    
 	    String loggedInMemberId = (String) session.getAttribute("SID");
 	    
-	    // 로그인된 사용자가 참여 중인 챌린지 리스트 가져오기
 	    List<ParticipateChallengeList> participateChallengeList = challengeFeedService.getChallengeListByMemberId(loggedInMemberId);
 
 	    model.addAttribute("challengeCode", challengeCode);
