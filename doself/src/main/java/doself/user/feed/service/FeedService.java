@@ -29,5 +29,12 @@ public interface FeedService {
 	// 피드 코드 조회
 	Feed getFeedByCode(String feedCode);
 	
+	// 피드 삭제
+	void deleteFeed(String feedCode);
+	
 	// 피드 댓글 추가
+	void addComment(String feedCode, String memberId, String commentContent);
+	
+	// 피드 댓글 조회
+	List<Feed> getCommentsByFeedCode(String feedCode);
 }

@@ -16,15 +16,15 @@
 
                <!-- 정보 입력 영역 -->
                <div class="feed-comment-feed-info">
-					<div class="feed-user-comment-container">
-						<div class="feed-comment-user-block">
-				            <img class="comment-profile" src="" alt="프로필" id="comment-profile-image">
-				            <a href="#" id="comment-user-name" class="feed-comment-user-link"></a>
+					<div th:each="comment : ${comments}">
+				        <div class="feed-comment-user-block">
+				            <img class="comment-profile" th:src="@{|${comment.memberProfileImage}|}" alt="프로필">
+				            <a href="#" th:text="${comment.memberId}" class="feed-comment-user-link"></a>
 				            <div class="feed-comment-feed-comment">
-				                <span id="comment-content"></span>
+				                <span th:text="${comment.commentContent}"></span>
 				            </div>
-				        </div>            
-					</div>
+				        </div>
+				    </div>
                    	<div class="feed-comment-feed-info-under">
                        <div class="action-icons">
                            <button type="button" class="action-btn likeBtn" data-liked="false">
@@ -36,8 +36,8 @@
                            <span>좋아요 3</span>
                        </div>
                        <div class="feed-comment-under-input">
-                           <input type="text" placeholder="댓글 달기...">
-                           <button type="button" class="feed-comment-comment-btn">게시</button>
+                           <input type="text" id="newComment" placeholder="댓글 달기...">
+                           <button type="button" class="feed-comment-comment-btn" data-feed-code="${f.feedCode}">게시</button>
                        </div>
                    </div>
                </div>
