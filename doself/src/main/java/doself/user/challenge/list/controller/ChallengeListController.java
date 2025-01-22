@@ -1,6 +1,5 @@
 package doself.user.challenge.list.controller;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +24,6 @@ import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +40,6 @@ public class ChallengeListController {
 	
 	// 챌린지 리스트 서비스 → 인스턴스 생성자 메소드
 	private final ChallengeListService challengeListService;
-	private final FileService fileService;
-	private final FilesMapper filesMapper;
 	
 	// 진행중인 챌린지 리스트 조회
 	@GetMapping("/list")

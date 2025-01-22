@@ -712,7 +712,79 @@ $(document).ready(function () {
 
 
 // --- feed comment modal ---
-$(document).ready(function () {
+$(document).on('click', '.commentBtn', function () {
+    const challengeFeedCode = $(this).data('challenge-code'); // 피드 코드 가져오기
+
+    if (!challengeFeedCode) {
+        alert("피드 코드가 없습니다.");
+        return;
+    }
+
+    // AJAX 요청으로 댓글 및 피드 데이터 가져오기
+    $.ajax({
+        url: '/challenge/feed/feedcomment',
+        type: 'GET',
+        data: { challengeFeedCode: challengeFeedCode },
+        success: function (response) {
+            if (!response) {
+                alert("데이터를 가져오지 못했습니다.");
+                return;
+            }
+
+            const { challengeFeedImage, comments } = response;
+
+            // 댓글 모달 HTML 생성
+            let commentHtml = `
+                <div class="cf-comment-modal-body">
+                    <div class="cf-comment-modal-image-upload">
+                        <img src="${challengeFeedImage || '/images/default-image.png'}" alt="피드 이미지" id="image-preview">
+                    </div>
+                    <div class="cf-comment-feed-info">
+                        <div class="cf-user-comment-container">`;
+
+            if (comments && comments.length > 0) {
+                comments.forEach(comment => {
+                    commentHtml += `
+                        <section>
+                            <div class="cf-comment-user-block">
+                                <div class="cf-comment-content-block">
+                                    <img class="comment-profile" src="${comment.challengeCommentAuthorImage || '/images/default-profile.png'}" alt="프로필">
+                                    <a href="#" class="cf-comment-user-link">${comment.challengeFeedCommentAuthor}</a>
+                                    <span class="comment-day-count">${new Date(comment.challengeFeedCommentDate).toLocaleDateString()}</span>
+                                    <div class="cf-comment-feed-comment">
+                                        <span>${comment.challengeFeedCommentContent}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="/images/comment-divider.png" alt="댓글 구분" class="comment-section">
+                        </section>`;
+                });
+            } else {
+                commentHtml += `<p>댓글이 없습니다. 첫 댓글을 작성해보세요!</p>`;
+            }
+
+            commentHtml += `
+                        </div>
+                    </div>
+                </div>`;
+
+            // 댓글 모달 표시
+            const commentModalContainer = $('.cf-comment-modal-container');
+            commentModalContainer.empty();
+            commentModalContainer.append(commentHtml);
+
+            $('#feedCommentModalOverlay').fadeIn(300);
+        },
+        error: function (error) {
+            console.error("댓글 데이터 로드 실패:", error);
+            alert("댓글 데이터를 가져오는 중 오류가 발생했습니다.");
+        }
+    });
+});
+
+
+
+/*$(document).ready(function () {
     // 댓글 버튼 클릭 이벤트
     $('.commentBtn').on('click', function () {
         const challengeFeedCode = $(this).data('challenge-code'); // 데이터 코드 가져오기
@@ -812,7 +884,7 @@ $(document).ready(function () {
             $('#feedCommentModalOverlay').fadeOut(300);
         }
     });
-});
+});*/
 
 
 

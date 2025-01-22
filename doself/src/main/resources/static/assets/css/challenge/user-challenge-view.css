@@ -15,8 +15,8 @@ dl, ol, ul {
 	margin-bottom: 0 !important;	
 }
 
-a:hover {
-	color: #a9bd4d !important;
+.challenge-main-container a:hover {
+	color: #515151 !important;
 }
 
 /* challenge-main-container */
