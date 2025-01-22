@@ -48,9 +48,6 @@ public interface ChallengeFeedMapper {
     // 챌린지 멤버 리스트 조회
     List<ChallengeMemberList> getMemberList(@Param("challengeCode") String challengeCode);
     
-    // 챌린지 피드 댓글 조회
-    List<ChallengeFeedComment> getFeedCommentList(@Param("challengeFeedCode") String challengeFeedCode);
-    
     // 챌린지 현재 멤버수
  	int getCurrentMemberCount(String challengeCode);
  	
@@ -71,6 +68,12 @@ public interface ChallengeFeedMapper {
 
 	// 챌린지 피드 댓글 등록
 	int addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
+	
+	// 챌린지 피드 이미지 조회
+	String getFeedImage(String challengeFeedCode);
+	
+	// 챌린지 피드 댓글 리스트 조회
+	List<ChallengeFeedComment> getFeedCommentList(@Param("challengeFeedCode") String challengeFeedCode);
 	
 	// 챌린지 피드 댓글 1개 조회
 	String ChallengeFeedCommentView(@Param("challengeFeedCommentCode") String challengeFeedCommentCode);

@@ -42,9 +42,6 @@ public interface ChallengeFeedService {
 	// 챌린지 참여 멤버 리스트 조회
 	List<ChallengeMemberList> getMemberList(String challengeCode);
 	
-	// 챌린지 피드 댓글 조회
-	List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode);
-	
 	// 챌린지 참여 멤버수 조회
 	int getCurrentMemberCount(String challengeCode);
 	
@@ -68,4 +65,7 @@ public interface ChallengeFeedService {
 	
 	// 챌린지 피드 댓글 등록
 	void addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
+
+	// 챌린지 피드 댓글 조회
+	List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode);
 }

@@ -228,13 +228,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 //        );
 	}
 
-	// 챌린지 피드별 댓글 리스트
-	@Override
-	public List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode) {
-		List<ChallengeFeedComment> feedCommentList = challengeFeedMapper.getFeedCommentList(challengeFeedCode);
-		return feedCommentList;
-	}
-
 	// 챌린지 참여 멤버수 조회
 	@Override
 	public int getCurrentMemberCount(String challengeCode) {
@@ -549,6 +542,13 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    challengeFeedComment.setChallengeFeedCommentCaution("N");	  // 경고 기본값 N
 
 	    challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
+	}
+	
+	// 챌린지 피드별 댓글 리스트
+	@Override
+	public List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode) {
+		List<ChallengeFeedComment> feedCommentList = challengeFeedMapper.getFeedCommentList(challengeFeedCode);
+		return feedCommentList;
 	}
 
 }
