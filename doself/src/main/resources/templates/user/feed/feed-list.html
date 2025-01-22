@@ -16,8 +16,8 @@
 	                    <div class="body-content">
 	                        <div class="body-titlebox">
 	                            <ul>
-	                                <li class="pop" id="feed-modify-modal" th:data-feed-code="${feed.feedCode}">피드 수정</li>
-	                                <li class="pop" id="feed-delete-modal">피드 삭제</li>
+	                                <li class="pop" id="feed-modify-modal" data-feed-code="${feedCode}">피드 수정</li>
+	                                <li class="pop" id="feed-delete-modal" data-feed-code="${feedCode}">피드 삭제</li>
 	                                <li class="pop" id="my-feed-link-copy"> 피드 링크 복사</li>
 	                                <li class="pop close">취소</li>
 	                            </ul>
@@ -137,8 +137,8 @@
                 <hr>
                 <div class="add-comment">
                     <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-                    <input type="text" placeholder="댓글 달기...">
-                    <button class="comment-submit">게시</button>
+                    <input type="text" id="newComment" placeholder="댓글 달기...">
+                    <button class="comment-submit" data-feed-code="${f.feedCode}">게시</button>
                 </div>
             </div>
 		</section>

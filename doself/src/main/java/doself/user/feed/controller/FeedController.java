@@ -95,8 +95,15 @@ public class FeedController {
 	// 피드 수정 모달 열기
     @GetMapping("/modifyfeed/{feedCode}")
     @ResponseBody
-    public Feed getFeedModifyData(@RequestParam("feedCode") String feedCode) {
-    	return feedService.getFeedByCode(feedCode);
+    public Feed getFeedModifyData(@PathVariable String feedCode) {
+    	log.info("Fetching data for feed modification, feedCode: {}", feedCode);
+
+        Feed feed = feedService.getFeedByCode(feedCode);
+        if (feed == null) {
+            throw new RuntimeException("피드를 찾을 수 없습니다.");
+        }
+
+        return feed;
     }
 	
 	// 피드 수정
@@ -117,6 +124,19 @@ public class FeedController {
         return "redirect:/feed/" + feed.getFeedCode();
     }
 	
+    // 피드 삭제
+    @PostMapping("/delete")
+    @ResponseBody
+    public ResponseEntity<String> deleteFeed(@RequestParam("feedCode") String feedCode) {
+        try {
+            feedService.deleteFeed(feedCode);
+            return ResponseEntity.ok("피드가 성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            log.error("피드 삭제 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("피드 삭제 중 오류가 발생했습니다.");
+        }
+    }
+    
 	// 피드 댓글 조회
 	@GetMapping("/{feedCode}/comments")
     public String getFeedComments(Model model) {
@@ -124,6 +144,28 @@ public class FeedController {
         
         return "user/feed/feed-comment";
     }
+	
+	// 피드 댓글 추가
+		@PostMapping("/{feedCode}/addComment")
+		@ResponseBody
+		public ResponseEntity<String> addComment(
+	        @PathVariable String feedCode,
+	        @RequestBody Map<String, String> payload,
+	        HttpSession session) {
+	    String memberId = (String) session.getAttribute("SID");
+	    String commentContent = payload.get("commentContent");
+
+	    if (commentContent == null || commentContent.trim().isEmpty()) {
+	        return ResponseEntity.badRequest().body("댓글 내용이 비어있습니다.");
+	    }
+
+	    try {
+	        feedService.addComment(feedCode, memberId, commentContent);
+	        return ResponseEntity.ok("댓글이 추가되었습니다.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가 중 오류가 발생했습니다.");
+	    }
+	}
 	
 	// 피드 좋아요 증감
 	@PostMapping("/like")
@@ -150,6 +192,4 @@ public class FeedController {
 		
 		return "user/feed/nutritioninfo-view";
 	}
-	
-	// 피드 댓글 추가
 }

@@ -109,10 +109,42 @@ public class FeedServiceImpl implements FeedService {
     @Override
 	public Feed getFeedByCode(String feedCode) {
 		Map<String, Object> params = new HashMap<>();
-	    params.put("FeedCode", feedCode);
+	    params.put("feedCode", feedCode);
 	    return feedMapper.getFeedByCode(params);
 	}
     
+    // 피드 삭제
+    @Override
+    @Transactional
+    public void deleteFeed(String feedCode) {
+        // 피드 댓글 삭제
+        feedMapper.deleteFeedComments(feedCode);
+        
+        // 피드에 연결된 파일 삭제
+        feedMapper.deleteFeedFileIdx(feedCode);
+        
+        // 피드 삭제
+        feedMapper.deleteFeed(feedCode);
+        
+        log.info("Feed and related data deleted for feedCode: {}", feedCode);
+    }
+    
     // 피드 댓글 추가
+    @Override
+    public void addComment(String feedCode, String memberId, String commentContent) {
+        Feed comment = new Feed();
+        comment.setFeedCode(feedCode);
+        comment.setMemberId(memberId);
+        comment.setCommentContent(commentContent);
+        comment.setCommentDate(LocalDateTime.now());
+
+        feedMapper.addComment(comment);
+    }
+
+    // 피드 댓글 조회
+    @Override
+    public List<Feed> getCommentsByFeedCode(String feedCode) {
+        return feedMapper.getCommentsByFeedCode(feedCode);
+    }
 }
 	
