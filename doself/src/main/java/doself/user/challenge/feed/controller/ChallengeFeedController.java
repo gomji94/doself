@@ -178,6 +178,9 @@ public class ChallengeFeedController {
 	    addChallengeFeed.setChallengeMemberId(memberId);
 
 	    challengeFeedService.addChallengeFeed(files, addChallengeFeed);
+	    
+	    //관리자 기능 실행
+	    challengeFeedService.adminChallengeFeed(addChallengeFeed);
 
 	    //log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
 	    

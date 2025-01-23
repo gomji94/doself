@@ -9,6 +9,7 @@
         	</div>
 	        <hr>
 	        <form id="modifyFeedForm" th:action="@{/feed/modifyfeed}" method="post" enctype="multipart/form-data" th:object="${feed}">
+	        
 				<input type="hidden" id="feedCode" name="feedCode" />
 				<div class="feed-modify-modal-body">
                     <!-- 이미지 업로드 영역 -->
@@ -73,6 +74,7 @@
                         </div>
                     </div>
                 </div>
+	     
                 <div class="fm-submit-btn">
                     <button type="submit" id="modifyFeedBtn" class="feed-modify-submit-btn">수정</button>
                     <a href="/feed/list" class="feed-modify-cancel-submit-btn" id="feed-modify-cancel-btn">취소</a>

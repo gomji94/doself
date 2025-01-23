@@ -62,7 +62,7 @@
 		       </div>
 		   </div>
 	        
-			<!-- 챌린지 생성 모달 -->
+			<!-- 피드 생성 모달 -->
             <div th:replace="~{user/feed/feed-create :: feed-create(mniList=${foodNutritionList})}"></div>
 			
 	        <!-- 피드 수정 모달 -->
@@ -76,7 +76,6 @@
 		</div>
 		<!-- 피드 리스트 -->
 		<section>
-			<input type="hidden" id="feedCode" th:value="${feedCode ?: ''}" />
             <div class="feed" th:each="f, iterStat : ${FeedList}" 
 						      th:data-is-owner="${f.owner}" 
 						      th:data-feed-code="${f.feedCode}"
@@ -101,6 +100,7 @@
 						      th:data-feed_file_idx="${f.feedFileIdx}" 
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
+                <input type="hidden" id="feedCode" th:value="${f.feedCode}" />
                     <a href="#">
                        <img class="profile-img" th:src="@{|${f.memberFilePath}|}" alt="프로필 이미지">
                     </a>
@@ -114,7 +114,7 @@
                     </div>
                 </div>
 				<div class="feed-main-img">
-				    <a th:href="@{|/feed/${f.feedCode}|}"> <!-- feedCode를 경로에 전달 -->
+				    <a th:href="@{/feed/view(feedCode=${f.feedCode})}"> <!-- feedCode를 경로에 전달 -->
 				        <img class="meal-img" th:src="@{|${f.feedFilePath}|}" alt="피드 이미지">
 				    </a>
 				</div>

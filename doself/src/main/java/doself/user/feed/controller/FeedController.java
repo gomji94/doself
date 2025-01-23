@@ -50,6 +50,7 @@ public class FeedController {
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		
 		    feedList.forEach(feed -> {
+		    	log.info("FeedCode: {}", feed.getFeedCode());
 		        if (feed.getFeedDate() != null) {
 		            feed.setFormattedDate(feed.getFeedDate().format(formatter));
 		        }
@@ -68,8 +69,8 @@ public class FeedController {
 	}
 	
 	// 특정 피드 상세 조회
-    @GetMapping("/{feedCode}")
-    public String getFeedDetail(@PathVariable String feedCode, Model model) {
+    @GetMapping("/view")
+    public String getFeedDetail(@RequestParam(name="feedCode") String feedCode, Model model) {
         Feed feed = feedService.getFeedDetail(feedCode);
 
         model.addAttribute("feed", feed);
@@ -93,42 +94,41 @@ public class FeedController {
     }
     
 	// 피드 수정 모달 열기
-    @GetMapping("/modifyfeed/{feedCode}")
+    @GetMapping("/modifyfeed")
     @ResponseBody
-    public Feed getFeedModifyData(@PathVariable String feedCode) {
+    public Feed getFeedModifyData(@RequestParam(name="feedCode") String feedCode, Model model) {
         log.info("Fetching data for feed modification, feedCode: {}", feedCode);
 
-        Feed feed = feedService.getFeedByCode(feedCode);
-        if (feed == null) {
-            throw new RuntimeException("Feed not found.");
-        }
-
+        Feed feed = feedService.getFeedDetail(feedCode);
+        model.addAttribute("feed", feed);
         return feed;
     }
 	
-	// 피드 수정
+    // 피드 수정 폼
     @PostMapping("/modifyfeed")
     public String modifyFeed(
         @RequestPart(name = "files", required = false) MultipartFile files,
         @ModelAttribute Feed feed,
+        @RequestParam("feedCode") String feedCode, // 명시적으로 feedCode를 받아옴
         HttpSession session
     ) {
         String memberId = (String) session.getAttribute("SID");
-        feed.setMemberId(memberId); // 세션에서 작성자 아이디를 설정
+        feed.setMemberId(memberId);
+        feed.setFeedCode(feedCode); // feedCode 설정
 
         feedService.modifyFeed(feed, files);
 
-        log.info("Modified feed: {}", feed);
-
-        // 수정 완료 후 상세 페이지로 리다이렉트
         return "redirect:/feed/" + feed.getFeedCode();
     }
 	
     // 피드 삭제
-    @PostMapping("/delete")
+    @PostMapping("/deletefeed")
     @ResponseBody
-    public ResponseEntity<String> deleteFeed(@RequestParam("feedCode") String feedCode) {
-        try {
+    public ResponseEntity<String> deleteFeed(@RequestParam(required = true) String feedCode) {
+    	if (feedCode == null || feedCode.isEmpty()) {
+            return ResponseEntity.badRequest().body("feedCode가 누락되었습니다.");
+        }
+    	try {
             feedService.deleteFeed(feedCode);
             return ResponseEntity.ok("피드가 성공적으로 삭제되었습니다.");
         } catch (Exception e) {

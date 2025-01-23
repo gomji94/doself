@@ -93,7 +93,7 @@ public interface ChallengeFeedMapper {
 	// 관리자
 	// 멤버기록
 		// 해당아이디, 해당챌린지, 해당날짜에 챌린지 피드 개수 조회 
-		Integer getChallengeFeedCountByChallengeFeed(AddChallengeFeed challengeFeed);
+		int getChallengeFeedCountByChallengeFeed(AddChallengeFeed challengeFeed);
 		// 해당아이디, 해당챌린지, 해당날짜에 챌린지 개인기록 개수 조회 
 		int isDataMemberStat(AddChallengeFeed challengeFeed);
 		// 피드난이도별 개수 가져오기
