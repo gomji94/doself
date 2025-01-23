@@ -97,11 +97,7 @@ public class FeedController {
     @GetMapping("/modifyfeed")
     @ResponseBody
     public Feed getFeedModifyData(@RequestParam(name="feedCode") String feedCode, Model model) {
-        log.info("Fetching data for feed modification, feedCode: {}", feedCode);
-
-        Feed feed = feedService.getFeedDetail(feedCode);
-        model.addAttribute("feed", feed);
-        return feed;
+    	return feedService.getFeedDetail(feedCode);
     }
 	
     // 피드 수정 폼

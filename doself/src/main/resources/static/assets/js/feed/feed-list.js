@@ -254,41 +254,47 @@ $('#feed-create-submit-btn').on('click', function (e) {
 
 // --- 피드 수정 모달 ---
 $(document).ready(function () {
-	$('#feed-modify-modal').click(function () {
-	    const feedCode = $(this).data("feedCode");
+    // 수정 버튼 클릭 시
+    $('.feed-modify-btn').on('click', function () {
+        const feedElement = $(this).closest('.feed'); // 클릭된 피드 요소 가져오기
+        const feedCode = feedElement.data('feed-code'); // 피드 코드 가져오기
 
-		 // AJAX 요청으로 피드 데이터를 가져옴
-    	 $.ajax({
+        // 모달에 데이터 바인딩
+        $('#modify-feedCode').val(feedElement.data('feed-code'));
+        $('#modify-feedContent').val(feedElement.data('feed-content'));
+        $('#modify-feedIntakeDate').val(feedElement.data('feed-intakedate'));
+        $('#modify-feedFoodIntake').val(feedElement.data('meal-weight'));
+        $('#modify-mealCategoryCode').val(feedElement.data('meal-category'));
+        const feedVisibility = feedElement.data('feed-visibility');
+        $(`input[name="feedOpenStatus"][value="${feedVisibility}"]`).prop('checked', true);
+
+        // 모달 표시
+        $('#feed-modify-modal-overlay').fadeIn();
+    });
+
+    // 모달 닫기 버튼
+    $('.modal-close-btn').on('click', function () {
+        $('#feed-modify-modal-overlay').fadeOut();
+    });
+
+    // 피드 수정 요청
+    $('#feed-modify-form').on('submit', function (e) {
+        e.preventDefault();
+
+        const formData = $(this).serialize(); // 폼 데이터 직렬화
+        $.ajax({
             url: '/feed/modifyfeed',
-            method: 'GET',
-			data: { feedCode: feedCode },
-            success: function (feed) {
-				 // 데이터 바인딩
-                $('#feedContent').val(feed.feedContent || '');
-                $('#intakeDateTime').val(feed.feedIntakeDate ? feed.feedIntakeDate.slice(0, 16) : '');
-                $('#feedFoodIntake').val(feed.feedFoodIntake);
-                $('#mealCategoryCode').val(feed.mealCategoryCode);
-                $(`input[name="feedOpenStatus"][value="${feed.feedOpenStatus}"]`).prop('checked', true);
-
-				const imagePath = feed.feedFilePath || '/path/to/default-image.png'; // 기본 이미지 경로 설정
-		        $('#image-preview').attr('src', imagePath); // 미리보기 이미지 업데이트
-		        $('#image-preview').css('display', 'block'); // 이미지 표시
-		        /*$('#plate').css('display', 'none'); // 기본 플레이트 이미지 숨기기*/
-				
-                // 모달 열기
-                $('#feed-modify-modal-overlay').fadeIn(300);
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                alert('피드 수정 완료');
+                location.reload(); // 페이지 새로고침
             },
-            error: function (error) {
-                console.error('Error fetching feed data:', error);
-                alert('피드 정보를 불러오는 데 실패했습니다.');
-            }
+            error: function () {
+                alert('피드 수정 중 오류 발생');
+            },
         });
     });
-});
-
-// 모달 닫기 버튼
-$("#feed-modify-modal-closeBtn").on("click", function () {
-    $("#feed-modify-modal-overlay").fadeOut(300);
 });
 
     /*// 글자수 카운터
