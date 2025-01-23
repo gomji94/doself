@@ -48,11 +48,11 @@ public interface ChallengeFeedService {
 	// 파일 처리
 	String getFilePath(String fileName);
 	
-	// 멤버 점수 계산
-	void updateMemberScores(String challengeCode);
-	
 	// 챌린지 피드 생성
 	void addChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed);
+	
+	// 관리자 챌린지 피드 기능 실행
+	void adminChallengeFeed(AddChallengeFeed addChallengeFeed);
 	
 	// 챌린지 피드 수정
 	void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed);
