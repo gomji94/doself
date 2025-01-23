@@ -254,17 +254,17 @@ $('#feed-create-submit-btn').on('click', function (e) {
 
 // --- 피드 수정 모달 ---
 $(document).ready(function () {
-	$(document).on("click", ".feed-modify-modal", function () {
-	    const feedCode = $(this).data("feed-code");
+	$('#feed-modify-modal').click(function () {
+	    const feedCode = $(this).data("feedCode");
 
 		 // AJAX 요청으로 피드 데이터를 가져옴
     	 $.ajax({
-            url: `/feed/modifyfeed/${encodeURIComponent(feedCode)}`,
-            type: 'GET',
-            dataType: 'json',
+            url: '/feed/modifyfeed',
+            method: 'GET',
+			data: { feedCode: feedCode },
             success: function (feed) {
 				 // 데이터 바인딩
-                $('#feed-modify-content').val(feed.feedContent || '');
+                $('#feedContent').val(feed.feedContent || '');
                 $('#intakeDateTime').val(feed.feedIntakeDate ? feed.feedIntakeDate.slice(0, 16) : '');
                 $('#feedFoodIntake').val(feed.feedFoodIntake);
                 $('#mealCategoryCode').val(feed.mealCategoryCode);
@@ -273,7 +273,7 @@ $(document).ready(function () {
 				const imagePath = feed.feedFilePath || '/path/to/default-image.png'; // 기본 이미지 경로 설정
 		        $('#image-preview').attr('src', imagePath); // 미리보기 이미지 업데이트
 		        $('#image-preview').css('display', 'block'); // 이미지 표시
-		        $('#plate').css('display', 'none'); // 기본 플레이트 이미지 숨기기
+		        /*$('#plate').css('display', 'none'); // 기본 플레이트 이미지 숨기기*/
 				
                 // 모달 열기
                 $('#feed-modify-modal-overlay').fadeIn(300);

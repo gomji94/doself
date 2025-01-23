@@ -45,12 +45,8 @@ public class FeedServiceImpl implements FeedService {
 	// 특정 피드 조회
 	@Override
     public Feed getFeedDetail(String feedCode) {
-		log.info("Fetching feed detail for feedCode: {}", feedCode);
         Feed feed = feedMapper.getFeedDetail(feedCode);
-        if (feed == null) {
-        	log.warn("Feed not found for feedCode: {}", feedCode);
-            throw new RuntimeException("피드 정보를 찾을 수 없습니다.");
-        }
+        
         log.info("Feed detail retrieved: {}", feed);
         return feed;
     }
@@ -108,12 +104,9 @@ public class FeedServiceImpl implements FeedService {
     // 피드 코드 조회
     @Override
 	public Feed getFeedByCode(String feedCode) {
-    	Feed feed = feedMapper.getFeedByCode(Map.of("feedCode", feedCode));
-	    if (feed == null) {
-	        log.warn("Feed not found for feedCode: {}", feedCode);
-	        throw new RuntimeException("Feed not found.");
-	    }
-	    return feed;
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("feedCode", feedCode);
+        return feedMapper.getFeedByCode(params);
 	}
     
     // 피드 삭제
