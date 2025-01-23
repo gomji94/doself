@@ -27,6 +27,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/challenge/feed")
@@ -59,7 +61,8 @@ public class ChallengeFeedController {
 	// 챌린지 피드 조회
 	@GetMapping("/view/{challengeCode}")
 	public String viewChallengeFeed(@PathVariable("challengeCode") String challengeCode,
-	        						Pageable pageable, HttpSession session, Model model) {
+	        						Pageable pageable, String challengeFeedCode,
+	        						HttpSession session, Model model) {
 		
 		//log.info(">>> location/controller >>> challengeCode: {}", challengeCode);  // >>>>>> check
 	    
@@ -76,6 +79,10 @@ public class ChallengeFeedController {
 	    int endPageNum = pageInfo.getEndPageNum();
 	    int lastPage = pageInfo.getLastPage();
 	    
+	    ChallengeFeed modifyChallengeFeedList = challengeFeedService.getModifyChallengeFeed(challengeFeedCode);
+	    
+	    List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
+	    
 	    var challengeFeedPageInfo = challengeFeedService.getChallengeFeedPage(challengeCode, pageable);
 	    var challengeProgress = challengeFeedService.getProcessChallengeStatus(challengeCode);
 	    int totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
@@ -83,6 +90,7 @@ public class ChallengeFeedController {
 	    var dateCalculations = challengeFeedService.calculateDPlusAndDMinus(challengeCode);
 
 	    model.addAttribute("challengeCode", challengeCode);
+	    model.addAttribute("challengeFeedCode", challengeFeedCode);
 	    model.addAttribute("challengeFeedList", challengeFeedList);
 	    model.addAttribute("currentPage", currentPage);
 	    model.addAttribute("startPageNum", startPageNum);
@@ -98,13 +106,18 @@ public class ChallengeFeedController {
 	    model.addAttribute("dMinus", dateCalculations.get("dMinus"));
 	    model.addAttribute("levelList", levelList);
 	    model.addAttribute("challengeMemberList", challengeMemberList);
+	    model.addAttribute("feedCommentList", feedCommentList);
+	    model.addAttribute("loggedInMemberId", loggedInMemberId);
+	    model.addAttribute("modifyChallengeFeedList", modifyChallengeFeedList);
 	    
+	    log.info(">>> location/controller >>> modifyChallengeFeedList: {}", modifyChallengeFeedList);
 	    //log.info(">>> location/controller >>> challengeCode: {}", challengeCode);
 	    //log.info(">>> location/controller >>> challengeFeedList: {}", challengeFeedList);
 	    //log.info(">>> location/controller >>> challengeProgress: {}", challengeProgress);
 	    //log.info(">>> location/controller >>> Total Progress: {}", challengeFeedService.calculateTotalProgress(challengeCode));
 	    //log.info(">>> location/controller >>> Top Participants: {}", challengeFeedService.getTopParticipants(challengeCode));
 	    //log.info(">>> location/controller >>> Date Calculations: {}", dateCalculations);
+	    //log.info(">>> location/controller >>> feedCommentList: {}", feedCommentList);
 
 	    return "user/challenge/challenge-view";
 	}
@@ -171,7 +184,6 @@ public class ChallengeFeedController {
 
 	    //log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
 	    
-	    //return "redirect:/challenge/feed/list";
 	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 	
@@ -193,7 +205,6 @@ public class ChallengeFeedController {
 	    
 	    log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
 	    
-		//return "redirect:/challenge/feed/list";
 	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 	
@@ -247,13 +258,40 @@ public class ChallengeFeedController {
 		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 	
-	// 챌린지 피드 댓글 조회(모달 안 열림/추후 수정필요)
+	// 챌린지 피드 댓글 조회
 	@GetMapping("/feedcomment")
 	@ResponseBody
-	public List<ChallengeFeedComment> getFeedComment(@RequestParam(value = "challengeFeedCode") String challengeFeedCode, Model model) {
+	public List<ChallengeFeedComment> getFeedComment(@RequestParam(value = "challengeFeedCode") String challengeFeedCode,
+													 HttpSession session) {
+		String loggedInMemberId = (String) session.getAttribute("SID");
+		
 		List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
+		feedCommentList.forEach(comment -> comment.setLoggedInMemberId(loggedInMemberId));
 		//log.info("Feed Comment List: {}", feedCommentList);
 		
 		return feedCommentList;
 	}
+	
+	// 챌린지 피드 댓글 수정
+	@PostMapping("/modifycommentrequest")
+	public String modifyCommentRequest(@RequestParam("challengeFeedCommentCode") String challengeFeedCommentCode,
+									   @RequestParam("challengeFeedCommentContent") String challengeFeedCommentContent,
+									   AddChallengeFeed addChallengeFeed) {
+		
+		challengeFeedService.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
+		
+		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+	}
+	
+	// 챌린지 피드 댓글 삭제
+	@PostMapping("/deletecommentrequest")
+	public String deleteCommentRequest(@RequestParam("challengeFeedCommentCode") String challengeFeedCommentCode,
+									   AddChallengeFeed addChallengeFeed) {
+		
+		challengeFeedService.deleteFeedComment(challengeFeedCommentCode);
+		
+		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+	}
+	
+	
 }

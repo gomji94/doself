@@ -24,6 +24,9 @@ public interface ChallengeFeedService {
 	// 챌린지 피드 조회
 	List<ChallengeFeed> getChallengeFeed(Map<String, Object> params);
 	
+	// 챌린지 수정 조회 화면
+	ChallengeFeed getModifyChallengeFeed(String challengeFeedCode);
+	
 	// 피드 페이징
 	PageInfo<ChallengeFeed> getChallengeFeedPage(String challengeCode, Pageable pageable);
 	
@@ -68,4 +71,10 @@ public interface ChallengeFeedService {
 
 	// 챌린지 피드 댓글 조회
 	List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode);
+	
+	// 챌린지 피드 댓글 수정
+	void modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent);
+	
+	// 챌린지 피드 댓글 삭제
+	void deleteFeedComment(String challengeFeedCommentCode);
 }

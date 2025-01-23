@@ -214,27 +214,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	        "dPlus", "D+" + Math.max(0, dPlus),
 	        "dMinus", "D-" + Math.max(0, dMinus)
 	    );
-	    
-		//		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
-//        if (progress == null) {
-//            return Map.of("dPlus", "N/A", "dMinus", "N/A");
-//        }
-//
-//        LocalDate today = LocalDate.now();
-//        LocalDate startDate = progress.getChallengeStartDate().toInstant()
-//                                      .atZone(ZoneId.of("Asia/Seoul"))
-//                                      .toLocalDate();
-//        LocalDate endDate = progress.getChallengeEndDate().toInstant()
-//                                    .atZone(ZoneId.of("Asia/Seoul"))
-//                                    .toLocalDate();
-//
-//        long dPlus = ChronoUnit.DAYS.between(startDate, today);
-//        long dMinus = ChronoUnit.DAYS.between(today, endDate);
-//        
-//        return Map.of(
-//            "dPlus", "D+" + Math.max(0, dPlus),
-//            "dMinus", "D-" + Math.max(0, dMinus)
-//        );
 	}
 
 	// 챌린지 참여 멤버수 조회
@@ -549,6 +528,24 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode) {
 		List<ChallengeFeedComment> feedCommentList = challengeFeedMapper.getFeedCommentList(challengeFeedCode);
 		return feedCommentList;
+	}
+
+	// 챌린지 피드 댓글 수정
+	@Override
+	public void modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent) {
+		challengeFeedMapper.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
+	}
+
+	// 챌린지 피드 댓글 삭제
+	@Override
+	public void deleteFeedComment(String challengeFeedCommentCode) {
+		challengeFeedMapper.deleteFeedComment(challengeFeedCommentCode);
+	}
+
+	@Override
+	public ChallengeFeed getModifyChallengeFeed(String challengeFeedCode) {
+		
+		return challengeFeedMapper.getModifyChallengeFeed(challengeFeedCode);
 	}
 
 }

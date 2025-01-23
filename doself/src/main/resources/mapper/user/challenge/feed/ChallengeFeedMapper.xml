@@ -61,7 +61,6 @@
 		<result column="mbr_id" 				property="challengeFeedCommentAuthor" />
 		<result column="cfc_content" 			property="challengeFeedCommentContent"/>
 		<result column="cfc_date" 				property="challengeFeedCommentDate"/>
-		<result column="cfc_like" 				property="challengeFeedCommentLike"/>
 		<result column="cfc_caution_check"  	property="challengeFeedCommentCaution"/>
 		<result column="mbr_file_idx" 			property="challengeCommentAuthorImageIdx"/>
 		<result column="cmf_file_idx" 			property="challengeFeedImageIdx"/>
@@ -198,6 +197,31 @@
 		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
 	</select>
 	
+	<!-- 챌린지 피드 수정 화면 조회 -->
+	<select id="getModifyChallengeFeed" resultMap="ChallengeResultMap">
+		SELECT
+			cg.cg_num,
+			cg.cg_name,
+			cg.mbr_id,
+			ct.ct_name,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			ctl.ctl_level,
+			ctl.ctl_content,
+			cg.cg_max_mbr_count,
+			cg.cg_content,
+			f.file_path
+		FROM
+			challenge_group cg
+			INNER JOIN challenge_topic_level ctl USING(ctl_num)
+			INNER JOIN challenge_topic ct USING(ct_num)
+			INNER JOIN challenge_member_feed cmf USING(cg_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+		WHERE
+			cg.cg_num = #{challengeCode}
+		AND cg.cg_num IS NOT NULL
+	</select>	
+	
 	<!-- 챌린지 피드 행 갯수 조회 -->
 	<select id="getChallengeFeedCount" resultType="int" parameterType="string">
 		SELECT
@@ -268,7 +292,6 @@
 			cfc.mbr_id,
 			cfc.cfc_content,
 			cfc.cfc_date,
-			cfc.cfc_like,
 			cfc.cfc_caution_check,
 			m.mbr_file_idx,
 			cmf.cmf_file_idx,
@@ -292,7 +315,6 @@
 			mbr_id,
 			cfc_content,
 			cfc_date,
-			cfc_like,
 			cfc_caution_check
 		) VALUES (
 			#{challengeFeedCommentCode},
@@ -300,7 +322,6 @@
 			#{challengeFeedCommentAuthor},
 			#{challengeFeedCommentContent},
 			NOW(),
-			#{challengeFeedCommentLike},
 			#{challengeFeedCommentCaution}
 		)
   	</insert>
@@ -445,6 +466,23 @@
 	    WHERE cfc.cmf_num = #{challengeFeedCode}
 	    ORDER BY cfc.cfc_date DESC
 	</select>
+	
+	<!-- 챌린지 피드 댓글 수정 -->
+	<update id="modifyFeedComment">
+		UPDATE challenge_feed_comments
+		SET
+			cfc_content=#{challengeFeedCommentContent}
+		WHERE cfc_num=#{challengeFeedCommentCode}
+	</update>
+	
+	<!-- 챌린지 피드 댓글 삭제 -->
+	<delete id="deleteFeedComment">
+		DELETE
+		FROM
+			challenge_feed_comments
+		WHERE
+			cfc_num = #{challengeFeedCommentCode}
+	</delete>
 		
 	
 	
@@ -514,11 +552,9 @@
 		SELECT
 			ctl.ctl_count
 		FROM 
-			challenge_topic_level ctl INNER JOIN challenge_group cg
-			ON ctl.ctl_num = cg.ctl_num			
+			challenge_topic_level ctl
 		WHERE
-			cg.cg_num = #{cgNum}
-			
+			ct_num = #{cgNum}
 	</select>
 	<!-- 챌린지피드가 한개도 존재하지않을시 insert -->
 	<insert id="createPersonalStat" parameterType="map" >
