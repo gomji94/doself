@@ -58,6 +58,14 @@ public class Feed {
         return feedFilePath;
     }
 
+    public String getFeedCode() {
+        return feedCode;
+    }
+
+    public void setFeedCode(String feedCode) {
+        this.feedCode = feedCode;
+    }
+    
     public void setFeedFilePath(String feedFilePath) {
         this.feedFilePath = feedFilePath;
     }

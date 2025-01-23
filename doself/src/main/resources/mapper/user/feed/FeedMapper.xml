@@ -51,10 +51,10 @@
 		    f.feed_intake_date,
 		    f.feed_like,
 		    f.feed_open_status,
-		    fi_feed.file_path AS feed_file_path,
-		    fi_feed.file_new_name AS feed_file_name,
-		    fi_member.file_path AS member_file_path,
-		    fi_member.file_new_name AS member_file_name,
+		    fi_feed.file_path,
+		    fi_feed.file_new_name,
+		    fi_member.file_path,
+		    fi_member.file_new_name,
 		    mll.mni_name,
 		    mll.mni_picture,
 		    mll.mni_weight,
@@ -108,40 +108,22 @@
 		    ON mll.mni_num = f.mni_num
 	</select>
 	
-	<!-- 특정 피드 댓글 조회 -->
-	<!-- <select id="getFeedComment" resultMap="Feed">
-	    SELECT 
-		    fc.fc_num,
-		    fc.feed_num,
-		    fc.mbr_id,
-		    fc.fc_content,
-		    fc.fc_date,
-		    fc.fc_like,
-		    m.mbr_file_idx
-		FROM 
-		    feed_comments fc
-		LEFT JOIN 
-		    member m ON fc.mbr_id = m.mbr_id
-		WHERE 
-		    fc.feed_num = #{feedNum};
-	</select> -->
-	
 	<!-- 특정 피드 상세 조회 -->
 	<select id="getFeedDetail" parameterType="String" resultMap="FeedResultMap">
 	    SELECT
-	        f.feed_num AS feedCode,
-	        f.mbr_id AS memberId,
-	        f.mni_num AS mealNutritionInfoCode,
-	        f.feed_food_intake AS feedFoodIntake,
-	        f.feed_content AS feedContent,
-	        f.mc_num AS mealCategoryCode,
-	        f.feed_date AS feedDate,
-	        f.feed_intake_date AS feedIntakeDate,
-	        f.feed_like AS feedLike,
-	        f.feed_open_status AS feedOpenStatus,
-	        fi_feed.file_path AS feedFilePath,
-	        fi_feed.file_new_name AS feedFileName,
-	        fc.fc_content AS feedCommentContent,
+	        f.feed_num,
+	        f.mbr_id,
+	        f.mni_num,
+	        f.feed_food_intake,
+	        f.feed_content,
+	        f.mc_num,
+	        f.feed_date,
+	        f.feed_intake_date,
+	        f.feed_like,
+	        f.feed_open_status,
+	        fi_feed.file_path,
+	        fi_feed.file_new_name,
+	        fc.fc_content,
 	        f.feed_file_index,
 	        m.mbr_file_idx,
 	        mll.mni_name,
@@ -238,16 +220,16 @@
 	<!-- 피드 코드 조회 -->
 	<select id="getFeedByCode" parameterType="map" resultMap="FeedResultMap">
 		SELECT
-	        f.feed_num AS feedCode,
-	        f.mbr_id AS memberId,
-	        f.feed_food_intake AS feedFoodIntake,
-	        f.feed_content AS feedContent,
-	        f.mc_num AS mealCategoryCode,
-	        f.feed_intake_date AS feedIntakeDate,
-	        f.feed_open_status AS feedOpenStatus,
-	        f.feed_file_index AS feedFileIdx
+	        feed_num,
+	        mbr_id,
+	        feed_food_intake,
+	        feed_content,
+	        mc_num,
+	        feed_intake_date,
+	        feed_open_status,
+	        feed_file_index
 	    FROM
-	        feed f
+	        feed
 	    WHERE
 	        feed_num = #{feedCode};
     </select>
@@ -259,6 +241,7 @@
 		    	feed_comments
 		    WHERE
 		    	feed_num = #{feedCode}
+	    	AND mbr_id = #{memberId}
 		</delete>
 		
 	<!--피드 이미지 파일 삭제 -->
@@ -278,6 +261,7 @@
 	    		feed
 		    WHERE
 		    	feed_num = #{feedCode}
+	    	AND mbr_id = #{memberId}
 		</delete>
 	
 	<!-- 좋아요 수 증가 -->
@@ -321,13 +305,12 @@
 	<!-- 피드 댓글 조회 -->
 	<select id="getCommentsByFeedCode" parameterType="String" resultType="Feed">
 	    SELECT
-	        fc.fc_num AS commentCode,
-	        fc.feed_num AS feedCode,
-	        fc.mbr_id AS memberId,
-	        fc.fc_content AS commentContent,
-	        fc.fc_date AS commentDate,
-	        fc.fc_like AS commentLike,
-	        m.mbr_file_idx AS memberProfileImage
+	        fc.fc_num,
+	        fc.feed_num,
+	        fc.mbr_id,
+	        fc.fc_content,
+	        fc.fc_date,
+	        m.mbr_file_idx
 	    FROM feed_comments fc
 	    LEFT JOIN member m ON fc.mbr_id = m.mbr_id
 	    WHERE fc.feed_num = #{feedCode}
