@@ -655,11 +655,12 @@ img#createChallengeModifyFeedPreviewImage {
     margin-top: 57px;
     position: absolute;
     max-width: 480px;
+    min-width: 480px;
     width: 100%;
     left: 19px;
     top: 0;
     height: 100%;
-    max-height: 429px;
+    max-height: 418px;
     border-radius: 0px 0px 0px 10px;
     z-index: 1000;
     display: block;
@@ -1774,7 +1775,7 @@ select #meal-type option:checked {
 }
 
 .cf-modify-modal-body {
-    padding: 10px 0;
+    padding: 10px 0px 0px 0px;
     text-align: center;
     display: grid;
     grid-template-columns: 480px 310px;
@@ -1836,6 +1837,8 @@ div#modifyFeedButtonBlock {
     height: 63px;
     mix-blend-mode: multiply;
     z-index: 1010;
+    left: 387px;
+    top: 178px;
 }
 
 /* #cf-modify-upload-btn:hover {
