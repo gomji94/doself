@@ -20,4 +20,5 @@ public class ChallengeFeedComment {
 	private String  challengeFeedImage;				// 챌린지 피드 이미지
 	private String  challengeCommentAuthorImageIdx; // 챌린지 피드 댓글 작성자 프로필 idx
 	private String  challengeCommentAuthorImage;	// 챌린지 피드 댓글 작성자 프로필
+	private String  loggedInMemberId;
 }

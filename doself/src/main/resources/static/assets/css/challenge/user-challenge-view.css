@@ -591,7 +591,7 @@ button#loadMore {
     background: #fff;
     border-radius: 10px;
     padding: 20px;
-    width: 800px;
+    width: 845px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     z-index: 1001;
 }
@@ -668,6 +668,15 @@ img#createChallengeModifyFeedPreviewImage {
 .cf-comment-modal-image-upload {
     flex: 1;
     text-align: center;
+    /* max-width: 480px;
+    max-height: 429px; */
+    min-width: 480px;
+    min-height: 429px;
+}
+
+.cf-comment-modal-image-upload img#image-preview {
+    width: 100%;
+    height: 100%;
 }
 
 /* 정보 입력 영역 */
@@ -675,6 +684,7 @@ img#createChallengeModifyFeedPreviewImage {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 305px;
     width: 84%;
     justify-content: space-between;
     padding: 6px 0px;
@@ -727,6 +737,65 @@ img#createChallengeModifyFeedPreviewImage {
     margin-top: 5px;
 }
 
+a#feedCommentAuthorId {
+    margin-top: 3px;
+}
+
+input.comment-edit-input {
+    position: absolute;
+    left: 71.8%;
+    top: 16%;
+    width: 137px;
+    border-style: none;
+    background-color: #f1f1f1;
+}
+
+input.comment-edit-input {
+    font-size: 14px;
+    color: #515151;
+}
+
+.cf-mofify-comment-feed-comment {
+    width: 0px;
+    height: 0px;
+}
+
+button.edit-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #b9cd64;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.save-btn {
+	border: none;
+    outline: none;
+    background-color: inherit;
+    color: #657c00;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.cancel-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #fe7322;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
+button.delete-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #d92d2d;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
 .cf-comment-feed-info .emoji-btn {
     background: none;
     border: none;
@@ -776,6 +845,7 @@ img#createChallengeModifyFeedPreviewImage {
     font-size: 14px;
     border-style: none;
     outline: none;
+    width: 204px;
 }
 
 button.cf-comment-comment-btn {
@@ -785,7 +855,7 @@ button.cf-comment-comment-btn {
     cursor: pointer;
     height: 25px;
     font-weight: 700;
-    margin-left: auto;
+    margin-left: 15px;
     white-space: nowrap;
 }
 
@@ -1757,14 +1827,15 @@ div#modifyFeedButtonBlock {
 #cf-modify-upload-btn {
     position: relative;
     display: flex;
-    background-color: #525252;
+    background-color: #acacac;
     color: #c7c7c7;
     border: none;
     border-radius: 5px 0px 0px 0px;
     cursor: pointer;
     width: 72.5px;
     height: 63px;
-    mix-blend-mode: color-burn;
+    mix-blend-mode: multiply;
+    z-index: 1010;
 }
 
 /* #cf-modify-upload-btn:hover {

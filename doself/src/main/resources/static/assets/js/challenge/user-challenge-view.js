@@ -11,7 +11,7 @@ $(document).ready(function () {
 });
 
 
-// --- feed infinite scroll(10 limit) ---
+// --- feed more load scroll(10 limit) ---
 document.getElementById("loadMore").addEventListener("click", function () {
     const loadMoreBtn = this;
     const currentPage = parseInt(loadMoreBtn.dataset.currentPage, 10);
@@ -396,7 +396,7 @@ $(document).ready(function () {
 
 
 // --- modify feed ---
-$(document).ready(function () {
+/*$(document).ready(function () {
     // 수정 버튼 클릭 이벤트 처리
     $('#cl-modify-modal').click(function () {
         // data-challenge-feed-code 속성 값 가져오기
@@ -493,7 +493,7 @@ $(document).ready(function () {
             $('#cf-modify-modal-overlay').fadeOut();
         }
     });
-});
+});*/
 
 // 해결X
 /*$(document).ready(function () {
@@ -613,7 +613,7 @@ $(document).ready(function () {
 
 
 // --- delete challenge feed ---
-$(document).on("click", "#cl-delete-modal", function () {
+/*$(document).on("click", "#cl-delete-modal", function () {
     const challengeFeedCode = $(this).data("challenge-feed-code");
 
     if (!challengeFeedCode) {
@@ -635,11 +635,166 @@ $(document).on("click", "#cl-delete-modal", function () {
             }
         });
     }
-});
+});*/
 
 
 // --- feed option button ---
 $(document).ready(function () {
+    // 옵션 버튼 클릭 이벤트 (수정/삭제 모달 열기)
+    $('.option-button').click(function () {
+        const challengeFeedCode = $(this).attr('data-challenge-feed-code');
+
+        if (!challengeFeedCode) {
+			
+            alert('챌린지 피드 코드를 찾을 수 없습니다.');
+            return;
+        }
+		
+        // 모달에 데이터 설정
+        $('#cl-modify-modal').attr('data-challenge-feed-code', challengeFeedCode); // 수정
+        $('#cl-delete-modal').attr('data-challenge-feed-code', challengeFeedCode); // 수정
+
+        // 모달 열기
+        $('.feed-option-modal-wrap').fadeIn();
+    });
+
+    // 수정 버튼 클릭 이벤트
+    $('#cl-modify-modal').click(function () {
+        // data-challenge-feed-code 속성 값 가져오기
+        const challengeFeedCode = $(this).attr('data-challenge-feed-code');
+        //const challengeFeedCode = $('#challengeFeedCode').val();
+
+        if (!challengeFeedCode) {
+			console.log('challengeFeedCode:', challengeFeedCode);
+            alert('챌린지 피드 코드가 없습니다.');
+			$('.popup-wrap').css('display', 'none');
+            return;
+        }
+
+        // AJAX 요청으로 데이터 가져오기
+        $.ajax({
+            url: '/challenge/feed/modifychallengefeed',
+            method: 'GET',
+            data: { challengeFeedCode: challengeFeedCode },
+            success: function (data) {
+				// 수정 화면에 데이터 채우기
+                $('#cf-modify-content').val(data.challengeFeedContent);
+                $('#serving').val(data.challengeFeedFoodIntake);
+                $('#meal-type').val(data.challengeMealCategory);
+
+                if (data.cmfFileIdx) {
+                    $('#createChallengeModifyFeedPreviewImage').attr(
+                        'src',
+                        `/upload/challenge_feed/${data.cmfFileIdx}`
+                    );
+                }
+				
+				$('.popup-wrap').css('display', 'none');
+				
+				console.log(data);
+				
+                // 수정 모달 열기
+               //$('#cf-modify-modal-overlay').css('display', 'block');
+               $('#cf-modify-modal-overlay').fadeIn();
+			   
+			   /* TODO : cf-modify-modal-overlay에 데이터 생성하면서 받아올 것. 닫힐 땐 데이터 초기화 */
+			   
+            },
+            error: function (err) {
+                alert('데이터를 불러오는 데 실패했습니다.');
+                console.error('Error:', err);
+            },
+        });
+    });
+
+    // 이미지 업로드 및 미리보기
+    $('#cf-modify-upload-btn').click(function () {
+        $('#feedFiles').click();
+    });
+
+    $('#feedFiles').change(function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#createChallengeModifyFeedPreviewImage').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+	
+    // 글자수 카운터
+    const content = $('#cf-modify-content');
+    const textCount = $('#cf-modify-text-count');
+    const maxLength = 2000;
+
+    content.on('input', function () {
+        const currentLength = content.val().length;
+        textCount.text(currentLength);
+
+        // 글자수 초과 시 스타일 변경
+        if (currentLength > maxLength) {
+            textCount.css('color', 'red');
+        } else {
+            textCount.css('color', '');
+        }
+    });
+
+    // 수정 폼 제출 이벤트
+	$('#ModifyChallengeFeedForm').on('submit', function (e) {
+        e.preventDefault();
+        // 폼 데이터를 jQuery로 전송
+        $(this).unbind('submit').submit();
+    });
+
+    // 삭제 버튼 클릭 이벤트
+	$(document).on("click", "#cl-delete-modal", function () {
+	    const challengeFeedCode = $(this).data("challenge-feed-code");
+
+	    if (!challengeFeedCode) {
+	        alert("챌린지 피드 코드를 찾을 수 없습니다.");
+	        return;
+	    }
+
+	    if (confirm("정말 삭제하시겠습니까?")) {
+	        $.ajax({
+	            url: "/challenge/feed/deletechallengefeedrequest",
+	            type: "POST",
+	            data: { challengeFeedCode: challengeFeedCode },
+	            success: function () {
+	                alert("삭제되었습니다.");
+	                window.location.reload();
+	            },
+	            error: function () {
+	                alert("삭제 중 문제가 발생했습니다.");
+	            }
+	        });
+	    }
+	});
+
+    // 모달 닫기
+	$(document).on('click', function (e) {
+        if ($(e.target).is('.feed-option-modal-wrap, #optionCencleButton, #cf-modify-modal-overlay')) {
+            $('.feed-option-modal-wrap').fadeOut(); // 클릭된 오버레이 닫기
+        }
+    });
+
+	// ESC 키로 모달 닫기
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            $('.feed-option-modal-wrap, #cf-modify-modal-overlay').fadeOut();
+        }
+    });
+
+    // 수정 모달 닫기
+    $('#cf-modify-modal-closeBtn').click(function () {
+        $('#cf-modify-modal-overlay').fadeOut();
+    });
+});
+
+
+
+/*$(document).ready(function () {
     // 옵션 버튼 클릭 시 모달창 표시
     $('.option-button').on('click', function () {
         $('.feed-option-modal-wrap').fadeIn(); // 모달창 활성화
@@ -662,7 +817,7 @@ $(document).ready(function () {
             $('#cf-warning-modal-overlay').fadeOut();
         }
     });
-});
+});*/
 
 
 // --- feed like button event ---
@@ -710,182 +865,293 @@ $(document).ready(function () {
 });
 
 
+// --- feed modal comment submit ---
+/*$(document).on('click', '#feedCommentModalButton', function () {
+    const challengeFeedCode = $('.commentBtn').data('challenge-code'); // 현재 모달에 열린 챌린지 코드
+    const commentContent = $('input[placeholder="댓글 달기..."]').val(); // 댓글 내용 가져오기
 
-// --- feed comment modal ---
+    if (!commentContent.trim()) {
+        alert("댓글 내용을 입력해주세요.");
+        return;
+    }
+
+    $.ajax({
+        url: '/challenge/feed/createcommentrequest',
+        type: 'POST',
+        data: {
+            challengeFeedCode: challengeFeedCode,
+            challengeFeedCommentContent: commentContent
+        },
+        success: function (response) {
+            alert("댓글이 등록되었습니다.");
+            $('input[placeholder="댓글 달기..."]').val(''); // 입력 필드 초기화
+            $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+        },
+        error: function (error) {
+            console.error("댓글 등록 실패:", error);
+            alert("댓글 등록 중 오류가 발생했습니다.");
+        }
+    });
+});*/
+
+
+// --- feed comment modal --- TODO 작업중
 $(document).on('click', '.commentBtn', function () {
-    const challengeFeedCode = $(this).data('challenge-code'); // 피드 코드 가져오기
+    const challengeFeedCode = $(this).data('challenge-code');
+	const pictureFileImage = $(this).data('picture-file-image');
+    console.log("challengeFeedCode:", challengeFeedCode); // 디버깅용 로그
+	console.log("pictureFileImage:", pictureFileImage);
 
     if (!challengeFeedCode) {
         alert("피드 코드가 없습니다.");
         return;
     }
 
-    // AJAX 요청으로 댓글 및 피드 데이터 가져오기
     $.ajax({
         url: '/challenge/feed/feedcomment',
         type: 'GET',
         data: { challengeFeedCode: challengeFeedCode },
         success: function (response) {
-            if (!response) {
-                alert("데이터를 가져오지 못했습니다.");
+            console.log("댓글 데이터 로드 성공:", response);
+			
+			let imagePath = pictureFileImage;
+			$('#image-preview').attr('src', imagePath);
+			let comments = response;
+            let commentHtml = '';
+			
+            if (!response || response.length === 0) {
+                alert("댓글이 없습니다.");
                 return;
             }
 
-            const { challengeFeedImage, comments } = response;
-
-            // 댓글 모달 HTML 생성
-            let commentHtml = `
-                <div class="cf-comment-modal-body">
-                    <div class="cf-comment-modal-image-upload">
-                        <img src="${challengeFeedImage || '/images/default-image.png'}" alt="피드 이미지" id="image-preview">
-                    </div>
-                    <div class="cf-comment-feed-info">
-                        <div class="cf-user-comment-container">`;
-
-            if (comments && comments.length > 0) {
+			if (comments && comments.length > 0) {
                 comments.forEach(comment => {
+					const isAuthor = comment.loggedInMemberId === comment.challengeFeedCommentAuthor; // 작성자 여부 확인
+					console.log(comment.loggedInMemberId, comment.challengeFeedCommentAuthor, isAuthor);
+					
                     commentHtml += `
-                        <section>
-                            <div class="cf-comment-user-block">
-                                <div class="cf-comment-content-block">
-                                    <img class="comment-profile" src="${comment.challengeCommentAuthorImage || '/images/default-profile.png'}" alt="프로필">
-                                    <a href="#" class="cf-comment-user-link">${comment.challengeFeedCommentAuthor}</a>
-                                    <span class="comment-day-count">${new Date(comment.challengeFeedCommentDate).toLocaleDateString()}</span>
-                                    <div class="cf-comment-feed-comment">
-                                        <span>${comment.challengeFeedCommentContent}</span>
-                                    </div>
+                    <section data-comment-id="${comment.challengeFeedCommentCode}">
+                        <div class="cf-comment-user-block">
+                            <div class="cf-comment-content-block">
+                                <img class="comment-profile" src="${comment.challengeCommentAuthorImage}" alt="프로필">
+                                <a href="#" class="cf-comment-user-link" id="feedCommentAuthorId">${comment.challengeFeedCommentAuthor}</a>
+                                <div class="cf-comment-feed-comment">
+                                   <span>${comment.challengeFeedCommentContent}</span>
+								   <div class="cf-mofify-comment-feed-comment" style="display: none;">
+					                  <span th:text="${comment.challengeFeedCommentContent}" class="comment-text"></span>
+									  <input type="text" class="comment-edit-input" value="${comment.challengeFeedCommentContent}" style="display: none;" />
+                                   </div>
                                 </div>
                             </div>
-                            <img src="/images/comment-divider.png" alt="댓글 구분" class="comment-section">
-                        </section>`;
+						    <div class="comment-actions" id="modifyAndDeleteCommentButton" style="display: ${isAuthor ? 'block' : 'none'};">
+							    <button type="button" class="edit-btn" data-comment-id="${comment.challengeFeedCommentCode}" data-content="${comment.challengeFeedCommentContent}">수정</button>
+                                <button type="button" class="delete-btn" data-comment-id="${comment.challengeFeedCommentCode}">삭제</button>
+                            </div>
+                        </div>
+                    </section>`;
                 });
             } else {
-                commentHtml += `<p>댓글이 없습니다. 첫 댓글을 작성해보세요!</p>`;
-            }
+                commentHtml = '<p>댓글이 없습니다. 첫 댓글을 작성해보세요!</p>';
+            };
 
-            commentHtml += `
-                        </div>
-                    </div>
-                </div>`;
-
-            // 댓글 모달 표시
-            const commentModalContainer = $('.cf-comment-modal-container');
-            commentModalContainer.empty();
-            commentModalContainer.append(commentHtml);
-
-            $('#feedCommentModalOverlay').fadeIn(300);
+	        $('.cf-user-comment-container').html(commentHtml);
+	        $('#feedCommentModalOverlay').fadeIn(300);
         },
-        error: function (error) {
+		error: function (error) {
             console.error("댓글 데이터 로드 실패:", error);
             alert("댓글 데이터를 가져오는 중 오류가 발생했습니다.");
         }
     });
-});
+	
+	// 댓글 수정 버튼 클릭 이벤트
+	$(document).on('click', '.edit-btn', function () {
+	    const parentDiv = $(this).closest('.cf-comment-content-block');
+	    const commentEditContainer = parentDiv.find('.cf-mofify-comment-feed-comment');
+	    const originalContent = $(this).data('content');
 
+	    // 텍스트 숨기고, 수정용 input 필드 표시
+		commentEditContainer.css('display', 'block');
+		$('.cf-mofify-comment-feed-comment').css('display', 'block');
+		$('.comment-edit-input').css('display', 'block');
+		
+	    commentEditContainer.find('.comment-text').hide();
+	    commentEditContainer.find('.comment-edit-input').val(originalContent).show();
 
+	    // 버튼 상태 변경 (수정 -> 저장, 삭제 -> 취소)
+	    $(this).text('저장').addClass('save-btn').removeClass('edit-btn');
+		$('.delete-btn').text('취소').addClass('cancel-btn').removeClass('delete-btn');
+	});
 
-/*$(document).ready(function () {
-    // 댓글 버튼 클릭 이벤트
-    $('.commentBtn').on('click', function () {
-        const challengeFeedCode = $(this).data('challenge-code'); // 데이터 코드 가져오기
-        console.log("Challenge Feed Code:", challengeFeedCode);
-
-        if (!challengeFeedCode) {
-            alert("해당 피드의 댓글이 없습니다.");
+    // 댓글 저장 버튼 클릭 이벤트
+    $(document).on('click', '.save-btn', function () {
+		const parentDiv = $(this).closest('.cf-comment-content-block');
+	    const commentEditContainer = parentDiv.find('.cf-mofify-comment-feed-comment');
+	    const commentId = $(this).data('comment-id');
+	    const newContent = commentEditContainer.find('.comment-edit-input').val();
+		
+        if (!newContent.trim()) {
+            alert("댓글 내용을 입력해주세요.");
             return;
         }
 
-        // Ajax 요청으로 댓글 데이터 가져오기
         $.ajax({
-            url: '/challenge/feedcomment', // 컨트롤러 URL
-            type: 'GET',
-            data: { challengeFeedCode: challengeFeedCode },
-            success: function (response) {
-                console.log("댓글 데이터:", response);
-
-                // 댓글 모달 HTML 생성
-                const commentModalHtml = `
-                    <div class="cf-comment-modal-body">
-                        <!-- 이미지 업로드 영역 -->
-                        <div class="cf-comment-modal-image-upload">
-                            <img src="${response[0]?.challengeFeedImage}" alt="업로드된 이미지 미리보기" id="image-preview">
-                        </div>
-    
-                        <!-- 정보 입력 영역 -->
-                        <div class="cf-comment-feed-info">
-                            <div class="cf-user-comment-container">
-                                ${
-                                    response.map(comment => `
-                                        <section>
-                                            <div class="cf-comment-user-block">
-                                                <div class="cf-comment-content-block">
-                                                    <img class="comment-profile" src="${comment.challengeCommentAuthorImage || '/images/default-profile.png'}" alt="프로필">
-                                                    <a href="#" class="cf-comment-user-link">${comment.challengeFeedCommentAuthor}</a>
-                                                    <span class="comment-day-count">${new Date(comment.challengeFeedCommentDate).toLocaleDateString()}</span>
-                                                    <div class="cf-comment-feed-comment">
-                                                        <span>${comment.challengeFeedCommentContent}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="action-icons">
-                                                    <button class="action-btn likeBtn" data-liked="false">
-                                                        <img class="likeImg" src="/path/to/like-icon.png" alt="좋아요">
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <img src="/path/to/divider-icon.png" alt="댓글구분" class="comment-section">
-                                        </section>
-                                    `).join('') // 댓글 데이터 반복 생성
-                                }
-                            </div>
-                            <div class="cf-comment-feed-info-under">
-                                <img src="/path/to/divider-icon.png" alt="댓글구분" class="comment-section-under">
-                                <div class="cf-comment-under-input">
-                                    <button type="button" class="emoji-btn">
-                                        <img class="emoji-btn-img" src="/path/to/emoji-icon.png" alt="이모지">
-                                    </button>
-                                    <input type="text" placeholder="댓글 달기...">
-                                    <button type="button" class="cf-comment-comment-btn">게시</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // 댓글 모달 컨테이너에 추가
-                const commentModalContainer = $('.cf-comment-modal-container');
-                commentModalContainer.empty(); // 기존 내용 초기화
-                commentModalContainer.append(commentModalHtml);
-
-                // 댓글 모달 오버레이 표시
-                $('#feedCommentModalOverlay').fadeIn(300);
+            url: '/challenge/feed/modifycommentrequest',
+            type: 'POST',
+            data: { challengeFeedCommentCode: commentId,
+			        newContent: newContent },
+            success: function () {
+                alert("댓글이 수정되었습니다.");
+				commentEditContainer.find('.comment-text').text(newContent).show();
+	            commentEditContainer.find('.comment-edit-input').hide();
+				
+				// 수정 UI 숨김
+	            commentEditContainer.css('display', 'none');
             },
-            error: function (xhr, status, error) {
-                console.error("댓글 데이터 로드 오류:", error);
-                alert("댓글 데이터를 불러오는 중 오류가 발생했습니다.");
+            error: function (error) {
+                console.error("댓글 수정 실패:", error);
+                alert("댓글 수정 중 오류가 발생했습니다.");
+            }
+        });
+
+        $(this).text('수정').addClass('edit-btn').removeClass('save-btn');
+    });
+
+    // 댓글 삭제 버튼 클릭 이벤트
+    $(document).on('click', '.delete-btn', function () {
+        const challengeFeedCommentCode = $(this).data('comment-id');
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/challenge/feed/deletecommentrequest',
+                type: 'POST',
+                data: { challengeFeedCommentCode: challengeFeedCommentCode },
+                success: function () {
+                    alert("댓글이 삭제되었습니다.");
+                    $(`button[data-comment-id='${challengeFeedCommentCode}']`).closest('section').remove();
+                },
+                error: function (error) {
+                    console.error("댓글 삭제 실패:", error);
+                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    });
+
+    // 댓글 등록 버튼 클릭 이벤트
+    $(document).on('click', '#feedCommentModalButton', function () {
+        const challengeFeedCode = $('.commentBtn').data('challenge-code');
+        const commentContent = $('input[placeholder="댓글 달기..."]').val();
+
+        if (!commentContent.trim()) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: '/challenge/feed/createcommentrequest',
+            type: 'POST',
+            data: {
+                challengeFeedCode: challengeFeedCode,
+                challengeFeedCommentContent: commentContent
+            },
+            success: function () {
+                alert("댓글이 등록되었습니다.");
+                $('input[placeholder="댓글 달기..."]').val('');
+                $('#feedCommentModalOverlay').fadeOut(300);
+
+                // 댓글 목록 새로고침
+                location.reload();
+            },
+            error: function (error) {
+                console.error("댓글 등록 실패:", error);
+                alert("댓글 등록 중 오류가 발생했습니다.");
             }
         });
     });
+	
+	// 모달 닫기 버튼 클릭 이벤트
+	$(document).on('click', '.feedCommentModalCloseBtn', function () {
+	    $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	});
 
-    // 모달 닫기 버튼 클릭 이벤트
-    $(document).on('click', '.feedCommentModalCloseBtn', function () {
-        $('#feedCommentModalOverlay').fadeOut(300);
+	// 오버레이 클릭 이벤트
+	$(document).on('click', '#feedCommentModalOverlay', function (e) {
+	    if ($(e.target).is('#feedCommentModalOverlay')) {
+	        $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	    }
+	});
+
+	// ESC 키 누르기 이벤트
+	$(document).on('keydown', function (e) {
+	    if (e.key === 'Escape') {
+	        $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	    }
+	});
+});
+
+
+// --- challenge feed comment modify&delete ---
+/*$(document).ready(function () {
+    // 댓글 수정 버튼 클릭 이벤트
+    $(document).on('click', '.edit-btn', function () {
+        const commentId = $(this).data('comment-id');
+        const originalContent = $(this).data('content');
+        const parentDiv = $(this).closest('.cf-comment-content-block');
+
+        parentDiv.find('.comment-text').hide();
+        parentDiv.find('.comment-edit-input').val(originalContent).show();
+
+        $(this).text('저장').addClass('save-btn').removeClass('edit-btn');
     });
 
-    // 모달 오버레이 클릭 시 닫기
-    $(document).on('click', '#feedCommentModalOverlay', function (e) {
-        if ($(e.target).is('#feedCommentModalOverlay')) {
-            $(this).fadeOut(300);
+    // 댓글 저장 버튼 클릭 이벤트
+    $(document).on('click', '.save-btn', function () {
+        const commentId = $(this).data('comment-id');
+        const parentDiv = $(this).closest('.cf-comment-content-block');
+        const newContent = parentDiv.find('.comment-edit-input').val();
+
+        if (!newContent.trim()) {
+            alert('댓글 내용을 입력해주세요.');
+            return;
         }
+
+        $.ajax({
+            url: '/challenge/feed/updatecomment',
+            type: 'POST',
+            data: { commentId: commentId, newContent: newContent },
+            success: function () {
+                alert('댓글이 수정되었습니다.');
+                parentDiv.find('.comment-text').text(newContent).show();
+                parentDiv.find('.comment-edit-input').hide();
+            },
+            error: function (error) {
+                console.error('댓글 수정 실패:', error);
+                alert('댓글 수정 중 오류가 발생했습니다.');
+            }
+        });
+
+        $(this).text('수정').addClass('edit-btn').removeClass('save-btn');
     });
 
-    // ESC 키 누를 시 모달 닫기
-    $(document).on('keydown', function (e) {
-        if (e.key === "Escape") {
-            $('#feedCommentModalOverlay').fadeOut(300);
+    // 댓글 삭제 버튼 클릭 이벤트
+    $(document).on('click', '.delete-btn', function () {
+        const commentId = $(this).data('comment-id');
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/challenge/feed/deletecomment',
+                type: 'POST',
+                data: { commentId: commentId },
+                success: function () {
+                    alert('댓글이 삭제되었습니다.');
+                    $(`button[data-comment-id='${commentId}']`).closest('section').remove();
+                },
+                error: function (error) {
+                    console.error('댓글 삭제 실패:', error);
+                    alert('댓글 삭제 중 오류가 발생했습니다.');
+                }
+            });
         }
     });
 });*/
-
 
 
 // --- challenge progress circle ---
@@ -975,7 +1241,6 @@ function updateTopParticipants(challengeCode) {
         }
     });
 }
-
 
 
 // --- D+, D- calculate ---

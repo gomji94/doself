@@ -78,6 +78,15 @@ public interface ChallengeFeedMapper {
 	// 챌린지 피드 댓글 1개 조회
 	String ChallengeFeedCommentView(@Param("challengeFeedCommentCode") String challengeFeedCommentCode);
 	
+	// 챌린지 피드 댓글 수정
+	void modifyFeedComment(@Param("challengeFeedCommentCode") String challengeFeedCommentCode,
+						   @Param("challengeFeedCommentContent") String challengeFeedCommentContent);
+	
+	// 챌린지 피드 댓글 삭제
+	void deleteFeedComment(@Param("challengeFeedCommentCode") String challengeFeedCommentCode);
+	
+	// 챌린지 수정
+	ChallengeFeed getModifyChallengeFeed(String challengeFeedCode);
 	
 	
 	
