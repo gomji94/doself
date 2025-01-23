@@ -3,14 +3,12 @@
 	<div class="feed-modify-modal-overlay" id="feed-modify-modal-overlay" style="display: none;" th:fragment="feed-modify">
        <div class="feed-modify-modal-container">
            <div class="feed-modify-modal-header feed-modify-header-display">
-	            <img src="https://velog.velcdn.com/images/mekite/post/cce77b75-c834-4f16-858d-1548946f09f5/image.png" alt="옵션">
 	            <h2>피드 수정</h2>
 	            <img id="feed-modify-modal-closeBtn" src="https://velog.velcdn.com/images/mekite/post/0936bbac-2eab-4353-90f2-0be979df6ea3/image.png" alt="닫기">
         	</div>
 	        <hr>
 	        <form id="modifyFeedForm" th:action="@{/feed/modifyfeed}" method="post" enctype="multipart/form-data" th:object="${feed}">
-	        
-				<input type="hidden" id="feedCode" name="feedCode" />
+	        	<input type="hidden" id="feedCode" name="feedCode" />
 				<div class="feed-modify-modal-body">
                     <!-- 이미지 업로드 영역 -->
                     <div class="feed-modify-image-upload">
@@ -29,7 +27,7 @@
 				
                     <!-- 정보 입력 영역 -->
                     <div class="feed-modify-feed-info">
-                        <textarea id="feedContent" name="feedContent" maxlength="2000" required></textarea>
+                        <textarea id="modify-feedContent" name="feedContent" maxlength="2000"></textarea>
                         <div class="feed-modify-text-box-under">
                             <div class="feed-modify-text-counter">
                                 <span id="feed-modify-text-count">0</span>
@@ -38,38 +36,38 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="feedIntakeDate">섭취 날짜 및 시간</label>
-                        <input type="datetime-local" id="intakeDateTime" name="feedIntakeDate" required>
+                        <label for="modify-feedIntakeDate">섭취 날짜 및 시간</label>
+                        <input type="datetime-local" id="modify-intakeDateTime" name="feedIntakeDate">
                     </div>
                     <div class="input-group">
-                        <label for="feedFoodIntake">섭취 인분</label>
-                        <select id="feedFoodIntake" name="feedFoodIntake" required>
+                        <label for="modify-feedFoodIntake">섭취 인분</label>
+                        <select id="modify-feedFoodIntake" name="feedFoodIntake">
                             <option value="">선택하세요</option>
-                            <option value="1" th:selected="${feed.feedFoodIntake == 1}">1</option>
-                            <option value="2" th:selected="${feed.feedFoodIntake == 2}">2</option>
-                            <option value="3" th:selected="${feed.feedFoodIntake == 3}">3</option>
-                            <option value="4" th:selected="${feed.feedFoodIntake == 4}">4</option>
-                            <option value="5" th:selected="${feed.feedFoodIntake == 5}">5</option>
+                            <option value="1"}>1</option>
+                            <option value="2"}>2</option>
+                            <option value="3"}>3</option>
+                            <option value="4"}>4</option>
+                            <option value="5"}>5</option>
                         </select>
                     </div>
                     <div class="input-group">
-                        <label for="mealCategoryCode">식사 분류</label>
-                        <select id="mealCategoryCode" name="mealCategoryCode">
+                        <label for="modify-mealCategoryCode">식사 분류</label>
+                        <select id="modify-mealCategoryCode" name="mealCategoryCode">
                             <option value="">선택하세요</option>
-                            <option value="mc001" th:selected="${feed.mealCategoryCode == 'mc001'}">아침</option>
-                            <option value="mc002" th:selected="${feed.mealCategoryCode == 'mc002'}">점심</option>
-                            <option value="mc003" th:selected="${feed.mealCategoryCode == 'mc003'}">저녁</option>
-                            <option value="mc004" th:selected="${feed.mealCategoryCode == 'mc004'}">간식</option>
+                            <option value="mc001"}>아침</option>
+                            <option value="mc002"}>점심</option>
+                            <option value="mc003"}>저녁</option>
+                            <option value="mc004"}>간식</option>
                         </select>
                     </div>
                     <div class="radio-group">
                         <label for="feedOpenStatus">공개 여부</label>
                         <div>
                             <label>
-                                <input type="radio" name="feedOpenStatus" value="1" th:selected="${feed.feedOpenStatus == 1}"> 공개
+                                <input type="radio" name="feedOpenStatus" value="1" /> 공개
                             </label>
                             <label>
-                                <input type="radio" name="feedOpenStatus" value="0" th:selected="${feed.feedOpenStatus == 0}"> 비공개
+                                <input type="radio" name="feedOpenStatus" value="0" /> 비공개
                             </label>
                         </div>
                     </div>
