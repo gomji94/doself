@@ -677,25 +677,21 @@ $(document).ready(function () {
             method: 'GET',
             data: { challengeFeedCode: challengeFeedCode },
             success: function (data) {
-				// 수정 화면에 데이터 채우기
-                $('#cf-modify-content').val(data.challengeFeedContent);
-                $('#serving').val(data.challengeFeedFoodIntake);
-                $('#meal-type').val(data.challengeMealCategory);
-
-                if (data.cmfFileIdx) {
-                    $('#createChallengeModifyFeedPreviewImage').attr(
-                        'src',
-                        `/upload/challenge_feed/${data.cmfFileIdx}`
-                    );
-                }
-				
 				$('.popup-wrap').css('display', 'none');
 				
 				console.log(data);
 				
                 // 수정 모달 열기
-               //$('#cf-modify-modal-overlay').css('display', 'block');
-               $('#cf-modify-modal-overlay').fadeIn();
+                //$('#cf-modify-modal-overlay').css('display', 'block');
+                $('#cf-modify-modal-overlay').fadeIn();
+
+				$('#createChallengeModifyFeedPreviewImage').attr('src', data.challengeFeedFilePath);
+				$('#modifyChallengeFeedMemberId').text(data.challengeMemberId);
+				$('#modifyChallengeFeedMemberProfile').attr('src', data.challengeMemberProfilePath);
+				
+				$('#cf-modify-content').val(data.challengeFeedContent);
+	            $('#serving').val(data.challengeFeedFoodIntake);
+	            $('#meal-type').val(data.challengeMealCategory);				
 			   
 			   /* TODO : cf-modify-modal-overlay에 데이터 생성하면서 받아올 것. 닫힐 땐 데이터 초기화 */
 			   
@@ -704,6 +700,7 @@ $(document).ready(function () {
                 alert('데이터를 불러오는 데 실패했습니다.');
                 console.error('Error:', err);
             },
+			
         });
     });
 
@@ -775,7 +772,7 @@ $(document).ready(function () {
     // 모달 닫기
 	$(document).on('click', function (e) {
         if ($(e.target).is('.feed-option-modal-wrap, #optionCencleButton, #cf-modify-modal-overlay')) {
-            $('.feed-option-modal-wrap').fadeOut(); // 클릭된 오버레이 닫기
+            $('.feed-option-modal-wrap, #cf-modify-modal-overlay').fadeOut(); // 클릭된 오버레이 닫기
         }
     });
 
@@ -791,33 +788,6 @@ $(document).ready(function () {
         $('#cf-modify-modal-overlay').fadeOut();
     });
 });
-
-
-
-/*$(document).ready(function () {
-    // 옵션 버튼 클릭 시 모달창 표시
-    $('.option-button').on('click', function () {
-        $('.feed-option-modal-wrap').fadeIn(); // 모달창 활성화
-    });
-
-    // 닫기 버튼 클릭 시 모달창 닫기
-    $('.feed-option-modal-wrap .close').on('click', function () {
-        $('.feed-option-modal-wrap').fadeOut(); // 모달창 비활성화
-    });
-
-    // 모달창 바깥을 클릭하면 모달창 닫기
-    $('.feed-option-modal-wrap').on('click', function (e) {
-        if ($(e.target).is('.feed-option-modal-wrap')) {
-            $(this).fadeOut();
-        }
-    });
-	$(document).on('keydown', function (e) {
-        if (e.key === "Escape") {
-            $('#cf-mbr-modal-overlay').fadeOut();
-            $('#cf-warning-modal-overlay').fadeOut();
-        }
-    });
-});*/
 
 
 // --- feed like button event ---
@@ -965,27 +935,37 @@ $(document).on('click', '.commentBtn', function () {
 	
 	// 댓글 수정 버튼 클릭 이벤트
 	$(document).on('click', '.edit-btn', function () {
-	    const parentDiv = $(this).closest('.cf-comment-content-block');
-	    const commentEditContainer = parentDiv.find('.cf-mofify-comment-feed-comment');
+		const parentSection = $(this).closest('section'); // 현재 댓글 섹션
+	    const commentEditContainer = parentSection.find('.cf-mofify-comment-feed-comment');
+	    const commentText = parentSection.find('.comment-text');
 	    const originalContent = $(this).data('content');
 
-	    // 텍스트 숨기고, 수정용 input 필드 표시
+	    // 텍스트 숨기고, 수정 input 표시
 		commentEditContainer.css('display', 'block');
-		$('.cf-mofify-comment-feed-comment').css('display', 'block');
-		$('.comment-edit-input').css('display', 'block');
+		commentText.hide();
+	    commentEditContainer.show();
+		//$('.cf-mofify-comment-feed-comment').css('display', 'block');
+		//$('.comment-edit-input').css('display', 'block');
 		
-	    commentEditContainer.find('.comment-text').hide();
-	    commentEditContainer.find('.comment-edit-input').val(originalContent).show();
+	    //commentEditContainer.find('.comment-text').hide();
+	    //commentEditContainer.find('.comment-edit-input').val(originalContent).show();
+
+		// 다른 댓글의 수정 상태 초기화
+	    $('.cf-mofify-comment-feed-comment').not(commentEditContainer).hide();
+	    $('.comment-text').not(commentText).show();
+	    $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	    $('.cancel-btn').text('삭제').addClass('delete-btn').removeClass('cancel-btn');
 
 	    // 버튼 상태 변경 (수정 -> 저장, 삭제 -> 취소)
 	    $(this).text('저장').addClass('save-btn').removeClass('edit-btn');
-		$('.delete-btn').text('취소').addClass('cancel-btn').removeClass('delete-btn');
+	    parentSection.find('.delete-btn').text('취소').addClass('cancel-btn').removeClass('delete-btn');
 	});
 
     // 댓글 저장 버튼 클릭 이벤트
     $(document).on('click', '.save-btn', function () {
-		const parentDiv = $(this).closest('.cf-comment-content-block');
+		const parentDiv = $(this).closest('.cf-comment-user-block');
 	    const commentEditContainer = parentDiv.find('.cf-mofify-comment-feed-comment');
+	    const commentText = parentDiv.find('.comment-text');
 	    const commentId = $(this).data('comment-id');
 	    const newContent = commentEditContainer.find('.comment-edit-input').val();
 		
@@ -994,27 +974,45 @@ $(document).on('click', '.commentBtn', function () {
             return;
         }
 
-        $.ajax({
-            url: '/challenge/feed/modifycommentrequest',
-            type: 'POST',
-            data: { challengeFeedCommentCode: commentId,
-			        newContent: newContent },
-            success: function () {
-                alert("댓글이 수정되었습니다.");
-				commentEditContainer.find('.comment-text').text(newContent).show();
-	            commentEditContainer.find('.comment-edit-input').hide();
-				
-				// 수정 UI 숨김
-	            commentEditContainer.css('display', 'none');
-            },
-            error: function (error) {
-                console.error("댓글 수정 실패:", error);
-                alert("댓글 수정 중 오류가 발생했습니다.");
-            }
-        });
+		$.ajax({
+	        url: '/challenge/feed/modifycommentrequest',
+	        type: 'POST',
+	        data: { challengeFeedCommentCode: commentId, challengeFeedCommentContent: newContent },
+	        success: function () {
+	            alert("댓글이 수정되었습니다.");
+	            commentText.text(newContent).show(); // 수정된 텍스트를 표시
+	            commentEditContainer.hide(); // 수정 input 숨기기
+
+	            // 버튼 상태 복구
+	            $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	            $('.cancel-btn').text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+	        },
+	        error: function () {
+	            alert("댓글 수정 중 오류가 발생했습니다.");
+	        }
+	    });
 
         $(this).text('수정').addClass('edit-btn').removeClass('save-btn');
     });
+	
+	// 댓글 취소 버튼 클릭 이벤트
+	$(document).on('click', '.cancel-btn', function () {
+	    const parentDiv = $(this).closest('.cf-comment-user-block');
+	    const commentEditContainer = parentDiv.find('.cf-mofify-comment-feed-comment');
+	    const commentText = parentDiv.find('.comment-text');
+	    const originalContent = $(this).siblings('.save-btn').data('content'); // 원래 댓글 내용 가져오기
+
+	    // DB의 댓글 내용으로 초기화
+	    commentEditContainer.find('.comment-edit-input').val(originalContent);
+
+	    // 기존 텍스트 표시 및 수정 input 숨기기
+	    commentText.show();
+	    commentEditContainer.hide();
+
+	    // 버튼 상태 복구
+	    $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	    $(this).text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+	});
 
     // 댓글 삭제 버튼 클릭 이벤트
     $(document).on('click', '.delete-btn', function () {

@@ -95,15 +95,18 @@
 	    <result column="file_path" 			property="challengeImage" />
 	</resultMap> 
 	
+	<!-- 챌린지 피드 수정(피드코드) -->
 	<resultMap type="AddChallengeFeed" id="ModifyChallengeFeedResultMap">
 		<id 	column="cmf_num" 		  	property="challengeFeedCode" />
 		<result column="cg_num" 		  	property="challengeCode" />
 		<result column="mbr_id"  		  	property="challengeMemberId" />
+		<result column="memberProfilePath" 	property="challengeMemberProfilePath" />
 		<result column="cmf_content"  	  	property="challengeFeedContent" />
 		<result column="cmf_like"  		  	property="challengeFeedLike" />
 		<result column="cmf_date"  		  	property="challengeFeedDate" />
 		<result column="cmf_warning_check"  property="challengeFeedWarningCheck" />
 		<result column="cmf_file_idx"  		property="challengeFeedFileIdx" />
+		<result column="feedImagePath"  	property="challengeFeedFilePath" />
 		<result column="cmf_food_intake"    property="challengeFeedFoodIntake" />
 		<result column="mc_num"  			property="challengeMealCategory" />
 	</resultMap>
@@ -412,20 +415,29 @@
 	
 	<!-- 챌린지 피드 코드 -->
 	<select id="getChallengeFeedByCode" parameterType="map" resultMap="ModifyChallengeFeedResultMap">
+	/* 챌린지 피드 코드 */
 	    SELECT
-	        cmf_num,
-	        cg_num,
-	        mbr_id,
-	        cmf_content,
-	        cmf_like,
-	        cmf_warning_check,
-	        cmf_file_idx,
-	        cmf_food_intake,
-	        mc_num
+	        cmf.cmf_num,
+	        cmf.cg_num,
+	        cmf.mbr_id,
+	        mf.file_path AS memberProfilePath,
+	        cmf.cmf_content,
+	        cmf.cmf_like,
+	        cmf.cmf_date,
+	        cmf.cmf_warning_check,
+	        cmf.cmf_file_idx,
+	        cf.file_path  AS feedImagePath,
+	        cmf.cmf_food_intake,
+	        cmf.mc_num
 	    FROM
-	        challenge_member_feed
-	    WHERE
-	        cmf_num = #{challengeFeedCode}
+	        challenge_member_feed cmf INNER JOIN member m
+	        ON cmf.mbr_id = m.mbr_id
+	        INNER JOIN files mf
+	        ON m.mbr_file_idx = mf.file_idx
+	        INNER JOIN files cf
+	        ON cmf.cmf_file_idx = cf.file_idx
+	   WHERE 
+	   cmf.cmf_num = #{challengeFeedCode}
 	</select>
 	
 	<!-- 챌린지 피드 삭제 -->
