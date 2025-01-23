@@ -102,6 +102,7 @@
 		<result column="mbr_id"  		  	property="challengeMemberId" />
 		<result column="cmf_content"  	  	property="challengeFeedContent" />
 		<result column="cmf_like"  		  	property="challengeFeedLike" />
+		<result column="cmf_date"  		  	property="challengeFeedDate" />
 		<result column="cmf_warning_check"  property="challengeFeedWarningCheck" />
 		<result column="cmf_file_idx"  		property="challengeFeedFileIdx" />
 		<result column="cmf_food_intake"    property="challengeFeedFoodIntake" />
@@ -459,17 +460,17 @@
 	
 	<!-- 관리자 -->
 	<!-- 해당챌린지, 해당아이디, 해당날짜의 챌린지 피드 개수 조회 -->
-	<select id="getChallengeFeedCountByChallengeFeed" parameterType="AddChallengeFeed" resultMap="ChallengeFeedResultMap">
+	<select id="getChallengeFeedCountByChallengeFeed" parameterType="AddChallengeFeed" resultType="Int">
 		SELECT
 			COUNT(*)
 		FROM
-			challenge_member_feed cmf
+			challenge_member_feed
 		WHERE
 			cg_num = #{challengeCode}
 			AND
 			mbr_id = #{challengeMemberId}
 			AND
-			cmf_date = #{challengeFeedDate}
+			DATE(cmf_date) = #{challengeFeedDate}
 	</select>
 	
 	<resultMap type="PersonalStat" id="PersonalStatResultMap">
