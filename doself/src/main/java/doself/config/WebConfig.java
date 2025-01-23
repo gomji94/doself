@@ -30,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
 				.excludePathPatterns("/assets/**")
 				.excludePathPatterns("/error/**")
 				.excludePathPatterns("/attachment/**")
+				.excludePathPatterns("/images/**")
 				.excludePathPatterns("/manage/**");
 				
 		registry.addInterceptor(loginInterceptor)
