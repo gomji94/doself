@@ -97,8 +97,6 @@ public class FeedController {
     @GetMapping("/modifyfeed")
     @ResponseBody
     public Feed getFeedModifyData(@RequestParam(name="feedCode") String feedCode) {
-    	
-    	System.out.println("!@!@!@feedCode : " + feedCode);
     	return feedService.getFeedDetail(feedCode);
     }
 	
@@ -113,7 +111,6 @@ public class FeedController {
         String memberId = (String) session.getAttribute("SID");
         feed.setMemberId(memberId);
         feed.setFeedCode(feedCode);
-
         feedService.modifyFeed(feed, files);
 
         return "redirect:/feed/" + feed.getFeedCode();

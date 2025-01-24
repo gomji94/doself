@@ -24,7 +24,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 															, "/ticket/purchasedetail/isCheck", "/feed/{feedCode})"
 															, "/challenge/list/view/participation", "/ticket/purchasedetail/refund"
 															, "/ticket/purchasedetail/isCheck", "/challenge/feed/modifychallengefeed"
-															, "/ticket/purchasedetail/isCheck", "/challenge/feed/view/**", "/feed//modifyfeed");
+															, "/ticket/purchasedetail/isCheck", "/challenge/feed/view/**", "/feed/modifyfeed");
 
 	
 	
