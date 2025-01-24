@@ -451,7 +451,7 @@
 	        </main>
 	        
 	        <!-- challenge progress(right aside) -->
-	        <div class="progress-container" th:each="cp : ${challengeProgress}">
+	        <div class="progress-container" th:if="${challengeTotalProgressInfo != null || challengeTotalProgressInfo.isEmpty()}" th:each="${ctpi : challengeTotalProgressInfo}">
 	        	<!-- th:object="${challengeProgress[0]}" -->
 	            <div class="challenge">
 	                <a href="#">
