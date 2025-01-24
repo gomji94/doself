@@ -11,12 +11,14 @@ public class AddChallengeFeed {
 	private String challengeFeedCode;
 	private String challengeCode;
 	private String challengeMemberId;
+	private String challengeMemberProfilePath;
 	private String challengeFeedContent;
+	private int    challengeFeedLike;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date   challengeFeedDate;
-	private int    challengeFeedLike;
 	private String challengeFeedWarningCheck;
 	private String challengeFeedFileIdx;
+	private String challengeFeedFilePath;
 	private int challengeFeedFoodIntake;
 	private String challengeMealCategory;
 }

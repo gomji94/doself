@@ -11,7 +11,9 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
+import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
+import retrofit2.http.HEAD;
 
 @Mapper
 public interface ChallengeFeedMapper {
@@ -20,6 +22,9 @@ public interface ChallengeFeedMapper {
 	
 	// 현재 참여중인 챌린지 리스트 조회
 	List<ChallengeFeed> getChallengeList();
+
+	// 현재 참여중인 챌린지의 피드목록 조회
+	List<ChallengeFeed> getChallengeListByChallengeCode(Map<String, Object> params);
 	
 	// 로그인된 사용자가 참여 중인 챌린지 리스트 가져오기
 	List<ParticipateChallengeList> getChallengeListByMemberId(@Param("memberId") String memberId);
@@ -36,9 +41,6 @@ public interface ChallengeFeedMapper {
 	// 총 업로드 데이터 합계
     Integer getTodayProgressSum(@Param("challengeCode") String challengeCode);
 
-	// 참여 멤버 상위 3명 표시
-    List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
-	
 	// 투데이 디데이 계산
 	ChallengeProgress getChallengeProgressByCode(@Param("challengeCode") String challengeCode);
 	
@@ -87,6 +89,13 @@ public interface ChallengeFeedMapper {
 	
 	// 챌린지 수정
 	ChallengeFeed getModifyChallengeFeed(String challengeFeedCode);
+
+	// 챌린지 정보 조회(그래프)
+	List<ChallengeTotalProgress> getChallengeTotalProgressInfo(@Param("challengeCode") String challengeCode);
+	
+	// 참여 멤버 상위 3명 표시
+	List<ChallengeTotalProgress> getTopParticipants(@Param("challengeCode") String challengeCode);
+	//List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
 	
 	
 	

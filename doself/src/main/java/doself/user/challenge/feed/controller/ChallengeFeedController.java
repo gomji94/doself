@@ -18,6 +18,7 @@ import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
 import doself.user.challenge.feed.service.ChallengeFeedService;
 import doself.user.challenge.list.domain.AddChallenge;
@@ -27,7 +28,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -62,6 +62,7 @@ public class ChallengeFeedController {
 	@GetMapping("/view/{challengeCode}")
 	public String viewChallengeFeed(@PathVariable("challengeCode") String challengeCode,
 	        						Pageable pageable, String challengeFeedCode,
+	        						ChallengeTotalProgress challengeTotalProgress,
 	        						HttpSession session, Model model) {
 		
 		//log.info(">>> location/controller >>> challengeCode: {}", challengeCode);  // >>>>>> check
@@ -79,14 +80,15 @@ public class ChallengeFeedController {
 	    int endPageNum = pageInfo.getEndPageNum();
 	    int lastPage = pageInfo.getLastPage();
 	    
-	    ChallengeFeed modifyChallengeFeedList = challengeFeedService.getModifyChallengeFeed(challengeFeedCode);
+	    //ChallengeFeed modifyChallengeFeedList = challengeFeedService.getModifyChallengeFeed(challengeFeedCode);
 	    
 	    List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
 	    
 	    var challengeFeedPageInfo = challengeFeedService.getChallengeFeedPage(challengeCode, pageable);
-	    var challengeProgress = challengeFeedService.getProcessChallengeStatus(challengeCode);
-	    int totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
-	    var topParticipants = challengeFeedService.getTopParticipants(challengeCode);
+	    //var challengeProgress = challengeFeedService.getProcessChallengeStatus(challengeCode);
+	    //int totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
+	    //List<ChallengeMemberList> topParticipants = challengeFeedService.getTopParticipants(challengeCode);
+	    List<ChallengeTotalProgress> challengeTotalProgressInfo = challengeFeedService.getChallengeTotalProgressInfo(challengeCode);
 	    var dateCalculations = challengeFeedService.calculateDPlusAndDMinus(challengeCode);
 
 	    model.addAttribute("challengeCode", challengeCode);
@@ -99,18 +101,19 @@ public class ChallengeFeedController {
 	    model.addAttribute("lastPage", lastPage);
 	    model.addAttribute("pageInfo", pageInfo);
 	    model.addAttribute("pageInfo", challengeFeedPageInfo);
-	    model.addAttribute("challengeProgress", challengeProgress);
-	    model.addAttribute("totalProgress", totalProgress);
-	    model.addAttribute("topParticipants", topParticipants);
+	    //model.addAttribute("challengeProgress", challengeProgress);
+	    //model.addAttribute("totalProgress", totalProgress);
+	    //model.addAttribute("topParticipants", topParticipants);
 	    model.addAttribute("dPlus", dateCalculations.get("dPlus"));
 	    model.addAttribute("dMinus", dateCalculations.get("dMinus"));
 	    model.addAttribute("levelList", levelList);
 	    model.addAttribute("challengeMemberList", challengeMemberList);
 	    model.addAttribute("feedCommentList", feedCommentList);
 	    model.addAttribute("loggedInMemberId", loggedInMemberId);
-	    model.addAttribute("modifyChallengeFeedList", modifyChallengeFeedList);
+	    model.addAttribute("challengeTotalProgressInfo", challengeTotalProgressInfo);
+	    //model.addAttribute("modifyChallengeFeedList", modifyChallengeFeedList);
 	    
-	    log.info(">>> location/controller >>> modifyChallengeFeedList: {}", modifyChallengeFeedList);
+	    //log.info(">>> location/controller >>> modifyChallengeFeedList: {}", modifyChallengeFeedList);
 	    //log.info(">>> location/controller >>> challengeCode: {}", challengeCode);
 	    //log.info(">>> location/controller >>> challengeFeedList: {}", challengeFeedList);
 	    //log.info(">>> location/controller >>> challengeProgress: {}", challengeProgress);
@@ -196,14 +199,18 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 수정 폼(이전 코드)
 	@PostMapping("/modifychallengefeedrequest")
-	public String postMethodName(@RequestPart(name = "files", required = false) MultipartFile files,
-								 @ModelAttribute AddChallengeFeed addChallengeFeed, HttpSession session) {
+	public String postMethodName(@RequestPart(name = "modifyFiles", required = false) MultipartFile files,
+								 AddChallengeFeed addChallengeFeed, HttpSession session) {
+		
+		//log.info("fileYN:{}, files: {}", files.isEmpty(), files);
+		//log.info("addChallengeFeed: {}", addChallengeFeed);
+		
 		String memberId = (String) session.getAttribute("SID");
 	    addChallengeFeed.setChallengeMemberId(memberId);
 
 	    challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
 	    
-	    log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
+	    //log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
 	    
 	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}

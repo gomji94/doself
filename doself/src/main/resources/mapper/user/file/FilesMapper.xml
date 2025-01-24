@@ -86,7 +86,6 @@
 	<update id="updateFileByIdx" parameterType="int">
 	    UPDATE files
 	    <set>
-	        <if test="fileIdx != null">file_idx = #{fileIdx},</if>
 	        <if test="fileOriginalName != null">file_original_name = #{fileOriginalName},</if>
 	        <if test="fileNewName != null">file_new_name = #{fileNewName},</if>
 	        <if test="filePath != null">file_path = #{filePath}</if>
