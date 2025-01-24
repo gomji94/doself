@@ -96,7 +96,9 @@ public class FeedController {
 	// 피드 수정 모달 열기
     @GetMapping("/modifyfeed")
     @ResponseBody
-    public Feed getFeedModifyData(@RequestParam(name="feedCode") String feedCode, Model model) {
+    public Feed getFeedModifyData(@RequestParam(name="feedCode") String feedCode) {
+    	
+    	System.out.println("!@!@!@feedCode : " + feedCode);
     	return feedService.getFeedDetail(feedCode);
     }
 	
@@ -105,12 +107,12 @@ public class FeedController {
     public String modifyFeed(
         @RequestPart(name = "files", required = false) MultipartFile files,
         @ModelAttribute Feed feed,
-        @RequestParam("feedCode") String feedCode, // 명시적으로 feedCode를 받아옴
+        @RequestParam("feedCode") String feedCode,
         HttpSession session
     ) {
         String memberId = (String) session.getAttribute("SID");
         feed.setMemberId(memberId);
-        feed.setFeedCode(feedCode); // feedCode 설정
+        feed.setFeedCode(feedCode);
 
         feedService.modifyFeed(feed, files);
 

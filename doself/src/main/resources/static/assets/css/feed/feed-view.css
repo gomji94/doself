@@ -1898,7 +1898,7 @@ select #meal-type option:checked {
 }
 
 .df-feed-main-img {
-    width: 480px;
+    width: 360px;
     height: auto;
     margin-top: 20px;
 }

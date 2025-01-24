@@ -255,18 +255,29 @@ $('#feed-create-submit-btn').on('click', function (e) {
 // --- 피드 수정 모달 ---
 $(document).ready(function () {
     // 수정 버튼 클릭 시
-    $('.feed-modify-btn').on('click', function () {
-        const feedElement = $(this).closest('.feed'); // 클릭된 피드 요소 가져오기
-        const feedCode = feedElement.data('feed-code'); // 피드 코드 가져오기
+	$('.feed-modify-modal').on('click', function () {
 
-        // 모달에 데이터 바인딩
-        $('#modify-feedCode').val(feedElement.data('feed-code'));
-        $('#modify-feedContent').val(feedElement.data('feed-content'));
-        $('#modify-feedIntakeDate').val(feedElement.data('feed-intakedate'));
-        $('#modify-feedFoodIntake').val(feedElement.data('meal-weight'));
-        $('#modify-mealCategoryCode').val(feedElement.data('meal-category'));
-        const feedVisibility = feedElement.data('feed-visibility');
-        $(`input[name="feedOpenStatus"][value="${feedVisibility}"]`).prop('checked', true);
+        $.ajax({
+            url: '/feed/modifyfeed', // 서버에서 데이터를 가져올 엔드포인트
+            method: 'GET',
+            data: { feedCode: feedCode },
+            success: function (feed) {
+                // 데이터 바인딩
+                $('#modify-feedCode').val(feed.feedCode);
+                $('#modify-feedContent').val(feed.feedContent);
+                $('#modify-intakeDateTime').val(feed.feedIntakeDate);
+                $('#modify-mealCategoryCode').val(feed.mealCategoryCode);
+                $('#modify-feedFoodIntake').val(feed.feedFoodIntake);
+                $(`input[name="feedOpenStatus"][value="${feed.feedOpenStatus}"]`).prop('checked', true);
+
+                // 모달 열기
+                $('#feed-modify-modal-overlay').fadeIn();
+            },
+            error: function (error) {
+                console.error('피드 데이터를 가져오는 중 오류가 발생했습니다:', error);
+                alert('피드 데이터를 가져오는 데 실패했습니다.');
+            }
+        });
 
         // 모달 표시
         $('#feed-modify-modal-overlay').fadeIn();

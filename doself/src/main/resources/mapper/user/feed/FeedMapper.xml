@@ -121,8 +121,10 @@
 	        f.feed_intake_date,
 	        f.feed_like,
 	        f.feed_open_status,
-	        fi_feed.file_path,
-	        fi_feed.file_new_name,
+	        fi_feed.file_path AS feed_file_path,
+	        fi_feed.file_new_name AS feed_file_name,
+	        fi_member.file_path AS member_file_path,
+		    fi_member.file_new_name AS member_file_name,
 	        fc.fc_content,
 	        f.feed_file_index,
 	        m.mbr_file_idx,
@@ -146,6 +148,8 @@
 	    	files fi_feed ON f.feed_file_index = fi_feed.file_idx
 	    INNER JOIN
 	        member m ON f.mbr_id = m.mbr_id
+        LEFT JOIN
+	    	files fi_member ON m.mbr_file_idx = fi_member.file_idx
 	    LEFT JOIN
 	        feed_comments fc ON f.feed_num = fc.feed_num
 	    WHERE
