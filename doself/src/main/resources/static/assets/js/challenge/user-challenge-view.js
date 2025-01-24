@@ -402,14 +402,13 @@ $(document).ready(function () {
         const challengeFeedCode = $(this).attr('data-challenge-feed-code');
 
         if (!challengeFeedCode) {
-			
             alert('챌린지 피드 코드를 찾을 수 없습니다.');
             return;
         }
 		
         // 모달에 데이터 설정
-        $('#cl-modify-modal').attr('data-challenge-feed-code', challengeFeedCode); // 수정
-        $('#cl-delete-modal').attr('data-challenge-feed-code', challengeFeedCode); // 수정
+        $('#cl-modify-modal').attr('data-challenge-feed-code', challengeFeedCode);
+        $('#cl-delete-modal').attr('data-challenge-feed-code', challengeFeedCode);
 
         // 모달 열기
         $('.feed-option-modal-wrap').fadeIn();

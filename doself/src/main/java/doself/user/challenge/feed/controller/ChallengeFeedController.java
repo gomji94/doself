@@ -18,6 +18,7 @@ import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
 import doself.user.challenge.feed.service.ChallengeFeedService;
 import doself.user.challenge.list.domain.AddChallenge;
@@ -27,7 +28,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -62,6 +62,7 @@ public class ChallengeFeedController {
 	@GetMapping("/view/{challengeCode}")
 	public String viewChallengeFeed(@PathVariable("challengeCode") String challengeCode,
 	        						Pageable pageable, String challengeFeedCode,
+	        						ChallengeTotalProgress challengeTotalProgress,
 	        						HttpSession session, Model model) {
 		
 		//log.info(">>> location/controller >>> challengeCode: {}", challengeCode);  // >>>>>> check
@@ -84,9 +85,10 @@ public class ChallengeFeedController {
 	    List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
 	    
 	    var challengeFeedPageInfo = challengeFeedService.getChallengeFeedPage(challengeCode, pageable);
-	    var challengeProgress = challengeFeedService.getProcessChallengeStatus(challengeCode);
-	    int totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
-	    var topParticipants = challengeFeedService.getTopParticipants(challengeCode);
+	    //var challengeProgress = challengeFeedService.getProcessChallengeStatus(challengeCode);
+	    //int totalProgress = challengeFeedService.calculateTotalProgress(challengeCode);
+	    //List<ChallengeMemberList> topParticipants = challengeFeedService.getTopParticipants(challengeCode);
+	    List<ChallengeTotalProgress> challengeTotalProgressInfo = challengeFeedService.getChallengeTotalProgressInfo(challengeCode);
 	    var dateCalculations = challengeFeedService.calculateDPlusAndDMinus(challengeCode);
 
 	    model.addAttribute("challengeCode", challengeCode);
@@ -100,14 +102,15 @@ public class ChallengeFeedController {
 	    model.addAttribute("pageInfo", pageInfo);
 	    model.addAttribute("pageInfo", challengeFeedPageInfo);
 	    //model.addAttribute("challengeProgress", challengeProgress);
-	    model.addAttribute("totalProgress", totalProgress);
-	    model.addAttribute("topParticipants", topParticipants);
+	    //model.addAttribute("totalProgress", totalProgress);
+	    //model.addAttribute("topParticipants", topParticipants);
 	    model.addAttribute("dPlus", dateCalculations.get("dPlus"));
 	    model.addAttribute("dMinus", dateCalculations.get("dMinus"));
 	    model.addAttribute("levelList", levelList);
 	    model.addAttribute("challengeMemberList", challengeMemberList);
 	    model.addAttribute("feedCommentList", feedCommentList);
 	    model.addAttribute("loggedInMemberId", loggedInMemberId);
+	    model.addAttribute("challengeTotalProgressInfo", challengeTotalProgressInfo);
 	    //model.addAttribute("modifyChallengeFeedList", modifyChallengeFeedList);
 	    
 	    //log.info(">>> location/controller >>> modifyChallengeFeedList: {}", modifyChallengeFeedList);

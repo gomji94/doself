@@ -24,6 +24,7 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
+import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
 import doself.util.PageInfo;
@@ -93,12 +94,12 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
     }
 	
 	// 총 업로드 데이터 합계
-	@Override
-	@Transactional
-	public int calculateTotalProgress(String challengeCode) {
-		Integer progressSum = challengeFeedMapper.getTodayProgressSum(challengeCode);
-	    return progressSum != null ? progressSum : 0; // null일 경우 기본값 0 반환
-	}
+//	@Override
+//	@Transactional
+//	public int calculateTotalProgress(String challengeCode) {
+//		Integer progressSum = challengeFeedMapper.getTodayProgressSum(challengeCode);
+//	    return progressSum != null ? progressSum : 0; // null일 경우 기본값 0 반환
+//	}
 
 	// 참여 멤버 상위 3명 표시
 	@Override
@@ -549,10 +550,18 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		challengeFeedMapper.deleteFeedComment(challengeFeedCommentCode);
 	}
 
+	// 챌린지 피드 수정
 	@Override
 	public ChallengeFeed getModifyChallengeFeed(String challengeFeedCode) {
 		
 		return challengeFeedMapper.getModifyChallengeFeed(challengeFeedCode);
+	}
+
+	// 챌린지 정보 조회(그래프)
+	@Override
+	public List<ChallengeTotalProgress> getChallengeTotalProgressInfo(String challengeCode) {
+		
+		return challengeFeedMapper.getChallengeTotalProgressInfo(challengeCode);
 	}
 
 }

@@ -10,6 +10,7 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
+import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -34,7 +35,7 @@ public interface ChallengeFeedService {
 	List<ChallengeProgress> getProcessChallengeStatus(String challengeCode);
 
 	// 챌린지 진행도 계산
-	int calculateTotalProgress(String challengeCode);
+	//int calculateTotalProgress(String challengeCode);
 	
 	// 챌린지 참여율 상위 3명 조회
 	List<ChallengeMemberList> getTopParticipants(String challengeCode);
@@ -77,4 +78,7 @@ public interface ChallengeFeedService {
 	
 	// 챌린지 피드 댓글 삭제
 	void deleteFeedComment(String challengeFeedCommentCode);
+	
+	// 챌린지 정보 조회(그래프)
+	List<ChallengeTotalProgress> getChallengeTotalProgressInfo(String challengeCode);
 }
