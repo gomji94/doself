@@ -79,7 +79,7 @@ public class ChallengeFeedController {
 	    int endPageNum = pageInfo.getEndPageNum();
 	    int lastPage = pageInfo.getLastPage();
 	    
-	    ChallengeFeed modifyChallengeFeedList = challengeFeedService.getModifyChallengeFeed(challengeFeedCode);
+	    //ChallengeFeed modifyChallengeFeedList = challengeFeedService.getModifyChallengeFeed(challengeFeedCode);
 	    
 	    List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
 	    
@@ -99,7 +99,7 @@ public class ChallengeFeedController {
 	    model.addAttribute("lastPage", lastPage);
 	    model.addAttribute("pageInfo", pageInfo);
 	    model.addAttribute("pageInfo", challengeFeedPageInfo);
-	    model.addAttribute("challengeProgress", challengeProgress);
+	    //model.addAttribute("challengeProgress", challengeProgress);
 	    model.addAttribute("totalProgress", totalProgress);
 	    model.addAttribute("topParticipants", topParticipants);
 	    model.addAttribute("dPlus", dateCalculations.get("dPlus"));
@@ -108,9 +108,9 @@ public class ChallengeFeedController {
 	    model.addAttribute("challengeMemberList", challengeMemberList);
 	    model.addAttribute("feedCommentList", feedCommentList);
 	    model.addAttribute("loggedInMemberId", loggedInMemberId);
-	    model.addAttribute("modifyChallengeFeedList", modifyChallengeFeedList);
+	    //model.addAttribute("modifyChallengeFeedList", modifyChallengeFeedList);
 	    
-	    log.info(">>> location/controller >>> modifyChallengeFeedList: {}", modifyChallengeFeedList);
+	    //log.info(">>> location/controller >>> modifyChallengeFeedList: {}", modifyChallengeFeedList);
 	    //log.info(">>> location/controller >>> challengeCode: {}", challengeCode);
 	    //log.info(">>> location/controller >>> challengeFeedList: {}", challengeFeedList);
 	    //log.info(">>> location/controller >>> challengeProgress: {}", challengeProgress);
@@ -196,14 +196,18 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 수정 폼(이전 코드)
 	@PostMapping("/modifychallengefeedrequest")
-	public String postMethodName(@RequestPart(name = "files", required = false) MultipartFile files,
-								 @ModelAttribute AddChallengeFeed addChallengeFeed, HttpSession session) {
+	public String postMethodName(@RequestPart(name = "modifyFiles", required = false) MultipartFile files,
+								 AddChallengeFeed addChallengeFeed, HttpSession session) {
+		
+		//log.info("fileYN:{}, files: {}", files.isEmpty(), files);
+		//log.info("addChallengeFeed: {}", addChallengeFeed);
+		
 		String memberId = (String) session.getAttribute("SID");
 	    addChallengeFeed.setChallengeMemberId(memberId);
 
 	    challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
 	    
-	    log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
+	    //log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
 	    
 	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}

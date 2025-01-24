@@ -80,7 +80,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		params.put("pageable", pageable);
 		
 		//List<ChallengeFeed> feeds = challengeFeedMapper.getChallengeFeed(params);
-		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeList();
+		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeListByChallengeCode(params);
 		
 		return new PageInfo<>(challengeFeedList, pageable, rowCnt);
 	}
@@ -456,7 +456,14 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    if (files != null && !files.isEmpty()) {
 	        Files uploadedFile = filesUtils.uploadFile(files);
 	        if (uploadedFile != null) {
-	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx());
+	        	String challengeFeedFileIdx = addChallengeFeed.getChallengeFeedFileIdx();
+	        	Files challengeFeedFile = filesMapper.getFileInfoByIdx(challengeFeedFileIdx);
+	        	boolean isFileDelete = filesUtils.deleteFileByPath(challengeFeedFile.getFilePath());
+	            
+	        	if(isFileDelete) {
+	        		uploadedFile.setFileIdx(challengeFeedFileIdx);
+	        		filesMapper.updateFileByIdx(uploadedFile);
+	        	}
 	        }
 	    }
 	    

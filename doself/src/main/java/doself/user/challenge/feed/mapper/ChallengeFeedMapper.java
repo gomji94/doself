@@ -20,6 +20,9 @@ public interface ChallengeFeedMapper {
 	
 	// 현재 참여중인 챌린지 리스트 조회
 	List<ChallengeFeed> getChallengeList();
+
+	// 현재 참여중인 챌린지의 피드목록 조회
+	List<ChallengeFeed> getChallengeListByChallengeCode(Map<String, Object> params);
 	
 	// 로그인된 사용자가 참여 중인 챌린지 리스트 가져오기
 	List<ParticipateChallengeList> getChallengeListByMemberId(@Param("memberId") String memberId);
