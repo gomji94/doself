@@ -51,10 +51,10 @@
 		    f.feed_intake_date,
 		    f.feed_like,
 		    f.feed_open_status,
-		    fi_feed.file_path,
-		    fi_feed.file_new_name,
-		    fi_member.file_path,
-		    fi_member.file_new_name,
+		    fi_feed.file_path AS feed_file_path,
+		    fi_feed.file_new_name AS feed_file_name,
+		    fi_member.file_path AS member_file_path,
+		    fi_member.file_new_name AS member_file_name,
 		    mll.mni_name,
 		    mll.mni_picture,
 		    mll.mni_weight,
@@ -305,12 +305,13 @@
 	<!-- 피드 댓글 조회 -->
 	<select id="getCommentsByFeedCode" parameterType="String" resultType="Feed">
 	    SELECT
-	        fc.fc_num,
-	        fc.feed_num,
-	        fc.mbr_id,
-	        fc.fc_content,
-	        fc.fc_date,
-	        m.mbr_file_idx
+	        fc.fc_num AS commentCode,
+	        fc.feed_num AS feedCode,
+	        fc.mbr_id AS memberId,
+	        fc.fc_content AS commentContent,
+	        fc.fc_date AS commentDate,
+	        fc.fc_like AS commentLike,
+	        m.mbr_file_idx AS memberProfileImage
 	    FROM feed_comments fc
 	    LEFT JOIN member m ON fc.mbr_id = m.mbr_id
 	    WHERE fc.feed_num = #{feedCode}
