@@ -306,17 +306,14 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 			  Calendar calendar = Calendar.getInstance(); calendar.setTime(date); 
 			  // 년도와 월 추출 
 			  int year = calendar.get(Calendar.YEAR); 
-			  int month = calendar.get(Calendar.MONTH) + 1; 
+			  int month = calendar.get(Calendar.MONTH)+1; 
 			  // 해당멤버의 누적달성률 추출 
 			  double achievementRate = challengeFeedMapper.getAchievementRate(addChallengeFeed); // 해당멤버의 누적참여율 추출
-			  double participationRate =
-			  challengeFeedMapper.getParticipationRate(addChallengeFeed); 
+			  double participationRate = challengeFeedMapper.getParticipationRate(addChallengeFeed); 
 			  // 챌린지 보상기준에 따른 달성률 점수 추출 
-			  int achievementScore =
-			  challengeFeedMapper.getAchievementScore(achievementRate); 
+			  int achievementScore = challengeFeedMapper.getAchievementScore(achievementRate); 
 			  // 챌린지 보상기준에 따른 참여율 점수 추출 
-			  int participationScore =
-			  challengeFeedMapper.getParticipationScore(participationRate);
+			  int participationScore = challengeFeedMapper.getParticipationScore(participationRate);
 			  
 			  
 			  Map<String, Object> memberScoreMap = new HashMap<String, Object>();
@@ -336,14 +333,18 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 			  // 챌린지 개인점수 키 생성 
 			  String memberScoreKey = commonMapper.getPrimaryKey("cpsl_", "challenge_personal_score_list", "cpsl_num");
 			  memberScoreMap.put("memberScoreKey", memberScoreKey);
-			  
+			  log.info("isDataMemberScore {}",isDataMemberScore);
 			  // 데이터가 없으면 insert 
 			  if(isDataMemberScore == 0) {
 			  
-			  challengeFeedMapper.createPersonalScore(memberScoreMap); } // 데이터가 있으면 update
+				  challengeFeedMapper.createPersonalScore(memberScoreMap); 
+			  } 
+			  // 데이터가 있으면 update
 			  else {
 			  
-			  challengeFeedMapper.updatePersonalScore(memberScoreMap); } // 랭킹 update
+				  challengeFeedMapper.updatePersonalScore(memberScoreMap); 
+			  } 
+			  // 랭킹 update
 			  challengeFeedMapper.updateMemberScoreRank();
 			  
 			  

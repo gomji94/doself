@@ -564,9 +564,10 @@
 		SELECT
 			ctl.ctl_count
 		FROM 
-			challenge_topic_level ctl
+			challenge_topic_level ctl INNER JOIN challenge_group cg
+			ON ctl.ctl_num = cg.ctl_num			
 		WHERE
-			ct_num = #{cgNum}
+			cg.cg_num = #{cgNum}
 	</select>
 	<!-- 챌린지피드가 한개도 존재하지않을시 insert -->
 	<insert id="createPersonalStat" parameterType="map" >
@@ -597,7 +598,7 @@
 		<set>
 		cmss_upload_feed_count = #{challengeFeedCount},
 		cmss_participation_check = CASE WHEN (#{challengeFeedCount}/#{topicLevel}) = 1 THEN 0 ELSE 1 END,
-		cmss_today_achievement_rate =  (#{challengeFeedCount}/#{topicLevel})*100
+		cmss_today_achievement_rate =CASE WHEN (#{challengeFeedCount}/#{topicLevel})*100 >= 100 THEN 100 ELSE (#{challengeFeedCount}/#{topicLevel})*100 END
 		</set>
 		<where>
 			cg_num = #{challengeFeed.challengeCode}
@@ -611,7 +612,7 @@
 	<!-- 해당멤버의 누적 달성률 추출 -->
 	<select id="getAchievementRate" parameterType="AddChallengeFeed">
 		SELECT 
-			SUM(cmss.cmss_today_achievement_rate)/COUNT(*)
+			ROUND(SUM(cmss.cmss_today_achievement_rate)/14,2)
 		FROM
 			challenge_member_score_stats cmss
 		WHERE
@@ -623,7 +624,7 @@
 	<!-- 해당멤버의 누적 참여율 추출 -->
 	<select id="getParticipationRate" parameterType="AddChallengeFeed">
 		SELECT 
-			SUM(cmss.cmss_today_participation_rate)/COUNT(*)
+			ROUND(SUM(cmss.cmss_today_participation_rate)/14,2)
 		FROM
 			challenge_member_score_stats cmss
 		WHERE
@@ -659,15 +660,15 @@
 	</select>
 	
 	<!-- 해당아이디의 해당챌린지의 챌린지개인점수 데이터가 있는지 조회 -->
-	<select id="isDataMemberScore" parameterType="AddChallengeFeed">
+	<select id="isDataMemberScore" parameterType="map">
 		SELECT
 			COUNT(*)
 		FROM
 			challenge_personal_score_list
 		WHERE
-			cg_num = #{challengeCode}
+			cg_num = #{challengeFeed.challengeCode}
 			AND
-			mbr_id = #{challengeMemberId}
+			mbr_id = #{challengeFeed.challengeMemberId}
 			AND
 			cpsl_year = #{year}
 			AND
@@ -720,7 +721,7 @@
 		cpsl_cumulative_participation_score=#{participationScore},
 		cpsl_like_score=0,
 		cpsl_comments_count=0,
-		cpsl_total_score=SUM(#{achievementScore},#{participationScore}),		
+		cpsl_total_score= #{achievementScore}+#{participationScore}		
 	WHERE 
 		cpsl_year = #{year}
 		AND
@@ -853,7 +854,7 @@
 	<!-- 해당챌린지의 누적달성률 출력 -->
 	<select id="getChallengeCumulativeAchievementRate" parameterType="AddChallengeFeed">
 		SELECT 
-			SUM(ctps.ctps_achievement_rate)/COUNT(*)
+			ROUND(SUM(ctps.ctps_achievement_rate)/14,2)
 		FROM 
 			challenge_today_participation_stats ctps
 		WHERE
@@ -863,7 +864,7 @@
 	<!-- 해당챌린지의 누적참여율 출력 -->
 	<select id="getChallengeCumulativeParticipationRate" parameterType="AddChallengeFeed">
 		SELECT 
-			SUM(ctps.ctps_participation)/COUNT(*)
+			ROUND(SUM(ctps.ctps_participation)/14,2)
 		FROM 
 			challenge_today_participation_stats ctps
 		WHERE
