@@ -13,6 +13,7 @@ import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
+import retrofit2.http.HEAD;
 
 @Mapper
 public interface ChallengeFeedMapper {
@@ -88,7 +89,7 @@ public interface ChallengeFeedMapper {
 	
 	// 챌린지 수정
 	ChallengeFeed getModifyChallengeFeed(String challengeFeedCode);
-	
+
 	// 챌린지 정보 조회(그래프)
 	List<ChallengeTotalProgress> getChallengeTotalProgressInfo(@Param("challengeCode") String challengeCode);
 	
