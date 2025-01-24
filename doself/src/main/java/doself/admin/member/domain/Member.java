@@ -16,6 +16,9 @@ public class Member {
 	private int openingTicketCount;
 	private int participationTicketCount;
 	private int mbrPoint;
+	private String isDeleted;
+	private String mbrFileIdx;
+	private String mbrImage;
 	
 	private Age ageInfo;
 	private Grade GradeInfo;

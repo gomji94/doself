@@ -47,7 +47,7 @@ $(document).ready(function () {
 		            $('.confirm-popup-wrap').fadeOut();
 					
 					if(response){
-						const url = new URL(location.herf);
+						const url = new URL(location.href);
 						location.href = url.pathname;
 						return;
 					}
@@ -59,7 +59,6 @@ $(document).ready(function () {
 				console.log(error)
 			})
 			
-			//$('#modal-request-form').submit();
 		}
     });
 

@@ -7,13 +7,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.admin.member.domain.Member;
+import doself.common.mapper.CommonMapper;
+import doself.user.login.mapper.LoginMapper;
 import doself.user.login.service.LoginService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Controller
 @Slf4j
@@ -21,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController {
 
 	private final LoginService loginService;
+	private final LoginMapper loginMapper;
+	private final CommonMapper commonMapper;
 	
 	
 	@GetMapping("/logout")
@@ -35,7 +42,7 @@ public class LoginController {
 	@PostMapping("/login/loginPro")
 	public String loginProcess(@RequestParam(value="mbrId") String mbrId,
 			   @RequestParam(value="mbrPw") String mbrPw,
-			   RedirectAttributes reAttr, HttpSession session) {
+			   RedirectAttributes reAttr, HttpSession session,HttpServletRequest request) {
 		
 		String viewName = "redirect:/login";
 		
@@ -47,18 +54,26 @@ public class LoginController {
 			  Member memberInfo = (Member) resultMap.get("memberInfo");
 			  String membergrade = memberInfo.getMgCode(); 
 			  String memberName = memberInfo.getMbrName();
-		  
+			  	
+			  String memberImage = memberInfo.getMbrImage();
+			  
+			  String memberIp = request.getRemoteAddr();
+			  // 로그인이력 키값생성
+			  String memberIpKey = commonMapper.getPrimaryKey("mll_", "member_login_log", "mll_num");
+			  loginMapper.createMemberLoginLog(memberIpKey, mbrId, memberIp);
+			  
 			  session.setAttribute("SID", mbrId);
 			  session.setAttribute("SNAME", memberName);
 			  session.setAttribute("SGRD", membergrade);
+			  session.setAttribute("IMAGE", memberImage);
 			  
 			  if(membergrade.equals("mg_001")) {
 				  viewName = "redirect:/admin/member/list";
 			  }else if(membergrade.equals("mg_002") || membergrade.equals("mg_003")) {
-				  viewName = "redirect:/food/list";				 
+				  viewName = "redirect:/feed/list";				 
 			  }
 		  }else { 
-			  reAttr.addAttribute("msg", "회원의 정보가 일치하지 않습니다."); 
+			  reAttr.addAttribute("msg", "회원의 정보가 일치하지 않거나 탈퇴한 계정입니다."); 
 		  }
 
 		return viewName;		
@@ -72,5 +87,44 @@ public class LoginController {
 		return "loginpage";
 	}
 	
+	@GetMapping("/register")
+	public String getRegister() {		
+		
+		return "register";
+	}
+	
+	@PostMapping("/register/idCheck")
+	@ResponseBody
+	public boolean checkId(@RequestParam(value="mbrId") String mbrId) {
+		
+		boolean isDuplicate = false;
+		
+		isDuplicate = loginService.isMemberById(mbrId);
+		return isDuplicate;
+	}
+	
+	@PostMapping("/register")
+	public String postRegister(Member member) {
+		member.setMbrEmail(removeCommas(member.getMbrEmail()));
+		member.setMbrPhoneNum(removeCommasPhone(member.getMbrPhoneNum()));
+		loginService.createMember(member);
+		
+		return "redirect:/login";
+	}
+	
+	public static String removeCommas(String mbrEmail) {
+        if (mbrEmail == null) {
+            return null; // Handle null input gracefully
+        }
+        return mbrEmail.replace(",", "");
+    }
+	
+	
+	public static String removeCommasPhone(String mbrPhoneNum) {
+        if (mbrPhoneNum == null) {
+            return null; // Handle null input gracefully
+        }
+        return mbrPhoneNum.replace(",", "-");
+    }
 	
 }

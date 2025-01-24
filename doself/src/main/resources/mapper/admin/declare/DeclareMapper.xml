@@ -24,6 +24,12 @@
 	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
 	  		</association>	
 	  		
+  			<!-- 관리자 관계 -->
+	  		<association property="adminInfo" javaType="AdminInfo">
+	  			<id 	column="admin.mbr_id" property="adminMbrId" />	  			
+	  			<result column="adminMbrName" property="adminMbrName" />	  				  				  			  			  			
+	  		</association>	
+	  		
 	  		<!-- 발생위치카테고리 관계 -->
 	  		<association property="occuranceLocationInfo" javaType="OccuranceLocation">
 	  			<id 	column="olc_code" property="olcCode" />	  			
@@ -47,7 +53,7 @@
 		<select id="getDeclareList" resultMap="declareResultMap">
 			/* 신고요청 접수 조회 */
 			
-			SELECT
+				SELECT
 				rr_num,
 				m.mbr_name,
 				olc.olc_name,
@@ -55,12 +61,14 @@
 				rc.rc_name,
 				rr_content,
 				rr_date,
-				sc.sc_status,
-				rr_admin,
+				sc.sc_status,		
+				admin.mbr_name AS adminMbrName,
 				rr_processing_period,
 				rr_reason_content
 			FROM report_request rr INNER JOIN `member` m
 				ON rr.mbr_id = m.mbr_id
+				LEFT JOIN `member` admin
+				ON admin.mbr_id = rr.rr_admin
 				INNER JOIN occurance_location_code olc
 				ON rr.olc_code = olc.olc_code
 				INNER JOIN status_category sc
@@ -129,7 +137,14 @@
 	  		<association property="memberInfo" javaType="Member">
 	  			<id 	column="mbr_id" property="mbrId" />	  			
 	  			<result column="mbr_name" property="mbrName" />	  				  				  			  			  			
-	  		</association>	
+	  			<result column="mg_code" property="mgCode" />	  				  				  			  			  			
+	  		</association>
+	  		
+	  		<!-- 관리자 관계 -->
+	  		<association property="adminInfo" javaType="AdminInfo">
+	  			<id 	column="admin.mbr_id" property="adminMbrId" />	  			
+	  			<result column="adminMbrName" property="adminMbrName" />	  				  				  			  			  			
+	  		</association>		
 	  			  		   		  		  			 	   		
 	  		<!-- 신고유형카테고리 관계 -->
 	  		<association property="declareCategoryInfo" javaType="DeclareCategory">
@@ -150,9 +165,11 @@
 				rmm_sanction_start_date,
 				rmm_sanction_period,
 				rmm_sanction_end_date,
-				rmm_admin
+				admin.mbr_name AS adminMbrName
 			FROM report_member_management rmm INNER JOIN `member` m
 				ON rmm.mbr_id = m.mbr_id
+				LEFT JOIN `member` admin
+				ON rmm.rmm_admin = admin.mbr_id
 				INNER JOIN report_category rc
 				ON rmm.rc_code = rc.rc_code
 			<where>
@@ -275,13 +292,92 @@
   		</update>
   		
   		<!-- 부정회원 추가후 회원등급 변경 -->
-  		<update id="modifyMgCode" parameterType="Member">
+  		<update id="modifyMgCode" parameterType="Declare">
   			UPDATE `member`
-  			<trim prefix="SET" suffixOverrides=","> 	
+  			<set>
   				mbr_id = #{mbrId},									
-				mg_code = 'mg_003'				  			
-  			</trim>
+				mg_code = 'mg_003'				  			  			  	
+  			</set>	
   			WHERE
   				mbr_id = #{mbrId};
+  		</update>
+  		
+  		<!-- 부정회원 추가후 진행중인 챌린지가 있는지 조회후 챌린지 반환 -->
+  		<select id="isDataParticipationChallnege" parameterType="Declare" resultType="String">
+  			WITH recentData AS (
+			   SELECT *,
+			      ROW_NUMBER() OVER (PARTITION BY mbr_id,cg_num ORDER BY cgm_date DESC) AS rn
+			   FROM challenge_group_member
+			)
+			SELECT
+				r.cg_num
+			FROM
+				recentData r
+			WHERE
+				r.rn = 1
+				AND 
+				r.cs_num = 'cs_002'
+				AND 
+				r.mbr_id = #{mbrId}	
+  		</select>
+  		
+  		<!-- 참여중인 챌린지가 있으면 챌린지참여자 insert -->
+  		<insert id="createChallengeMember" parameterType="map">	
+	  		INSERT INTO challenge_group_member (
+		  		cgm_num, 
+		  		cg_num, 
+		  		mbr_id, 
+		  		cs_num, 
+		  		cgm_date
+	  		) VALUES (
+		  		#{challengeMemberKey}, 
+		  		#{cgNum}, 
+		  		#{mbrId}, 
+		  		'cs_008', 
+		  		NOW()
+	  		)
+  		</insert>
+  		
+  		<!-- 제제기간 지난 유저리스트 가져오기 -->
+  		<select id="getSanctionEndList" resultMap="declareUserResultMap">
+  			WITH RankedRecords AS (
+			    SELECT 
+			        rmm.rmm_num,
+			        rmm.rr_num,
+			        rmm.mbr_id,
+			        rmm.rc_code,
+			        rmm.rmm_sanction_start_date,
+			        rmm.rmm_sanction_period,
+			        rmm.rmm_sanction_end_date,
+			        rmm.rmm_admin,
+			        ROW_NUMBER() OVER (PARTITION BY rmm.mbr_id ORDER BY rmm.rmm_num DESC) as rn
+			    FROM report_member_management rmm
+			    INNER JOIN `member` m ON rmm.mbr_id = m.mbr_id
+			    WHERE m.mg_code = 'mg_003'
+			)
+			SELECT 
+			    rmm_num,
+			    rr_num,
+			    mbr_id,
+			    rc_code,
+			    rmm_sanction_start_date,
+			    rmm_sanction_period,
+			    rmm_sanction_end_date,
+			    rmm_admin
+			FROM RankedRecords
+			WHERE rn = 1
+			AND rmm_sanction_end_date <![CDATA[ <= ]]> NOW()
+			ORDER BY rmm_num DESC
+				
+  		</select>
+  		
+  		<!-- 제제기간 지난 멤버 회원등급 변경 -->
+  		<update id="everydayCheck" parameterType="DeclareUser">
+  			UPDATE
+  				`member`
+  			SET
+  				mg_code = 'mg_002'
+  			WHERE
+  				mbr_id = #{mbrId}
   		</update>
   </mapper>

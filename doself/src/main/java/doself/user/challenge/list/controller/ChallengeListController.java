@@ -1,19 +1,30 @@
 package doself.user.challenge.list.controller;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import doself.file.mapper.FilesMapper;
+import doself.file.service.FileService;
+import doself.user.challenge.list.domain.AddChallenge;
+import doself.user.challenge.list.domain.AddChallengeMember;
 import doself.user.challenge.list.domain.ChallengeDetailView;
 import doself.user.challenge.list.domain.ChallengeList;
 import doself.user.challenge.list.service.ChallengeListService;
 import doself.util.CardPageable;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChallengeListController {
 	
+	@org.springframework.beans.factory.annotation.Value("${file.path}")
+	private String fileRealPath;
+	
 	// 챌린지 리스트 서비스 → 인스턴스 생성자 메소드
 	private final ChallengeListService challengeListService;
 	
@@ -32,19 +46,33 @@ public class ChallengeListController {
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public String getChallengeList(CardPageable cardPageable, Model model) {
 		var challengeListPageInfo = challengeListService.getChallengeList(cardPageable);
-		//List<ChallengeList> challengeList = challengeListService.getChallengeList();
+		
+		// 챌린지 주제 리스트
+		var topicList = challengeListService.getChallengeTopicList();
+	    // 챌린지 난이도 리스트
+	    var levelList = challengeListService.getChallengeLevelList();
+		
 		List<ChallengeList> challengeList = challengeListPageInfo.getContents();
 		int currentPage = challengeListPageInfo.getCurrentPage();
 		int startPageNum = challengeListPageInfo.getStartPageNum();
 		int endPageNum = challengeListPageInfo.getEndPageNum();
 		int lastPage = challengeListPageInfo.getLastPage();
 		
-		log.info("Fetched Challenge List: {}", challengeList);
+		// 참여 멤버 수를 계산하여 ChallengeList에 반영
+	    challengeList.forEach(cl -> {
+	        int memberCount = challengeListService.getCurrentMemberCount(cl.getChallengeCode());
+	        cl.setChallengeCurrentMember(memberCount);
+	    });
+		
+		//log.info(">>> location/controller >>> challengeList : {}", challengeList);
+		
 		model.addAttribute("challengeList", challengeList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPageNum", startPageNum);
 		model.addAttribute("endPageNum", endPageNum);
 		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("topicList", topicList);
+		model.addAttribute("levelList", levelList);
 		return "user/challenge/challenge-list";
 	}
 	
@@ -53,30 +81,83 @@ public class ChallengeListController {
 	@ResponseBody
 	// HttpServletRequest : 클라이언트가 보낸 사용자 입력 및 데이터 추출
 	public ChallengeDetailView getChallengeListView(@RequestParam("challengeCode") String challengeCode) {
-        log.info("Challenge Code: {}", challengeCode);
         ChallengeDetailView challengeDetail = challengeListService.getChallengeListView(challengeCode);
-        log.info("Challenge Detail: {}", challengeDetail);
+
         return challengeDetail;
     }
-	/*
-	 * public String getChallengeListView(@RequestParam(value="challengeCode")
-	 * String challengeCode, Model model) { List<ChallengeDetailView>
-	 * challengeListDetail =
-	 * challengeListService.getChallengeListView(challengeCode);
-	 * model.addAttribute("challengeListDetail", challengeListDetail); return
-	 * "user/challenge/challenge-list-view :: challenge-list-view"; }
-	 */
 	
+	// 챌린지 생성 폼
 	@PostMapping("/list/createchallengerequest")
-	public String addChallenge(ChallengeList challengeList) {
-		log.info("challengeList : {}", challengeList);
-		challengeListService.addChallenge(challengeList);
+	@ResponseBody
+	public String addChallenge(AddChallenge addChallenge,
+							   @RequestPart(name = "files", required = false) MultipartFile files,
+							   HttpSession session, Model model) {
+		
+		// 현재 세션의 아이디 설정
+		addChallenge.setMemberId((String) session.getAttribute("SID"));
+		//log.info(">>> location/controller >>> files: {}", files);
+		
+		// 파일 처리
+		challengeListService.addChallenge(files, addChallenge);
+		
 		return "redirect:/challenge/list";
 	}
 	
+	// 챌린지 이름 중복 처리
+	@PostMapping("/checkDuplicateName")
+	@ResponseBody
+    public Map<String, Boolean> checkDuplicateName(@RequestBody Map<String, String> request) {
+        String challengeName = request.get("challengeName");
+        boolean isAvailable = !challengeListService.isNameDuplicate(challengeName);
+        //log.info(">>> location/controller >>> challengeName : {}", challengeName);
+        return Collections.singletonMap("available", isAvailable);
+    }
+	
+	// 챌린지 참여 폼
 	@PostMapping("list/view/participation")
-	public String challengeParticipation(ChallengeList challengeList) {
-		return "redirect:/challenge/list";
+	@ResponseBody
+	public Map<String, Object> challengeParticipation(@RequestBody AddChallengeMember addChallengeMember,
+	        										  HttpSession session, Model model) {
+		
+		Map<String, Object> response = new HashMap<>();
+		String sessionId = (String) session.getAttribute("SID");
+	    if (sessionId == null) {
+	        response.put("success", false);
+	        response.put("message", "세션이 만료되었거나 로그인이 필요합니다.");
+	        return response;
+	    }
+	    addChallengeMember.setChallengeMemberId(sessionId);
+		
+	    try {
+	        // 이미 참여 중인지 확인
+	        boolean isAlreadyParticipated = challengeListService.isAlreadyParticipated(addChallengeMember);
+
+	        if (isAlreadyParticipated) {
+	            response.put("success", false);
+	            response.put("message", "이미 참여중인 챌린지입니다.");
+	            return response;
+	        }
+
+	        boolean isParticipated = challengeListService.addChallengeMember(addChallengeMember);
+	        response.put("success", isParticipated);
+	        response.put("message", isParticipated ? "참여가 완료되었습니다." : "참여 처리 중 오류가 발생했습니다.");
+	    } catch (IllegalArgumentException e) {
+	        response.put("success", false);
+	        response.put("message", e.getMessage());
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "참여 처리 중 오류가 발생했습니다.");
+	    }
+	    
+	    List<ChallengeList> challengeList = challengeListService.getChallengeList();
+	    for(ChallengeList challengeIdx : challengeList) {
+	    	String statusCode = challengeIdx.getChallengeStatusCode();
+	    	challengeListService.updateChallengeStatuses();
+	    	return response;
+	    }
+	    
+	    log.info(">>> location/controller >>> : response {}", response);
+	    
+	    return response;
 	}
-	
 }

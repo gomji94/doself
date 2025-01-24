@@ -1,170 +1,103 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>피드 상세 정보</title>
-    <link rel="stylesheet" th:href="@{/assets/css/feed/feed-common.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/feed/feed-details-view.css}">
-</head>
-<body>
-    <!-- header : 상단 고정 포지션 픽스 -->
-    <header class="header">
-        <a href="#" class="logo">
-            <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
-        </a>
-        <!-- 로고 클릭 시 링크 이동 -->
-        <nav class="nav-links">
-            <a href="#">피드</a>
-            <a href="#">음식</a>
-            <a href="#">영양제</a>
-            <a href="#">챌린지</a>
-            <a href="#">티켓</a>
-            <a href="#">마켓</a>
-            <a href="#">커뮤니티</a>
-        </nav>
-        <div class="profile">
-            <a href="#">
-            <img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
-        </div>
-        <!-- 프로필 사진 (원형) -->
-    </header>
-    <!-- container -->
-    <div class="feed-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/mekite/post/77cd9c52-10df-43a4-bf7f-e32c5ffdc15d/image.png"	alt="검색 아이콘"/></li>
-                <li>
-                <a href="#">검색</a></li>
-            </ul>
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/wlsgus4296/post/b686331f-57cd-4151-a977-5dccac86ba5f/image.png"	alt="피드 추가 아이콘"/></li>
-                <li>
-                <a href="#">피드 추가</a></li>
-            </ul>
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/wlsgus4296/post/55cd2fc1-6375-4982-a9b3-5887ca9e14cb/image.png"	alt="영양 정보 아이콘"/></li>
-                <li>
-                <a href="#">영양 정보</a></li>
-            </ul>
-            <ul>
-                <li>
-                <img src="https://velog.velcdn.com/images/wlsgus4296/post/6796c6f7-cca3-45ab-bda3-5fb850420929/image.png"	alt="챌린지 아이콘"/></li>
-                <li>
-                <a href="#">챌린지</a></li>
-            </ul>
-        </aside>
-        <!-- Main Content -->
-        <main class="main">
-            <div class="feed">
-                <div class="feed-header">
-                    <a href="#">
-                        <img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="작성자 프로필">
-                    </a>
-                    <div class="user-name">
-                        <a href="#">id001</a>
-                    </div>
-                    <div class="feed-option">
-                        <a href="#">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{user/layout/feed-default}">
+<!-- container -->
+<div:block layout:fragment="content-body" class="df-feed-container">
+	<div class="sidebar-container"></div>
+	<main class="main">
+		<div class="df-container">
+		<!-- 여기서부터 옵션 모달 -->
+	        <div class="popup-wrap feed-option-modal-wrap" style="display: none;">
+	            <div class="popup">
+	                <div class="popup-body">
+	                    <div class="body-content">
+	                        <div class="body-titlebox">
+	                            <ul>
+	                                <li class="pop" id="feed-modify-modal">피드 수정</li>
+	                                <li class="pop" id="feed-delete-modal">피드 삭제</li>
+	                                <li class="pop" id="feed-link-copy"> 피드 링크 복사</li>
+	                                <!-- 위 내용 그냥 복붙하면 자동으로 증가 -->
+	                                <li class="pop close">취소</li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+			<!-- 특정 피드 상세 정보 -->
+			<section>
+				<div class="df-feed">
+					<div class="df-feed-header">
+						<a href="#">
+							<img class="df-profile-img" th:src="${feed.memberProfileImage}">
+						</a>
+						<div class="df-user-name">
+							<a href="#"><p th:text="${feed.memberId}"></p></a>
+						</div>
+						<div class="df-feed-option">
+                        <button class="df-option-button">
                             <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
-                        </a>
-                    </div>
-                </div>
-                <div class="feed-img-chart">
-                    <div class="feed-main-img">                    
-                        <img src="https://www.fsnews.co.kr/news/photo/202206/45847_38385_3220.png" alt="게시글 이미지">
-                    </div>
-                    <div class="nutrition-info">
-                        <p>식단 영양 정보 분석표</p>
-                        <div>
-                            <canvas id="pieChart" width="220" height="220"></canvas>
-                          </div>
-                        <ul class="list-group">
-                          <li class="list-group-item">열량: <span id="calories">0</span> kcal</li>
-                          <li class="list-group-item">탄수화물: <span id="protein">0</span> kcal</li>
-                          <li class="list-group-item">단백질: <span id="fat">0</span> kcal</li>
-                          <li class="list-group-item">지방: <span id="fat">0</span> kcal</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="feed-action">
-                    <div class="action-icons">
-                        <button class="action-btn">
-                            <img src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요">
-                        </button>
-                        <button class="action-btn">
-                            <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
                         </button>
                     </div>
-                    <p class="feed-time">2일 전</p>
-                </div>
-                <div class="feed-description">
-                    <p id="feed-likes">좋아요 0개</p>
-                    <p>오늘 운동후 식단</p>
-                    <p class="comments-link">댓글</p>
-                </div>
-                <hr>
-                <div class="add-comment">
-                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-                    <input type="text" placeholder="댓글 달기...">
-                    <button class="comment-submit">게시</button>
-                </div>
-            </div>
-        </main>
-    </div>
-    <!-- footer : 하단 고정 포지션 스테틱 -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-logo">
-                <img src="https://velog.velcdn.com/images/mekite/post/552ea3de-e88e-42f5-969e-d7c8051cd272/image.png" alt="footer_logo">
-            </div>
-            <div class="company-info">
-                <span>전주시 덕진구 기린대로 499</span>
-                <span>|</span>
-                <span>홍길동</span>
-                <span>|</span>
-                <span>사업자등록번호 418-82-10120</span>
-            </div>
-            <div class="license-info">
-                <span>© 2024 DoSelf, Inc. All rights reserved.</span>
-            </div>
-        </div>
-    </footer>
-</body>
-
+					</div>
+					<hr>
+					<div class="df-feed-content">
+						<div class="df-feed-main-img">
+							<img class="df-meal-img" th:src="@{|${feed.feedFilePath}|}">
+						</div>
+						<div class="df-progress-container">
+							<div class="df-analysis-table">
+								<p class="df-analysis-title" th:text="${feed.mealName}"></p>
+							</div>
+							<div class="df-analysis-info">
+								<table class="df-info-table">
+									<tr>
+										<td>구분(1인분)</td>
+										<td>칼로리</td>
+										<td>탄수화물</td>
+										<td>단백질</td>
+										<td>지방</td>
+										<td>당류</td>
+										<td>콜레스트롤</td>
+										<td>나트륨</td>
+										<td>칼슘</td>
+										<td>철분</td>
+									</tr>
+									<tr>
+										<td th:text="${feed.mealWeight} + ' g'"></td>
+										<td th:text="${feed.mealCalories} + ' kcal'"></td>
+										<td th:text="${feed.mealCarbohydrates} + 'kcal'"></td>
+										<td th:text="${feed.mealProtein} + 'g'"></td>
+										<td th:text="${feed.mealFat} + 'g'"></td>
+										<td th:text="${feed.mealSugar} + 'g'"></td>
+										<td th:text="${feed.mealCholesterol} + 'mg'"></td>
+										<td th:text="${feed.mealSodium} + 'mg'"></td>
+										<td th:text="${feed.mealCalcium} + 'mg'"></td>
+										<td th:text="${feed.mealIron} + 'mg'"></td>
+									</tr>
+								</table>
+							</div>
+							<div class="df-analysis-caution">
+								<p>※ 표시된 영양성분은 산출근거에 따른 표준 값으로 실제 제품과 차이가 있을 수 있습니다.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+</div:block>
+</html>
+    
 <!--/* 사용자 추가 js file */-->
 <th:block layout:fragment="customJsResource">
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/assets/js/feed/feed-list.js}"></script>
 </th:block>
 
 <!--/* 사용자 추가 js script */-->
 <th:block layout:fragment="customJs">
 	<script>
-		// 원형 그래프 데이터와 설정
-		const pieCtx = document.getElementById('pieChart').getContext('2d');
-		const pieChart = new Chart(pieCtx, {
-		  type: 'pie',
-		  data: {
-		    labels: ['칼로리', '탄수화물', '단백질', '지방'],
-		    datasets: [{
-		      data: [554.025, 0, 289.1, 262.125], // 각각의 비율
-		      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
-		    }]
-		  },
-		  options: {
-		    responsive: true,
-		    plugins: {
-		      legend: {
-		        position: 'top',
-		      },
-		    }
-		  }
-		});
+		
 	</script>
 </th:block>
 </html>

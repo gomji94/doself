@@ -5,36 +5,37 @@
 <head>
 	<link th:href="@{/assets/css/mypage/info.css}" rel="stylesheet" type="text/css" />
 </head>		
-	<th:block layout:fragment="content-body">
+	<th:block layout:fragment="content-body" th:object="${memberInfo}">
+		
         <!-- 왼쪽 사이드바 -->
         <div class="sidebar">
             <ul>
                 <li>
-                    <a th:href="@{/mypage/member/info}" class="menu-item">
+                    <a th:href="@{/mypage/modify(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-user-gear"></i>
                         <div>my 정보 수정</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/tickethistory}" class="menu-item">
+                    <a th:href="@{/mypage/tickethistory(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-ticket"></i>
                         <div>티켓 조회</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/pointhistory}" class="menu-item">
+                    <a th:href="@{/mypage/pointhistory(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-brands fa-bitcoin"></i>
                         <div>포인트 조회</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/medicinearlam}" class="menu-item">
+                    <a th:href="@{/mypage/medicinearlam(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-capsules"></i>
                         <div>영양제 알림 체크</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/feedlist}" class="menu-item">
+                    <a th:href="@{/mypage/feedlist(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-regular fa-file-lines"></i>
                         <div>my 게시물</div>
                     </a>
@@ -48,25 +49,30 @@
                     <div id="main-container-title__eng">Account</div>
                     <div id="main-container-title__kor">계정센터</div>
             </div>
-		<th:block th:object="${memberInfo}">
-            <div id="main-user-info">
+		
             	<!-- multipart/form-data : 모든 문자를 인코딩하지 않음 (원본 데이터가 유지되어 이미지, 파일 등을 서버로 전송할 수 있음) -->
-            	<form th:action="@{/mypage/member/info}" method="POST" id="myPageFrm" enctype="multipart/form-data">
+            <form class="account-form" id="modifyMemberForm" th:action="@{/mypage/member/info}" method="post"  enctype="multipart/form-data">
+	            <div id="main-user-info">
+            	<!-- <form th:action="@{/mypage/member/info}" method="POST" id="myPageFrm"> -->
 	                <div id = "profile-image">
-	                        <img th:src="*{memberImage}" 
-	                         id="memberImage" name="memberImage" alt="프로필 이미지" class="profile-image">
+	                	<!-- 프로필이미지가 없으면 기본이미지경로 -->
+	               		<img th:src="${#strings.isEmpty(memberInfo.memberImage) ? '/resources/static/imgs/user.jpg' : memberInfo.memberImage}"
+							  id="memberImage" name="memberImage" alt="프로필 이미지" class="profile-image">
 	                </div>    
 	                <div id="profile-info">
 	                    <div id="profile-edit">
-	                        <input type="file" id="btnChangeUplode" style="display:none">
-	                        <button type="button" id="btnChangeProfile" style="">프로필 변경</button>
+	                        <input type="file" name="file" id="btnChangeUplode" style="display:none"  accept="image/*">
+	                        <!-- accept="image/*" -->
+	                        <button type="button" id="btnChangeProfile">프로필 변경</button>
 	                    </div>
-	                    <div id="profile-userId" th:text="*{memberId}"></div>
+	                    <div id="profile-edit">
+	                        <button type="button" id="btnDeleteProfile">삭제</button>
+	                    </div>
 	                </div>
-            	</form>
-            </div>
+	                    <div id="profile-userId" th:text="*{memberId}"></div>
+            	
+            	</div>
 
-            <form class="account-form" id="modifyMemberForm" th:action="@{/mypage/member/info}" method="post" >
             	<input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
                 <div class="form-group">
                     <label for="name">이름</label>
@@ -74,172 +80,308 @@
                 </div>
                 <div class="form-group">
                     <label for="birth-date">생년월일</label>
-                    <input type="text" id="birth-date" th:value="*{memberBrith}" name="memberBrith" disabled="disabled">
-                </div>
-                <div class="form-group">
-                    <label for="current-password">현재 비밀번호</label>
-                    <div class="input-wrapper">
-                    	<input class="width-fit" type="password" id="oldMemberPw" name="oldMemberPw" >
-                    	<br />
-                 	    <span id="currentPasswordError" class="error-message" style= "display: none;">현재 비밀번호가 틀렸습니다.</span>
-                    </div> 
+                    <input type="text" id="birth-date" th:value="*{memberBirth}" name="memberBirth" disabled="disabled">
                 </div>
                 <div class="form-group">
                     <label for="new-password">새 비밀번호</label>
                     <div class="input-wrapper">
-                   		<input class="width-fit" type="password" id="newMemberPw" name="newMemberPw" disabled="disabled">
+                   		<input class="width-fit" type="password" id="memberPw" name="memberPw" autocomplete="new-password" 
+                   			   oninput="this.value=this.value.replace(/[^a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]/g,'');" >
+                   		<div></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">새 비밀번호 확인</label>
                     <div class="input-wrapper">
-                   		 <input class="width-fit" type="password" id="confirmMemberPw" name="confirmMemberPw" disabled="disabled">
-                   		 <br />
-                	     <span id="passwordMatchError" class="error-message" style= "display: none;">새 비밀번호가 일치하지 않습니다.</span>
-                	     <br />
-                	     <span id="passwordLengthError" class="error-message" style= "display: none;">비밀번호는 8자 이상 16자 이하로 입력해야 합니다.</span>
-                	     <span id="samePasswordError" class="error-message" style= "display: none;">현재 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.</span>
+                   		 <input class="width-fit" type="password" id="memberPwChk" autocomplete="new-password"
+                   		        oninput="this.value=this.value.replace(/[^a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]/g,'');">
+                   		 <div></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="phone-number">핸드폰 번호</label>
-                    <div class="phone-input">
-                        <input type="text" id="phone-number-part1" th:value="${memberTel[0]}" name="memberPhoneNum" maxlength="3" 
-                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part2" th:value="${memberTel[1]}" name="memberPhoneNum" maxlength="4" 
-                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
-                        <input type="text" id="phone-number-part3" th:value="${memberTel[2]}" name="memberPhoneNum" maxlength="4" 
-                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                    <div class="phone-group">
+	                    <div class="phone-input">
+	                        <input type="text" id="phone-number1" th:value="${#strings.substring(memberInfo.memberPhoneNum,0,3)}" name="memberPhoneNum" maxlength="3" 
+	                        	   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+	                        <input type="text" id="phone-number2" th:value="${#strings.substring(memberInfo.memberPhoneNum,4,8)}" name="memberPhoneNum" maxlength="4" 
+	                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> -
+	                        <input type="text" id="phone-number3" th:value="${#strings.substring(memberInfo.memberPhoneNum,9,13)}" name="memberPhoneNum" maxlength="4" 
+	                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+	                    </div>     
+	                    <div class= "phone-error"></div>
                     </div>
                 </div>
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <div class="email-input">
-                            <input type="text" id="memberEmail" th:value="${memberEmail}" name="memberEmail" maxlength="20">
+                          <div class="email-gr">
+                            <input type="text" name="memberEmail" id="memberEmail" th:value="${#strings.arraySplit(memberInfo.memberEmail,'@')[0]}" maxlength="20">
                             <input type="text" name="memberEmail" value="@" readonly="readonly" style="border:none; width: 35px; ">
-                            <select name="memberEmail">
-                                <option value="gmail.com">gmail.com</option>
-                                <option value="naver.com">naver.com</option>
-                                <option value="daum.net">daum.net</option>
+                            <select name="memberEmail"> 
+                                <option value="gmail.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'gmail.com'">gmail.com</option>
+                                <option value="naver.com" th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'naver.com'">naver.com</option>
+                                <option value="daum.net"  th:selected="${#strings.arraySplit(memberInfo.memberEmail,'@')[1]} eq 'daum.net'">daum.net</option>
                             </select>
+                          </div>
+                         <div class= "email-error"></div>     
                         </div>
                     </div>
                     <button type="submit" id="modifyMemberBtn" class="btn-submit">수정</button>
                 </form>
-                <form action="/mypage/member/delete" method="post">
-                <input type="hidden" id="memberId" name="memberId" th:value="*{memberId}">
+                <form action="/mypage/delete" method="post" id="deleteMemberForm">
+                <input type="hidden" name="memberId" th:value="*{memberId}">
                     <div id="withdrawa">
           	          <button type="submit" id="removeBtn">회원탈퇴</button>
                     </div>
                 </form>
-		</th:block>
+		
        </main>
 
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+	    <script th:src="@{/assets/js/layout.js}"></script>
+	    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"></script>
-    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript">
     	
+		//유효성 검사 함수 : 빈값여부체크
+		const emptyFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
+		const emptyPhoneFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.parentNode.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
+		const emptyEmailFn = (element) => { 
+			const value = element.value.trim();
+			let msg = '';
+			let isEmpty = false; 
+			
+			if(!value){ 
+				msg = '필수 입력항목입니다.';
+				isEmpty = true;
+			}
+			element.parentNode.nextElementSibling.textContent = msg;
+			return isEmpty;
+		}	
+		
+		//유효성 검사 함수 : 8~16자 여부확인  
+		const isPassword = (element) => {
+			const memberPw = element.value.trim(); 
+			let msg = '';
+			let isDuplicate = false;
+			var regExp =  /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
+				if(memberPw && !regExp.test(memberPw)){
+					msg = '8 ~ 16자 조합';
+					isDuplicate = true;
+				}
+			element.nextElementSibling.textContent = msg;
+	        return isDuplicate;
+		 }
+		
+		//유효성 검사 함수 : 비밀번호일치 여부 확인 
+		 const checkPwFn = (element) => {
+			 const memberPw = document.querySelector('#memberPw').value.trim();
+			 const checkPw = element.value;
+			 let msg = '';
+			 let isEqual = false;
+		        if(memberPw && memberPw !=checkPw) { 
+		        	msg = '비밀번호가 일치하지 않습니다.';
+		        	isEqual = true;
+		        }			 
+		        element.nextElementSibling.textContent = msg;
+		        return isEqual;		 
+		 }
 
-		$('#btnChangeProfile').click(function(){
-			$('#btnChangeUplode').click();
-		});	
-		
-		function isPassword(asValue) {
-			let regExp = /^(?=.*\d)[0-9a-zA-Z]{8,16}$/;
-			return regExp.test(asValue);
-		}
-		
-		$('#oldMemberPw').on('input', function () {
-		    const oldMemberPw = $(this).val();
-		    if (oldMemberPw) {
-		        $('#newMemberPw').prop('disabled', false);
-		        $('#confirmMemberPw').prop('disabled', false);
-		    } else {
-		        $('#newMemberPw').prop('disabled', true);
-		        $('#confirmMemberPw').prop('disabled', true);
-		    }
-		});
-		
-	    $('#modifyMemberBtn').click(function (e) {
-	        e.preventDefault();
-       
-	        const memberId = $('#memberId').val();
-	        const oldMemberPw = $('#oldMemberPw').val();
-	        const newMemberPw = $('#newMemberPw').val();
-	        const confirmMemberPw = $('#confirmMemberPw').val();
-	        const memberPhoneNum = $('#phone-number-part1').val() + '-' + $('#phone-number-part2').val() + '-' + $('#phone-number-part3').val();
-	        const memberEmail = $('#memberEmail').val() + '@' + $('select[name="memberEmail"]').val();
-       
-	        $('#currentPasswordError').hide();
-	        $('#passwordMatchError').hide();
-	        $('#passwordLengthError').hide();
-	        $('#samePasswordError').hide();
-	        
-	        // 현재 비밀번호 확인 Ajax 요청
-	        $.ajax({
-	            url: '/mypage/pwCheck',
-	            method: 'POST',
-	            data: { 'memberId': memberId, 'oldMemberPw': oldMemberPw },
-	            dataType: 'json'
-	        })
-	            .done(function (isValid) {
-	                if (!isValid) {
-	                    $('#currentPasswordError').show(); 
-	                    return;
-	                }
-	                $('#currentPasswordError').hide();
-       
-	   		     // 비밀번호 길이 유효성 검사
-	   		       if (!isPassword(newMemberPw)) {
-	   		    	 $('#passwordLengthError').show();
-	   		         return; 
-	   		     }
-       
-	   		     // 새 비밀번호와 확인 비밀번호 비교
-	   		     if (newMemberPw !== confirmMemberPw) {
-	   		         $('#passwordMatchError').show(); 
-	   		         return; 
-	   		     }
+		    //입력값
+		    const $memberPw = document.getElementById('memberPw')
+		    const $checkPw = document.getElementById('memberPwChk')
+		    const $email = document.getElementById('memberEmail')
+		    const $phone1 = document.getElementById('phone-number1')
+		    const $phone2 = document.getElementById('phone-number2')
+		    const $phone3 = document.getElementById('phone-number3')
+		 
+		   	$memberPw.addEventListener('input', e => {
+		   		const memberPw = e.target.value.trim();
+		   		if(memberPw === '') {
+		   			$checkPw.value = '';
+		   			$checkPw.nextElementSibling.textContent = '';
+		   		}
+		   	});
+		    
+		    //값이비어있으면 유효성검사 함수종료 값있으면 유효성검사
+		    $memberPw.addEventListener('blur', e => {
+		    	if(e.target.value.trim() === '') return;
+		    	isPassword(e.target);
+		    });
+		    
+		    $checkPw.addEventListener('blur', e => {
+		    	checkPwFn(e.target); return;
+		    });
+		    
+		    $email.addEventListener('blur', e => {
+		    	if(!emptyEmailFn(e.target)) return;
+		    });
+		    
+		    $phone1.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
+		    
+		    $phone2.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
+		    
+		    $phone3.addEventListener('blur', e => {
+		    	if(!emptyPhoneFn(e.target)) return;
+		    });
 
-	   		     // 새 비밀번호와 현재 비밀번호 비교
-	   		     if (oldMemberPw === newMemberPw) {
-	   		    	 $('#samePasswordError').show();
-	   		         return; 
-	   		     }
-	                // 비밀번호 변경 Ajax 요청
-	                $.ajax({
-	                    url: '/mypage/pwUpdate',
-	                    method: 'POST',
-	                    data: {
-	                        'memberId': memberId,
-	                        'oldMemberPw': oldMemberPw,
-	                        'newMemberPw': newMemberPw,
-	                        'confirmMemberPw': confirmMemberPw
-	                    },
-	                    dataType: 'json'
-	                })
-	                    .done(function (response) {
-	                        if (response) {
-	                            alert('정보가 변경되었습니다.');
-	                        } else {
-	                            alert('정보변경에 실패했습니다.');
-	                        }
-	                    })
-	                    .fail(function () {
-	                        alert('정보변경 요청 중 오류가 발생했습니다.');
-	                    });
-	            })
-	            .fail(function () {
-	                alert('현재 정보확인 요청 중 오류가 발생했습니다.');
-	            });
+		   	// 프로필 이미지 변경/삭제
+			const btnChangeProfile = $('#btnChangeProfile'); // button 
+			const btnChangeUplode = $('#btnChangeUplode');   // input 
+			const memberImage = $('#memberImage');           // scr 
+			const deleteProfile = $('#btnDeleteProfile');    // delete
+			
+			let initCheck;         // 초기 프로필 이미지 상태 저장하는 변수 
+			  			           // false 기본이미지, true == 이전 업로드 이미지
+			let deleteCheck = -1;  //프로필 이미지가 새로 업로드 되거나 삭제되었음을 나타내는 변수
+					               //-1 == 초기값, 0 == 프로필 삭제, 1 == 새업로드 이미지
+			let originalImage;     // 초기 프로필 이미지 파일경로 저장
+			
+			if(btnChangeUplode != null) { //화면에 input이 있을 경우
+				
+				originalImage = memberImage.attr('src'); //프로필이미지가 출력되는 img태그의 src속성 저장
+				
+				// 회원 프로필 화면 진입시
+				// 현재 회원의 프로필 이미지 상태 확인
+				if(originalImage == "/attachment/20250117/image/1d220292-7b85-4d20-8538-2c31b1d80efd.jpg"){
+					// 기본이미지인 경우
+					initCheck = false;
+				} else {
+					initCheck = true;
+				}
+			}
+			
+ 	// 프로필 변경
+	   $(document).ready(function() {
+		   	
+		   //input 클릭이벤트 등록
+			$('#btnChangeProfile').click(function(){
+				$('#btnChangeUplode').click();
+			});	
+			
+			$('#memberImage').click(function(){
+				$('#btnChangeUplode').click();
+			});
+								  
+			//프로필이미지 동적변경
+			btnChangeUplode.on('change', function(e){
+				memberImage.empty();		    //이전에 추가된 콘텐츠를 제거
+				
+				console.log(e.target);          //input
+				console.log(e.target.value);    // 업로드된 파일경로
+				console.log(e.target.files);    // 업로드된 파일의 정보가 담긴 배열
+				
+				const file = e.target.files[0]; // 업로드한 파일의 정보가 담긴 객체        
+				if(file) {						
+					const reader = new FileReader();
+					reader.onload = function(e) {
+						memberImage.attr('src', e.target.result).show();
+					}
+					reader.readAsDataURL(file);
+				}
+			});
+			
+			deleteProfile.on("click", function() {
+				memberImage.attr('src', '/attachment/20250117/image/1d220292-7b85-4d20-8538-2c31b1d80efd.jpg');
+				btnChangeUplode.value = ""
+				deleteCheck = 0;
+			});
+	   });
+	    
+		 // 수정버튼 클릭시 유효성검사 후 폼 제출   
+		   document.getElementById('modifyMemberForm').addEventListener('submit', function(e) {
+			   e.preventDefault();
+				
+		        if($memberPw.value.trim() !== '' && isPassword($memberPw)){ 
+		        	$memberPw.focus();
+		        	return;
+		        }
+		        
+		        if ($memberPw.value.trim() !== '' && checkPwFn($checkPw)) {
+		            $checkPw.focus();
+		            return; 
+		        }
+		        
+		        if($checkPw.value.trim() !== '' && checkPwFn($checkPw)){                                       
+		            $checkPw.focus();
+		            return;
+		        }
+		        
+		        if(emptyEmailFn($email)){
+		        	$email.focus();
+		        	return;
+		        }
+		        
+		        if (emptyPhoneFn($phone1)) {
+		        	$phone1.focus();
+		            return; 
+		        }
+		        if (emptyPhoneFn($phone2)) {
+		        	$phone2.focus();
+		            return; 
+		        }
+		        if (emptyPhoneFn($phone3)) {
+		        	$phone3.focus();
+		            return; 
+		        }
+		        
+				let flag = true;
+				
+				// 프로필 이미지가 없다 > 있다
+				if(!initCheck && deleteCheck == 1) flag = false;
+				
+				// 이전 프로필 이미지가 있다 > 삭제
+				if(initCheck && deleteCheck == 0) flag = false;
+				
+				// 이전 프로필 이미지가 있다 > 새이미지
+				if(initCheck && deleteCheck == 1) flag = false;
+				
+				if(flag) {
+					e.preventDefault();
+				}
+		        this.submit();
+		        alert('수정되었습니다.')
 		   });
+ 
+		   document.getElementById('deleteMemberForm').addEventListener('submit', function(e) {
+		        this.submit();
+		        alert('탈퇴가 완료되었습니다.')
+		   });
+		   
+		   
 	</script>
     </th:block> 
 </html>

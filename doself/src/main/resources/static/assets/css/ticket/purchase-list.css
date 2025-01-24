@@ -105,6 +105,8 @@
         #main-content {
              width: calc(100% - 230px);
              margin : 0;
+             flex-direction: column !important; 
+   			 gap: 20px !important;
         }
 
         @media (max-width: 1000px) {
@@ -203,21 +205,18 @@
     .pagination {
         text-align: center;
         margin-top: 10px;
-        
+        display: flex;
+    	list-style: none;
+    	justify-content: space-around;
     }
     
     .pagination a {
         margin: 0 5px;
         text-decoration: none;
         padding: 5px 10px;
-        border: 1px solid #ccc;
         color: #333;
     }
     
-    .pagination .active {
-        background-color: #9ACD32;
-        color: white;
-    }
 
     .line {
         width: 100%;
@@ -294,3 +293,38 @@
 #ticket-list {
     margin-top : 30px;
 }        
+
+section.content-main {
+    min-height: 1000px;
+}
+
+.pagination a {
+	margin : 0px !important; 
+}
+
+.page-item.active .page-link {
+    background-color: #D7E790 !important;
+    color: #618141 !important;
+    border-color: #a9bd4d !important;
+ }
+ 
+p {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+ul.pagination.pagination-sm.justify-content-center.text-muted {
+    padding-bottom: 25px !important;
+}
+
+.submit-btn {
+    padding: 0px !important;
+}
+
+.table-info, .table-info>td, .table-info>th {	
+    background-color: transparent !important;
+}
+
+li.active > a {
+	font-weight: bold;
+}

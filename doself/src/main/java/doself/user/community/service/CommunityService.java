@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import doself.user.community.domain.Article;
+import doself.user.community.domain.Comment;
+import doself.user.community.domain.Like;
+import doself.user.community.domain.Report;
 import doself.user.community.domain.SearchArticle;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -20,9 +23,33 @@ public interface CommunityService {
 	PageInfo<Article> getArticleListByCategory(Pageable pageable, Integer categoryCode);
 	
 	// 게시글 조회
-	Article getArticleDetail(String articleKeyNum);
+	Article getArticleDetail(int articleKeyNum);
 	
 	// 게시글 검색
 	PageInfo<Article> getArticleListBySearch(Pageable pageable, SearchArticle searchArticle);
+	
+	// 게시글 작성
+	void createArticle(Article article);
+	
+	// 게시글 수정
+	void modifyArticle(Article article);
+	
+	// 게시글 삭제
+	void deleteArticle(int articleKeyNum);
+	
+	// 좋아요 여부 확인
+	Like isLiked(Like like);
+	
+	// 좋아요 insert
+	boolean createLikeToArticle(Like like);
+	
+	// 좋아요 취소 update
+	boolean modifyLikeToArticle(Like like);
+	
+	// 댓글 작성
+	void createComment(Comment comment);
+	
+	// 게시글 및 댓글 신고
+	int createReport(Report report);
 
 }

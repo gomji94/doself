@@ -16,7 +16,6 @@ import doself.admin.challenge.domain.Score;
 import doself.admin.challenge.domain.Stat;
 import doself.admin.challenge.domain.Warning;
 import doself.admin.challenge.service.ChallengeService;
-import doself.admin.member.domain.MemberLog;
 import doself.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -235,5 +234,16 @@ public class ChallengeController {
 		model.addAttribute("lastPage", lastPage);
 		
 		return "admin/challenge/reward-list";
+	}
+	
+	// 챌린지 상태 완료이면 보상 지급
+	public void everydayCheck() {
+		
+		challengeService.everydayCheck();
+	}
+	// 챌린지 월별 순위보상지급
+	public void everyMonthlyCheck() {
+		
+		challengeService.everyMonthlyCheck();
 	}
 }

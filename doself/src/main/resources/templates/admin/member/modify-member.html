@@ -8,14 +8,17 @@
           <div class="row">
                 <div class="col-6">
                     <div class="content-header">
-                        <h2 class="content-title">회원 정보 수정</h2>                        
+                        <h2 class="content-title">회원수정</h2>
+                        <div>
+                            
+                        </div>
                     </div>
                 </div>
-            </div>    
+            </div>   
 		</th:block>
 		
-		<th:block layout:fragment="content-body">			
-			<form action="#" method="post">
+		<th:block layout:fragment="content-body">
+			<form id="modifyMemberForm" th:action="@{/admin/member/modify}" method="post" th:object="${memberInfo}">
 			<div class="row">
                 <div class="col-lg-6">
                     <div class="card mb-4">
@@ -23,57 +26,101 @@
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">1. 회원등급</label>
-                                        <select name="scCode" id="scCode" class="form-select">
-                                        	<option value="mg_001">관리자</option>
-                                        	<option value="mg_002">회원</option>
-                                        	<option value="mg_003">부정회원</option>
-                                        </select>
+                                        <input type="hidden"id="mbrId" name="mbrId" th:value="*{mbrId}">
+                                        <label for="mbrName" class="form-label">이름</label>
+                                        <input type="text" placeholder="Type here" class="form-control" id="mbrName" name="mbrName" th:value="*{mbrName}">
                                     </div>                
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mgCode" class="form-label">회원등급</label>
+										<select name="mgCode" id="mgCode" class="form-control text-center">
+											<option value="">회원등급을 선택해주세요</option>
+											<th:block th:if="${gradeList}"
+													  th:each="l, status : ${gradeList}">
+												<option th:value="${l.mgCode}" 
+														th:text="${l.mgName}"
+														th:selected="${status.count} == *{mgCode}">
+												</option>
+											</th:block>
+										</select>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mbrEmail" class="form-label">이메일</label>
+                                        <input class="form-control" type="text" id="mbrEmail" name="mbrEmail" th:value="*{mbrEmail}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="mbrBirthDate" class="form-label">생일</label>
+                                        <input class="form-control" type="text" id="mbrBirthDate" name="mbrBirthDate" th:value="*{mbrBirthDate}">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
 
                             <hr class="mb-4 mt-0">
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">2. 이메일</label>
-                                        <input type="text" class="form-control">
+                                        <label for="mbrPhoneNum" class="form-label">전화번호</label>
+                                        <input class="form-control" type="text" id="mbrPhoneNum" name="mbrPhoneNum" th:value="*{mbrPhoneNum}">
                                     </div>
                                 </div> <!-- col.// -->
-                            </div> <!-- row.// -->                            
+                            </div> <!-- .row end// -->                        
+                            
+                            <hr class="mb-4 mt-0">
+                            <div class="row">                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">                                      
+                                        <label for="acNum" class="form-label">연령대</label>
+										<select name="acNum" id="acNum" class="form-control text-center">
+											<option value="">연령대를 선택해주세요</option>
+											<th:block th:if="${ageList}"
+													  th:each="l, status : ${ageList}">
+												<option th:value="${l.acNum}" 
+														th:text="${l.acName}"
+														th:selected="${status.count} == *{acNum}">
+												</option>
+											</th:block>
+										</select>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
                             
                             <hr class="mb-4 mt-0">
                             <div class="row">                                
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">3. 생년월일</label>
-                                        <input type="text" class="form-control">
+                                        <label for="mbrPoint" class="form-label">포인트</label>
+                                        <input class="form-control" type="text" id="mbrPoint" name="mbrPoint" th:value="*{mbrPoint}">
                                     </div>
                                 </div> <!-- col.// -->
-                            </div> <!-- row.// --> 
-                                                       
-                            <hr class="mb-4 mt-0">
-                            <div class="row">                                
-                                <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label">4. 연락처</label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div> <!-- col.// -->
-                            </div> <!-- row.// -->                                                         
+                            </div> <!-- .row end// -->                          
                             
                             <div class="row">                                
                                 <div class="col-md-9 addBtn">
-                                    <a class="btn btn-light rounded font-sm mr-5 text-body hover-up" th:href="@{#}">수정하기</a>
+                                    <button type="submit" id="modifyMemberBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">수정하기</button>
                             		<a class="btn btn-md rounded font-sm hover-up" th:href="@{/admin/member/list}">취소</a>
                                 </div> <!-- col.// -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>             
-			</form>		
+            </div>
+            </form>
 		</th:block> 
 
 		<!--/* 사용자 추가 js file */-->

@@ -15,8 +15,12 @@ dl, ol, ul {
 	margin-bottom: 0 !important;	
 }
 
-/* feed-container */
-.feed-container {
+.challenge-main-container a:hover {
+	color: #515151 !important;
+}
+
+/* challenge-main-container */
+.challenge-main-container {
     flex: 1;
     display: grid;
     grid-template-columns: 310px 469px 314px;
@@ -86,6 +90,21 @@ dl, ol, ul {
 .sidebar ul li a:hover {
     background-color: transparent;
 }
+
+div#feedOptionButton {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+#memberWarnigButton {
+	width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
 /* 
     .sidebar.shrink {
         width: 80px;
@@ -114,7 +133,7 @@ dl, ol, ul {
 
 /* 모달 컨테이너 */
 #cf-mbr-modal {
-    display: none; /* 기본적으로 숨김 */
+    /* display: none; */
     position: fixed;
     top: 50%;
     left: 50%;
@@ -126,7 +145,7 @@ dl, ol, ul {
     border-radius: 10px;
     overflow: hidden;
     /* display: none; */
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.6);
     padding: 20px;
 }
 
@@ -136,7 +155,7 @@ dl, ol, ul {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 1004;
     display: none;
 }
@@ -182,6 +201,7 @@ img#scf-mbr-modal-close {
 
 .challenge-mbr-list {
     display: grid;
+    margin-top: 10px;
 }
 
 img#section-bar {
@@ -215,6 +235,7 @@ img#section-bar {
     border: none;
     background-color: unset;
     opacity: 0.3;
+    font-size: 14px;
 }
 
 .mbr-warning {
@@ -222,6 +243,14 @@ img#section-bar {
     font-size: 14px;
     margin-right: 9px;
 }
+
+select#serving {
+    height: 35px !important;
+}
+
+select#meal-type {
+    height: 35px !important;
+}s
 
 .img-progress-container {
     position: relative;
@@ -323,6 +352,7 @@ p.progress-text {
     /* max-height: calc(100vh - 100px); */
     padding: 32px 20px;
     justify-content: flex-start;
+    align-items: center;
 }
 
 /* 스크롤바 숨기기 */
@@ -330,7 +360,7 @@ p.progress-text {
     display: none;
 }
 
-.container {
+.feed-container .container {
     margin: 0;
     margin-top: -21px;
     display: flex;
@@ -339,6 +369,7 @@ p.progress-text {
     max-width: 100%;
     box-sizing: border-box;
     flex-wrap: nowrap;
+    flex-direction: column;
 }
 
 .feed {
@@ -379,8 +410,10 @@ p.progress-text {
 }
 
 .feed-header img {
-    width: auto;
-    height: 40px;
+    width: 35px;
+    height: 35px;
+    max-width: 35px;
+    max-height: 35px;
     border-radius: 100px;
     margin-top: 5px;
 }
@@ -388,9 +421,10 @@ p.progress-text {
 .feed-header .user-name {
     font-weight: bold;
     font-size: 15px;
-    padding: 0px 17px;
+    padding: 0px 10px;
     position: relative;
     margin-right: auto;
+    margin-top: 4px;
 }
 
 .feed-header .feed-option {
@@ -400,6 +434,7 @@ p.progress-text {
     width: 24px;
     height: 20px;
     margin-right: -2px;
+    margin-top: -7px;
 }
 
 .feed-header .feed-option .option-button {
@@ -408,7 +443,7 @@ p.progress-text {
 }
 
 .feed-header .feed-option img {
-    width: 19px;
+    width: 16px;
     height: auto;
     opacity: 0.7;
 }
@@ -484,7 +519,7 @@ p.progress-text {
 }
 
 .feed hr {
-    opacity: 0.2;
+    opacity: 0.5;
 }
 
 .feed .add-comment {
@@ -530,6 +565,13 @@ p.progress-text {
     width: 73%;
 }
 
+button#loadMore {
+    background-color: #ffffff !important;
+    color: #9cb331 !important;
+    border-color: #d2dba7 !important;
+    padding: 6px 15px 5px 18px !important;
+}
+
 .cf-comment-modal-overlay {
     display: none;
     position: fixed;
@@ -549,7 +591,7 @@ p.progress-text {
     background: #fff;
     border-radius: 10px;
     padding: 20px;
-    width: 800px;
+    width: 845px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     z-index: 1001;
 }
@@ -568,7 +610,7 @@ p.progress-text {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .cf-comment-modal-header img {
@@ -583,7 +625,7 @@ p.progress-text {
     color: #333;
 }
 
-.cf-comment-modal-header #cf-comment-modalCloseBtn {
+.cf-comment-modal-header #feedCommentModalCloseBtn {
     background: none;
     border: none;
     color: #666;
@@ -606,9 +648,36 @@ p.progress-text {
     margin-top: -11.5px;
 }
 
+img#challengeModifyFeedPreviewImage {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 57px;
+    position: absolute;
+    max-width: 480px;
+    min-width: 480px;
+    width: 100%;
+    left: 19px;
+    top: 0;
+    height: 100%;
+    max-height: 418px;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1000;
+    display: block;
+}
+
 .cf-comment-modal-image-upload {
     flex: 1;
     text-align: center;
+    /* max-width: 480px;
+    max-height: 429px; */
+    min-width: 480px;
+    min-height: 429px;
+}
+
+.cf-comment-modal-image-upload img#image-preview {
+    width: 100%;
+    height: 100%;
 }
 
 /* 정보 입력 영역 */
@@ -616,6 +685,7 @@ p.progress-text {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 305px;
     width: 84%;
     justify-content: space-between;
     padding: 6px 0px;
@@ -668,6 +738,65 @@ p.progress-text {
     margin-top: 5px;
 }
 
+a#feedCommentAuthorId {
+    margin-top: 3px;
+}
+
+input.comment-edit-input {
+    position: absolute;
+    left: 71.8%;
+    top: 16%;
+    width: 137px;
+    border-style: none;
+    background-color: #f1f1f1;
+}
+
+input.comment-edit-input {
+    font-size: 14px;
+    color: #515151;
+}
+
+.cf-mofify-comment-feed-comment {
+    width: 0px;
+    height: 0px;
+}
+
+button.edit-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #b9cd64;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.save-btn {
+	border: none;
+    outline: none;
+    background-color: inherit;
+    color: #657c00;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.cancel-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #fe7322;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
+button.delete-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #d92d2d;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
 .cf-comment-feed-info .emoji-btn {
     background: none;
     border: none;
@@ -717,6 +846,7 @@ p.progress-text {
     font-size: 14px;
     border-style: none;
     outline: none;
+    width: 204px;
 }
 
 button.cf-comment-comment-btn {
@@ -726,8 +856,36 @@ button.cf-comment-comment-btn {
     cursor: pointer;
     height: 25px;
     font-weight: 700;
-    margin-left: auto;
+    margin-left: 15px;
     white-space: nowrap;
+}
+
+img#createChallengeFeedPreviewImage {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 57px;
+    position: absolute;
+    max-width: 480px;
+    width: 100%;
+    left: 19px;
+    top: 0;
+    height: 100%;
+    max-height: 429px;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1100;
+    display: block;
+}
+
+input#files {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #CACACA;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
 }
 
 /* feed mdl modal */
@@ -775,6 +933,7 @@ button.cf-comment-comment-btn {
 
 .popup-body li:last-child {
     border-bottom: none;
+    width: 250px;
     /* margin-bottom: 7px; */
 }
 
@@ -784,8 +943,8 @@ button.cf-comment-comment-btn {
 }
 
 .close:hover {
-    cursor: pointer;
-    color: red;
+    cursor: pointer !important;
+    color: red !important;
 }
 
 /* create challenge modal */
@@ -1010,6 +1169,11 @@ hr {
     gap: 15px;
 }
 
+.feed-info .challenge-create-info .input-block .form-control {
+    display: block;
+    padding-left: 12.5px !important;
+}
+
 .feed-info .challenge-create-info {
     margin-top: 20px;
     display: grid;
@@ -1045,7 +1209,7 @@ hr {
     position: absolute;
     z-index: 3;
     bottom: 0px;
-    left: 111px;
+    left: 101px;
     width: 190px;
     font-size: 14px;
     border-style: none;
@@ -1059,14 +1223,14 @@ hr {
     position: absolute;
     z-index: 3;
     bottom: 0px;
-    left: 102px;
-    width: 205px;
+    left: 100px;
+    width: 203px;
     font-size: 14px;
     border-style: none;
     outline: none;
     color: #515151;
     opacity: 0.6;
-    background-color: inherit;
+    background-color: transparent;
 }
 
 .feed-info .challenge-create-info .input-block .date {
@@ -1096,6 +1260,7 @@ hr {
     margin-left: 7px;
     color: #515151;
     text-decoration: none;
+    margin-top: 10px;
 }
 
 .user-link:hover {
@@ -1160,6 +1325,7 @@ textarea::-webkit-resizer {
 .input-group label {
     font-size: 14px;
     color: #515151;
+    margin: 0px;
 }
 
 input[type="number"] {
@@ -1168,6 +1334,14 @@ input[type="number"] {
     border-radius: 5px;
     text-align: center;
     padding: 6px 12px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center !important;
+    width: 100%;
 }
 
 select {
@@ -1294,7 +1468,7 @@ select option:checked {
     justify-content: space-between;
     text-align: center;
     margin-bottom: -1px;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .\.cf-modal-header img {
@@ -1342,6 +1516,8 @@ select option:checked {
     padding: 20px;
     cursor: pointer;
     align-content: center;
+    width: 480px;
+    height: 465px;
 }
 
 .cf-upload-box img {
@@ -1581,7 +1757,7 @@ select #meal-type option:checked {
     justify-content: space-between;
     text-align: center;
     margin-bottom: -1px;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .cf-modify-modal-header #cf-modify-modal-closeBtn {
@@ -1599,7 +1775,7 @@ select #meal-type option:checked {
 }
 
 .cf-modify-modal-body {
-    padding: 10px 0;
+    padding: 10px 0px 0px 0px;
     text-align: center;
     display: grid;
     grid-template-columns: 480px 310px;
@@ -1622,10 +1798,25 @@ select #meal-type option:checked {
 }
 
 .cf-modify-upload-box img {
-    width: 63px;
+    width: 53px;
     opacity: 0.7;
     margin-left: -2px;
-    margin-bottom: 11px;
+    position: absolute;
+    left: 11.5px;
+    bottom: 4px;
+}
+
+img#modifyFeedImage {
+    mix-blend-mode: hard-light;
+    opacity: 0.6;
+}
+
+div#modifyFeedButtonBlock {
+    z-index: 1010;
+    position: relative;
+    mix-blend-mode: hard-light;
+    left: 386px;
+    bottom: -189px;
 }
 
 .cf-modify-upload-box p {
@@ -1635,19 +1826,24 @@ select #meal-type option:checked {
 }
 
 #cf-modify-upload-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #CACACA;
-    color: #fff;
+    position: relative;
+    display: flex;
+    background-color: #acacac;
+    color: #c7c7c7;
     border: none;
-    border-radius: 5px;
+    border-radius: 5px 0px 0px 0px;
     cursor: pointer;
-    margin-top: 15px;
+    width: 72.5px;
+    height: 63px;
+    mix-blend-mode: multiply;
+    z-index: 1010;
+    left: 387px;
+    top: 178px;
 }
 
-#cf-modify-upload-btn:hover {
+/* #cf-modify-upload-btn:hover {
     background-color: #C6DA70;
-}
+} */
 
 .cf-modify-preview-box img {
     width: 100%;
@@ -2061,7 +2257,8 @@ select #meal-type option:checked {
     position: absolute;
     font-size: 14px;
     color: #515151;
-    margin-left: 205px;
+    right: 12%;
+    opacity: 0.7;
 }
 
 .participants p {
@@ -2096,7 +2293,7 @@ select #meal-type option:checked {
 
 .info-box {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     justify-content: space-between;
     padding: 19px 29px;
     background-color: #fff;
@@ -2104,6 +2301,7 @@ select #meal-type option:checked {
     margin-top: 219px;
     margin-left: 17px;
     margin-right: 17px;
+    align-items: flex-end;
 }
 
 .info-item {
@@ -2136,6 +2334,7 @@ select #meal-type option:checked {
     width: 1px;
     height: 50px;
     background-color: #E0E0E0;
+    align-self: center;
 }
 
 .footer {

@@ -62,10 +62,11 @@ a {
 
 @font-face {
     font-family: 'Pretendard-Light';
-    src: url('/assets/fonts/Pretendard-Light.woff2') format('woff2'),
-         url('/assets/fonts/Pretendard-Light.woff') format('woff'),
-         url('/assets/fonts/Pretendard-Light.otf') format('opentype');
+    src: url('/assets/fonts/Pretendard-Light.otf') format('opentype');
 }
+
+/* url('/assets/fonts/Pretendard-Light.woff2') format('woff2'),
+   url('/assets/fonts/Pretendard-Light.woff') format('woff'), */
 
 html, body {
     height: 100%;   /* 전체 높이 설정 */
@@ -125,6 +126,14 @@ body > .content-main {
     height: auto;
 }
 
+#member-profile {
+	margin-right: 10px;
+}
+
+#logout-btn {
+	color: #b7b7b7 !important;
+}
+
 .nav-links {
     display: flex;
     gap: 30px;
@@ -153,6 +162,9 @@ body > .content-main {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+}
+
+#logout-btn {
 }
 
 /* main-container 스타일 */

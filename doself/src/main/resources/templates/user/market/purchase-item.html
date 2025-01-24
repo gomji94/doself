@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link th:href="@{/assets/css/market/purchase-item.css}" rel="stylesheet" type="text/css" />
     <title>item purchase</title>
-    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
     <div id="container">
@@ -22,16 +21,16 @@
                 <div class="item-info">
                     결제 상품명
                 </div>
-                <div id="item-name" name="purchaseItemName" th:text="*{pointItemName}">
-                </div>
-                <input type="hidden" name="pointItemKeyNum" th:value="*{pointItemKeyNum}">
+                <div id="item-name" name="purchaseItemName" th:text="*{pointItemName}"></div>
+                <input type="hidden" id="pointItemKeyNum" name="pointItemKeyNum" th:value="*{pointItemKeyNum}">
             </div>
             <div class="main-items">
                 <div class="item-info">
                     결제 가격
                 </div>
-                <div id="item-price" th:text="*{pointItemPrice} + ' point'">
-                </div>
+                <div id="item-price" th:text="*{pointItemPrice} + ' point'"></div>
+                <input type="hidden" id="itemPrice" name="itemPrice" th:value="*{pointItemPrice}">
+
             </div>
             <div class="main-items">
                 <div class="item-info">
@@ -40,16 +39,7 @@
                 <div id="user-point" th:text="*{memberPoint} + ' point'">
                 </div>
             </div>
-            <div class="main-items">
-                <div class="item-info">
-                    사용 포인트
-                </div>
-                <div id="use-point">
-                    <input type="text" name="inputPointValue" id="point-input" th:attr="disabled=*{pointItemPrice} > *{memberPoint} ? 'disabled' : null">
-                    <span>&nbsp;point</span>
-                    <!-- <button id="use-point__button">전액 사용</button> -->
-                </div>
-            </div>
+            
         </div>
         <div class="market-item-button-container">
             <div id="pay-agreement">
@@ -64,35 +54,9 @@
 
     <th:block layout:fragment="customJsResource">
    		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+   		<script th:src="@{/assets/js/market/purchase-item.js}"></script>
     </th:block>
     
     <th:block layout:fragment="customJs">
-    	<script th:inline="javascript">
-	    	$('#item-purchase__button').click(event => {
-	    		const itemPrice = /*[[${itemInfo.pointItemPrice}]]*/;
-	    		const memberPoint = /*[[${itemInfo.memberPoint}]]*/;
-	    		let isValid = true; 
-	    		event.preventDefault();
-	    		
-	    		const inputPointValue = $('#point-input').val();
-	    		const isAgreeChecked = $('#pay-agree-checkbox').prop('checked');
-	    		
-	    		if(!isAgreeChecked) {
-	    			alert("결제 서비스 동의 체크를 확인해주세요");
-	    			$('#pay-agree-checkbox').focus();
-	    			isValid = false;
-	    			return;
-	    		} else if(memberPoint < inputPointValue && !(inputPointValue === itemPrice)) {
-	    			alert("사용 포인트를 확인해주세요");
-	    			$('#point-input').focus();
-	    			isValid = false;
-	    		};
-	    		
-	    		if(isValid) $('#purchaseItemForm').submit();
-	    		
-	    		
-	    	})
-    	
-    	</script>
     </th:block> 
 </html>

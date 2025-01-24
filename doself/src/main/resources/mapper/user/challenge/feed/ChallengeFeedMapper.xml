@@ -4,98 +4,524 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
   <mapper namespace="doself.user.challenge.feed.mapper.ChallengeFeedMapper">
+  	<!-- 특정 챌린지 리스트 조회 -->
+  	<resultMap type="ParticipateChallengeList" id="ParticipateChallengeListMap">
+	    <id 	column="cg_num" 			  property="challengeCode"/>
+	    <result column="mbr_id"				  property="memberId"/>
+	    <result column="cg_name" 			  property="challengeName"/>
+	    <result column="file_path"			  property="challengePicture"/>
+	    <result column="cg_content"			  property="challengeContent"/>
+	    <result column="cg_start_date"		  property="challengeStartDate"/>
+	    <result column="cg_end_date" 		  property="challengeEndDate"/>
+	    <result column="cg_max_mbr_count"	  property="challengeMaxMember"/>
+	    <result column="ctl_level"			  property="challengeTopicLevel"/>
+	    <result column="ct_num"				  property="challengeTopicCode"/>
+	    <result column="ct_name" 			  property="challengeTopicName"/>
+	    <result column="cs_num"			 	  property="challengeStatusCode"/>
+	    <result column="cs_status"			  property="challengeStatus"/>
+	</resultMap>
+  
   	<!-- 특정 챌린지 피드 조회 -->
   	<resultMap type="ChallengeFeed" id="ChallengeFeedResultMap">
 	    <id 	column="cmf_num"		   property="challengeFeedCode" />
-	    <result column="cg_num" 		   property="challengeCode" />
-	    <result column="mbr_id" 		   property="challengeFeedAuthor" />
+	    <id 	column="cg_num" 		   property="challengeCode" />
+	    <result column="mbr_id" 		   property="challengeMemberId" />
 	    <result column="cmf_content"	   property="challengeFeedContent" />
-	    <result column="cmf_picture"	   property="challengeFeedPicture" />
+	    <result column="file_path"	   	   property="challengeFeedPicture" />
 	    <result column="cmf_date"	   	   property="challengeFeedDate" />
 	    <result column="cmf_like"		   property="challengeFeedLike" />
 	    <result column="cmf_warning_check" property="challengeFeedWarningCheck" />
-	    <result column="mbr_image"		   property="memberProfileImage" />
-	    <result column="cfc_num"		   property="challengeFeedCommentCode" />
+	    <result column="cmf_file_idx"	   property="pictureFileIdx" />
+	    <result column="cmf_feed_img" 	   property="pictureFileImage" />
+	    <result column="mbr_file_idx" 	   property="memberProfileIdx" />
+	    <result column="mbr_profile_img"   property="memberProfileImage" />
+	    <result column="cmf_food_intake"   property="challengeFeedFoodIntake" />
+	    <result column="mc_num" 		   property="challengeMealCategory" />
+	    <result column="cfc_num"		   property="challengeFeedCommentCode" javaType="string"/>
 	    <result column="cfc_content"	   property="challengeFeedCommentContent" />
 	</resultMap>
 	
 	<!-- 챌린지 멤버 리스트 조회 -->
 	<resultMap type="ChallengeMemberList" id="ChallengeMemberListMap">
-		<id 	column="cgm_num"	 property="challengeMemberCode" />
-		<id 	column="cg_num" 	 property="challengeCode" />
-		<result column="mbr_id"		 property="memberId" />
-		<result column="cs_num" 	 property="challengeStatus" />
-		<result column="cgm_date"	 property="challengeMemberInOutDate" />
-		<result column="mbr_image"   property="memberProfileImage" />
+		<id 	column="cgm_num"						property="challengeMemberCode" />
+		<id 	column="cg_num" 	 					property="challengeCode" />
+		<result column="mbr_id"		 					property="memberId" />
+		<result column="file_path"		 				property="memberProfileImage" />
+		<result column="cs_num" 						property="challengeStatus" />
+		<result column="cgm_date"	 					property="challengeMemberInOutDate" />
+		<result column="cmss_today_participation_rate"  property="todayParticipationRate" javaType="double" />
+	    <result column="cmss_today_achievement_rate" 	property="todayAchievementRate" javaType="double" />
+	    <result column="score" 							property="score" javaType="double" />
 	</resultMap>
 	
 	<!-- 챌린지 댓글 리스트 조회 -->
-	<resultMap type="ChallengeFeedComment" id="ChallengeFeedCommentMap">
-		<id 	column="cgm_num" property="challengeFeedCommentCode" />
-		<id 	column="cmf_num" property="challengeFeedCode" />
-		<result column="mbr_id" property="challengeFeedCommentAuthor" />
-		<result column="cfc_content" property="challengeFeedCommentContent"/>
-		<result column="cfc_date" property="challengeFeedCommentDate"/>
-		<result column="cfc_like" 		property="challengeFeedCommentLike"/>
-		<result column="cfc_caution_check" property="challengeFeedCommentCaution"/>
-		<result column="mbr_image" property="challengeFeedImage"/>
+	<resultMap type="ChallengeFeedComment"  id="ChallengeFeedCommentMap">
+		<id 	column="cfc_num" 				property="challengeFeedCommentCode" />
+		<id 	column="cmf_num"				property="challengeFeedCode" />
+		<result column="mbr_id" 				property="challengeFeedCommentAuthor" />
+		<result column="cfc_content" 			property="challengeFeedCommentContent"/>
+		<result column="cfc_date" 				property="challengeFeedCommentDate"/>
+		<result column="cfc_caution_check"  	property="challengeFeedCommentCaution"/>
+		<result column="mbr_file_idx" 			property="challengeCommentAuthorImageIdx"/>
+		<result column="cmf_file_idx" 			property="challengeFeedImageIdx"/>
+		<result column="mbr_profile_image" 		property="challengeCommentAuthorImage"/>
+		<result column="cmf_picture_image" 		property="challengeFeedImage"/>
 	</resultMap>
 	
-	<!-- 특정 챌린지 피드 조회 -->
-	<select id="getChallengeFeedList" resultMap="ChallengeFeedResultMap">
+	<!-- 챌린지 진행 상태 조회 -->
+	<resultMap type="ChallengeProgress" id="ChallengeProcessMap">
+		<id 	column="cg_num" 						property="challengeCode"/>
+		<result column="cg_name" 						property="challengeName"/>
+		<result column="cs_num"							property="challengeStatusCode"/>
+		<result column="mbr_id" 						property="challengeMemberId"/>
+		<result column="cg_start_date" 					property="challengeStartDate"/>
+		<result column="cg_end_date" 					property="challengeEndDate"/>
+		<result column="cg_max_mbr_count"			    property="challengeMaxMember"/>
+		<result column="cmss_today_participation_rate"  property="challengeTodayParticipationRate"/>
+		<result column="cmss_today_achievement_rate" 	property="challengeTodayAchievementRate"/>
+	</resultMap>
+	
+	<resultMap type="ChallengeUser" id="ChallengeResultMap">
+	    <id 	column="cg_num" 			property="challengeCode" />
+	    <id 	column="cg_name"			property="challengeName" />
+	    <result column="mbr_id"				property="challengeMemberId" />
+	    <result column="ct_name" 			property="challengeTopic" />
+	    <result column="cg_start_date" 		property="challengeStartDate" />
+	    <result column="cg_end_date" 		property="challengeEndDate" />
+	    <result column="ctl_level" 			property="challengeTopicLevel" />
+	    <result column="ctl_content" 		property="challengeTopicLevelContent"/>
+	    <result column="cg_max_mbr_count" 	property="challengeMaxMemberCount" />
+	    <result column="cg_content" 		property="challengeContent" />
+	    <result column="file_path" 			property="challengeImage" />
+	</resultMap> 
+	
+	<!-- 챌린지 피드 수정(피드코드) -->
+	<resultMap type="AddChallengeFeed" id="ModifyChallengeFeedResultMap">
+		<id 	column="cmf_num" 		  	property="challengeFeedCode" />
+		<result column="cg_num" 		  	property="challengeCode" />
+		<result column="mbr_id"  		  	property="challengeMemberId" />
+		<result column="memberProfilePath" 	property="challengeMemberProfilePath" />
+		<result column="cmf_content"  	  	property="challengeFeedContent" />
+		<result column="cmf_like"  		  	property="challengeFeedLike" />
+		<result column="cmf_date"  		  	property="challengeFeedDate" />
+		<result column="cmf_warning_check"  property="challengeFeedWarningCheck" />
+		<result column="cmf_file_idx"  		property="challengeFeedFileIdx" />
+		<result column="feedImagePath"  	property="challengeFeedFilePath" />
+		<result column="cmf_food_intake"    property="challengeFeedFoodIntake" />
+		<result column="mc_num"  			property="challengeMealCategory" />
+	</resultMap>
+	
+	<!-- 로그인된 챌린지 멤버 아이디 -->
+	<select id="getChallengeCodeByMemberId" parameterType="string" resultType="string">
+	    SELECT
+	    	cg_num
+        FROM
+        	challenge_member_feed
+        WHERE
+        	mbr_id = #{memberId}
+        LIMIT 1
+	</select>
+	
+	<!-- 챌린지 피드 리스트 -->
+	<select id="getChallengeList" resultMap="ChallengeFeedResultMap">
 		SELECT
 			cmf.cmf_num,
 			cmf.cg_num,
 			cmf.mbr_id,
 			cmf.cmf_content,
-			cmf.cmf_picture,
 			cmf.cmf_date,
 			cmf.cmf_like,
 			cmf.cmf_warning_check,
-			m.mbr_image,
-			cfc.cfc_num,
-			cfc.cfc_content
+			cmf.cmf_file_idx,
+			cmf.cmf_food_intake,
+			cmf.mc_num,
+			m.mbr_file_idx,
+			f.file_path AS mbr_profile_img,
+			ff.file_path AS cmf_feed_img
 		FROM
 			challenge_member_feed cmf
-			INNER JOIN `member` m USING(mbr_id)
-			LEFT JOIN challenge_feed_comments cfc USING(cmf_num)
-		LIMIT #{offset}, #{pageSize}
+			INNER JOIN `member` m ON cmf.mbr_id = m.mbr_id
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
+	</select>
+	
+	<!-- 챌린지 피드 리스트 -->
+	<select id="getChallengeListByChallengeCode" resultMap="ChallengeFeedResultMap">
+		SELECT
+			cmf.cmf_num,
+			cmf.cg_num,
+			cmf.mbr_id,
+			cmf.cmf_content,
+			cmf.cmf_date,
+			cmf.cmf_like,
+			cmf.cmf_warning_check,
+			cmf.cmf_file_idx,
+			cmf.cmf_food_intake,
+			cmf.mc_num,
+			m.mbr_file_idx,
+			f.file_path AS mbr_profile_img,
+			ff.file_path AS cmf_feed_img
+		FROM
+			challenge_member_feed cmf
+			INNER JOIN `member` m ON cmf.mbr_id = m.mbr_id
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
+		WHERE
+			cmf.cg_num = #{challengeCode}
+		ORDER BY cmf.cmf_date DESC
+		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
+	</select>
+	
+	<!-- 현재 참여중인 챌린지 리스트 조회 -->
+  	<select id="getChallengeListByMemberId" parameterType="string" resultMap="ParticipateChallengeListMap">
+	    SELECT
+	        cg.cg_num,
+	        cg.mbr_id,
+	        cg.cg_name,
+	        f.file_path,
+	        cg.cg_content,
+	        cg.cg_start_date,
+	        cg.cg_end_date,
+	        cg.cg_max_mbr_count,
+	        stl.ctl_level,
+	        ct.ct_num,
+	        ct.ct_name,
+	        cs.cs_num,
+	        cs.cs_status
+	    FROM
+	        challenge_group cg
+	        INNER JOIN challenge_topic_level stl USING(ctl_num)
+	        INNER JOIN challenge_status cs USING(cs_num)
+	        INNER JOIN challenge_topic ct USING(ct_num)
+	        INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+	        INNER JOIN challenge_group_member cgm ON cg.cg_num = cgm.cg_num
+	    WHERE
+	        cgm.mbr_id = #{memberId}
+	    ORDER BY 
+	        cg_start_date DESC
+	</select>
+  	
+	<!-- 특정 챌린지 피드 조회 -->
+	<select id="getChallengeFeed" parameterType="map" resultMap="ChallengeResultMap">
+		SELECT
+			cg.cg_num,
+			cg.cg_name,
+			cg.mbr_id,
+			ct.ct_name,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			ctl.ctl_level,
+			ctl.ctl_content,
+			cg.cg_max_mbr_count,
+			cg.cg_content,
+			f.file_path
+		FROM
+			challenge_group cg
+			INNER JOIN challenge_topic_level ctl USING(ctl_num)
+			INNER JOIN challenge_topic ct USING(ct_num)
+			INNER JOIN challenge_member_feed cmf USING(cg_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+		WHERE
+			cg.cg_num = #{challengeCode}
+		AND cg.cg_num IS NOT NULL
+		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
+	</select>
+	
+	<!-- 챌린지 피드 수정 화면 조회 -->
+	<select id="getModifyChallengeFeed" resultMap="ChallengeResultMap">
+		SELECT
+			cg.cg_num,
+			cg.cg_name,
+			cg.mbr_id,
+			ct.ct_name,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			ctl.ctl_level,
+			ctl.ctl_content,
+			cg.cg_max_mbr_count,
+			cg.cg_content,
+			f.file_path
+		FROM
+			challenge_group cg
+			INNER JOIN challenge_topic_level ctl USING(ctl_num)
+			INNER JOIN challenge_topic ct USING(ct_num)
+			INNER JOIN challenge_member_feed cmf USING(cg_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+		WHERE
+			cg.cg_num = #{challengeCode}
+		AND cg.cg_num IS NOT NULL
+	</select>	
+	
+	<!-- 챌린지 피드 행 갯수 조회 -->
+	<select id="getChallengeFeedCount" resultType="int" parameterType="string">
+		SELECT
+			COUNT(*)
+		FROM
+			challenge_member_feed cmf
+		WHERE
+			cmf.cg_num = #{challengeCode}
+			AND cg_num IS NOT NULL
+		ORDER BY cmf_date DESC
+	</select>
+	
+	<!-- 총 업로드 데이터 합계((총 참여율+총달성률)/2/14(기간)/멤버수/100) -->
+  	<select id="getTodayProgressSum" resultType="int" parameterType="string">
+	    SELECT
+	        ROUND(SUM(cmss_today_participation_rate + cmss_today_achievement_rate)/2, 1) AS result
+	    FROM
+	        challenge_member_score_stats
+	    WHERE
+	        cg_num = #{challengeCode}
+	</select>
+  	
+  	<!-- 참여 멤버 점수 top3 -->
+  	<select id="getTopParticipants" parameterType="string" resultMap="ChallengeMemberListMap">
+	    SELECT 
+	        m.mbr_id                              AS memberId,
+	        f.file_path                           AS memberProfileImage,
+	        cmss.cmss_today_participation_rate    AS todayParticipationRate,
+	        cmss.cmss_today_achievement_rate      AS todayAchievementRate,
+	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate) / 2, 1) AS score
+	    FROM 
+	        challenge_member_score_stats cmss
+	        INNER JOIN member m USING (mbr_id)
+	        INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+	    WHERE 
+	        cmss.cg_num = #{challengeCode}
+	    ORDER BY 
+	        score DESC
+	    LIMIT 3
 	</select>
 	
 	<!-- 챌린지 멤버 리스트 조회 -->
   	<select id="getMemberList" resultMap="ChallengeMemberListMap">		
 		SELECT
-			MAX(cgm.cgm_num),
-			MAX(cgm.cg_num),
-			cgm.mbr_id,
-			MAX(cgm.cs_num),
-			MAX(cgm.cgm_date),
-			m.mbr_image
-		FROM
-			challenge_group_member cgm
-			LEFT JOIN `member` m USING(mbr_id)
-		WHERE
-			cg_num = #{challengeCode}
-		GROUP BY
-			cgm.mbr_id, m.mbr_image;
+	        MAX(cgm.cgm_num),
+	        MAX(cgm.cg_num),
+	        cgm.mbr_id,
+	        MAX(cgm.cs_num),
+	        MAX(cgm.cgm_date),
+	        f.file_path
+	    FROM
+	        challenge_group_member cgm
+	        LEFT JOIN `member` m USING(mbr_id)
+	        INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+	    WHERE
+	        cg_num = #{challengeCode}
+	    GROUP BY
+	        cgm.mbr_id, f.file_path
+	    ORDER BY
+	        cgm.cgm_date ASC
   	</select>
   	
   	<!-- 챌린지 댓글 리스트 조회 -->
-  	<select id="getFeedComment" resultMap="ChallengeFeedCommentMap">
+  	<!-- <select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
   		SELECT
 			cfc.cfc_num,
 			cfc.cmf_num,
 			cfc.mbr_id,
 			cfc.cfc_content,
 			cfc.cfc_date,
-			cfc.cfc_like,
 			cfc.cfc_caution_check,
-			m.mbr_image
+			m.mbr_file_idx,
+			cmf.cmf_file_idx,
+			f.file_path AS mbr_profile_image,
+			ff.file_path AS cmf_picture_image
 		FROM
 			challenge_feed_comments cfc
-			LEFT JOIN `member` m USING(mbr_id)
+			INNER JOIN `member` m USING(mbr_id)       
+			INNER JOIN challenge_member_feed cmf USING(cmf_num)
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
 		WHERE
-			cfc.cmf_num = #{challengeFeedCode};
+			cfc.cmf_num = #{challengeFeedCode}
+  	</select> -->
+  	
+  	<!-- 챌린지 피드 댓글 등록 -->
+  	<insert id="addChallengeFeedComment" parameterType="ChallengeFeedComment">
+  		INSERT INTO challenge_feed_comments	(
+			cfc_num,
+			cmf_num,
+			mbr_id,
+			cfc_content,
+			cfc_date,
+			cfc_caution_check
+		) VALUES (
+			#{challengeFeedCommentCode},
+			#{challengeFeedCode},
+			#{challengeFeedCommentAuthor},
+			#{challengeFeedCommentContent},
+			NOW(),
+			#{challengeFeedCommentCaution}
+		)
+  	</insert>
+  	
+  	<!-- 챌린지 진행 상태 조회 -->
+  	<select id="getChallengeProgress" resultMap="ChallengeProcessMap">
+  		SELECT DISTINCT
+			cg.cg_num,
+			cg.cg_name,
+			cg.cs_num,
+			cg.mbr_id,
+			f.file_path,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			cg.cg_max_mbr_count,
+			cmss.cmss_today_participation_rate,
+			cmss.cmss_today_achievement_rate
+		FROM
+			challenge_group cg
+			INNER JOIN `member` m USING(mbr_id)
+			INNER JOIN challenge_member_score_stats cmss USING(cg_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+		WHERE
+			cg_num = #{challengeCode}
   	</select>
+  	
+  	<select id="getChallengeProgressByCode" parameterType="string" resultType="ChallengeProgress">
+	    SELECT 
+	        cg.cg_num AS challengeCode,
+	        cg.cg_start_date AS challengeStartDate,
+	        cg.cg_end_date AS challengeEndDate
+	    FROM challenge_group cg
+	    WHERE cg_num = #{challengeCode}
+	</select>
+	
+	<!-- 특정 챌린지의 현재 참여 멤버 수 조회 -->
+	<select id="getCurrentMemberCount" parameterType="string" resultType="int">
+	    SELECT COUNT(*)
+	    FROM challenge_group_member
+	    WHERE cg_num = #{challengeCode}
+	</select>
+	
+	<!-- 챌린지 피드 생성 -->
+	<insert id="addChallengeFeed" parameterType="AddChallengeFeed">
+	    INSERT INTO challenge_member_feed (
+	        cmf_num,
+	        cg_num,
+	        mbr_id,
+	        cmf_content,
+	        cmf_date,
+	        cmf_like,
+	        cmf_warning_check,
+	        cmf_file_idx,
+	        cmf_food_intake,
+	        mc_num
+	    ) VALUES (
+	        #{challengeFeedCode},
+	        #{challengeCode},
+	        #{challengeMemberId},
+	        #{challengeFeedContent},
+	        NOW(),
+	        #{challengeFeedLike},
+	        #{challengeFeedWarningCheck},
+	        #{challengeFeedFileIdx},
+	        #{challengeFeedFoodIntake},
+	        #{challengeMealCategory}
+	    )
+	</insert>
+	
+	<!-- 멤버 점수 업데이트 -->
+	<update id="updateMemberScore" parameterType="map">
+	    UPDATE challenge_member_score_stats
+	    SET cmss_score = #{score}
+	    WHERE cg_num = #{challengeCode} AND mbr_id = #{memberId}
+	</update>
+	
+	<!-- 챌린지 피드 수정 -->
+	<update id="modifyChallengeFeed" parameterType="AddChallengeFeed">
+	    UPDATE challenge_member_feed
+	    <set>
+	        <if test="challengeFeedContent != null">cmf_content = #{challengeFeedContent},</if>
+	        <if test="challengeFeedFileIdx != null">cmf_file_idx = #{challengeFeedFileIdx},</if>
+	        <if test="challengeFeedFoodIntake != null">cmf_food_intake = #{challengeFeedFoodIntake},</if>
+	        <if test="challengeMealCategory != null">mc_num = #{challengeMealCategory}</if>
+	    </set>
+	    WHERE cmf_num = #{challengeFeedCode}
+	</update>
+	
+	<!-- 챌린지 피드 코드 -->
+	<select id="getChallengeFeedByCode" parameterType="map" resultMap="ModifyChallengeFeedResultMap">
+	/* 챌린지 피드 코드 */
+	    SELECT
+	        cmf.cmf_num,
+	        cmf.cg_num,
+	        cmf.mbr_id,
+	        mf.file_path AS memberProfilePath,
+	        cmf.cmf_content,
+	        cmf.cmf_like,
+	        cmf.cmf_date,
+	        cmf.cmf_warning_check,
+	        cmf.cmf_file_idx,
+	        cf.file_path  AS feedImagePath,
+	        cmf.cmf_food_intake,
+	        cmf.mc_num
+	    FROM
+	        challenge_member_feed cmf INNER JOIN member m
+	        ON cmf.mbr_id = m.mbr_id
+	        INNER JOIN files mf
+	        ON m.mbr_file_idx = mf.file_idx
+	        INNER JOIN files cf
+	        ON cmf.cmf_file_idx = cf.file_idx
+	   WHERE 
+	   cmf.cmf_num = #{challengeFeedCode}
+	</select>
+	
+	<!-- 챌린지 피드 삭제 -->
+	<delete id="deleteChallengeFeed">
+	    DELETE FROM challenge_member_feed
+	    WHERE cmf_num = #{challengeFeedCode}
+	      AND mbr_id = #{memberId}
+	</delete>
+	
+	<!-- 챌린지 피드 댓글 조회(1개 화면 노출) -->
+	<select id="">
+		SELECT
+			cmf.cmf_num,
+			cfc.cfc_num,
+			cfc.mbr_id,
+			cfc.cfc_content
+		FROM
+			challenge_member_feed cmf
+			INNER JOIN challenge_feed_comments cfc ON cmf.cmf_num = cfc.cmf_num
+		WHERE
+			cfc.cfc_num = #{challengeFeedCommentCode}
+		LIMIT
+			1
+	</select>
+	
+	<!-- 댓글 리스트 조회 -->
+	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
+	    SELECT 
+	        cfc.cfc_num,
+	        cfc.mbr_id,
+	        cfc.cfc_content,
+	        cfc.cfc_date,
+	        m.mbr_file_idx,
+	        f.file_path AS mbr_profile_image
+	    FROM challenge_feed_comments cfc
+	    INNER JOIN `member` m ON cfc.mbr_id = m.mbr_id
+	    LEFT JOIN files f ON m.mbr_file_idx = f.file_idx
+	    WHERE cfc.cmf_num = #{challengeFeedCode}
+	    ORDER BY cfc.cfc_date DESC
+	</select>
+	
+	<!-- 챌린지 피드 댓글 수정 -->
+	<update id="modifyFeedComment">
+		UPDATE challenge_feed_comments
+		SET
+			cfc_content=#{challengeFeedCommentContent}
+		WHERE cfc_num=#{challengeFeedCommentCode}
+	</update>
+	
+	<!-- 챌린지 피드 댓글 삭제 -->
+	<delete id="deleteFeedComment">
+		DELETE
+		FROM
+			challenge_feed_comments
+		WHERE
+			cfc_num = #{challengeFeedCommentCode}
+	</delete>
+	
   </mapper>
   

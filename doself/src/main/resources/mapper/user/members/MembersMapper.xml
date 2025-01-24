@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
   <mapper namespace="doself.user.members.mapper.MembersMapper">
+  
+	<!-- 회원수정정보 1:1 -->  
     <resultMap type="Members" id="membersResultMap">
 		<id 	column="mbr_id" 			         property="memberId"/>
-		<result column="mbr_pw" 			         property="oldMemberPw" />
+		<result column="mbr_pw" 			         property="memberPw" />
 		<result column="mbr_name" 			         property="memberName" />
-		<result column="mg_code" 			         property="memberGrdCode" />
 		<result column="mbr_email"			         property="memberEmail" />
-		<result column="mbr_birth_date" 	         property="memberBrith" />
+		<result column="mbr_birth_date" 	         property="memberBirth" />
 		<result column="mbr_phone_num" 		         property="memberPhoneNum" />
-		<result column="mbr_gender" 		         property="memberGender" />
-		<result column="ac_num" 			         property="memberAgeRange" />
 		<result column="opening_ticket_count" 	   	 property="openTicketCnt" />
 		<result column="participation_ticket_count"  property="partTicketCnt" />
 		<result column="mbr_point" 	                 property="memberPoint" />
-		<result column="mbr_image" 	                 property="memberImage" />
-	</resultMap>
-	
+		<result column="mbr_file_idx" 	             property="profileFileIdx" />
+		<result column="file_path" 	                 property="memberImage" />
+	</resultMap>		
+			<!-- 회원피드	1:N 
+			<collection property="feedList" ofType="FeedList">
+				<id 	column="feed_num"  		property="feedNum"/>
+				<result column="feed_picture" 	property="feedImage"/>
+			</collection> -->
 	<!-- 티켓리스트 -->
 	<resultMap type="TicketList" id="TicketListResultMap">
 		<id 	column="mbr_id" 			         property="memberId"/>
@@ -35,12 +40,69 @@
 	<!-- 포인트리스트 -->
 	<resultMap type="PointList" id="PointListResultMap">
 		<id 	column="mbr_id" 		    property="memberId"/>
-		<result column="point_date" 	    property="pointTotalDate" />
 		<result column="point_detail" 	    property="pointDetail" />
 		<result column="point_amount" 	    property="pointAmount" />
 		<result column="point_usechk" 	    property="pointUseChk" />
 	</resultMap>
-
+	
+	<!-- 피드리스트 -->
+	<resultMap type="FeedList" id="FeedListResultMap">
+		<id 	column="feed_num"  		property="feedNum"/>
+		<result column="mbr_id" 	    property="memberId"/>
+		<result column="feed_picture" 	property="feedImage"/>
+	</resultMap> 
+	
+  	<!-- 회원수정정보 -->
+    <select id="getMemberInfoById" parameterType="String" resultMap="membersResultMap">
+		SELECT 
+			m.mbr_id, 
+			m.mbr_pw,
+			m.mbr_name,
+			m.mbr_email, 
+			m.mbr_birth_date,
+			m.mbr_phone_num,
+			m.mbr_point,
+			f.file_path 
+		FROM 
+		   member m INNER JOIN files f ON	
+			m.mbr_file_idx = f.file_idx
+		WHERE
+		   mbr_id = #{memberId};
+    </select>
+    
+    <!-- 회원 피드목록 조회 -->
+    <select id="getMemberFeedListById" resultMap="FeedListResultMap">
+		SELECT 
+			f.feed_num,
+			f.feed_picture,
+			m.mbr_id
+	    FROM 
+	        member m INNER JOIN feed f USING(mbr_id)
+	    WHERE
+	        m.mbr_id = #{memberId};
+    </select>
+    
+	<!-- 회원수정 -->
+    <update id="modifyMember" parameterType="Members">
+       UPDATE member 
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberPw != null and memberPw !=''">
+                mbr_pw=#{memberPw},
+            </if>
+            <if test="memberPhoneNum != null and memberPhoneNum != ''">
+                mbr_phone_num=#{memberPhoneNum},
+            </if>
+            <if test="memberEmail != null and memberEmail != ''">
+                mbr_email=#{memberEmail},
+            </if>
+            <if test="profileFileIdx != null and profileFileIdx != ''">
+		  		mbr_file_idx=#{profileFileIdx}
+     		</if>
+        </trim>
+        WHERE 
+            mbr_id=#{memberId};
+    </update>  
+    
 	<!-- 회원탈퇴 -->
 	<update id="removeMemberById" parameterType="String">
 		UPDATE member
@@ -49,56 +111,6 @@
 		WHERE
 			mbr_id = #{memberId};
 	</update>
-  		
-  	<!-- 회원정보 -->	
-    <select id="getMemberInfoById" parameterType="String" resultMap="membersResultMap">
-        SELECT 
-            mbr_id, 
-            mbr_pw,
-            mbr_name,
-            mg_code,
-            mbr_email, 
-            mbr_birth_date, 
-            mbr_phone_num,
-            mbr_gender,
-            ac_num,
-            opening_ticket_count,
-            participation_ticket_count,
-            mbr_point,
-            mbr_image
-        FROM 
-            member
-        WHERE
-            mbr_id = #{memberId};
-    </select>
-    
-	<!-- 현재 비밀번호 확인 -->
-	<select id="passwordChk" parameterType="map" resultType="int">
-	    SELECT COUNT(*)
-	    FROM member
-	    WHERE 
-	    mbr_id = #{memberId} AND mbr_pw = #{oldMemberPw}
-	</select>
-	
-	<!-- 새 비밀번호 업데이트 -->
-	<update id="updatePassword" parameterType="map">
-	    UPDATE member
-	    SET mbr_pw = #{newMemberPw}
-	    WHERE mbr_id = #{memberId}
-	</update>
-	
-	<update id="modifyMember" parameterType="Members">
-       UPDATE member 
-    <set>
-        <if test="oldMemberPw != null and oldMemberPw !='' and newMemberPw != null and newMemberPw">
-         mbr_pw = #{newMemberPw},</if>
-        <if test="memberPhoneNum != null">
-         mbr_phone_num = #{memberPhoneNum},</if>
-        <if test="memberEmail != null">
-         mbr_email = #{memberEmail}</if>
-    </set>
-       WHERE mbr_id = #{memberId};
-</update>    
 
     <!-- 회원 티켓내역 조회 -->
     <!-- /* <![CDATA[<= ]]> 꺽쇠 텍스트인식 */ -->
@@ -146,6 +158,7 @@
 			AND ctph_date <![CDATA[ <= ]]> #{endDate} 
 			</if>
    	</select>
+   	
    	<!-- 회원 포인트내역 조회 -->
     <select id="getPointListById" parameterType="map" resultMap="PointListResultMap">
     	SELECT
@@ -158,7 +171,7 @@
 			reward_payment_history rph INNER JOIN	
 			reward_history rh ON rh.rh_num = rph.rh_num
 		WHERE
-			mbr_id = 'id008'
+			mbr_id = #{memberId}
 			<if test="startDate!= null">
 			AND rph.rph_reward_payment_date >= #{startDate}
 			</if>
@@ -177,18 +190,18 @@
 		INNER JOIN	
 			point_exchange_product_list pepl ON pepl.pepl_num = pumh.pepl_num
 		WHERE
-			mbr_id = 'id008'
+			mbr_id = #{memberId}
 			<if test="startDate!= null">
 			AND pumh.pumh_date >= #{startDate}
 			</if>
 			<if test="endDate!=null">
 			AND pumh.pumh_date <![CDATA[ <= ]]> #{endDate}
 			</if>
-		ORDER BY point_date
+		ORDER BY point_date DESC
     	LIMIT #{rowPerPage}	OFFSET #{offset};
     </select>
-        <!-- 회원 포인트이력 총 행의 갯수 -->
-
+       
+    <!-- 회원 포인트이력 총 행의 갯수 -->
    	<select id="getCntPointHistory" resultType="int">
 		WITH reward_point AS 
 		(
@@ -220,11 +233,31 @@
 		)
 		SELECT COUNT(*) FROM reward_point;
    	</select>
-	
-	<select id="getFeedList">
-		
-	
-	</select>
-
-    
+   	
+   	<select id="getMemebrTicketCntByIdandTicketCode" parameterType="Order" resultType="int">
+	   	SELECT 
+			<if test="ticketCode == 'ctc_001'">
+				opening_ticket_count
+			</if>
+			<if test="ticketCode == 'ctc_002'">
+				participation_ticket_count
+			</if>
+		FROM member
+		WHERE mbr_id = #{ordererId}
+   	</select>
+   	
+   	<update id="modifyMemberTicketCnt" parameterType="Order">
+   		UPDATE member
+		SET
+			<if test="ticketCode == 'ctc_001'">
+				opening_ticket_count=${updatedTicketCnt}
+			</if>
+			<if test="ticketCode == 'ctc_002'">
+				participation_ticket_count=${updatedTicketCnt}
+			</if>
+			
+		WHERE mbr_id = #{ordererId}
+   	</update>
+   	
+   	
   </mapper>

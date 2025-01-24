@@ -11,11 +11,15 @@ html, body {
     flex-direction: column;
 }
 
+.parent-container {
+    overflow: visible !important; /* 숨김 제거 */
+}
+
 /* feed-container */
 .feed-container {
     flex: 1;
     display: grid;
-    grid-template-columns: 310px 469px 314px;
+    grid-template-columns: 230px 469px 314px;
     height: 100%;
     gap: 45px;
     max-width: 1280px;
@@ -103,6 +107,7 @@ html, body {
         pointer-events: none;
     }
 */
+
 /* 모달 오버레이 */
 .modal-overlay {
     position: fixed;
@@ -114,25 +119,13 @@ html, body {
     z-index: 1000;
     display: none;
 }
-
-/* 모달 컨테이너 */
-#feed-mbr-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    width: 330px;
-    height: auto;
-    z-index: 1001;
-    border-radius: 10px;
-    overflow: hidden;
-    /* display: none; */
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-    padding: 20px;
-}
     
 /* 메인 콘텐츠 이동 */
+.feed-sidebar-container {
+    height: 100%;
+    display: flex;
+}
+
 .main {
     display: flex;
     flex-direction: column;
@@ -171,6 +164,7 @@ html, body {
     border-width: 0.5px;
     border-color: #f2f2f2;
     margin-bottom: 20px;
+	scroll-margin-top: 100px; /* 스크롤 중 요소가 뷰포트에 적절히 위치하도록 설정 */
 }
 
 .feed a {
@@ -187,6 +181,7 @@ html, body {
 
 .feed img {
     width: 100%;
+	height: 350px;
 }
 
 .feed-header {
@@ -197,8 +192,10 @@ html, body {
 }
 
 .feed-header img {
-    width: auto;
-    height: 40px;
+    width: 35px;
+    height: 35px;
+    max-width: 35px;
+    max-height: 35px;
     border-radius: 100px;
     margin-top: 5px;
 }
@@ -234,6 +231,8 @@ html, body {
 .feed .feed-main-img {
     width: 100%;
     height: auto;
+    object-fit: cover; /* 이미지의 잘린 부분을 커버 */
+    max-height: 400px; /* 최대 높이 설정 (필요한 경우) */
 }
 
 .feed .feed-action {
@@ -318,8 +317,9 @@ html, body {
 }
 
 .feed .add-comment img {
-    width: 20px;
+	width: 20px;
     opacity: 0.7;
+    height: auto;
 }
 
 .feed .add-comment input {
@@ -339,11 +339,6 @@ html, body {
     font-weight: bold;
 }
 	
-.feed .input[type="text"] {
-    border: none;
-    width: 73%;
-}
-
 .feed .input[type="text"] {
     border: none;
     width: 73%;
@@ -549,7 +544,7 @@ button.feed-comment-comment-btn {
     white-space: nowrap;
 }
 
-/* feed modal */
+/* myfeed modal */
 .popup-wrap {
     display: none; /* 기본적으로 숨김 */
     position: fixed;
@@ -606,6 +601,148 @@ button.feed-comment-comment-btn {
     cursor: pointer;
     color: red;
 }
+
+/* other members feed modal */
+.other-members-option-modal-wrap {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex; /* Flexbox 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 1000;
+}
+
+.other-members-feed-popup {
+    width: 90%;
+    max-width: 250px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.other-members-feed-popup-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.other-members-feed-popup-body li {
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 0.5px solid #e9e9e9;
+    font-size: 14px;
+    color: #515151;
+}
+
+.other-members-feed-popup-body li:last-child {
+    border-bottom: none;
+    /* margin-bottom: 7px; */
+}
+
+.other-members-feed-popup-body li:hover {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+li#feed-declaration-modal {
+    color: red;
+}
+
+.close:hover {
+    cursor: pointer;
+    color: red;
+}
+
+/* feed-declaration modal */
+.feed-declaration-popup-wrap {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex; /* Flexbox 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 1005;
+}
+
+.feed-declaration-popup {
+    width: 90%;
+    max-width: 250px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.popup-container .popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    margin-bottom: -1px;
+    padding: 0px 5px 10px 5px;
+}
+
+.popup-container .popup-header img {
+    width: 18px;
+    height: 100%;
+    opacity: 0.7;
+}
+
+
+.popup-container .popup-header h2 {
+    font-size: 17px;
+    color: #333;
+    font-weight: bold;
+}
+
+.feed-declaration-popup-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feed-declaration-popup-body li {
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 0.5px solid #e9e9e9;
+    font-size: 14px;
+    color: #515151;
+}
+
+.feed-declaration-popup-body li:last-child {
+    border-bottom: none;
+    /* margin-bottom: 7px; */
+}
+
+.feed-declaration-popup-body li:hover {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.close:hover {
+    cursor: pointer;
+    color: red;
+} 
 	
 /* 정보 입력 영역 */
 .feed-info {
@@ -616,78 +753,18 @@ button.feed-comment-comment-btn {
     gap: 15px;
 }
 
-.feed-info .challenge-create-info {
+.feed-info .feed-create-info {
     margin-top: 20px;
     display: grid;
     position: relative;
     gap: 10px;
 }
 
-.feed-info .challenge-create-info .input-block {
+.feed-info .feed-create-info .input-block {
     position: relative;
 }
 
-.feed-info .challenge-create-info .input-block img {
-    width: 102%;
-    opacity: 0.8;
-}
 
-.feed-info .challenge-create-info .input-block span {
-    width: 100px;
-    height: 32.5px;
-    font-size: 14px;
-    color: #ffff;
-    position: absolute;
-    font-weight: 400;
-    display: flex;
-    z-index: 2;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    bottom: 6.2px;
-}
-
-.feed-info .challenge-create-info .input-block input {
-    position: absolute;
-    z-index: 3;
-    bottom: 12px;
-    left: 111px;
-    width: 190px;
-    font-size: 14px;
-    border-style: none;
-    outline: none;
-    opacity: 0.7;
-    color: #515151;
-}
-
-.feed-info .challenge-create-info .input-block select {
-    position: absolute;
-    z-index: 3;
-    bottom: 7px;
-    left: 102px;
-    width: 205px;
-    font-size: 14px;
-    border-style: none;
-    outline: none;
-    color: #515151;
-    opacity: 0.6;
-    background-color: inherit;
-}
-
-.feed-info .challenge-create-info .input-block .date {
-    font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
-    z-index: 3;
-    bottom: 7px;
-    left: 102px;
-    width: 205px;
-    height: 26px;
-    padding: 7px 10px;
-    margin: 0;
-    opacity: 0.6;
-    border-radius: 10px;
-    background-color: inherit;
-}
 
 .feed-info #emoji-btn {
     background: none;
@@ -708,9 +785,9 @@ button.feed-comment-comment-btn {
 }
 
 textarea {
+	width: 270px;
     max-width: 310px;
-    min-width: 310px;
-    min-height: 100px;
+    min-height: 180px;
     border-radius: 5px;
     padding: 10px;
     font-size: 13px;
@@ -776,25 +853,25 @@ input[type="number"] {
 }
 
 select {
-    /* width: 24%;
- padding: 5px;
- border: 0.7px solid #ccc;
- border-radius: 5px; */
- width: 27%;
- padding: 6px 12px; /* 내부 여백 */
- font-size: 14px; /* 글꼴 크기 */
- border: 1px solid #ccc; /* 테두리 */
- border-radius: 5px; /* 둥근 모서리 */
- background-color: #fff; /* 배경색 */
- color: #515151; /* 글자색 */
- appearance: none; /* 기본 브라우저 화살표 제거 */
- -moz-appearance: none;
- -webkit-appearance: none;
- position: relative;
- background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M7%2010l5%205%205-5z%27%20fill%3D%27%23333%27/%3E%3C/svg%3E'); /* 화살표 아이콘 */
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
+	/* width: 24%;
+	padding: 5px;
+	border: 0.7px solid #ccc;
+	border-radius: 5px; */
+	width: 35%;
+	padding: 6px 12px; /* 내부 여백 */
+	font-size: 14px; /* 글꼴 크기 */
+	border: 1px solid #ccc; /* 테두리 */
+	border-radius: 5px; /* 둥근 모서리 */
+	background-color: #fff; /* 배경색 */
+	color: #515151; /* 글자색 */
+	appearance: none; /* 기본 브라우저 화살표 제거 */
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	position: relative;
+	background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M7%2010l5%205%205-5z%27%20fill%3D%27%23333%27/%3E%3C/svg%3E'); /* 화살표 아이콘 */
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	background-size: 16px;
 }
 
 select:focus {
@@ -857,8 +934,31 @@ select option:checked {
     background-color: #D7E790;
 }
 
-/* create challenge feed modal */
-.feed-modal-overlay {
+/* food search dropdown */
+.dropdown-menu {
+	display: block;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-width: 200px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* feed create modal */
+/* 모달 전체 배경 (오버레이) */
+.modal-overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -869,7 +969,99 @@ select option:checked {
     z-index: 1000;
 }
 
-.feed-modal-container {
+/* 모달 창 */
+.modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 1001; /* 오버레이 위 */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 모달 헤더 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    border-bottom: none !important;
+}
+
+.modal-header h2 {
+    font-size: 18px !important;
+    color: #333 !important;
+}
+
+#modalCloseBtn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+}
+
+.modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.upload-box {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.submit-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #D7E790;
+    color: #4C6B33;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #C6DA70;
+}
+
+/* create feed modal */
+.feed-create-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.feed-create-modal-container {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -882,17 +1074,17 @@ select option:checked {
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.feed-modal-container hr {
+.feed-create-modal-container hr {
     opacity: 0.3;
     margin-top: 14px;
 }
 
-.feed-modal-container .feed-modal-header h2 {
+.feed-create-modal-container .feed-create-modal-header h2 {
     font-size: 17px;
     color: #333;
 }
 
-.feed-modal-header {
+.feed-create-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -901,67 +1093,90 @@ select option:checked {
     padding: 0px 5px;
 }
 
-.\.feed-modal-header img {
+.\.feed-create-modal-header img {
     cursor: pointer;
     width: 18px;
     height: 100%;
     opacity: 0.7;
 }
 
-.\.feed-modal-header h2 {
+.\.feed-create-modal-header h2 {
     font-size: 18px;
     color: #333;
 }
 
-.feed-modal-header #feed-modalCloseBtn {
+.feed-create-modal-header #feed-create-modalCloseBtn {
     background: none;
     border: none;
     color: #666;
     cursor: pointer;
 }
 
-.feed-modal-header img {
+.feed-create-modal-header img {
     cursor: pointer;
     width: 18px;
     height: 100%;
     opacity: 0.7;
 }
 
-.feed-modal-body{
+.feed-create-modal-body{
+	padding: 10px 0;
+    text-align: center;
     display: grid;
     grid-template-columns: 480px 310px;
     gap: 20px;
-    margin-top: -2px;
+    margin-top: -11.5px;
 }
 
-.feed-image-upload {
+.feed-create-image-upload {
     flex: 1;
     text-align: center;
 }
 
-.feed-upload-box {
-    background-color: #f3f3f3;
+.feed-create-upload-box {
+	background-color: #f3f3f3;
     border-radius: 0px 0px 0px 10px;
-    height: 100%;
+    height: 73%;
     padding: 20px;
     cursor: pointer;
     align-content: center;
 }
 
-.feed-upload-box img {
+.feed-create-upload-box img {
     width: 63px;
     opacity: 0.7;
     margin-left: -2px;
     margin-bottom: 11px;
 }
 
-.feed-upload-box p {
+img#feed-create-image-preview {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    min-width: auto;
+    max-width: 480px;
+    width: 100%;
+    left: 20px;
+    top: 54px;
+    max-height: 440px;
+    height: auto;
+    min-height: 0;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1100;
+}
+
+img#feed-create-image-preview {
+    height: 600px;
+}
+
+.feed-create-upload-box p {
     font-size: 14px;
     color: #666;
     margin-bottom: 3px;
 }
 
-.feed-upload-btn {
+.feed-create-upload-btn {
     display: inline-block;
     padding: 10px 20px;
     background-color: #CACACA;
@@ -971,57 +1186,61 @@ select option:checked {
     cursor: pointer;
     margin-top: 15px;
 }
-.feed-upload-btn:hover {
+.feed-create-upload-btn:hover {
     background-color: #C6DA70;
 }
 
-.feed-preview-box img {
+.feed-create-preview-box img {
     width: 100%;
     border-radius: 10px;
     display: none;
 }
 
 /* 정보 입력 영역 */
-.feed-feed-info {
+.feed-create-feed-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     width: 84%;
-    gap: 15px;
+    gap: 3px;
 }
 
-.feed-user-block {
+.form-control {
+	padding: 0px !important;
+}
+
+.feed-create-user-block {
     display: flex;
     align-items: center;
     margin-top: 9px;
 }
 
-.feed-feed-info img {
+.feed-create-feed-info img {
     width: 35px;
     height: 35px;
     border-radius: 100px;
     margin-top: 5px;
 }
 
-.feed-feed-info #emoji-btn {
+.feed-create-feed-info #emoji-btn {
     background: none;
     border: none;
     cursor: pointer;
     display: contents;
 }
 
-.feed-user-link {
+.feed-create-user-link {
     font-size: 14px;
     margin-left: 7px;
     color: #515151;
     text-decoration: none;
 }
 
-.feed-user-link:hover {
+.feed-create-user-link:hover {
     text-decoration: underline;
 }
 
-textarea#feed-content {
+textarea#feed-create-content {
     max-width: 260px;
     min-width: 260px;
     min-height: 210px;
@@ -1034,13 +1253,14 @@ textarea#feed-content {
     resize: none;
 }
 
-.feed-text-box-under {
+.feed-create-text-box-under {
     display: flex;
     text-align: right;
     font-size: 0.9rem;
     color: #999;
     align-items: center;
     justify-content: space-between;
+    flex-direction: column;
 }
 
 .text-counter {
@@ -1054,14 +1274,19 @@ textarea#feed-content {
     margin-right: -3px;
 }
 
-.feed-text-box-under img {
+.feed-create-text-box-under img {
     width: 25px;
     height: auto;
     opacity: 0.7;
 }
 
-.feed-text-box-under span {
+.feed-create-text-box-under span {
     text-align: right;
+}
+
+#intakeDateTime {
+	pointer-events: auto !important; /* 포커스를 허용 */
+    z-index: auto !important; /* 다른 요소와의 충돌 방지 */
 }
 
 .input-group {
@@ -1123,7 +1348,32 @@ select #meal-type option:checked {
     color: #333; /* 선택된 옵션 글자색 */
 }
 
-.feed-submit-btn {
+.submit-grop {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+button#feedCreateSubmitBtn {
+	background-color: #D7E790;
+    color: #5cb85c;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button.btn.btn-secondary {
+	background-color: #ffdddd;
+    color: #d9534f;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.feed-create-submit-btn {
     background-color: #D7E790;
     color: #4C6B33;
     border: none;
@@ -1135,12 +1385,8 @@ select #meal-type option:checked {
     margin-left: auto;
 }
 
-.feed-submit-btn:hover {
-    background-color: #D7E790;
-}
 
-
-/* modify challenge feed */
+/* modify feed modal */
 .feed-modify-modal-overlay {
     display: none;
     position: fixed;
@@ -1198,8 +1444,8 @@ select #meal-type option:checked {
     opacity: 0.7;
 }
 
-.feed-modify-modal-body {
-    padding: 10px 0;
+.feed-modify-modal-body{
+	padding: 10px 0;
     text-align: center;
     display: grid;
     grid-template-columns: 480px 310px;
@@ -1213,9 +1459,9 @@ select #meal-type option:checked {
 }
 
 .feed-modify-upload-box {
-    background-color: #f3f3f3;
+	background-color: #f3f3f3;
     border-radius: 0px 0px 0px 10px;
-    height: 100%;
+    height: 73%;
     padding: 20px;
     cursor: pointer;
     align-content: center;
@@ -1228,24 +1474,47 @@ select #meal-type option:checked {
     margin-bottom: 11px;
 }
 
+img#feed-modify-image-preview {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    min-width: auto;
+    max-width: 480px;
+    width: 100%;
+    left: 20px;
+    top: 54px;
+    max-height: 440px;
+    height: auto;
+    min-height: 0;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1100;
+}
+
+img#feed-modify-image-preview {
+    height: 600px;
+}
+
 .feed-modify-upload-box p {
     font-size: 14px;
     color: #666;
     margin-bottom: 3px;
 }
 
-#feed-modify-upload-btn {
-    display: inline-block;
-    padding: 10px 20px;
+.feed-modify-upload-btn {
+	position: relative;
+    display: flex;
     background-color: #CACACA;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 5px 0px 0px 0px;
     cursor: pointer;
-    margin-top: 15px;
+    z-index: 1010;
+    mix-blend-mode: hard-light;
+    left: 386px;
+    bottom:-189px;
 }
-
-#feed-modify-upload-btn:hover {
+.feed-modify-upload-btn:hover {
     background-color: #C6DA70;
 }
 
@@ -1261,7 +1530,7 @@ select #meal-type option:checked {
     display: flex;
     flex-direction: column;
     width: 84%;
-    gap: 15px;
+    gap: 18px;
 }
 
 .feed-modify-user-block {
@@ -1296,9 +1565,8 @@ select #meal-type option:checked {
 }
 
 textarea#feed-modify-content {
-    max-width: 260px;
-    min-width: 260px;
-    min-height: 210px;
+    max-width: 310px;
+    min-height: 280px;
     border-radius: 5px;
     padding: 10px;
     font-size: 13px;
@@ -1306,6 +1574,7 @@ textarea#feed-modify-content {
     background-color: #f3f3f3;
     opacity: 0.8;
     resize: none;
+    margin-top: 10px;
 }
 
 .feed-modify-text-box-under {
@@ -1397,23 +1666,35 @@ select #meal-type option:checked {
     color: #333; /* 선택된 옵션 글자색 */
 }
 
-.feed-modify-submit-btn {
-    background-color: #D7E790;
-    color: #4C6B33;
+.fm-submit-btn {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+.feed-modify-cancel-submit-btn {
+	background-color: #ffdddd;
+    color: #d9534f;
     border: none;
-    border-radius: 45px;
+    border-radius: 5px;
+    padding: 10px 20px;
     cursor: pointer;
-    width: 63px;
-    height: 31px;
-    font-weight: 700;
-    margin-left: auto;
+}
+
+.feed-modify-submit-btn {
+	background-color: #dff0d8;
+    color: #5cb85c;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
 }
 
 .feed-modify-submit-btn:hover {
     background-color: #D7E790;
 }
-
-
 
 /* Right Sidebar */
 .progress-container {
@@ -1430,6 +1711,24 @@ select #meal-type option:checked {
     text-align: center;
     margin-left: -25px;
     box-shadow: 0 4px 10px rgba(51, 24, 24, 0.1);
+}
+
+.analysis-title {
+    font-weight: bold;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 5px 10px;
+    margin-right: auto;
+    border-radius: 12px;
+    background-color: #ddd;
+}
+
+.info-table td {
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #ddd;
+	transition: all 0.3s ease; /* 텍스트 변경 시 부드럽게 표시 */
 }
 
 .analysis-table .analysis-title {
@@ -1461,6 +1760,14 @@ select #meal-type option:checked {
     border-radius: 5px;
 }
 
+#analysis-img img {
+    width: 100%;
+	height: 200px;
+	padding: 5px 5px;
+	border-radius: 20px;
+	transition: all 0.3s ease; /* 이미지가 부드럽게 변경되도록 설정 */
+}
+
 .progress-container .analysis-info {
     width: 100%;
     border-collapse: collapse;
@@ -1482,6 +1789,439 @@ select #meal-type option:checked {
     margin-top: 10px;
     color: #777;
     font-size: 11px;
+}
+
+/* 상세 피드 */
+.df-container {
+    margin: 0;
+    margin-top: -21px;
+    display: flex;
+    flex: 1;
+    width: 1280px;
+    max-width: 100%;
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+}
+
+.df-feed-container {
+	flex: 1;
+    display: grid;
+    grid-template-columns: 272px 800px;
+    height: 100%;
+    max-width: 1280px;
+    width: 100%;
+    margin-bottom: 0px;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+}
+
+.df-feed {
+    background: #ffffff;
+    width: 100%;
+    max-width: 740px;
+    height: 100%;
+    max-height: 710px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(51, 24, 24, 0.1);
+}
+
+.df-feed a {
+    text-decoration: none;
+    color: #515151;
+}
+
+.df-feed-header .df-feed-option {
+    position: relative;
+    float: right;
+    display: block;
+    width: 30px;
+    height: 20px;
+    margin-right: -2px;
+}
+
+.df-feed-header .df-feed-option .df-option-button {
+    border: none;
+    background-color: #fff;
+}
+
+.df-feed-header .df-feed-option img {
+    width: 19px;
+    height: auto;
+    opacity: 0.7;
+}
+
+.df-feed img {
+    width: 100%;
+    height: auto;
+}
+
+.df-feed-header {
+    padding: 5px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.df-feed-header img {
+    width: auto;
+    height: 40px;
+    border-radius: 100px;
+    margin-top: 5px;
+}
+
+.df-feed-header .df-user-name {
+    font-weight: bold;
+    font-size: 15px;
+    padding: 0px 17px;
+    position: relative;
+    margin-right: auto;
+}
+
+.df-feed-header .df-feed-option {
+    position: relative;
+    float: right;
+    color: #EAEAEA;
+}
+
+.df-feed-header .df-feed-option img {
+    width: 19px;
+    height: auto;
+    opacity: 0.7;
+    padding-left: 5px;
+}
+
+.df-feed-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.df-feed-main-img {
+    width: 480px;
+    height: auto;
+    margin-top: 20px;
+}
+
+.df-analysis-table .img {
+    width: 100%;
+    padding: 5px 5px;
+    border-radius: 5px;
+}
+
+#df-analysis-img img {
+	width: 100%;
+	height: auto;
+	padding: 5px 5px;
+	border-radius: 5px;
+}
+
+.df-feed .df-feed-img-chart {
+    display: flex;
+}
+
+.df-feed .df-feed-img-chart .df-feed-chart {
+    display: grid;
+}
+
+.df-feed .df-feed-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px 7px 18px;
+}
+
+.df-feed .df-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.df-feed .df-action-btn img {
+    width: auto;
+    height: 25px;
+    margin-top: 4px;
+}
+
+.df-feed .df-action-icons {
+    display: flex;
+    gap: 13px;
+}
+
+.df-feed .df-feed-time {
+    color: #777;
+    font-size: 12px;
+    padding-bottom: 16px;
+    display: flex;
+    margin-right: 2px;
+    float: inline-end;
+}
+
+.df-feed .df-feed-description {
+    margin-left: 11px;
+    margin-bottom: 12px;
+}
+
+.df-feed .df-feed-description #df-feed-likes {
+    font-size: 13px;
+}
+
+.df-feed-description p {
+    padding: 6.5px 7px;
+    font-size: 15px;
+}
+
+.df-feed hr {
+    opacity: 0.2;
+}
+
+.df-feed .df-comments-link {
+    color: #aaa; /* 댓글 링크 색상 */
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.df-feed .df-add-comment img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+}
+
+.df-feed .df-add-comment input {
+    flex: 1;
+    padding: 11px 10px 4px 6px;
+    font-size: 14px;
+    border-style: none;
+    outline: none;
+}
+
+.df-feed .df-comment-submit {
+    background: none;
+    border: none;
+    color: #9EB92A;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.df-feed .df-input[type="text"] {
+    border: none;
+    width: 73%;
+}
+
+.df-nutrition-info {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-right: 20px;
+    margin-bottom: 2%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.df-nutrition-info .df-p {
+    margin-bottom: 10%;
+
+}
+
+.df-nutrition-info .df-list-group {
+    margin-top: 20px;
+    width: 70%;
+    transform: scale(1.05);
+    list-style-type: none;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 10px 25px;
+}
+
+/* Right Sidebar */
+.df-progress-container {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 320px;
+    height: 500px;
+}
+
+.df-progress-container {
+    flex: 1;
+    width: 600px;
+    position: sticky;
+    top: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: auto;
+} 
+
+.df-analysis-table .df-analysis-title {
+    font-weight: bold;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px 10px;
+    position: relative;
+    margin-right: auto;
+    border-radius: 15px;
+    background-color: #ddd;
+}
+
+.df-analysis-table .df-food-name {
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px 10px;
+    position: relative;
+    margin-right: auto;
+    margin-top: 0 10px;
+}
+
+#df-analysis-img {
+    width: 220px;
+    padding: 1px 0px;
+}
+
+.df-analysis-table .img {
+    width: 100%;
+    padding: 5px 5px;
+    border-radius: 5px;
+}
+
+#df-analysis-img img {
+    width: 100%;
+	height: 200px;
+	padding: 5px 5px;
+	border-radius: 20px;
+}
+
+.info-table,
+.info-table table th,
+.info-table table td {
+    font-size: 13px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+.df-info-table td {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+    align-content: center;
+    text-align: center;
+    max-width: 65px;
+    width: 65px;
+}
+
+.info-table {
+    width: 100%;
+    height: 150px;
+}
+
+.analysis-caution {
+    margin-top: 10px;
+    color: #777;
+    font-size: 11px;
+}
+
+.df-progress-container .df-analysis-info {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.df-info-table,
+.df-info-table table th,
+.df-info-table table td {
+    font-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+.df-info-table {
+    width: 100%;
+    height: 150px;
+    margin-top: 10px;
+}
+
+.df-analysis-caution {
+    margin-top: 10px;
+    color: #777;
+    font-size: 12px;
+}
+
+.df-feed-description {
+    margin-left: 11px;
+    margin-bottom: 12px;
+}
+
+.df-feed-description #feed-likes {
+    font-size: 13px;
+}
+	
+.likeImg {
+    display: block; /* 이미지를 항상 표시 */
+    width: 50px; /* 원하는 너비로 설정 */
+    height: 50px; /* 원하는 높이로 설정 */
+    transition: all 0.1s ease; /* 변경 시 부드러운 애니메이션 */
+    object-fit: cover; /* 이미지 비율 유지 */
+}
+
+.feed-description p {
+    padding: 6.5px 7px;
+    font-size: 15px;
+}
+
+.feed-upload-date {
+    font-size: 13px;
+    opacity: 0.3;
+}
+
+.feed hr {
+    opacity: 0.2;
+}
+
+.df-add-comment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 18px;
+    margin-top: 20px;
+    width: 90%;
+    margin-bottom: 20px;
+}
+	
+.df-comments-link {
+    color: #aaa; /* 댓글 링크 색상 */
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.df-add-comment img {
+    width: 20px;
+    opacity: 0.7;
+}
+
+.df-add-comment input {
+    flex: 1;
+    padding: 11px 10px 4px 6px;
+    font-size: 14px;
+    border-style: none;
+    outline: none;
+}
+
+.df-comment-submit {
+    background: none;
+    border: none;
+    color: #9EB92A;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .footer {

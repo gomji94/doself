@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="doself.user.ticket.mapper.TicketMapper">
+  
+  	<resultMap type="TicketItem" id="ticketItemResultMap">
+  		<id 	column="ctc_code" 			property="ticketCode"/>
+  		<result column="ctc_category" 		property="ticketCategory"/>
+  		<result column="ctp_code" 			property="ticketPriceCode"/>
+  		<result column="ctp_price"			property="ticketPrice"/>
+  		<result column="ctc_expl" 			property="ticketExplanation"/>
+  	</resultMap>
+  	
+  	<resultMap type="TicketPurchase" id="ticketPurchaseResultMap">
+  		<id 	column="mbr_id" 			 property="memeberId"/>
+  		<result column="ctph_num" 		     property="paymentNum"/>
+  		<result column="ctph_date" 		     property="ticketPurchaseDate"/>
+  		<result column="ctc_category" 		 property="ticketCategory"/>
+  		<result column="ctp_price"			 property="paymentAmount"/>
+  		<result column="ctph_status" 		 property="paymentStatus"/>
+  		<result column="ctph_return_status"  property="paymentReturnStatus"/>
+  		<result column="pmc_name" 			 property="paymentMethod"/>
+  	</resultMap>
+  	
+  	<resultMap type="TicketPurchaseInfo" id="ticketPurchaseInfoResultMap">
+  		<id column="ctph_num" 		         property="paymentNum"/>
+  		<result column="ctc_category" 		 property="ticketCategory"/>
+  		<result column="ctph_date" 		     property="ticketPurchaseDate"/>
+  		<result column="ctp_price"			 property="paymentAmount"/>
+  		<result column="pmc_name" 			 property="paymentMethod"/>
+  		<result column="ctm_code" 			 property="ticketNum"/>
+  	</resultMap>
+ 
+  	<!-- 티켓 아이템 리스트 조회 -->
+  	<select id="getTicketList" resultMap="ticketItemResultMap" >
+		SELECT 
+			ctc.ctc_code, 
+			ctc.ctc_category, 
+			ctp.ctp_price,
+			ctc.ctc_expl 
+		FROM 
+			challenge_ticket_category ctc 
+		INNER JOIN
+			challenge_ticket_price ctp 
+		USING(ctc_code)
+		WHERE ctp_is_deleted = 'active';
+  	</select>
+  	
+  	<select id="getTicketListById" resultMap="ticketPurchaseResultMap">
+  		SELECT 
+			ctph.mbr_id,
+			ctph.ctph_num,
+			ctc.ctc_category, 
+			ctph.ctph_date, 
+			ctp.ctp_price, 
+			ctph.ctph_status,
+			TRIM(ctph.ctph_return_status) AS ctph_return_status,
+			pmc.pmc_name 
+		FROM 
+			challenge_ticket_payment_history ctph
+		INNER JOIN 
+			challenge_ticket_price ctp
+		USING(ctp_code)
+		INNER JOIN 
+			ticket_payment_method tpm
+		USING(tpm_num)
+		INNER JOIN 
+			payment_method_category pmc
+		USING(pmc_code)
+		INNER JOIN
+			challenge_ticket_category ctc
+		USING(ctc_code)
+		WHERE 
+			ctph.mbr_id = #{memberId}
+		ORDER BY ctph_date DESC
+		LIMIT #{rowPerPage}	OFFSET #{offset};	
+  	</select>
+  	<select id="getCntTicketHistory" resultType="int">
+  		SELECT	
+			COUNT(*)
+		FROM
+			challenge_ticket_payment_history
+  		WHERE
+  			mbr_id = #{memberId}	
+		<if test="startDate != null">
+		AND ctph_date >= #{startDate} 
+		</if>
+		<if test="endDate != null">
+		AND ctph_date <![CDATA[ <= ]]> #{endDate} 
+		</if>
+  	</select>
+  	
+  	<!-- 단일 티켓 정보 가져오는 쿼리 -->
+  	<select id="getTicketInfoByTicketKey" parameterType="String" resultMap="ticketItemResultMap">
+  		SELECT ctc.ctc_code, ctc.ctc_category, ctp.ctp_code, ctp.ctp_price
+		FROM challenge_ticket_category ctc INNER JOIN challenge_ticket_price ctp
+		USING (ctc_code)
+		WHERE ctc_code = #{ticketKey} AND ctp_is_deleted = 'active';
+  	</select>
+
+	<select id="getCntOfPurchaseBySearch" resultType="int" parameterType="String">
+		SELECT COUNT(*)
+		FROM   challenge_ticket_payment_history 
+		<where>
+			  mbr_id = #{memberId}
+			<if test="dayFilter > 1">
+				AND ctph_date > NOW() - INTERVAL ${dayFilter} DAY
+			</if>
+		</where>	
+	</select>
+	
+	<select id="getPurchaseListBySearch" resultType="map" resultMap="ticketPurchaseResultMap">
+		SELECT 
+			ctph.mbr_id,
+			ctph.ctph_num,
+			ctc.ctc_category, 
+			ctph.ctph_date, 
+			ctp.ctp_price, 
+			ctph.ctph_status,
+			TRIM(ctph.ctph_return_status) AS ctph_return_status,
+			pmc.pmc_name 
+		FROM 
+			challenge_ticket_payment_history ctph
+		INNER JOIN 
+			challenge_ticket_price ctp
+		USING(ctp_code)
+		INNER JOIN 
+			ticket_payment_method tpm
+		USING(tpm_num)
+		INNER JOIN 
+			payment_method_category pmc
+		USING(pmc_code)
+		INNER JOIN
+			challenge_ticket_category ctc
+		USING(ctc_code)
+		<where>
+			ctph.mbr_id = #{memberId}
+			<if test="dayFilter > 1">
+				AND ctph.ctph_date > NOW() - INTERVAL ${dayFilter} DAY
+			</if>
+		</where>	
+		ORDER BY ctph_date DESC
+		LIMIT #{rowPerPage}	OFFSET #{offset};	
+	</select>
+	<select id="getPurchaseDetail" parameterType="String" resultMap="ticketPurchaseInfoResultMap">
+	  	SELECT 
+			ctph.ctph_num, 
+			ctc.ctc_category, 
+			ctph.ctph_date, 
+			ctp.ctp_price, 
+			pmc.pmc_name,
+			ctm.ctm_code
+		FROM 
+			challenge_ticket_payment_history ctph
+		INNER JOIN 
+			challenge_ticket_price ctp
+		USING(ctp_code)
+		INNER JOIN 
+			ticket_payment_method tpm
+		USING(tpm_num)
+		INNER JOIN 
+			payment_method_category pmc
+		USING(pmc_code)
+		INNER JOIN
+			challenge_ticket_category ctc
+		USING(ctc_code)
+		INNER JOIN
+			challenge_ticket_management ctm
+		USING(ctph_num)
+		WHERE 
+			ctph.ctph_num = #{paymentNum}
+	</select>
+	
+	<insert id="createRefundRequest" parameterType="RefundRequest" >
+		INSERT INTO payment_refund_request
+		(prr_num, ctm_code, mbr_id, prr_date)
+		VALUES
+		(#{refundRequestPkValue}, #{ticketNum}, #{memberId}, NOW())
+	</insert>
+	
+	<!-- 티켓 결제수단 생성 -->
+	<insert id="createTicketPaymentMethod" parameterType="Order">
+		INSERT INTO ticket_payment_method
+		(tpm_num, pmc_code, mbr_id, tpm_detail_info)
+		VALUES (#{paymentMethodNum}, #{paymentMethod}, #{ordererId}, #{paymentCardNum})
+	</insert>
+	
+	<!-- 티켓 주문 생성 -->
+	<insert id="createTicketOrder" parameterType="Order">
+		INSERT INTO challenge_ticket_payment_history
+		(ctph_num, mbr_id, tpm_num, ctph_date, ctp_code)
+		VALUES (#{orderPkValue}, #{ordererId}, #{paymentMethodNum}, #{paymentDate}, #{ticketPriceCode})
+	</insert>
+	
+	<!-- 티켓관리에 티켓 생성 -->
+	<insert id="createTicketManagement" parameterType="String">
+		INSERT INTO challenge_ticket_management
+		(ctm_code, ctph_num, mbr_id)
+		VALUES (#{ctmPkValue}, #{ctphPkValue}, #{memberId})
+	</insert>
+  	
+  	<!-- 티켓상세내역 환불중복체크 -->
+  	<select id="cntDuplicate" parameterType="String">
+  		SELECT	
+			COUNT(*)
+		FROM
+			payment_refund_request
+  		WHERE
+  			ctm_code = #{ctmPkValue}
+  	</select>
+  	
+  	
+</mapper>

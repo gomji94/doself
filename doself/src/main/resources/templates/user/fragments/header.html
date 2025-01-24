@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+   	<script th:src="@{/assets/js/layout.js}"></script>
+   	<script th:src="@{/assets/js/community/view.js}"></script>
+   	<script th:src="@{/assets/js/community/comment-modify.js}"></script>
+	<script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script>
+</head>
+
 <header class="header" th:fragment="headerFragment">
-    <a href="/" class="logo">
+    <a th:href="@{/feed/list}" class="logo">
         <img src="https://velog.velcdn.com/images/mekite/post/3958812c-a50f-426c-a9ca-363b12b9bd4a/image.PNG" alt="top_logo">
     </a>
     <nav class="nav-links">
@@ -13,8 +20,15 @@
         <a th:href="@{/market/itemlist}">마켓</a>
         <a th:href="@{/community/list}">커뮤니티</a>
     </nav>
-    <div class="profile">
-        <a th:href="@{/mypage/member/info(memberId=${memberId})}"><img src="https://velog.velcdn.com/images/mekite/post/02c7afae-d297-40ee-81df-ed3da3b7f0ca/image.png" alt="프로필"></a>
-    </div>
+	    <div class="profile">
+	        <a id="member-profile" th:href="@{/mypage/feedlist(memberId=${session.SID})}"><img th:src="@{|${session.IMAGE}|}" alt="프로필"></a>
+	        <a th:if="${session.SID == null}" class="dropdown-item text-primary" th:href="@{/login}">
+				<i class="material-icons md-perm_identity"></i>Login
+			</a>
+			<a th:unless="${session.SID == null}" id="logout-btn" th:href="@{/logout}">
+				<i class="fa-solid fa-right-from-bracket"></i>
+			</a>
+	    </div>
+	    
 </header>
 </html>

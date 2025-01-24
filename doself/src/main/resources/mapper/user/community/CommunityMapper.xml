@@ -6,7 +6,7 @@
 
   <mapper namespace="doself.user.community.mapper.CommunityMapper">
   
-  	<resultMap type="Article" id="ArticleResultMap">
+  	<resultMap type="Article" id="articleResultMap">
   		<id 	column="fb_num" 				property="articleKeyNum"/>
   		<id 	column="mbr_id" 				property="articleAuthorId"/>
   		<id 	column="fbctg_name"				property="articleCategory"/>
@@ -18,6 +18,18 @@
   		<result column="fb_like" 				property="articleLike"/>
   	</resultMap>
   	
+	<resultMap type="Comment" id="commentResultMap">
+		<id column="fbc_num" property="commentKeyNum"/>
+		<result column="mbr_id" property="commentAuthorId"/>
+		<result column="fbc_content" property="commentContent"/>
+		<result column="fbc_date" property="commentDate"/>
+	</resultMap>
+	
+	<resultMap type="Like" id="likeResultMap">
+		<id column="lh_num" property="likeKeyNum"/>
+		<result column="lh_is_liked" property="isLiked"/>
+	</resultMap>
+	
   	<!-- 게시글 총 갯수 행 조회 -->
   	<select id="getCntOfArticle" resultType="int">
   		SELECT COUNT(*)
@@ -26,10 +38,11 @@
   	</select>
   	
   	<!-- 게시글 목록 조회 -->
-  	<select id="getArticleList" resultMap="ArticleResultMap" parameterType="Pageable">
+  	<select id="getArticleList" resultMap="articleResultMap" parameterType="Pageable">
 		SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
 		FROM free_board fb INNER JOIN free_board_category fbc
 		USING(fbctg_code)
+		WHERE fb_is_deleted = 'active'
 		ORDER BY fb_date DESC, fb_num DESC
 		LIMIT #{rowPerPage} OFFSET #{offset}; 
   	</select>
@@ -50,32 +63,32 @@
 		ORDER BY fb_date DESC;
   	</select>
   	
-  	<select id="getArticleListByCategory" resultMap="ArticleResultMap" parameterType="Map">
+  	<select id="getArticleListByCategory" resultMap="articleResultMap" parameterType="Map">
   		SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
 		FROM free_board fb INNER JOIN free_board_category fbc
 		USING(fbctg_code)
-		WHERE fbc.fbctg_code = CONCAT('fbcate_00', #{categoryCode})
+		WHERE fbc.fbctg_code = CONCAT('fbcate_00', #{categoryCode}) AND fb_is_deleted = 'active'
 		ORDER BY fb_date DESC
 		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
   	</select>
   	
   	 <!-- 검색 게시글 총 갯수 행 조회 -->
-	  	<select id="getCntOfArticleBySearch" parameterType="Map" resultType="int">
-	  		SELECT COUNT(*)
-			FROM free_board fb
-			<where>
-				<if test="searchArticle.days != null">
-					fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
-				</if>
-				<if test="searchArticle.searchValue != null">
-					AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
-				</if>
-			</where>
-			ORDER BY fb_date DESC;
-	  	</select>
+  	<select id="getCntOfArticleBySearch" parameterType="Map" resultType="int">
+  		SELECT COUNT(*)
+		FROM free_board fb
+		<where>
+			<if test="searchArticle.days != null">
+				fb.fb_date > NOW() - INTERVAL ${searchArticle.days} DAY
+			</if>
+			<if test="searchArticle.searchValue != null">
+				AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY fb_date DESC;
+  	</select>
   	
   	<!-- 게시글 검색 -->
-  	<select id="getArticleListBySearch" parameterType="Map" resultMap="ArticleResultMap">
+  	<select id="getArticleListBySearch" parameterType="Map" resultMap="articleResultMap">
 	  	SELECT 
 	  		CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, 
 	  		fb.mbr_id, fbc.fbctg_name, 
@@ -95,6 +108,7 @@
 			<if test="searchArticle.searchValue != null">
 				AND ${searchArticle.searchFilter} LIKE CONCAT('%', #{searchArticle.searchValue}, '%')
 			</if>
+			AND fb_is_deleted = 'active'
 		</where>
 		ORDER BY 
 			fb_date DESC, fb_num DESC
@@ -102,12 +116,115 @@
 			#{pageable.rowPerPage} OFFSET #{pageable.offset};
   	</select>
   	
-  	<select id="getArticleDetail" resultMap="ArticleResultMap" parameterType="String">
+  	<!-- 게시글 상세 조회 -->
+  	<select id="getArticleDetail" resultMap="articleResultMap" parameterType="String">
 	  	SELECT CAST(SUBSTRING_INDEX(fb.fb_num, '_', -1) AS UNSIGNED) AS fb_num, fb.mbr_id, fbc.fbctg_name, fb.fb_title, fb.fb_content, fb.fb_date, fb.fb_views, fb.fb_attachment_file, fb.fb_like
 		FROM free_board fb INNER JOIN free_board_category fbc
 		USING(fbctg_code)
 		WHERE fb.fb_num = #{articleKeyNum}
   	</select>
   	
+  	<!-- 게시글 create -->
+  	<insert id="createArticle" parameterType="Article">
+  		INSERT INTO free_board
+		(fb_num, mbr_id, fbctg_code, fb_title, fb_content, fb_date, fb_attachment_file)
+		VALUES (#{articleKeyValue}, #{articleAuthorId}, #{articleCategory}, #{articleTitle}, #{articleContent}, NOW(), #{articleAttachmentFile})
+  	</insert>
+  	
+  	<!-- 게시글 삭제(soft delete) -->
+  	<update id="deleteArticle" parameterType="String">
+	  	UPDATE free_board
+		SET
+			fb_is_deleted='delete'
+		WHERE fb_num=#{articleKeyNum}
+  	</update>
+  	
+  	<!-- 특정 글 댓글 리스트 조회 -->
+  	<select id="getCommentsByArticle" parameterType="String" resultMap="commentResultMap" >
+  		SELECT fbc_num, mbr_id, fbc_content, fbc_date
+		FROM free_board_comments
+		WHERE fb_num=#{articleKeyNum} AND fbc_is_deleted = 'active'
+  	</select>
+  	
+  	<!-- 좋아요 기록 가져오기 -->
+  	<select id="isLikedByUser" parameterType="Like" resultMap="likeResultMap">
+  		SELECT 
+  			lh_num, 
+ 			lh_is_liked
+		FROM like_history
+		WHERE mbr_id = #{likeMemberId} AND olc_code = 'olc_001' AND lh_occurs_topic_num = #{likeOccurArticleNumValue};
+  	</select>
+  	
+  	<!-- 좋아요 insert -->
+  	<insert id="createLikeToArticle" parameterType="Like" >
+  	  	INSERT INTO like_history
+		(lh_num, olc_code, mbr_id, lh_occurs_topic_num, lh_date)
+		VALUES (#{likeKeyNum}, 'olc_001', #{likeMemberId}, #{likeOccurArticleNumValue}, NOW())
+  	</insert>
+  	
+  	<!-- 게시글 좋아요 update +1 -->
+  	<update id="modifyArticleLikeCnt" parameterType="Map">
+	  	UPDATE free_board
+		SET fb_like=${calcLikeCnt}
+		WHERE fb_num =#{likeOccurArticleNumValue}
+  	</update>
+  	
+  	<!-- 좋아요 기록 update -->
+  	<update id="modifyisLiked" parameterType="Like">
+  		UPDATE like_history
+		SET lh_is_liked=
+		  <choose>
+		    <when test="isLiked == 'true'">
+		      'false'
+		    </when>
+		    <otherwise>
+		      'true'
+		    </otherwise>
+		  </choose>
+		WHERE lh_num = #{likeKeyNum}
+  	</update>
+  	
+  	<!-- comment insert -->
+  	<insert id="createComment" parameterType="Comment">
+	  	INSERT INTO free_board_comments
+		(fbc_num, fb_num, mbr_id, fbc_content, fbc_date)
+		VALUES (#{commentKeyNum}, #{articleKeyValue}, #{commentAuthorId}, #{commentContent}, NOW())
+  	</insert>
+  	
+  	<!-- comment delete(soft) -->
+  	<update id="deleteComment" parameterType="String">
+  		UPDATE free_board_comments
+		SET
+			fbc_is_deleted='delete'
+		WHERE fbc_num=#{commentKeyNum}
+  	</update>
+  	
+  	<!-- comment modify -->
+  	<update id="modifyComment" parameterType="Comment">
+  		UPDATE free_board_comments
+		SET
+			fbc_content=#{commentContent},
+			fbc_date=NOW()
+		WHERE fbc_num=#{commentKeyNum}
+  	</update>
+  	
+  	<!-- 신고 insert -->
+  	<insert id="createReport" parameterType="Report">
+	  	INSERT INTO report_request
+		(rr_num, mbr_id, olc_code, rr_bc_num, rc_code, rr_content, rr_date)
+		VALUES (#{reportKeyValue}, #{reporterId}, #{occurLocationCode}, #{reportedKeyValue}, #{reportCateValue}, #{reportContent}, NOW())
+  	</insert>
+  	
+  	<!-- 게시글 수정 -->
+  	<update id="modifyArticle" parameterType="Article">
+  		UPDATE free_board
+		SET
+			fbctg_code=#{articleCategory},
+			fb_title=#{articleTitle},
+			fb_content=#{articleContent}
+		WHERE fb_num=#{articleKeyValue}
+  	</update>
+  	
+
   	
 </mapper>

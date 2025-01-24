@@ -5,6 +5,7 @@
       
 <head>
 	<link th:href="@{/assets/css/community/list.css}" rel="stylesheet" type="text/css" />
+	<script src="https://kit.fontawesome.com/cc1c733a97.js" crossorigin="anonymous"></script>
 	<title>community</title>
 </head>
 	
@@ -24,7 +25,7 @@
 				    </div>
 				    <!-- 카테고리 버튼 -->
 				    <div th:if="${categoryList}" th:each="l : ${categoryList}">
-				        <a th:href="@{/community/list/category(cateNum=${l.categoryCode})}">
+				        <a th:href="@{/community/list/category(cateNum=${l.categoryCode})}" >
 				            <button type="button" class="category-button"
 				                th:classappend="${currentCategory == l.categoryCode} ? 'active'"
 				                th:text="${l.categoryName}">
@@ -67,6 +68,7 @@
                     </table>
                 </div>
                 <div id="main-container-footer">
+                	<th:block th:with="test=${queryParam + '&'}">
 	                    <div id="pagination" th:if="${not #lists.isEmpty(articleList)}">
 		                   <ul>
 		                   	<li th:classappend="${currentPage eq 1} ? 'disabled'">
@@ -81,7 +83,10 @@
 		                   	</li>
 		                   	<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 		                        <li th:classappend="${num == currentPage} ? 'active'">
-		                        	<a class="page-link" th:href="@{/community/list(currentPage=${num})}" th:text="${num}"></a>
+		                        <!-- <a class="page-link" th:href="@{/community/list(currentPage=${num})}" th:text="${num}"></a> -->
+		                        	<a class="page-link" 
+		                        	th:attr="href=${test == null} ? |?currentPage=${num}| : |?${test}currentPage=${num}|"
+		                        	 th:text="${num}"></a>
 		                        </li>
 		                   	</th:block>                           
 		                    <li th:classappend="${currentPage eq lastPage} ? 'disabled'">
@@ -95,9 +100,10 @@
 	                        	</a>
 		                    </li>
 		                   </ul>
-	                   	</div>	
+	                   	</div>
+                   	</th:block>	
                     <div id="article-write">
-                        <a href="#">
+                        <a th:href="@{/community/create}">
                             <button class="article-write__button">write</button>
                         </a>
                     </div>
@@ -128,6 +134,7 @@
                 	</form>
                 </div>
             </div>
+			
         </main>
         <div id="main-container-advertise">
             <div id="main-container-advertise__adBlock">
@@ -137,6 +144,7 @@
             </div>
         </div>
 	</th:block> 
+	
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
@@ -145,6 +153,5 @@
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
     	<script th:src="@{/assets/js/layout.js}"></script>
-    	
     </th:block> 
 </html>

@@ -7,42 +7,42 @@
 </head>			
 		
 	
-	<th:block layout:fragment="content-body">
-        <!-- 왼쪽 사이드바 -->
+	<th:block layout:fragment="content-body" th:object="${memberInfo}">
         <div class="sidebar">
             <ul>
                 <li>
-                    <a th:href="@{/mypage/member/info}" class="menu-item">
+                    <a th:href="@{/mypage/modify(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-user-gear"></i>
                         <div>my 정보 수정</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/tickethistory}" class="menu-item">
+                    <a th:href="@{/mypage/tickethistory(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-ticket"></i>
                         <div>티켓 조회</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/pointhistory}" class="menu-item">
+                    <a th:href="@{/mypage/pointhistory(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-brands fa-bitcoin"></i>
                         <div>포인트 조회</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/medicinearlam}" class="menu-item">
+                    <a th:href="@{/mypage/medicinearlam(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-solid fa-capsules"></i>
                         <div>영양제 알림 체크</div>
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/mypage/feedlist}" class="menu-item">
+                    <a th:href="@{/mypage/feedlist(memberId=*{memberId})}" class="menu-item">
                         <i class="fa-regular fa-file-lines"></i>
                         <div>my 게시물</div>
                     </a>
                 </li>
             </ul>
         </div>
+        
         <!-- 메인 콘텐츠 -->
     <main id="main-content">
         <div class="main-container-title">
@@ -80,7 +80,7 @@
 	                        </tr>
 	                      </thead>
                      	  <tbody>
-	                           <th:block th:if="${pointList != null}">
+	                           <th:block th:if="${not #lists.isEmpty(pointList)}">
 		                       		<tr th:each="l : ${pointList}"> 
 		                       			<td th:text="${l.pointTotalDate}"></td>
 		                       			<td th:text="${l.pointDetail}"></td>
@@ -88,12 +88,13 @@
 		                       			<td th:text="${l.pointAmount}"></td>
 		                       		</tr>
                                 </th:block>
-                           		<th:block th:unless="${pointList}">
+                           		<th:block th:unless="${not #lists.isEmpty(pointList)}">
 									<tr>
-										<td colspan="4">구매한 티켓 이력이 없습니다.</td>
+										<td colspan="4">포인트 이력이 없습니다.</td>
 									</tr>
 								</th:block>
 		             	   </tbody>
+		             	  
                     </table>
                     <div class="pagination">
                     	<ul class="pagination">
@@ -112,8 +113,6 @@
                     	</ul>
                     </div>
                  </div>
-                 
-			</th:block>
 		 </main>
 
 	<!--/* 사용자 추가 js file */-->

@@ -10,15 +10,15 @@
 	    <id 	column="cg_num" 			  property="challengeCode"/>
 	    <result column="mbr_id"				  property="memberId"/>
 	    <result column="cg_name" 			  property="challengeName"/>
-	    <result column="cg_picture"			  property="challengePicture"/>
+	    <result column="file_path"			  property="challengePicture"/>
 	    <result column="cg_content"			  property="challengeContent"/>
 	    <result column="cg_start_date"		  property="challengeStartDate"/>
 	    <result column="cg_end_date" 		  property="challengeEndDate"/>
-	    <result column="cg_current_mbr_count" property="challengeCurrentMember"/>
 	    <result column="cg_max_mbr_count"	  property="challengeMaxMember"/>
 	    <result column="ctl_level"			  property="challengeTopicLevel"/>
 	    <result column="ct_num"				  property="challengeTopicCode"/>
 	    <result column="ct_name" 			  property="challengeTopicName"/>
+	    <result column="cs_num"			 	  property="challengeStatusCode"/>
 	    <result column="cs_status"			  property="challengeStatus"/>
 	</resultMap>
 	
@@ -26,7 +26,6 @@
 	<resultMap type="ChallengeDetailView" id="challengeListDetailMap">
 		<id 	column="cg_num" 			  property="challengeCode"/>
 		<result column="cg_name" 			  property="challengeName"/>
-		<result column="cg_picture"			  property="challengeImage"/>
 		<result column="mbr_image"			  property="challengeLeaderImage"/>
 		<result column="mbr_id"				  property="challengeLeaderId"/>
 		<result column="ct_name"			  property="challengeCategory"/>
@@ -34,9 +33,27 @@
 		<result column="cg_end_date"		  property="challengeEndDate"/>
 		<result column="ctl_level" 			  property="challengeTopicLevel"/>
 		<result column="ctl_content"		  property="challengeLevelContent"/>
-		<result column="cg_current_mbr_count" property="challengeCurrentMember"/>
 		<result column="cg_max_mbr_count"	  property="challengeMaxMember"/>
 		<result column="cg_content" 		  property="challengeContent"/>
+		<result column="file_path"		 	  property="challengeImage"/>
+	</resultMap>
+	
+	<!-- 챌린지 생성 조회 -->
+	<resultMap type="AddChallenge" id="AddChallengeMap">
+		<id 	column="cg_num" 		  property="challengeCode"/>
+		<id 	column="ctl_num" 		  property="challengeTopicLevelCode"/>
+		<id 	column="cs_num" 		  property="challengeStatusCode"/>
+		<id 	column="mbr_id" 		  property="memberId"/>
+		<result column="cg_leader_name"   property="challengeLeaderName"/>
+		<result column="cg_name"		  property="challengeName"/>
+		<result column="file_path" 		  property="challengePicture"/>
+		<result column="cg_content" 	  property="challengeContent"/>
+		<result column="cg_creation_date" property="challengeCreationDate"/>
+		<result column="cg_max_mbr_count" property="challengeMaxMember"/>
+		<result column="cg_start_date" 	  property="challengeStartDate"/>
+		<result column="cg_end_date" 	  property="challengeEndDate"/>
+		<result column="cg_like" 		  property="challengeGroupLike"/>
+		<result column="cs_reward_check"  property="challengeRewardCheck"/>
 	</resultMap>
 
   	<!-- 특정 챌린지 리스트 조회 -->
@@ -45,64 +62,185 @@
 			cg.cg_num,
 			cg.mbr_id,
 			cg.cg_name,
-			cg.cg_picture,
+			f.file_path,
 			cg.cg_content,
 			cg.cg_start_date,
 			cg.cg_end_date,
-			cg.cg_current_mbr_count,
 			cg.cg_max_mbr_count,
 			stl.ctl_level,
 			ct.ct_num,
 			ct.ct_name,
+			cs.cs_num,
 			cs.cs_status
 		FROM
 			challenge_group cg
 		    INNER JOIN challenge_topic_level stl USING(ctl_num)
 		    INNER JOIN challenge_status cs USING(cs_num)
 		    INNER JOIN challenge_topic ct USING(ct_num)
+		    INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		ORDER BY 
 		    cg_start_date DESC 
-	    LIMIT #{rowPerPage} OFFSET #{offset}
-	 <!--    WHERE
-			cg.cg_num = #{ChallengeCode}; -->
+	    <if test="rowPerPage != null and offset != null">
+	    	LIMIT #{rowPerPage} OFFSET #{offset}
+	    </if>
+  	</select>
+  	
+  	<!-- 특정 챌린지의 현재 참여 멤버 수 조회 -->
+	<select id="getCurrentMemberCount" parameterType="String" resultType="int">
+	    SELECT
+	    	COUNT(*)
+	    FROM
+	    	challenge_group_member
+	    WHERE
+	    	cg_num = #{challengeCode}
+	</select>
+	
+	<!-- 챌린지 최대 멤버 수 조회 -->
+	<select id="getMaxMemberCount" parameterType="String" resultType="int">
+	    SELECT cg_max_mbr_count
+	    FROM challenge_group
+	    WHERE cg_num = #{challengeCode}
+	</select>
+  	
+  	<!-- 챌린지 생성 조회 -->
+  	<select id="addChallengeList" resultMap="AddChallengeMap">
+  		SELECT
+			cg_num,
+			ctl_num,
+			cg_name,
+			file_path,
+			cg_content,
+			cg_creation_date,
+			cg_max_mbr_count,
+			cg_start_date,
+			cg_end_date,
+			cg_like,
+			cs_num,
+			mbr_id,
+			cs_reward_check
+		FROM
+			challenge_group
   	</select>
   	
   	<!-- 챌린지 생성(등록) -->
   	<insert id="addChallenge" parameterType="ChallengeList">
   		INSERT INTO challenge_group(
-			cg_num 					AS challengeCode,
-			ctl_num 				AS challengeTopicLevelCode,
-			cg_leader_name 			AS challengeLeaderName,
-			cg_name 				AS challengeName,
-			cg_picture 				AS challengePicture,
-			cg_content 				AS challengeContent,
-			cg_creation_date 		AS challengeCreationDate,
-			cg_current_mbr_count 	AS challengeCurrentMember,
-			cg_max_mbr_count 		AS challengeMaxMember,
-			cg_start_date 			AS challengeStartDate,
-			cg_end_date 			AS challengeEndDate,
-			cg_like 				AS challengeGroupLike,
-			cs_num 					AS challengeStatusCode,
-			mbr_id 					AS memberId,
-			cs_reward_check 		AS challengeRewardCheck
+			cg_num,
+			ctl_num,
+			cg_name,
+			cg_content,
+			cg_creation_date,
+			cg_max_mbr_count,
+			cg_start_date,
+			cg_end_date,
+			cg_like,
+			cs_num,
+			mbr_id,
+			cs_reward_check,
+			cg_file_idx
 		) VALUES (
-			#{ChallengeCode},			  -- 생성 시, 자동으로 1씩 증가
-			#{challengeTopicLevelCode},   -- 난이도 선택 시, 매칭되는 코드값 가져옴
-			#{challengeLeaderName},		  -- mbr에서 매칭되는 이름 가져오기
+			#{challengeCode},
+			#{challengeTopicLevelCode},
 			#{challengeName},
-			#{challengePicture},		  -- url 연결 작업
 			#{challengeContent},
-			CURDATE(),					  -- 생성 버튼 클릭 시, 현재 날짜
-			#{challengeCurrentMember},	  -- 현재 멤버 수(최소5인)
-			#{challengeMaxMember},		  -- 챌린지 생성 시, 선택 가능한 최대 멤버(최대 20인)
-			#{challengeStartDate},		  -- 조건 충족 시, 챌린지가 시작하는 일자
-			#{challengeEndDate},		  -- 조건 충족 시, 끝나는 일자
-			#{challengeGroupLike},		  -- 아이디 중복 체크 후, 카운트
-			#{challengeStatusCode},		  -- 생성 시, 진행중(cs_002)이 기본값
+			CURDATE(),
+			#{challengeMaxMember},
+			#{challengeStartDate},
+			#{challengeEndDate},
+			#{challengeGroupLike},
+			#{challengeStatusCode},
 			#{memberId},
-			#{challengeRewardCheck} 	  -- null 허용
-		);
+			#{challengeRewardCheck},
+			#{challengeFileIdx}
+		)
   	</insert>
+  	
+  	<!-- 챌린지 멤버 추가 -->
+  	<insert id="addChallengeMember" parameterType="AddChallengeMember">
+  		INSERT INTO challenge_group_member (
+			cgm_num,
+			cg_num,
+			mbr_id,
+			cs_num,
+			cgm_date
+		) VALUES (
+			#{challengeMemberCode},
+			#{challengeCode},
+			#{challengeMemberId},
+			#{challengeStatusCode},
+			CURDATE()
+		)
+  	</insert>
+  	
+  	<!-- 특정 챌린지 멤버 조회 -->
+  	<select id="getChallengeMembers" parameterType="string" resultType="AddChallengeMember">
+		SELECT
+		   cgm_num AS challengeMemberCode,
+		   cg_num AS challengeCode,
+		   mbr_id AS challengeMemberId,
+		   cs_num AS challengeStatusCode,
+		   cgm_date AS challengeParticipationDate
+		FROM challenge_group_member
+		WHERE cg_num = #{challengeCode}
+  	</select>
+  	
+  	<!-- 챌린지 상태 코드 업데이트(5인 이상 && 시작일) -->
+  	<update id="updateChallengeStatus" parameterType="map">
+	    UPDATE challenge_group
+	    SET cs_num = #{statusCode}
+	    WHERE cg_num = #{challengeCode}
+	</update>
+  	
+  	<!-- 챌린지 카테고리 조회 -->
+  	<select id="getChallengeTopicList" resultType="Map">
+	    SELECT
+	        CAST(SUBSTRING_INDEX(ct_num, '_', -1) AS UNSIGNED) AS challengeTopicCode, 
+	        ct_name AS challengeTopicName
+	    FROM
+	        challenge_topic
+	</select>
+	
+	<!-- 챌린지 난이도 조회 -->
+  	<select id="getChallengeLevelList" resultType="Map">
+  		SELECT
+			CAST(SUBSTRING_INDEX(ctl_num, '_', -1) AS UNSIGNED) AS challengeLevelCode,
+			ctl_content AS challengeLevelContent
+		FROM
+			challenge_topic_level
+  	</select>
+  	
+  	<!-- 챌린지 상태 조회 -->
+  	<select id="getChallengeStatusList" resultType="Map">
+  		SELECT
+			CAST(SUBSTRING_INDEX(cs_num, '_', -1) AS UNSIGNED) AS challengeStatusCode,
+			cs_status AS challengeStatusInfo
+		FROM
+			challenge_status
+  	</select>
+  	
+  	<!-- 챌린지 상태 코드 조회 -->
+  	<select id="selectChallengeStatus" parameterType="String" resultType="String">
+	  	SELECT
+		   cs_num
+		FROM
+		   challenge_group cg
+		INNER JOIN challenge_status cs USING(cs_num)
+		WHERE
+		   cg.cg_num = #{challengeCode}
+		   AND cg_num IS NOT NULL
+  	</select>
+  	
+  	<!-- 챌린지 이름 입력 시, 중복 확인 -->
+  	<select id="isNameDuplicate" parameterType="String" resultType="boolean">
+  		SELECT EXISTS (
+	        SELECT 1
+	        FROM
+	        	challenge_group
+	        WHERE
+	        	cg_name = #{challengeName}
+	    )
+  	</select>
+  	
   	<!-- 챌린지 페이징 처리 -->
   	<select id="getCntChallengeList" resultType="int">
   		/* 챌린지 리스트 총 갯수 */
@@ -113,11 +251,11 @@
   	</select>
   	
   	<!-- 챌린지 상세 정보 모달 -->
-  	<select id="selectChallengeDetail" parameterType="string" resultMap="challengeListDetailMap">
+  	<select id="selectChallengeDetail" parameterType="String" resultMap="challengeListDetailMap">
 		SELECT
 			cg.cg_num,
 			cg.cg_name,
-			cg.cg_picture,
+			f.file_path,
 			m.mbr_image,
 			cg.mbr_id,
 			ct.ct_name,
@@ -125,7 +263,6 @@
 			cg.cg_end_date,
 			ctl.ctl_level,
 			ctl.ctl_content,
-			cg.cg_current_mbr_count,
 			cg.cg_max_mbr_count,
 			cg.cg_content
 		FROM
@@ -133,6 +270,7 @@
 			INNER JOIN `member` m USING(mbr_id)
 			INNER JOIN challenge_topic_level ctl USING(ctl_num)
 			INNER JOIN challenge_topic ct USING(ct_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
 			cg_num = #{challengeCode};
   	</select>

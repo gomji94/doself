@@ -4,72 +4,318 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="doself.user.feed.mapper.FeedMapper">
   	<resultMap type="Feed" id="FeedResultMap">
-	    <id column="feed_num" 				property="feedCode" />
-	    <id column="mbr_id" 				property="memberId" />
-	    <id column="mni_num" 				property="mealNutritionInfoCode" />
-	    <id column="mc_num" 				property="mealCategoryCode" />
-	    <result column="feed_food_intake" 	property="feedFoodIntake" />
-	    <result column="feed_content" 		property="feedContent" />
-	    <result column="feed_picture" 		property="feedPicture" />
-	    <result column="feed_date" 			property="feedDate" />
-	    <result column="feed_intake_date" 	property="feedIntakeDate" />
-	    <result column="feed_like" 			property="feedLike" />
-	    <result column="feed_open_status" 	property="feedOpenStatus" />
-	    <result column="mbr_image" 			property="memberProfileImage" />
-	    <result column="fc_num" 			property="feedCommentCode" />
-	    <result column="fc_content" 		property="feedCommentContent" />	    
+	    <id column="feed_num" property="feedCode" />
+	    <id column="mbr_id" property="memberId" />
+	    <id column="mni_num" property="mealNutritionInfoCode" />
+	    <id column="mc_num" property="mealCategoryCode" />
+	    <id column="fc_num" property="feedCommentCode" />
+	    <result column="feed_food_intake" property="feedFoodIntake" />
+	    <result column="feed_content" property="feedContent" />
+	    <result column="feed_date" property="feedDate" />
+	    <result column="feed_intake_date" property="feedIntakeDate" />
+	    <result column="feed_like" property="feedLike" />
+	    <result column="feed_open_status" property="feedOpenStatus" />
+	    <result column="feed_file_Index" property="feedFileIdx" />
+	    <result column="feed_file_path" property="feedFilePath" />
+		<result column="feed_file_name" property="feedFileName" />
+		<result column="member_file_path" property="memberFilePath" />
+		<result column="member_file_name" property="memberFileName" />
+	    <result column="mbr_file_idx" property="memberProfileImage" />
+	    <result column="fc_content" property="feedCommentContent" />
+	    <result column="fc_date" property="feedCommentDate" />
+	    <result column="fc_like" property="feedCommentLike" />
+	    <result column="mni_name" property="mealName" />
+	    <result column="mni_picture" property="mealPicture" />
+	    <result column="mni_weight" property="mealWeight" />
+	    <result column="mni_kcal" property="mealCalories" />
+	    <result column="mni_carbo" property="mealCarbohydrates" />
+	    <result column="mni_protein" property="mealProtein" />
+	    <result column="mni_fat" property="mealFat" />
+	    <result column="mni_sugar" property="mealSugar" />
+	    <result column="mni_cholesterol" property="mealCholesterol" />
+	    <result column="mni_sodium" property="mealSodium" />
+	    <result column="mni_calcium" property="mealCalcium" />
+	    <result column="mni_iron" property="mealIron" />
 	</resultMap>
-	<!-- 특정 피드 조회 -->
+	
+	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
-		SELECT
-			f.feed_num,
-			f.mbr_id,
-			f.mni_num,
-			f.feed_food_intake,
-			f.feed_content,
-			f.feed_picture,
-			f.mc_num,
-			f.feed_date,
-			f.feed_intake_date,
-			f.feed_like,
-			f.feed_open_status,
-			m.mbr_image,
-			fc.fc_num,
-			fc.fc_content
+	    SELECT
+		    f.feed_num,
+		    f.mbr_id,
+		    f.mni_num,
+		    f.feed_food_intake,
+		    f.feed_content,
+		    f.mc_num,
+		    f.feed_date,
+		    f.feed_intake_date,
+		    f.feed_like,
+		    f.feed_open_status,
+		    fi_feed.file_path,
+		    fi_feed.file_new_name,
+		    fi_member.file_path,
+		    fi_member.file_new_name,
+		    mll.mni_name,
+		    mll.mni_picture,
+		    mll.mni_weight,
+		    mll.mni_kcal,
+		    mll.mni_carbo,
+		    mll.mni_protein,
+		    mll.mni_fat,
+		    mll.mni_sugar,
+		    mll.mni_cholesterol,
+		    mll.mni_sodium,
+		    mll.mni_calcium,
+		    mll.mni_iron,
+		    fc.fc_content
+		
 		FROM
-			feed f
-			INNER JOIN `member` m USING(mbr_id)
-			LEFT JOIN feed_comments fc USING(feed_num)
+		    feed f
+		INNER JOIN
+		    meal_nutrition_info mll ON f.mni_num = mll.mni_num
+		LEFT JOIN
+		    files fi_feed ON f.feed_file_index = fi_feed.file_idx
+		LEFT JOIN
+		    member m ON f.mbr_id = m.mbr_id
+		LEFT JOIN
+		    files fi_member ON m.mbr_file_idx = fi_member.file_idx
+		LEFT JOIN
+		    feed_comments fc ON f.feed_num = fc.feed_num
+		
+		ORDER BY
+		    f.feed_date DESC;
 	</select>
 	
-	<!-- 피드 검색조회 -->
-	<select id="getSearchList" parameterType="map" resultMap="FeedResultMap">
+	<!-- 피드 영양 정보 조회 -->
+	<select id="getFeedNutritionInfo" resultMap="FeedResultMap">
 		SELECT
-			f.feed_num,
-			f.mbr_id,
-			f.mni_num,
-			f.feed_food_intake,
-			f.feed_content,
-			f.feed_picture,
-			f.mc_num,
-			f.feed_date,
-			f.feed_intake_date,
-			f.feed_like,
-			f.feed_open_status,
-			m.mbr_image,
-			fc.fc_num,
-			fc.fc_content
+		    f.mni_num,
+		    mll.mni_name,
+		    mll.mni_weight,
+		    mll.mni_kcal,
+		    mll.mni_carbo,
+		    mll.mni_protein,
+		    mll.mni_fat,
+		    mll.mni_picture,
+		    mll.mni_sugar,
+	        mll.mni_cholesterol,
+	        mll.mni_sodium,
+	        mll.mni_calcium,
+	        mll.mni_iron
 		FROM
-			feed f
-			INNER JOIN `member` m USING(mbr_id)
-			LEFT JOIN feed_comments fc USING(feed_num)
-		<where>
-			<if test="searchValue != null and searchValue != ''">
-				${searchCate} LIKE CONCAT('%', #{searchValue}, '%')
-			</if>
-		</where>
-		ORDER BY CAST(SUBSTRING_INDEX(f.mbr_id, 'ksmartid', -1) AS UNSIGNED) 
-		LIMIT #{listSize}
+		    meal_nutrition_info mll
+		INNER JOIN feed f
+		    ON mll.mni_num = f.mni_num
 	</select>
-  </mapper>
+	
+	<!-- 특정 피드 상세 조회 -->
+	<select id="getFeedDetail" parameterType="String" resultMap="FeedResultMap">
+	    SELECT
+	        f.feed_num,
+	        f.mbr_id,
+	        f.mni_num,
+	        f.feed_food_intake,
+	        f.feed_content,
+	        f.mc_num,
+	        f.feed_date,
+	        f.feed_intake_date,
+	        f.feed_like,
+	        f.feed_open_status,
+	        fi_feed.file_path,
+	        fi_feed.file_new_name,
+	        fc.fc_content,
+	        f.feed_file_index,
+	        m.mbr_file_idx,
+	        mll.mni_name,
+	        mll.mni_picture,
+	        mll.mni_weight,
+	        mll.mni_kcal,
+	        mll.mni_carbo,
+	        mll.mni_protein,
+	        mll.mni_fat,
+	        mll.mni_sugar,
+	        mll.mni_cholesterol,
+	        mll.mni_sodium,
+	        mll.mni_calcium,
+	        mll.mni_iron
+	    FROM
+	        feed f
+	    INNER JOIN
+	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
+        LEFT JOIN
+	    	files fi_feed ON f.feed_file_index = fi_feed.file_idx
+	    INNER JOIN
+	        member m ON f.mbr_id = m.mbr_id
+	    LEFT JOIN
+	        feed_comments fc ON f.feed_num = fc.feed_num
+	    WHERE
+	        f.feed_num = #{feedCode};
+	</select>
+	
+	<!-- 음식 이름 검색 -->
+	<select id="findKeywords" parameterType="String" resultType="String">
+	    SELECT
+	        mni_name
+	    FROM
+	        meal_nutrition_info
+	    WHERE
+	        mni_name LIKE CONCAT('%', #{query}, '%');
+	</select>
+	
+	<!-- 피드 추가 -->
+	<insert id="addFeed" parameterType="Feed">
+		INSERT INTO feed (
+		    feed_num,
+		    mbr_id,
+		    mni_num,
+		    feed_food_intake,
+		    feed_content,
+		    mc_num,
+		    feed_date,
+		    feed_intake_date, 
+		    feed_like,
+		    feed_open_status,
+		    feed_file_index
+		) VALUES (
+		    #{feedCode},
+		    #{memberId},
+		    #{mealNutritionInfoCode},
+		    #{feedFoodIntake},
+		    #{feedContent},
+		    #{mealCategoryCode},
+		    NOW(),
+		    #{feedIntakeDate}, 
+		    0,
+		    #{feedOpenStatus},
+		    #{feedFileIdx}
+		)
+	</insert>
+
+	<!-- 특정 피드 수정 -->
+	<update id="modifyFeed" parameterType="Feed">
+	    UPDATE feed
+        <set>
+	        <if test="feedContent != null">
+	            feed_content = #{feedContent},
+	        </if>
+	        <if test="feedIntakeDate != null">
+	            feed_intake_date = #{feedIntakeDate},
+	        </if>
+	        <if test="feedFoodIntake != null">
+	            feed_food_intake = #{feedFoodIntake},
+	        </if>
+	        <if test="mealCategoryCode != null">
+	            mc_num = #{mealCategoryCode},
+	        </if>
+	        <if test="feedOpenStatus != null">
+	            feed_open_status = #{feedOpenStatus},
+	        </if>
+	        <if test="feedFileIdx != null">
+	        	feed_file_idx = #{feedFileIdx},
+        	</if>
+	    </set>
+	    WHERE feed_num = #{feedCode};
+	</update>
+
+	<!-- 피드 코드 조회 -->
+	<select id="getFeedByCode" parameterType="map" resultMap="FeedResultMap">
+		SELECT
+	        feed_num,
+	        mbr_id,
+	        feed_food_intake,
+	        feed_content,
+	        mc_num,
+	        feed_intake_date,
+	        feed_open_status,
+	        feed_file_index
+	    FROM
+	        feed
+	    WHERE
+	        feed_num = #{feedCode};
+    </select>
+
+	<!-- 피드 댓글 삭제 -->
+		<delete id="deleteFeedComments" parameterType="String">
+		    DELETE
+		    FROM
+		    	feed_comments
+		    WHERE
+		    	feed_num = #{feedCode}
+	    	AND mbr_id = #{memberId}
+		</delete>
+		
+	<!--피드 이미지 파일 삭제 -->
+		<delete id="deleteFeedFileIdx" parameterType="String">
+		    DELETE
+		    	feed_file_index
+		    FROM
+		    	feed
+		    WHERE
+		    	feed_num = #{feedCode}
+		</delete>
+	
+	<!--피드 삭제 -->
+		<delete id="deleteFeed" parameterType="String">
+		    DELETE
+	    	FROM
+	    		feed
+		    WHERE
+		    	feed_num = #{feedCode}
+	    	AND mbr_id = #{memberId}
+		</delete>
+	
+	<!-- 좋아요 수 증가 -->
+	<update id="incrementLike" parameterType="String">
+        UPDATE
+        	feed
+        SET
+        	feed_like = feed_like + 1
+        WHERE
+        	feed_num = #{feedNum}
+    </update>
+	
+	<!-- 좋아요 수 감소 -->
+	<update id="decrementLike" parameterType="String">
+        UPDATE
+        feed
+        SET
+        feed_like = feed_like - 1
+        WHERE
+        feed_num = #{feedNum}
+    </update>
+	
+	<!-- 피드 댓글 추가 -->
+	<insert id="addComment" parameterType="Feed">
+	    INSERT INTO feed_comments (
+	    	fc_num,
+	    	feed_num,
+	    	mbr_id,
+	    	fc_content,
+	    	fc_date,
+	    	fc_like
+    	) VALUES (
+    		#{commentCode},
+    		#{feedCode},
+    		#{memberId},
+    		#{commentContent},
+    		NOW()),
+    		0;
+	</insert>
+	
+	<!-- 피드 댓글 조회 -->
+	<select id="getCommentsByFeedCode" parameterType="String" resultType="Feed">
+	    SELECT
+	        fc.fc_num,
+	        fc.feed_num,
+	        fc.mbr_id,
+	        fc.fc_content,
+	        fc.fc_date,
+	        m.mbr_file_idx
+	    FROM feed_comments fc
+	    LEFT JOIN member m ON fc.mbr_id = m.mbr_id
+	    WHERE fc.feed_num = #{feedCode}
+	    ORDER BY fc.fc_date ASC;
+	</select>
+	
+ </mapper>
   

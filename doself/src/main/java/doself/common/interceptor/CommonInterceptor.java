@@ -1,5 +1,6 @@
 package doself.common.interceptor;
 
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -14,6 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class CommonInterceptor implements HandlerInterceptor {
+	
+	private final static List<String> excludeUri = List.of("/market/purchaseitem", "/ticket/payment", "/challenge/list/view"
+															, "/challenge/feed/memberlist", "/challenge/feed/feedcomment"
+															, "/ticket/payment/result", "/challenge/checkDuplicateName", "/feed/list"
+															, "/ticket/purchasedetail/refund", "/register/idCheck", "/feed/createFeed"
+															, "/challenge/list/view/participation", "/ticket/purchasedetail/refund"
+															, "/ticket/purchasedetail/isCheck", "/feed/{feedCode})"
+															, "/challenge/list/view/participation", "/ticket/purchasedetail/refund"
+															, "/ticket/purchasedetail/isCheck", "/challenge/feed/modifychallengefeed"
+															, "/ticket/purchasedetail/isCheck", "/challenge/feed/view/**");
+
+	
 	
 	//컨트롤러 진입전 
 	@Override
@@ -48,6 +61,22 @@ public class CommonInterceptor implements HandlerInterceptor {
 		// TODO Auto-generated method stub
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
 		
+		Set<String> paramKeys = request.getParameterMap().keySet();
+		String uri = request.getRequestURI();
+		StringJoiner param = new StringJoiner("&");
+		
+		log.info(request.getRequestURI());
+
+		for(String paramkey : paramKeys) {
+			log.info("=============> paramkey : {}", paramkey);
+			if(!paramkey.equals("currentPage")) {			
+				param.add(paramkey + "="+ request.getParameter(paramkey));
+			}
+		}
+
+		log.info("queryParam : {}", param);
+		
+		if(!excludeUri.contains(uri)) modelAndView.addObject("queryParam", param);
 	}
 	
 	@Override

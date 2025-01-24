@@ -4,26 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
   <mapper namespace="doself.admin.member.mapper.MemberMapper">
-    	
-  		<!-- 특정회원 조회 -->
-  		<!-- <select id="getMemberInfoById" parameterType="String" resultMap="memberResultMap">
-  		SELECT 
-				mbr_id,
-				mbr_pw,
-				mbr_name, 
-				mbr_grd,
-				SUBSTRING_INDEX(mbr_grd, 'mbr_grd_',-1) AS mbr_grd_num,
-				mbr_addr,
-				mbr_daddr, 
-				mbr_zip, 
-				mbr_telno,
-				mbr_email,
-				mbr_reg_date
-		FROM members
-		WHERE
-			mbr_id = #{memberId};
-  		</select> -->
-  		
+
   		<resultMap type="Member" id="memberResultMap">
   			<id column="mbr_id" 						property="mbrId" />
   			<result column="mbr_pw" 					property="mbrPw" />
@@ -37,6 +18,9 @@
   			<result column="opening_ticket_count" 		property="openingTicketCount" />
   			<result column="participation_ticket_count" property="participationTicketCount" />
   			<result column="mbr_point" 					property="mbrPoint" />
+  			<result column="is_deleted" 				property="isDeleted" />
+  			<result column="mbr_file_idx" 				property="mbrFileIdx" />
+  			<result column="mbr_image" 					property="mbrImage" />
 
 	  		<!-- 연령대 카테고리 관계 -->
 	  		<association property="ageInfo" javaType="Age">
@@ -60,20 +44,24 @@
 				m.mbr_pw,
 				m.mbr_name, 
 				mg.mg_name,
+				m.mg_code,
 				m.mbr_email,
 				m.mbr_birth_date, 
 				m.mbr_phone_num, 
 				m.mbr_gender,
 				ac.ac_name,
+				m.mbr_file_idx,
+				m.mbr_image,
 				m.opening_ticket_count,
 				m.participation_ticket_count,
-				m.mbr_point			
+				m.mbr_point,
+				m.is_deleted
 			FROM member m INNER JOIN age_category ac
 				USING(ac_num)
 				INNER JOIN member_grade mg
 				ON m.mg_code = mg.mg_code
 			<where>
-				1=1
+				is_deleted ='active'
 				<if test="searchType != null and searchKeyword != null and searchType != '' and searchKeyword != ''">
 		        	AND ${searchType} LIKE CONCAT('%', #{searchKeyword}, '%') 
 			    </if>
@@ -178,4 +166,120 @@
 			</where>			
 		    ORDER BY m.mbr_id		   
 		</select>
+		
+		
+		<!-- 특정 회원 조회 -->
+		<select id="getMemberInfoByMbrId" parameterType="String" resultMap="memberResultMap">
+  		SELECT
+			m.mbr_id,
+			m.mbr_pw,
+			m.mbr_name,
+			m.mg_code,
+			m.mbr_email,
+			m.mbr_birth_date, 
+			m.mbr_phone_num, 
+			m.mbr_gender,
+			m.ac_num,
+			m.opening_ticket_count,
+			m.participation_ticket_count,
+			m.mbr_point,
+			m.is_deleted,
+			m.mbr_file_idx,
+			m.mbr_image
+		FROM `member` m
+		WHERE
+			mbr_id = #{mbrId};		
+  		</select>
+  		
+  		<!-- 특정 회원 수정 -->
+  		<update id="modifyMember" parameterType="Member">
+  			UPDATE `member`
+  			<trim prefix="SET" suffixOverrides=","> 	
+  				mbr_id = #{mbrId},		
+				<if test="mbrName != null and mbrName != ''">
+					mbr_name = #{mbrName},
+				</if>  			
+				<if test="mgCode != null and mgCode != ''">
+					mg_code = #{mgCode},
+				</if>  			
+				<if test="mbrEmail != null and mbrEmail != ''">
+					mbr_email = #{mbrEmail},
+				</if>  			
+				<if test="mbrBirthDate != null and mbrBirthDate != ''">
+					mbr_birth_date = #{mbrBirthDate},
+				</if>  			
+				<if test="mbrPhoneNum != null and mbrPhoneNum != ''">
+					mbr_phone_num = #{mbrPhoneNum},
+				</if>  			
+				<if test="acNum != null and acNum != ''">
+					ac_num = #{acNum},
+				</if>  			
+				<if test="mbrPoint != null and mbrPoint != ''">
+					mbr_point = #{mbrPoint},
+				</if>  			  			
+  			</trim>
+  			WHERE
+  				mbr_id = #{mbrId};
+  		</update>
+  		
+  		<!-- 회원 제거 -->
+  		<update id="deleteMember">
+  			UPDATE `member`
+  			<set>
+  				is_deleted = 'delete'
+  			</set>
+  			WHERE
+  				mbr_id=#{mbrId};
+  		</update>
+  		
+  		<!-- 회원등급 조회 -->
+  		<select id="getMemberMgCodeList" resultType="map">
+  			SELECT
+  				mg_code AS mgCode,
+  				mg_name AS mgName
+  			FROM
+  				member_grade
+  		</select>
+  		
+  		<!-- 연령대카테고리 조회 -->
+  		<select id="getAgeCategoryList" resultType="map">
+  			SELECT
+  				ac_num AS acNum,
+  				ac_name AS acName
+  			FROM
+  				age_category
+  		</select>
+  		
+  		<!-- 모든멤버조회 -->
+  		<select id="getAllMemberList" resultMap="memberResultMap">
+	  		SELECT
+	  			m.mbr_id,
+				m.mbr_pw,
+				m.mbr_name, 
+				mg.mg_name,
+				m.mg_code,
+				m.mbr_email,
+				m.mbr_birth_date, 
+				m.mbr_phone_num, 
+				m.mbr_gender,
+				ac.ac_name,
+				m.opening_ticket_count,
+				m.participation_ticket_count,
+				m.mbr_point,
+				m.is_deleted
+	  		FROM
+	  			`member`
+			WHERE
+				is_deleted = 'active'
+  		</select>
+  		
+  		<!-- 매년 1월 1일 나이값 체크하여 연령대 변경 -->
+  		<update id="updateAcNum" parameterType="Member">
+  			UPDATE `member`
+  			<set>
+  				ac_num = #{acNum}
+  			</set>
+  			WHERE
+  				mbr_id= #{mbrId}
+  		</update>
   </mapper>

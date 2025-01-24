@@ -13,103 +13,103 @@
 		<result column="mbr_phone_num" 				property="mbrPhoneNum" />
 		<result column="mbr_gender" 				property="mbrGender" />
 		<result column="ac_num" 					property="acNum" />
+		<result column="file_path" 					property="mbrImage" />
 		<result column="opening_ticket_count" 		property="openingTicketCount" />
 		<result column="participation_ticket_count" property="participationTicketCount" />
 		<result column="mbr_point" 					property="mbrPoint" />
+		<result column="is_deleted" 				property="isDeleted" />
+		<result column="mbr_file_idx" 				property="mbrFileIdx" />
 	</resultMap>
 	
 	
 	<!-- 특정회원 조회 -->
 	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap"> 
 		SELECT 
-			mbr_id,
-			mbr_pw,
-			mbr_name,
-			mg_code,
-			mbr_email,
-			mbr_birth_date,
-			mbr_phone_num,
-			mbr_gender,
-			ac_num,
-			opening_ticket_count,
-			participation_ticket_count,
-			mbr_point
-		FROM `member`
+			m.mbr_id,
+			m.mbr_pw,
+			m.mbr_name,
+			m.mg_code,
+			m.mbr_email,
+			m.mbr_birth_date,
+			m.mbr_phone_num,
+			m.mbr_gender,
+			m.ac_num,
+			f.file_path,
+			m.opening_ticket_count,
+			m.participation_ticket_count,
+			m.mbr_point,
+			m.is_deleted,
+			m.mbr_file_idx
+		FROM `member` m INNER JOIN	`files` f 
+		     ON m.mbr_file_idx = f.file_idx
 		WHERE 
-			mbr_id = #{mbrId}
+			mbr_id = #{mbrId};
 		
+	</select>
+	
+	<!-- 생년월일로 나이 받아오기 -->
+	<select id="getAgeByBirthDate" parameterType="string" resultType="int">
+		SELECT
+			TIMESTAMPDIFF(YEAR,#{birthDate},CURDATE())		
+	</select>
+	
+	<!-- 아이디 중복체크 -->
+	<select id="isMemberById" parameterType="string" resultType="boolean">
+		SELECT 
+			COUNT(*)
+		FROM `member`
+		WHERE
+			mbr_id = #{mbrId}
 	</select>
 
 	<!-- 회원등록 -->
-	<!-- <insert id="addMember" parameterType="Member">
+	 <insert id="createMember" parameterType="Member">
 		/* 회원등록 */
-		INSERT INTO members(
-			mbr_id, 
-		 	mbr_pw, 
-		 	mbr_name, 
-		 	mbr_grd, 
-		 	mbr_addr, 
-		 	mbr_daddr, 
-		 	mbr_zip, 
-		 	mbr_telno, 
-		 	mbr_email, 
-		 	mbr_reg_date
+		INSERT INTO `member` (
+		mbr_id, 
+		mbr_pw, 
+		mbr_name, 
+		mg_code, 
+		mbr_email, 
+		mbr_birth_date, 
+		mbr_phone_num, 
+		mbr_gender, 
+		ac_num, 
+		opening_ticket_count, 
+		participation_ticket_count, 
+		mbr_point,  
+		is_deleted,
+		mbr_file_idx
 		) VALUES (
-			#{memberId},
-			#{memberPw}, 
-			#{memberName}, 
-			CONCAT('mbr_grd_', #{memberGrade}), 
-			#{memberAddr}, 
-			#{memberDetailAddr}, 
-			#{memberZip}, 
-			#{memberTelNo}, 
-			#{memberEmail}, 
-			CURDATE()
-		);
+		#{mbrId}, 
+		#{mbrPw}, 
+		#{mbrName}, 
+		'mg_002', 
+		#{mbrEmail}, 
+		#{mbrBirthDate}, 
+		#{mbrPhoneNum}, 
+		#{mbrGender}, 
+		#{acNum}, 
+		0, 
+		0, 
+		0, 
+		'active',
+		'file_014'
+		)
 	</insert>
 
-	중복아이디 회원조회
-	<select id="isMemberById" parameterType="string" resultType="boolean">
-		/* 중복아이디 회원조회 */
-		SELECT
-			COUNT(*)
-		FROM
-			members
-		WHERE
-			mbr_id = #{memberId}; 
-	</select>
-
-	회원등급 조회
-	<select id="getMemberGradeList" resultType="map">
-		/* 회원등급 조회 */
-		SELECT
-			cgc.comm_group_cd 	AS groupCode,
-			cc.comm_cd 			AS gradeCode,
-			cc.comm_nm 			AS gradeName
-		FROM
-			comm_group_code cgc INNER JOIN comm_code cc
-			ON cgc.comm_group_cd = cc.comm_group_cd
-		WHERE 
-			cgc.comm_group_cd = 'comm_group_1';
-	</select>
-
-	회원목록 조회
-	<select id="getMemberList" resultType="Member">
-		/* 회원목록 조회 */
-		SELECT 
-			mbr_id 			AS memberId, 
-			mbr_pw 			AS memberPw, 
-			mbr_name 		AS memberName, 
-			mbr_grd 		AS memberGrade, 
-			mbr_addr 		AS memberAddr, 
-			mbr_daddr 		AS memberDetailAddr, 
-			mbr_zip 		AS memberZip, 
-			mbr_telno 		AS memberTelNo, 
-			mbr_email 		AS memberEmail, 
-			mbr_reg_date 	AS memberRegDate
-		FROM 
-			members
-		ORDER BY CAST(SUBSTRING_INDEX(mbr_id,'ksmartid',-1) AS UNSIGNED);
-	</select> -->
+	<!-- 멤버로그인이력 추가 -->
+	<insert id="createMemberLoginLog" parameterType="String">
+		INSERT INTO member_login_log (
+			mll_num, 
+			mbr_id, 
+			mll_ip, 
+			mll_date
+		) VALUES (
+			#{keyValue}, 
+			#{memberId}, 
+			#{memberIp}, 
+			NOW())
+	</insert>		
 	
 </mapper>

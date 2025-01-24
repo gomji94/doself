@@ -19,6 +19,10 @@ body > .content-main {
     max-width: 1000px !important;
 }
 
+a:hover {
+	color: #a9bd4d !important;
+}
+
 /* Sidebar */
 .sidebar-container {
     height: 100%;

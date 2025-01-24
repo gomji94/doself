@@ -7,42 +7,42 @@
 </head>			
 	
 	
-	<th:block layout:fragment="content-body">
+	<th:block layout:fragment="content-body" th:object="${memberInfo}">
 	    <!-- 왼쪽 사이드바 -->
-	    <div class="sidebar">
-	        <ul>
-	            <li>
-	                <a th:href="@{/mypage/member/info}" class="menu-item">
-	                    <i class="fa-solid fa-user-gear"></i>
-	                    <div>my 정보 수정</div>
-	                </a>
-	            </li>
-	            <li>
-	                <a th:href="@{/mypage/tickethistory}" class="menu-item">
-	                    <i class="fa-solid fa-ticket"></i>
-	                    <div>티켓 조회</div>
-	                </a>
-	            </li>
-	            <li>
-	                <a th:href="@{/mypage/pointhistory}" class="menu-item">
-	                    <i class="fa-brands fa-bitcoin"></i>
-	                    <div>포인트 조회</div>
-	                </a>
-	            </li>
-	            <li>
-	                <a th:href="@{/mypage/medicinearlam}" class="menu-item">
-	                    <i class="fa-solid fa-capsules"></i>
-	                    <div>영양제 알림 체크</div>
-	                </a>
-	            </li>
-	            <li>
-	                <a th:href="@{/mypage/feedlist}"class="menu-item">
-	                    <i class="fa-regular fa-file-lines"></i>
-	                    <div>my 게시물</div>
-	                </a>
-	            </li>
-	        </ul>
-	    </div>
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a th:href="@{/mypage/member/info(memberId=*{memberId})}" class="menu-item">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <div>my 정보 수정</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/tickethistory(memberId=*{memberId})}" class="menu-item">
+                        <i class="fa-solid fa-ticket"></i>
+                        <div>티켓 조회</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/pointhistory(memberId=*{memberId})}" class="menu-item">
+                        <i class="fa-brands fa-bitcoin"></i>
+                        <div>포인트 조회</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/medicinearlam(memberId=*{memberId})}" class="menu-item">
+                        <i class="fa-solid fa-capsules"></i>
+                        <div>영양제 알림 체크</div>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/mypage/feedlist(memberId=*{memberId})}" class="menu-item">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <div>my 게시물</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
     <!-- 241224 영양제알림체크 기능사용 x  -->
     <!-- 메인 콘텐츠 -->
@@ -107,10 +107,7 @@
                 </div>
             </div>
         </div>
-        
-        
     </main>
-	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource"></th:block>
