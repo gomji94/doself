@@ -4,7 +4,18 @@ $(document).ready(function () {
     $('.option-button').on('click', function () {
 		const feedElement = $(this).closest('.feed'); // 현재 피드 요소
         const isOwner = feedElement.data('is-owner'); // 본인 피드 여부
+		const feedCode = $(this).data('feed-code'); // 현재 피드 코드 가져오기
+	    const feedUrl = `/feed/view?feedCode=${feedCode}`; // 링크 생성
 
+		console.log('Feed Code:', feedCode); // 디버깅용
+	    console.log('Feed URL:', feedUrl);  // 디버깅용
+		
+		if (feedCode) {
+	        $('#modal-feed-link').attr('data-feed-url', feedUrl); // 동적으로 URL 설정
+	    } else {
+	        alert('피드 코드를 찾을 수 없습니다.');
+	    }
+		
         if (isOwner) {
             // 본인 피드 옵션 모달 표시
             $('.feed-option-modal-wrap').fadeIn();
@@ -12,6 +23,38 @@ $(document).ready(function () {
             // 다른 멤버 피드 옵션 모달 표시
             $('.other-members-option-modal-wrap').fadeIn();
         }
+    });
+	
+	// 피드 링크 복사
+    $('#my-feed-link-copy a').on('click', function (e) {
+        e.preventDefault();
+        const feedUrl = $('#modal-feed-link').attr('data-feed-url'); // URL 읽기
+
+        console.log('Copied URL:', feedUrl); // 디버깅용
+
+        if (!feedUrl) {
+            alert('복사할 링크가 없습니다.');
+            return;
+        }
+
+        const fullUrl = window.location.origin + feedUrl;
+
+        console.log('Copied Full URL:', fullUrl); // 디버깅용
+
+        const textarea = document.createElement('textarea');
+        textarea.value = fullUrl;
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            document.execCommand('copy');
+            alert(`피드 링크가 복사되었습니다: ${fullUrl}`);
+        } catch (err) {
+            alert('링크 복사 중 오류가 발생했습니다.');
+            console.error('Copy error:', err);
+        }
+
+        document.body.removeChild(textarea);
     });
 
     // 닫기 버튼 클릭 시 모달창 닫기
@@ -254,7 +297,7 @@ $('#feed-create-submit-btn').on('click', function (e) {
 
 // --- 피드 수정 모달 ---
 $(document).ready(function () {
-    // 수정 버튼 클릭 시
+    // 옵션 버튼 클릭 시
 	$('.option-button').click(function () {
 		const feedCode = $(this).data('feed-code');
 		
@@ -270,6 +313,7 @@ $(document).ready(function () {
 		$('#feed-option-modal-wrap').fadeIn();
 	});
 	
+	// 수정 버튼 클릭 이벤트
 	$('#feed-modify-modal').click(function() {
 		const feedCode = $(this).attr('data-feed-code');
 		
@@ -284,19 +328,18 @@ $(document).ready(function () {
             method: 'GET',
             data: { feedCode: feedCode },
             success: function (data) {
+				$('.popup-wrap').css('display', 'none');
 	            // 데이터 바인딩
+	            $('#feedCode').val(data.feedCode);
+	            $('#feedFileIdx').val(data.feedFileIdx);
+				
+				$('#modifyFeedPreviewImage').val(data.feedFilePath);
+				
 	            $('#modify-feedContent').val(data.feedContent);
 	            $('#modify-intakeDateTime').val(data.feedIntakeDate);
 	            $('#modify-mealCategoryCode').val(data.mealCategoryCode);
 	            $('#modify-feedFoodIntake').val(data.feedFoodIntake);
 	            $(`input[name="feedOpenStatus"][value="${data.feedOpenStatus}"]`).prop('checked', true);
-	
-				if(data.feedFileIdx) {
-					$('#createModifyFeedPreviewImage').attr(
-						'src',
-						`/upload/feed/$(data.feedFileIdx)`
-					);
-				}
 				
 	            // 모달 열기
 	            $('#feed-modify-modal-overlay').fadeIn();
@@ -307,130 +350,308 @@ $(document).ready(function () {
 	        }
 	    });
 		
-		$('#feed-modify-upload-btn').click(function () {
-			$('#feedFiles').click();
-		});
-		
-		$('#feedFiles').change(function (e) {
-			const file = e.target.files[0];
-			if(file) {
-				const reader = new FileReader();
-				reader.onload = function (e) {
-					$('#createModifyFeedPreviewImage').attr('src', e.target.result);
-				};
-				reader.readAsArDataURL(file);
-			}
-		});
-		
-		const content = $('#feed-modify-content');
-	    const textCount = $('#feed-modify-text-count');
-	    const maxLength = 2000;
-	
-	    content.on('input', function () {
-	        const currentLength = content.val().length;
-	        textCount.text(currentLength);
-	
-	        // 글자수 초과 시 스타일 변경
-	        if (currentLength > maxLength) {
-	            textCount.css('color', 'red');
-	        } else {
-	            textCount.css('color', '');
-	        }
-	    });
-		
-	    $('#feed-modify-form').on('submit', function (e) {
-	        e.preventDefault();
-			$(this).unbind('submit').submit();
-		});
-		
-		// 삭제 버튼 클릭 이벤트
-			$(document).on("click", "#feed-delete-modal", function () {
-			    const feedCode = $(this).data("feed-code");
-	
-			    if (!feedCode) {
-			        alert("피드 코드를 찾을 수 없습니다.");
-			        return;
-			    }
-	
-			    if (confirm("정말 삭제하시겠습니까?")) {
-			        $.ajax({
-			            url: "/feed/delete",
-			            type: "POST",
-			            data: { feedCode: feedCode },
-			            success: function () {
-			                alert("삭제되었습니다.");
-			                window.location.reload();
-			            },
-			            error: function () {
-			                alert("삭제 중 문제가 발생했습니다.");
-			            }
-			        });
-			    }
-			});
-		
-		// 모달 닫기
-		$(document).on('click', function (e) {
-	        if ($(e.target).is('.feed-option-modal-wrap, #optionCencleButton, #feed-modify-modal-overlay')) {
-	            $('.feed-option-modal-wrap').fadeOut(); // 클릭된 오버레이 닫기
-	        }
-	    });
-	
-		// ESC 키로 모달 닫기
-	    $(document).on('keydown', function (e) {
-	        if (e.key === 'Escape') {
-	            $('.feed-option-modal-wrap, #feed-modify-modal-overlay').fadeOut();
-	        }
-	    });	
-		
-	    // 모달 닫기 버튼
-	    $('.modal-close-btn').on('click', function () {
-	        $('#feed-modify-modal-overlay').fadeOut();
-	    });
 	});
-});
 	
-// --- 피드 삭제 ---
-$('#feed-delete-modal').on('click', function () {
-    const feedElement = $(this).closest('.feed'); // 현재 피드 요소
-    const feedCode = feedElement.data('feed-code'); // 피드 코드 가져오기
+	$('#feed-modify-upload-btn').click(function () {
+		$('#feedFiles').click();
+	});
+		
+	$('#feedFiles').change(function (e) {
+		const file = e.target.files[0];
+		if(file) {
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				$('#modifyFeedPreviewImage').attr('src', e.target.result);
+			};
+			reader.readAsArDataURL(file);
+		}
+	});
+		
+	const content = $('#feed-modify-content');
+    const textCount = $('#feed-modify-text-count');
+    const maxLength = 2000;
 
-    if (!confirm('정말로 이 피드를 삭제하시겠습니까?')) {
-        return;
-    }
+    content.on('input', function () {
+        const currentLength = content.val().length;
+        textCount.text(currentLength);
 
-    $.ajax({
-        url: '/feed/delete',
-        type: 'POST',
-        data: { feedCode },
-        success: function (response) {
-            alert('피드가 성공적으로 삭제되었습니다.');
-            feedElement.remove(); // UI에서 피드 제거
-        },
-        error: function (error) {
-            console.error('피드 삭제 중 오류 발생:', error);
-            alert('피드 삭제 중 오류가 발생했습니다.');
+        // 글자수 초과 시 스타일 변경
+        if (currentLength > maxLength) {
+            textCount.css('color', 'red');
+        } else {
+            textCount.css('color', '');
         }
+    });
+		
+    $('#feed-modify-form').on('submit', function (e) {
+        e.preventDefault();
+		$(this).unbind('submit').submit();
+	});
+		
+	// 삭제 버튼 클릭 이벤트
+	$(document).on("click", "#feed-delete-modal", function () {
+	    const feedCode = $(this).data("feed-code");
+
+	    if (!feedCode) {
+	        alert("피드 코드를 찾을 수 없습니다.");
+	        return;
+	    }
+
+	    if (confirm("정말 삭제하시겠습니까?")) {
+	        $.ajax({
+	            url: "/feed/deleteFeed",
+	            type: "POST",
+	            data: { feedCode: feedCode },
+	            success: function () {
+	                alert("삭제되었습니다.");
+	                window.location.reload();
+	            },
+	            error: function () {
+	                alert("삭제 중 문제가 발생했습니다.");
+	            }
+	        });
+	    }
+	});
+		
+	// 모달 닫기
+	$(document).on('click', function (e) {
+        if ($(e.target).is('.feed-option-modal-wrap, #optionCencleButton, #feed-modify-modal-overlay')) {
+            $('.feed-option-modal-wrap').fadeOut(); // 클릭된 오버레이 닫기
+        }
+    });
+	
+	// ESC 키로 모달 닫기
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            $('.feed-option-modal-wrap, #feed-modify-modal-overlay').fadeOut();
+        }
+    });	
+		
+    // 모달 닫기 버튼
+    $('.modal-close-btn').on('click', function () {
+        $('#feed-modify-modal-overlay').fadeOut();
     });
 });
 	
 // --- 피드 댓글 모달 ---
-$(document).ready(function () {
-    // 옵션 버튼 클릭 시 모달창 표시
-    $('.commentBtn').on('click', function () {
-        $('.feed-comment-modal-overlay').fadeIn(); // 모달창 활성화
-    });
+$(document).on('click', '.commentBtn', function () {
+	const feedCode = $(this).data('feed-code');
+	const pictureFileImage = $(this).data('picture-file-image');
+	
+	console.log("pictureFileImage:", pictureFileImage);
+	
+	if (!feedCode) {
+        alert("피드 코드가 없습니다.");
+        return;
+    }
+	
+	$.ajax({
+        url: '/feed/feedcomment',
+        type: 'GET',
+        data: { feedCode: feedCode },
+        success: function (response) {
+        console.log("댓글 데이터 로드 성공:", response);
+		
+	let imagePath = pictureFileImage;
+	$('#image-preview').attr('src', imagePath);
+	let comments = response;
+    let commentHtml = '';
+	
+    if (!response || response.length === 0) {
+        alert("댓글이 없습니다.");
+        return;
+    }
+	
+	if (comments && comments.length > 0) {
+                comments.forEach(comment => {
+					const isAuthor = comment.loggedInMemberId === comment.feedCommentAuthor; // 작성자 여부 확인
+					console.log(comment.loggedInMemberId, comment.feedCommentAuthor, isAuthor);
+					
+                    commentHtml += `
+                    <section data-comment-id="${comment.feedCommentCode}">
+                        <div class="feed-comment-user-block">
+                            <div class="feed-comment-content-block">
+                                <img class="comment-profile" src="${comment.feedCommentAuthorImage}" alt="프로필">
+                                <a href="#" class="feed-comment-user-link" id="feedCommentAuthorId">${comment.feedCommentAuthor}</a>
+                                <div class="feed-comment-feed-comment">
+                                   <span>${comment.feedCommentContent}</span>
+								   <div class="feed-mofify-comment-feed-comment" style="display: none;">
+					                  <span th:text="${comment.feedCommentContent}" class="comment-text"></span>
+									  <input type="text" class="comment-edit-input" value="${comment.feedCommentContent}" style="display: none;" />
+                                   </div>
+                                </div>
+                            </div>
+						    <div class="comment-actions" id="modifyAndDeleteCommentButton" style="display: ${isAuthor ? 'block' : 'none'};">
+							    <button type="button" class="edit-btn" data-comment-id="${comment.feedCommentCode}" data-content="${comment.feedCommentContent}">수정</button>
+                                <button type="button" class="delete-btn" data-comment-id="${comment.feedCommentCode}">삭제</button>
+                            </div>
+                        </div>
+                    </section>`;
+                });
+            } else {
+                commentHtml = '<p>댓글이 없습니다. 첫 댓글을 작성해보세요!</p>';
+            };
 
-    // 닫기 버튼 클릭 시 모달창 닫기
-    $('.feed-comment-modal-overlay .close').on('click', function () {
-        $('.feed-comment-modal-overlay').fadeOut(); // 모달창 비활성화
-    });
-
-    // 모달창 바깥을 클릭하면 모달창 닫기
-    $('.feed-comment-modal-overlay').on('click', function (e) {
-        if ($(e.target).is('.feed-comment-modal-overlay')) {
-            $(this).fadeOut();
+	        $('.feed-user-comment-container').html(commentHtml);
+	        $('#feedCommentModalOverlay').fadeIn(300);
+        },
+		error: function (error) {
+            console.error("댓글 데이터 로드 실패:", error);
+            alert("댓글 데이터를 가져오는 중 오류가 발생했습니다.");
         }
     });
+	
+	// 댓글 수정 버튼 클릭 이벤트
+	$(document).on('click', '.edit-btn', function () {
+		const parentSection = $(this).closest('section'); // 현재 댓글 섹션
+	    const commentEditContainer = parentSection.find('.feed-mofify-comment-feed-comment');
+	    const commentText = parentSection.find('.comment-text');
+	    const originalContent = $(this).data('content');
+
+	    // 텍스트 숨기고, 수정 input 표시
+		commentEditContainer.css('display', 'block');
+		commentText.hide();
+	    commentEditContainer.show();
+		//$('.cf-mofify-comment-feed-comment').css('display', 'block');
+		//$('.comment-edit-input').css('display', 'block');
+		
+	    //commentEditContainer.find('.comment-text').hide();
+	    //commentEditContainer.find('.comment-edit-input').val(originalContent).show();
+
+		// 다른 댓글의 수정 상태 초기화
+	    $('.feed-mofify-comment-feed-comment').not(commentEditContainer).hide();
+	    $('.comment-text').not(commentText).show();
+	    $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	    $('.cancel-btn').text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+
+	    // 버튼 상태 변경 (수정 -> 저장, 삭제 -> 취소)
+	    $(this).text('저장').addClass('save-btn').removeClass('edit-btn');
+	    parentSection.find('.delete-btn').text('취소').addClass('cancel-btn').removeClass('delete-btn');
+	});
+	
+	// 댓글 저장 버튼 클릭 이벤트
+    $(document).on('click', '.save-btn', function () {
+		const parentDiv = $(this).closest('.feed-comment-user-block');
+	    const commentEditContainer = parentDiv.find('.feed-mofify-comment-feed-comment');
+	    const commentText = parentDiv.find('.comment-text');
+	    const commentId = $(this).data('comment-id');
+	    const newContent = commentEditContainer.find('.comment-edit-input').val();
+		
+        if (!newContent.trim()) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+		
+		$.ajax({
+	        url: '/feed/modifycomment',
+	        type: 'POST',
+	        data: { feedCommentCode: commentId, feedCommentContent: newContent },
+	        success: function () {
+	            alert("댓글이 수정되었습니다.");
+	            commentText.text(newContent).show(); // 수정된 텍스트를 표시
+	            commentEditContainer.hide(); // 수정 input 숨기기
+
+	            // 버튼 상태 복구
+	            $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	            $('.cancel-btn').text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+	        },
+	        error: function () {
+	            alert("댓글 수정 중 오류가 발생했습니다.");
+	        }
+	    });
+
+        $(this).text('수정').addClass('edit-btn').removeClass('save-btn');
+    });
+	
+	// 댓글 취소 버튼 클릭 이벤트
+	$(document).on('click', '.cancel-btn', function () {
+	    const parentDiv = $(this).closest('.feed-comment-user-block');
+	    const commentEditContainer = parentDiv.find('.feed-mofify-comment-feed-comment');
+	    const commentText = parentDiv.find('.comment-text');
+	    const originalContent = $(this).siblings('.save-btn').data('content'); // 원래 댓글 내용 가져오기
+
+	    // DB의 댓글 내용으로 초기화
+	    commentEditContainer.find('.comment-edit-input').val(originalContent);
+
+	    // 기존 텍스트 표시 및 수정 input 숨기기
+	    commentText.show();
+	    commentEditContainer.hide();
+
+	    // 버튼 상태 복구
+	    $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	    $(this).text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+	});
+	
+	// 댓글 삭제 버튼 클릭 이벤트
+    $(document).on('click', '.delete-btn', function () {
+        const feedCommentCode = $(this).data('comment-id');
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/feed/deletecomment',
+                type: 'POST',
+                data: { feedCommentCode: feedCommentCode },
+                success: function () {
+                    alert("댓글이 삭제되었습니다.");
+                    $(`button[data-comment-id='${feedCommentCode}']`).closest('section').remove();
+                },
+                error: function (error) {
+                    console.error("댓글 삭제 실패:", error);
+                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    });
+	
+	// 댓글 등록 버튼 클릭 이벤트
+    $(document).on('click', '#feedCommentModalButton', function () {
+        const feedCode = $('.commentBtn').data('feed-code');
+        const commentContent = $('input[placeholder="댓글 달기..."]').val();
+
+        if (!commentContent.trim()) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: '/feed/createcomment',
+            type: 'POST',
+            data: {
+                feedCode: feedCode,
+                feedCommentContent: commentContent
+            },
+            success: function () {
+                alert("댓글이 등록되었습니다.");
+                $('input[placeholder="댓글 달기..."]').val('');
+                $('#feedCommentModalOverlay').fadeOut(300);
+
+                // 댓글 목록 새로고침
+                location.reload();
+            },
+            error: function (error) {
+                console.error("댓글 등록 실패:", error);
+                alert("댓글 등록 중 오류가 발생했습니다.");
+            }
+        });
+    });
+	
+	// 모달 닫기 버튼 클릭 이벤트
+	$(document).on('click', '.feedCommentModalCloseBtn', function () {
+	    $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	});
+	
+	// 오버레이 클릭 이벤트
+	$(document).on('click', '#feedCommentModalOverlay', function (e) {
+	    if ($(e.target).is('#feedCommentModalOverlay')) {
+	        $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	    }
+	});
+
+	// ESC 키 누르기 이벤트
+	$(document).on('keydown', function (e) {
+	    if (e.key === 'Escape') {
+	        $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	    }
+	});
 });
 
 // 오른쪽 사이드바 업데이트

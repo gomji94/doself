@@ -40,7 +40,7 @@ public class Feed {
     private Integer mealSodium;        		// 나트륨
     private Integer mealCalcium;       		// 칼슘
     private Integer mealIron;          		// 철분
-    private String feedFileIdx;				// 피드 파일 idx
+    private String feedFileIndex;			// 피드 파일 idx
     private String feedFilePath;    		// 피드 이미지 파일 경로
     private String feedFileName;    		// 피드 이미지 파일 이름
     private String memberFileIdx;			// 멤버 파일 idx
@@ -48,6 +48,7 @@ public class Feed {
     private String memberFileName;  		// 멤버 프로필 이미지 파일 이름
     private boolean owner;					// 작성자 여부
     private String formattedDate;			// 포맷된 날짜
+    private String feedUrl;
     
 
     public boolean isOwner() {

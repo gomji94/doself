@@ -13,6 +13,7 @@ import doself.common.mapper.CommonMapper;
 import doself.file.domain.Files;
 import doself.file.mapper.FilesMapper;
 import doself.file.util.FilesUtils;
+import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.mapper.FeedMapper;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class FeedServiceImpl implements FeedService {
 			filesMapper.addfile(fileInfo);
 			String feedCode = commonMapper.getPrimaryKey("feed_", "feed", "feed_num");
 			feed.setFeedCode(feedCode);
-			feed.setFeedFileIdx(fileIdx);
+			feed.setFeedFileIndex(fileIdx);
 			feedMapper.addFeed(feed);
 		}
 
@@ -84,7 +85,7 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public void modifyFeed(Feed feed, MultipartFile feedPicture) {
     	if (feedPicture != null && !feedPicture.isEmpty()) {
-            String oldFileIdx = feed.getFeedFileIdx();
+            String oldFileIdx = feed.getFeedFileIndex();
             if (oldFileIdx != null) {
                 filesMapper.deleteFileByIdx(oldFileIdx);
             }
@@ -94,7 +95,7 @@ public class FeedServiceImpl implements FeedService {
                 String newFileIdx = commonMapper.getPrimaryKey("file_", "files", "file_idx");
                 newFile.setFileIdx(newFileIdx);
                 filesMapper.addfile(newFile);
-                feed.setFeedFileIdx(newFileIdx);
+                feed.setFeedFileIndex(newFileIdx);
             }
         }
 
@@ -112,18 +113,16 @@ public class FeedServiceImpl implements FeedService {
     // 피드 삭제
     @Override
     @Transactional
-    public void deleteFeed(String feedCode) {
-        // 피드 댓글 삭제
-        feedMapper.deleteFeedComments(feedCode);
-        
-        // 피드에 연결된 파일 삭제
-        feedMapper.deleteFeedFileIdx(feedCode);
-        
-        // 피드 삭제
-        feedMapper.deleteFeed(feedCode);
-        
-        log.info("Feed and related data deleted for feedCode: {}", feedCode);
+    public void deleteFeed(String feedCode, String memberId) {
+        feedMapper.deleteFeed(feedCode, memberId);
     }
+    
+    // 피드 댓글 조회
+ 	@Override
+ 	public List<Feed> getFeedCommentList(String feedCode) {
+ 		List<Feed> feedCommentList = feedMapper.getFeedCommentList(feedCode);
+ 		return feedCommentList;
+ 	}
     
     // 피드 댓글 추가
     @Override
@@ -135,12 +134,6 @@ public class FeedServiceImpl implements FeedService {
         comment.setCommentDate(LocalDateTime.now());
 
         feedMapper.addComment(comment);
-    }
-
-    // 피드 댓글 조회
-    @Override
-    public List<Feed> getCommentsByFeedCode(String feedCode) {
-        return feedMapper.getCommentsByFeedCode(feedCode);
     }
 }
 	

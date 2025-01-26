@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.domain.MealNutritionInfo;
 
@@ -38,14 +40,14 @@ public interface FeedMapper {
     void deleteFeedComments(String feedCode);
     
     // 피드 이미지 파일 삭제
-    void deleteFeedFileIdx(String feedCode);
+    void deleteFeedFiles(String feedCode);
     
     // 피드 삭제
-	void deleteFeed(String feedCode);
+	void deleteFeed(String feedCode, String memberId);
     
     // 피드 댓글 추가
 	void addComment(Feed comment);
 
 	// 피드 댓글 조회
-	List<Feed> getCommentsByFeedCode(String feedCode);
+	List<Feed> getFeedCommentList(@Param("feedCode") String feedCode);
 }
