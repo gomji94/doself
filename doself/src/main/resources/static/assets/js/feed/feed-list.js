@@ -436,9 +436,10 @@ $(document).ready(function () {
 // --- 피드 댓글 모달 ---
 $(document).on('click', '.commentBtn', function () {
 	const feedCode = $(this).data('feed-code');
-	const pictureFileImage = $(this).data('picture-file-image');
+	const memberProfilePath = $(this).data('picture-file-image');
 	
-	console.log("pictureFileImage:", pictureFileImage);
+	console.log("feedCode:", feedCode);
+	console.log("memberProfilePath:", memberProfilePath);
 	
 	if (!feedCode) {
         alert("피드 코드가 없습니다.");
@@ -450,50 +451,45 @@ $(document).on('click', '.commentBtn', function () {
         type: 'GET',
         data: { feedCode: feedCode },
         success: function (response) {
-        console.log("댓글 데이터 로드 성공:", response);
-		
-	let imagePath = pictureFileImage;
-	$('#image-preview').attr('src', imagePath);
-	let comments = response;
-    let commentHtml = '';
-	
-    if (!response || response.length === 0) {
-        alert("댓글이 없습니다.");
-        return;
-    }
-	
-	if (comments && comments.length > 0) {
-                comments.forEach(comment => {
-					const isAuthor = comment.loggedInMemberId === comment.feedCommentAuthor; // 작성자 여부 확인
-					console.log(comment.loggedInMemberId, comment.feedCommentAuthor, isAuthor);
-					
+            console.log("댓글 데이터 로드 성공:", response);
+
+            let imagePath = memberProfilePath;
+            $('#image-preview').attr('src', imagePath);
+            let comments = response;
+
+            if (!response || response.length === 0) {
+                console.log("댓글이 없습니다. 빈 댓글 리스트를 표시합니다.");
+                $('.feed-user-comment-container').html('<p>댓글이 없습니다. 첫 댓글을 작성해보세요!</p>');
+            } else {
+                let commentHtml = '';
+                response.forEach(comment => {
+                    const isAuthor = comment.loggedInMemberId === comment.feedCommentAuthor; // 작성자 여부 확인
+                    const profileImage = comment.feedCommentAuthorImage || '/path/to/default/profile-image.png';
+                    const content = comment.feedCommentContent || '내용 없음';
+
                     commentHtml += `
                     <section data-comment-id="${comment.feedCommentCode}">
                         <div class="feed-comment-user-block">
                             <div class="feed-comment-content-block">
-                                <img class="comment-profile" src="${comment.feedCommentAuthorImage}" alt="프로필">
-                                <a href="#" class="feed-comment-user-link" id="feedCommentAuthorId">${comment.feedCommentAuthor}</a>
+                                <img class="comment-profile" src="${profileImage}" alt="프로필">
+                                <a href="#" class="feed-comment-user-link">${comment.feedCommentAuthor}</a>
                                 <div class="feed-comment-feed-comment">
-                                   <span>${comment.feedCommentContent}</span>
-								   <div class="feed-mofify-comment-feed-comment" style="display: none;">
-					                  <span th:text="${comment.feedCommentContent}" class="comment-text"></span>
-									  <input type="text" class="comment-edit-input" value="${comment.feedCommentContent}" style="display: none;" />
-                                   </div>
+                                    <span>${content}</span>
                                 </div>
                             </div>
-						    <div class="comment-actions" id="modifyAndDeleteCommentButton" style="display: ${isAuthor ? 'block' : 'none'};">
-							    <button type="button" class="edit-btn" data-comment-id="${comment.feedCommentCode}" data-content="${comment.feedCommentContent}">수정</button>
+                            <div class="comment-actions" style="display: ${isAuthor ? 'block' : 'none'};">
+                                <button type="button" class="edit-btn" data-comment-id="${comment.feedCommentCode}" data-content="${content}">수정</button>
                                 <button type="button" class="delete-btn" data-comment-id="${comment.feedCommentCode}">삭제</button>
                             </div>
                         </div>
                     </section>`;
                 });
-            } else {
-                commentHtml = '<p>댓글이 없습니다. 첫 댓글을 작성해보세요!</p>';
-            };
 
-	        $('.feed-user-comment-container').html(commentHtml);
-	        $('#feedCommentModalOverlay').fadeIn(300);
+                $('.feed-user-comment-container').html(commentHtml);
+            }
+
+            // 댓글 모달 열기
+            $('#feedCommentModalOverlay').fadeIn(300);
         },
 		error: function (error) {
             console.error("댓글 데이터 로드 실패:", error);

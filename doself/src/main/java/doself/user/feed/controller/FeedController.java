@@ -151,7 +151,6 @@ public class FeedController {
 		String loggedInMemberId = (String) session.getAttribute("SID");
     	
     	List<Feed> feedCommentList = feedService.getFeedCommentList(feedCode);
-    	feedCommentList.forEach(feed -> feed.setOwner(false));
     	log.info("Feed Comment List: {}", feedCommentList);
     	
         return feedCommentList;
@@ -178,6 +177,26 @@ public class FeedController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가 중 오류가 발생했습니다.");
 	    }
 	}
+	
+	// 피드 댓글 등록
+	@PostMapping("/createfeedcomment")
+	public String addFeedComment(@RequestParam("feedCode") String feedCode,
+								 @RequestParam("feedCommentContent") String commentContent,
+								 Feed feed, HttpSession session) {
+		String memberId = (String) session.getAttribute("SID");
+		
+		Feed comment = new Feed();
+		comment.setFeedCode(feedCode);
+		comment.setMemberId(memberId);
+		comment.setCommentContent(commentContent);
+		
+		feedService.addComment(feedCode, memberId, commentContent);
+		
+		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
+	}
+	
+	// 피드 댓글 수정
+	
 	
 	// 피드 좋아요 증감
 	@PostMapping("/like")

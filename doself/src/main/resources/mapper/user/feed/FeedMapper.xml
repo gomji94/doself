@@ -319,15 +319,15 @@
 	<!-- 피드 댓글 리스트 조회 -->
 	<select id="getFeedCommentList" resultMap="FeedResultMap">
 	    SELECT
-	        fc.fc_num,
-	        fc.feed_num,
-	        fc.mbr_id,
-	        fc.fc_content,
-	        fc.fc_date,
-	        fc.fc_like,
-	        m.mbr_file_idx
-	    FROM feed_comments fc
-	    LEFT JOIN member m ON fc.mbr_id = m.mbr_id
+			fc.fc_num,
+			fc.feed_num,
+			fc.mbr_id,
+			fc.fc_content,
+			fc.fc_date,
+			fi.file_path AS memberProfilePath
+		FROM feed_comments fc
+		INNER JOIN `member` m ON fc.mbr_id = m.mbr_id
+		LEFT JOIN files fi ON m.mbr_file_idx = fi.file_idx
 	    WHERE fc.feed_num = #{feedCode}
 	    ORDER BY fc.fc_date ASC;
 	</select>

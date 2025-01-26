@@ -309,7 +309,7 @@ html, body {
     width: 90%;
     margin-bottom: 20px;
 }
-	
+
 .feed .comments-link {
     color: #aaa; /* 댓글 링크 색상 */
     font-size: 14px;
@@ -317,9 +317,9 @@ html, body {
 }
 
 .feed .add-comment img {
-	width: 20px;
+    width: 20px;
+	height: auto;
     opacity: 0.7;
-    height: auto;
 }
 
 .feed .add-comment input {
@@ -338,10 +338,17 @@ html, body {
     cursor: pointer;
     font-weight: bold;
 }
-	
+
 .feed .input[type="text"] {
     border: none;
     width: 73%;
+}
+
+button#loadMore {
+    background-color: #ffffff !important;
+    color: #9cb331 !important;
+    border-color: #d2dba7 !important;
+    padding: 6px 15px 5px 18px !important;
 }
 
 .feed-comment-modal-overlay {
@@ -363,7 +370,7 @@ html, body {
     background: #fff;
     border-radius: 10px;
     padding: 20px;
-    width: 800px;
+    width: 845px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     z-index: 1001;
 }
@@ -382,7 +389,7 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .feed-comment-modal-header img {
@@ -397,7 +404,7 @@ html, body {
     color: #333;
 }
 
-.feed-comment-modal-header #feed-comment-modalCloseBtn {
+.feed-comment-modal-header #feedCommentModalCloseBtn {
     background: none;
     border: none;
     color: #666;
@@ -420,9 +427,36 @@ html, body {
     margin-top: -11.5px;
 }
 
+img#modifyFeedPreviewImage {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 57px;
+    position: absolute;
+    max-width: 480px;
+    min-width: 480px;
+    width: 100%;
+    left: 19px;
+    top: 0;
+    height: 100%;
+    max-height: 418px;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1000;
+    display: block;
+}
+
 .feed-comment-modal-image-upload {
     flex: 1;
     text-align: center;
+    /* max-width: 480px;
+    max-height: 429px; */
+    min-width: 480px;
+    min-height: 429px;
+}
+
+.feed-comment-modal-image-upload img#image-preview {
+    width: 100%;
+    height: 100%;
 }
 
 /* 정보 입력 영역 */
@@ -430,6 +464,7 @@ html, body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 305px;
     width: 84%;
     justify-content: space-between;
     padding: 6px 0px;
@@ -482,6 +517,65 @@ html, body {
     margin-top: 5px;
 }
 
+a#feedCommentAuthorId {
+    margin-top: 3px;
+}
+
+input.comment-edit-input {
+    position: absolute;
+    left: 71.8%;
+    top: 16%;
+    width: 137px;
+    border-style: none;
+    background-color: #f1f1f1;
+}
+
+input.comment-edit-input {
+    font-size: 14px;
+    color: #515151;
+}
+
+.feed-mofify-comment-feed-comment {
+    width: 0px;
+    height: 0px;
+}
+
+button.edit-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #b9cd64;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.save-btn {
+	border: none;
+    outline: none;
+    background-color: inherit;
+    color: #657c00;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.cancel-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #fe7322;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
+button.delete-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #d92d2d;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
 .feed-comment-feed-info .emoji-btn {
     background: none;
     border: none;
@@ -531,17 +625,46 @@ html, body {
     font-size: 14px;
     border-style: none;
     outline: none;
+    width: 204px;
 }
 
-button.feed-comment-comment-btn {
+button.cf-comment-comment-btn {
     background-color: #fff;
     color: #9EB92A;
     border: none;
     cursor: pointer;
     height: 25px;
     font-weight: 700;
-    margin-left: auto;
+    margin-left: 15px;
     white-space: nowrap;
+}
+
+img#createFeedPreviewImage {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 57px;
+    position: absolute;
+    max-width: 480px;
+    width: 100%;
+    left: 19px;
+    top: 0;
+    height: 100%;
+    max-height: 429px;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1100;
+    display: block;
+}
+
+input#files {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #CACACA;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
 }
 
 /* myfeed modal */
