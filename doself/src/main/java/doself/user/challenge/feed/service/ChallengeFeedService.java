@@ -38,7 +38,7 @@ public interface ChallengeFeedService {
 	//int calculateTotalProgress(String challengeCode);
 	
 	// 챌린지 참여율 상위 3명 조회
-	List<ChallengeMemberList> getTopParticipants(String challengeCode);
+	List<ChallengeTotalProgress> getTopParticipants(String challengeCode);
 	
 	// 투데이 디데이 계산
 	Map<String, String> calculateDPlusAndDMinus(String challengeCode);
@@ -80,5 +80,11 @@ public interface ChallengeFeedService {
 	void deleteFeedComment(String challengeFeedCommentCode);
 	
 	// 챌린지 정보 조회(그래프)
-	List<ChallengeTotalProgress> getChallengeTotalProgressInfo(String challengeCode);
+	ChallengeTotalProgress getChallengeTotalProgressInfo(String challengeCode);
+	
+	// 챌린지 피드 좋아요 증가
+	void incrementLike(String challengeFeedCode, String memberId);
+	
+	// 챌린지 피드 좋아요 감소
+	void decrementLike(String challengeFeedCode, String memberId);
 }
