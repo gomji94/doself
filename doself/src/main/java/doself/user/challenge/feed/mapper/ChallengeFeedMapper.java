@@ -90,13 +90,27 @@ public interface ChallengeFeedMapper {
 	// 챌린지 수정
 	ChallengeFeed getModifyChallengeFeed(String challengeFeedCode);
 
-	// 챌린지 정보 조회(그래프)
-	List<ChallengeTotalProgress> getChallengeTotalProgressInfo(@Param("challengeCode") String challengeCode);
+	// 챌린지 정보 조회(그래프/챌린지 정보)
+	ChallengeTotalProgress getChallengeTotalProgressInfo(@Param("challengeCode") String challengeCode);
 	
 	// 참여 멤버 상위 3명 표시
 	List<ChallengeTotalProgress> getTopParticipants(@Param("challengeCode") String challengeCode);
-	//List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
 	
+	// 챌린지 피드 좋아요 여부 확인
+	boolean hasLiked(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
+	
+	// 챌린지 피드 좋아요 추가
+	//void addLike(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
+
+	// 챌린지 피드 좋아요 삭제
+	//void removeLike(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
+
+	// 챌린지 피드 좋아요 증가
+	void incrementLike(String challengeFeedCode);
+
+	// 챌린지 피드 좋아요 감소
+	void decrementLike(String challengeFeedCode);
+    
 	
 	
 	// 관리자

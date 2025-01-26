@@ -106,32 +106,11 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 참여 멤버 상위 3명 표시
 	@Override
 	@Transactional
-	public List<ChallengeMemberList> getTopParticipants(String challengeCode) {
+	public List<ChallengeTotalProgress> getTopParticipants(String challengeCode) {
 		// 초기값: 참여 일자 순으로 정렬된 멤버 리스트 조회
-	    List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
+		List<ChallengeTotalProgress> memberList = challengeFeedMapper.getTopParticipants(challengeCode);
 
-	    // 참여율 및 점수 초기화
-	    memberList.forEach(member -> {
-	        if (member.getChallengeTodayParticipationRate() == null) {
-	            member.setChallengeTodayParticipationRate(0.0); // 기본 참여율
-	        }
-	        if (member.getChallengeTodayAchievementRate() == null) {
-	            member.setChallengeTodayAchievementRate(0.0); // 기본 달성률
-	        }
-	        if (member.getScore() == null) {
-	            member.setScore(
-	                (member.getChallengeTodayParticipationRate() + member.getChallengeTodayAchievementRate()) / 2
-	            ); // 점수 계산
-	        }
-	    });
-
-	    // 점수가 있는 경우만 정렬: 점수가 없는 경우는 기본 순서(참여 일자) 유지
-	    memberList.sort((m1, m2) -> Double.compare(
-	            (m2.getScore() != null ? m2.getScore() : 0.0),
-	            (m1.getScore() != null ? m1.getScore() : 0.0)
-	    ));
-
-	    //log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
+	    log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
 
 	    return memberList;
 	}
@@ -142,19 +121,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
 		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
 		
-		// 초기값 설정: 참여율과 달성률, 점수를 0으로 설정
-		memberList.forEach(member -> {
-	        if (member.getChallengeTodayParticipationRate() == null) {
-	            member.setChallengeTodayParticipationRate(0.0);
-	        }
-	        if (member.getChallengeTodayAchievementRate() == null) {
-	            member.setChallengeTodayAchievementRate(0.0);
-	        }
-	        if (member.getScore() == null) {
-	            member.setScore(0.0);
-	        }
-	    });
-	    
 	    //log.info(">>> location/serviceImpl >>> memberList: {}", memberList);
 
 	    return memberList;
@@ -169,16 +135,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 //	    }
 		
 		List<ChallengeProgress> challengeProgressList = challengeFeedMapper.getChallengeProgress(challengeCode);
-
-	    // 상태 코드 변환 로직
-	    challengeProgressList.forEach(progress -> {
-	        String statusCode = progress.getChallengeStatusCode();
-	        if ("cs_002".equals(statusCode) || "cs_003".equals(statusCode)) {
-	            progress.setChallengeStatusCode("진행중");
-	        } else if ("cs_004".equals(statusCode)) {
-	            progress.setChallengeStatusCode("대기중");
-	        }
-	    });
 	    
 	    //log.info(">>> location/serviceImpl >>> challengeProgressList: {}", challengeProgressList);
 
@@ -196,27 +152,43 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public Map<String, String> calculateDPlusAndDMinus(String challengeCode) {
 		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
 		
-		//log.info(">>> location/serviceImpl >>> progress: {}", progress);
+		log.info(">>> location/serviceImpl >>> progress: {}", progress);
 		
 	    if (progress == null) {
 	        return Map.of("dPlus", "N/A", "dMinus", "N/A");
 	    }
 
+//	    LocalDate today = LocalDate.now();
+//	    LocalDate startDate = progress.getChallengeStartDate().toInstant()
+//	                                  .atZone(ZoneId.of("Asia/Seoul"))
+//	                                  .toLocalDate();
+//	    LocalDate endDate = progress.getChallengeEndDate().toInstant()
+//	                                .atZone(ZoneId.of("Asia/Seoul"))
+//	                                .toLocalDate();
+	    
 	    LocalDate today = LocalDate.now();
 	    LocalDate startDate = progress.getChallengeStartDate().toInstant()
 	                                  .atZone(ZoneId.of("Asia/Seoul"))
 	                                  .toLocalDate();
-	    LocalDate endDate = progress.getChallengeEndDate().toInstant()
-	                                .atZone(ZoneId.of("Asia/Seoul"))
-	                                .toLocalDate();
+
+	    // 종료일 계산: 시작일 + 14일
+	    LocalDate endDate = startDate.plusDays(14);
 
 	    long dPlus = ChronoUnit.DAYS.between(startDate, today);
 	    long dMinus = ChronoUnit.DAYS.between(today, endDate);
 
-	    return Map.of(
-	        "dPlus", "D+" + Math.max(0, dPlus),
-	        "dMinus", "D-" + Math.max(0, dMinus)
-	    );
+//	    return Map.of(
+//	        "dPlus", "D+" + Math.max(0, dPlus),
+//	        "dMinus", "D-" + Math.max(0, dMinus)
+//	    );
+	    Map<String, String> dateCalculations = Map.of(
+            "dPlus", "D+" + Math.max(0, dPlus),
+            "dMinus", "D-" + Math.max(0, dMinus)
+        );
+	    
+	    log.info(">>> Service >>> calculateDPlusAndDMinus >>> dateCalculations: {}", dateCalculations);
+	    
+	    return dateCalculations;
 	}
 
 	// 챌린지 참여 멤버수 조회
@@ -473,40 +445,11 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    
 	    String challengeFeedCode = addChallengeFeed.getChallengeFeedCode();
 	    addChallengeFeed.setChallengeFeedCode(challengeFeedCode);
-	    
-	    // 파일의 idx 경로를 가져와서 delete가 이뤄지면(리턴 값이 true이면) 업로드
-	    // 업로드가 되면 fileinfo → 다시 올린 경로/오리지널네임 → 기존의 idx만 세팅(파일인포)
-	    // 파일 매퍼에
 		
-		log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
+		//log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
 		
 		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
 	}
-	
-	// 챌린지 피드 수정(해결X)
-//	@Override
-//	public void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
-//		if (files != null && !files.isEmpty()) {
-//	        // 기존 파일 경로 제거
-//	        Files existingFile = filesMapper.getFileInfoByIdx(addChallengeFeed.getChallengeFeedFileIdx());
-//	        if (existingFile != null) {
-//	            filesUtils.deleteFileByPath(existingFile.getFilePath());
-//	        }
-//
-//	        // 새로운 파일 업로드
-//	        Files uploadedFile = filesUtils.uploadFile(files);
-//	        if (uploadedFile != null) {
-//	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx());
-//	        }
-//	    }
-//	    
-//	    String challengeFeedCode = addChallengeFeed.getChallengeFeedCode();
-//	    addChallengeFeed.setChallengeFeedCode(challengeFeedCode);
-//	    
-//		log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
-//		
-//		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
-//	}
 
 	// 챌린지 피드 코드
 	@Override
@@ -562,9 +505,48 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	// 챌린지 정보 조회(그래프)
 	@Override
-	public List<ChallengeTotalProgress> getChallengeTotalProgressInfo(String challengeCode) {
-		
-		return challengeFeedMapper.getChallengeTotalProgressInfo(challengeCode);
+	@Transactional
+	public ChallengeTotalProgress getChallengeTotalProgressInfo(String challengeCode) {
+		// 챌린지 진행 상태 정보 조회
+	    ChallengeTotalProgress progressInfo = challengeFeedMapper.getChallengeTotalProgressInfo(challengeCode);
+
+	    // 현재 멤버 수 설정
+	    int currentMemberCount = challengeFeedMapper.getCurrentMemberCount(challengeCode);
+	    if (progressInfo != null) {
+	        progressInfo.setChallengeCurrentMember(currentMemberCount);
+
+	        // 상태 코드 변환
+	        String statusCode = progressInfo.getChallengeStatusCode();
+	        if ("cs_002".equals(statusCode) || "cs_003".equals(statusCode)) {
+	            progressInfo.setChallengeStatusCode("진행중");
+	        } else if ("cs_004".equals(statusCode)) {
+	            progressInfo.setChallengeStatusCode("대기중");
+	        }
+	    }
+
+	    log.info(">>> location/serviceImpl >>> progressInfo: {}", progressInfo);
+		return progressInfo;
 	}
+
+	// 챌린지 피드 좋아요 증가
+	public void incrementLike(String challengeFeedCode, String memberId) {
+        if (!challengeFeedMapper.hasLiked(challengeFeedCode, memberId)) {
+            //challengeFeedMapper.addLike(challengeFeedCode, memberId);
+            challengeFeedMapper.incrementLike(challengeFeedCode);
+        } else {
+            throw new RuntimeException("이미 좋아요를 누른 피드입니다.");
+        }
+    }
+
+	// 챌린지 피드 좋아요 감소
+	@Override
+	public void decrementLike(String challengeFeedCode, String memberId) {
+        if (challengeFeedMapper.hasLiked(challengeFeedCode, memberId)) {
+            //challengeFeedMapper.removeLike(challengeFeedCode, memberId);
+            challengeFeedMapper.decrementLike(challengeFeedCode);
+        } else {
+            throw new RuntimeException("좋아요를 누르지 않은 피드입니다.");
+        }
+    }
 
 }

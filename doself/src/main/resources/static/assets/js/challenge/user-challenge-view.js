@@ -549,6 +549,57 @@ $(document).ready(function () {
 // --- feed like button event ---
 $(document).ready(function () {
     $(document).on('click', '.likeBtn', function (event) {
+        event.preventDefault();
+
+        const likeBtn = $(this); // 현재 버튼
+        const likeImg = likeBtn.find('.likeImg'); // 버튼 내부의 likeImg 요소
+        const feedElement = likeBtn.closest('.feed'); // 현재 피드 요소
+        const feedDescription = feedElement.find('#feed-likes'); // 좋아요 수 표시
+        const feedNum = likeBtn.attr('data-feed-code'); // 피드 코드
+        const isLiked = likeBtn.attr('data-liked') === 'true'; // 현재 좋아요 상태
+        const newLikedStatus = !isLiked; // 새 좋아요 상태
+
+        console.log('좋아요 버튼 클릭:', { feedNum, isLiked, newLikedStatus }); // 디버깅용 로그
+
+        // AJAX 요청으로 서버에 좋아요 상태 전달
+        $.ajax({
+            url: '/feed/like',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                feedNum: feedNum,
+                liked: newLikedStatus,
+            }),
+            success: () => {
+                let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10); // 좋아요 수 파싱
+
+                // UI 업데이트
+                if (newLikedStatus) {
+                    likeImg.attr('src', 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png') // 좋아요 이미지
+						   .css({ 'width': '24.7px', 'height': 'auto' });
+                    currentLikes++;
+                } else {
+                    likeImg.attr('src', 'https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png'); // 기본 이미지
+                    currentLikes--;
+                }
+
+                feedDescription.text(`좋아요 ${currentLikes}개`); // 좋아요 수 갱신
+                likeBtn.attr('data-liked', newLikedStatus.toString()); // 상태 업데이트
+
+                console.log('좋아요 상태 업데이트 완료:', { currentLikes, newLikedStatus });
+            },
+            error: (error) => {
+                console.error('좋아요 상태 업데이트 실패:', error);
+                alert('좋아요 상태 업데이트에 실패했습니다. 다시 시도해주세요.');
+            },
+        });
+    });
+});
+
+
+/*.css({ 'width': '24.7px', 'height': 'auto' });*/
+/*$(document).ready(function () {
+    $(document).on('click', '.likeBtn', function (event) {
         event.preventDefault(); // 기본 동작 방지
 
         const likeImg = $(this).find('.likeImg'); // 버튼 내부의 likeImg 요소 선택
@@ -571,7 +622,7 @@ $(document).ready(function () {
         console.log(`현재 상태: ${$(this).attr('data-liked')}`);
         console.log(`현재 이미지 경로: ${likeImg.attr('src')}`);
     });
-});
+});*/
 
 
 // --- feed comment submit ---
@@ -813,120 +864,50 @@ $(document).on('click', '.commentBtn', function () {
 });
 
 
-// --- challenge feed comment modify&delete ---
-/*$(document).ready(function () {
-    // 댓글 수정 버튼 클릭 이벤트
-    $(document).on('click', '.edit-btn', function () {
-        const commentId = $(this).data('comment-id');
-        const originalContent = $(this).data('content');
-        const parentDiv = $(this).closest('.cf-comment-content-block');
-
-        parentDiv.find('.comment-text').hide();
-        parentDiv.find('.comment-edit-input').val(originalContent).show();
-
-        $(this).text('저장').addClass('save-btn').removeClass('edit-btn');
-    });
-
-    // 댓글 저장 버튼 클릭 이벤트
-    $(document).on('click', '.save-btn', function () {
-        const commentId = $(this).data('comment-id');
-        const parentDiv = $(this).closest('.cf-comment-content-block');
-        const newContent = parentDiv.find('.comment-edit-input').val();
-
-        if (!newContent.trim()) {
-            alert('댓글 내용을 입력해주세요.');
-            return;
-        }
-
-        $.ajax({
-            url: '/challenge/feed/updatecomment',
-            type: 'POST',
-            data: { commentId: commentId, newContent: newContent },
-            success: function () {
-                alert('댓글이 수정되었습니다.');
-                parentDiv.find('.comment-text').text(newContent).show();
-                parentDiv.find('.comment-edit-input').hide();
-            },
-            error: function (error) {
-                console.error('댓글 수정 실패:', error);
-                alert('댓글 수정 중 오류가 발생했습니다.');
-            }
-        });
-
-        $(this).text('수정').addClass('edit-btn').removeClass('save-btn');
-    });
-
-    // 댓글 삭제 버튼 클릭 이벤트
-    $(document).on('click', '.delete-btn', function () {
-        const commentId = $(this).data('comment-id');
-        if (confirm('댓글을 삭제하시겠습니까?')) {
-            $.ajax({
-                url: '/challenge/feed/deletecomment',
-                type: 'POST',
-                data: { commentId: commentId },
-                success: function () {
-                    alert('댓글이 삭제되었습니다.');
-                    $(`button[data-comment-id='${commentId}']`).closest('section').remove();
-                },
-                error: function (error) {
-                    console.error('댓글 삭제 실패:', error);
-                    alert('댓글 삭제 중 오류가 발생했습니다.');
-                }
-            });
-        }
-    });
-});*/
-
-
 // --- challenge progress circle ---
-$(document).ready(function() {
-    let currentProgress = 0;
-    const targetProgress = 0; // 목표 값
-    const progressCircle = $('.foreground-circle');
-    const progressPercent = $('#progress-percent-txt');
-
-    // 그래프 업데이트 함수
-    function updateProgress() {
-        if (currentProgress < targetProgress) {
-            currentProgress++;
-            const offset = 314 - (314 * currentProgress) / 100;
-            progressCircle.css('stroke-dashoffset', offset);
-            progressPercent.text(`${currentProgress}%`);
-            requestAnimationFrame(updateProgress); // 부드러운 애니메이션
-        }
-    }
-
-    // 페이지 로드 시 그래프 시작
-    updateProgress();
-});
-
-
-// --- challenge progress img ---
-$(document).ready(function() {
-    const greenImg = $('#green-img'); // 초록 그래프 이미지
+$(document).ready(function () {
+    const greenImg = $('#green-img');
     const progressText = $('.progress-text'); // 진행률 텍스트
-    let progressPercentage = 0; // 현재 진행률
+    const progressCircle = $('.foreground-circle'); // 원형 그래프
+    const progressPercentage = parseFloat(greenImg.data('progress')) || 0; // 진행률 데이터
 
     function updateProgress(targetPercentage) {
-        const interval = setInterval(() => {
-            if (progressPercentage < targetPercentage) {
-                progressPercentage++;
+        let currentPercentage = 0;
 
-                // 초록 그래프의 가로 크기 조정 (왼쪽부터 차오르게 설정)
-                $('.front-progress-bar').css({
-                    'clip-path': `inset(0 ${100 - progressPercentage}% 0 0)`, // 왼쪽부터 차오르는 애니메이션
-                    'width': '100%', // 부모의 가로를 유지
-                    'height': '100%' // 세로 크기 유지
+        function updateAnimation() {
+            if (currentPercentage < targetPercentage) {
+                currentPercentage += 0.5; // 증가 폭 (더 빠르게 차오르도록 설정)
+                
+                // green-img가 왼쪽부터 차오르는 효과
+                greenImg.css({
+                    'clip-path': `inset(0 ${100 - currentPercentage}% 0 0)`, // 잘리는 영역 변경
+                    'width': '100%', // 부모 가로 크기 유지
+                    'height': '100%' // 부모 세로 크기 유지
                 });
 
-                // 진행률 텍스트 업데이트
-                progressText.text(`${progressPercentage}%`);
+                // 원형 그래프 진행률 계산
+                const circleOffset = 314 - (314 * currentPercentage) / 100;
+                progressCircle.css('stroke-dashoffset', circleOffset);
+
+                // 텍스트 업데이트
+                progressText.text(`${currentPercentage.toFixed(1)}%`);
+                
+                requestAnimationFrame(updateAnimation); // 애니메이션 프레임 요청
             } else {
-                clearInterval(interval); // 목표치 도달 시 애니메이션 정지
+                // 최종 값 설정
+                greenImg.css({
+                    'clip-path': `inset(0 ${100 - targetPercentage}% 0 0)`
+                });
+                progressCircle.css('stroke-dashoffset', 314 - (314 * targetPercentage) / 100);
+                progressText.text(`${targetPercentage}%`);
             }
-        }, 10); // 애니메이션 속도 조정
+        }
+
+        updateAnimation(); // 애니메이션 시작
     }
-    updateProgress();
+
+    // 애니메이션 실행
+    updateProgress(progressPercentage);
 });
 
 
