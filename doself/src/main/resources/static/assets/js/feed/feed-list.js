@@ -705,165 +705,106 @@ document.addEventListener('DOMContentLoaded', () => {
     feeds.forEach(feed => observer.observe(feed));
 });
 
-
-/*
+// 영양 정보 페이지
 document.addEventListener("DOMContentLoaded", () => {
-	    const calendarBody = document.getElementById("calendar-body");
-	    const currentMonthElement = document.querySelector(".current-month");
-	    const prevMonthButton = document.querySelector(".prev-month");
-	    const nextMonthButton = document.querySelector(".next-month");
+    const calendarBody = document.getElementById("calendar-body");
+    const currentMonthElement = document.querySelector(".current-month");
+    const prevMonthButton = document.querySelector(".prev-month");
+    const nextMonthButton = document.querySelector(".next-month");
 
-	    let currentDate = new Date();
+    let currentDate = new Date();
 
-	    function renderCalendar(date) {
-	        const year = date.getFullYear();
-	        const month = date.getMonth();
-	        const today = new Date();
+    function renderCalendar(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const today = new Date();
 
-	        // 현재 월의 이름 설정
-	        currentMonthElement.textContent = date.toLocaleDateString("ko-KR", {
-	            month: "long",
-	            year: "numeric",
-	        });
+        currentMonthElement.textContent = date.toLocaleDateString("ko-KR", {
+            month: "long",
+            year: "numeric",
+        });
 
-	        // 이전 달력 지우기
-	        calendarBody.innerHTML = "";
+        calendarBody.innerHTML = "";
 
-	        // 현재 달의 첫째 날과 일수를 구하기
-	        const firstDay = new Date(year, month, 1).getDay();
-	        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-	        // 날짜 입력
-	        let row = document.createElement("tr");
-	        for (let i = 0; i < firstDay; i++) {
-	            row.appendChild(document.createElement("td"));
-	        }
+        let row = document.createElement("tr");
+        for (let i = 0; i < firstDay; i++) {
+            row.appendChild(document.createElement("td"));
+        }
 
-	        for (let day = 1; day <= daysInMonth; day++) {
-	            const cell = document.createElement("td");
-	            cell.textContent = day;
+        for (let day = 1; day <= daysInMonth; day++) {
+            const cell = document.createElement("td");
+            cell.textContent = day;
 
-	            // 오늘 날짜 표기
-	            if (
-	                day === today.getDate() &&
-	                month === today.getMonth() &&
-	                year === today.getFullYear()
-	            ) {
-	                cell.classList.add("today");
-	            }
+            if (
+                day === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear()
+            ) {
+                cell.classList.add("today");
+            }
 
-	            cell.addEventListener("click", () => {
-	                alert(`You selected: ${year}-${month + 1}-${day}`);
-	            });
+            cell.addEventListener("click", async () => {
+                const selectedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                await fetchNutritionalInfo("userId123", selectedDate); // Replace with actual member ID
+            });
 
-	            row.appendChild(cell);
+            row.appendChild(cell);
 
-	            // 토요일 이후에 새로운 행을 시작
-	            if ((firstDay + day) % 7 === 0) {
-	                calendarBody.appendChild(row);
-	                row = document.createElement("tr");
-	            }
-	        }
+            if ((firstDay + day) % 7 === 0) {
+                calendarBody.appendChild(row);
+                row = document.createElement("tr");
+            }
+        }
 
-	        if (row.children.length > 0) {
-	            calendarBody.appendChild(row);
-	        }
-	    }
+        if (row.children.length > 0) {
+            calendarBody.appendChild(row);
+        }
+    }
 
-	    // 순회하기 위한 이벤트 리스너
-	    prevMonthButton.addEventListener("click", () => {
-	        currentDate.setMonth(currentDate.getMonth() - 1);
-	        renderCalendar(currentDate);
-	    });
+    async function fetchNutritionalInfo(mbrId, date) {
+        const response = await fetch(`/nutrition/info?mbrId=${mbrId}&date=${date}`);
+        const data = await response.json();
 
-	    nextMonthButton.addEventListener("click", () => {
-	        currentDate.setMonth(currentDate.getMonth() + 1);
-	        renderCalendar(currentDate);
-	    });
+        document.getElementById("energy").textContent = data.dniiKcal || 0;
+        document.getElementById("carb").textContent = data.dniiCarbo || 0;
+        document.getElementById("protein").textContent = data.dniiProtein || 0;
+        document.getElementById("fat").textContent = data.dniiFat || 0;
 
-	    // 초기값
-	    renderCalendar(currentDate);
-	});
+        updateChart(data);
+    }
 
-	    // 영양 정보 업데이트 함수
-	    function updateNutritionInfo(date) {
-	        // 샘플 데이터: 실제 데이터는 서버에서 가져와야 함
-	        const nutritionData = {
-	            "2024-08-17": { energy: 2145.97, carb: 1220, protein: 89, fat: 547.85 },
-	            // 다른 날짜 데이터 추가
-	        };
+    function updateChart(data) {
+        const ctx = document.getElementById("pieChart").getContext("2d");
+        new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: ["Carb", "Protein", "Fat"],
+                datasets: [
+                    {
+                        data: [data.dniiCarbo, data.dniiProtein, data.dniiFat],
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            },
+        });
+    }
 
-	        const data = nutritionData[date] || { energy: 0, carb: 0, protein: 0, fat: 0 };
-	        document.getElementById("energy").textContent = data.energy;
-	        document.getElementById("carb").textContent = data.carb;
-	        document.getElementById("protein").textContent = data.protein;
-	        document.getElementById("fat").textContent = data.fat;
+    prevMonthButton.addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate);
+    });
 
-	        // 차트 업데이트
-	        updateChart(data);
-	    }
+    nextMonthButton.addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate);
+    });
 
-	    // 차트 업데이트 함수
-	    function updateChart(data) {
-	        const ctx = document.getElementById("progressChart").getContext("2d");
-	        new Chart(ctx, {
-	            type: "doughnut",
-	            data: {
-	                labels: ["Carb", "Protein", "Fat"],
-	                datasets: [
-	                    {
-	                        data: [data.carb, data.protein, data.fat],
-	                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-	                    },
-	                ],
-	            },
-	            options: {
-	                responsive: true,
-	                maintainAspectRatio: false,
-	            },
-	        });
-	    }
-	    // 원형 그래프 데이터와 설정
-	    const pieCtx = document.getElementById('pieChart').getContext('2d');
-	    const pieChart = new Chart(pieCtx, {
-	        type: 'doughnut',
-	        data: {
-	            // labels: ['칼로리', '탄수화물', '단백질', '지방'],
-	            datasets: [{
-	            data: [554.025, 0, 289.1, 262.125], // 각각의 비율
-	            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-	            borderWidth : 0
-	            }]
-	        },
-	        options: {
-	            responsive: true,
-	            cutout: '70%', // 도넛 가운데 비율 (70% 비워짐)
-	            plugins: {
-	                legend: {
-	                    display: false // 범례 숨기기
-	                },
-	                tooltip: {
-	                    enabled: false // 툴팁 비활성화
-	                }
-	            }
-	        },
-	    plugins: [
-	        {
-	            // 텍스트를 가운데에 표시하는 커스텀 플러그인
-	            id: 'centerText',
-	            beforeDraw: function(chart) {
-	                const ctx = chart.ctx;
-	                const width = chart.width;
-	                const height = chart.height;
-	                const text = '72%'; // 가운데 표시할 텍스트
-	                ctx.restore();
-	                ctx.font = 'bold 24px Arial';
-	                ctx.textBaseline = 'middle';
-	                ctx.textAlign = 'center';
-	                ctx.fillStyle = '#000'; // 텍스트 색상
-	                ctx.fillText(text, width / 2, height / 2);
-	                ctx.save();
-	            }
-	        }
-	    ]
-	});*/
+    renderCalendar(currentDate);
+});

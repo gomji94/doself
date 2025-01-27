@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +14,7 @@ import doself.common.mapper.CommonMapper;
 import doself.file.domain.Files;
 import doself.file.mapper.FilesMapper;
 import doself.file.util.FilesUtils;
-import doself.user.challenge.feed.domain.ChallengeFeedComment;
+import doself.user.feed.domain.DailyNutritionalIntakeInfo;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.mapper.FeedMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FeedServiceImpl implements FeedService {
 
+	@Autowired
 	private final FeedMapper feedMapper;
 	private final FilesUtils filesUtils;
 	private final FilesMapper filesMapper;
@@ -126,14 +128,34 @@ public class FeedServiceImpl implements FeedService {
     
     // 피드 댓글 추가
     @Override
-    public void addComment(String feedCode, String memberId, String commentContent) {
-        Feed comment = new Feed();
-        comment.setFeedCode(feedCode);
-        comment.setMemberId(memberId);
-        comment.setCommentContent(commentContent);
-        comment.setCommentDate(LocalDateTime.now());
+    public void addFeedComment(Feed feed) {
+    	String formattedKeyNum = commonMapper.getPrimaryKey("fc_", "feed_comments", "fc_num");
+    	feed.setFeedCommentCode(formattedKeyNum);
+    	feed.setCommentDate(LocalDateTime.now());
 
-        feedMapper.addComment(comment);
+    	feedMapper.addFeedComment(feed);
+    }
+    
+    // 피드 댓글 수정
+    @Override
+    public void mofidyFeedComment(String feedCommentCode, String feedCommentContent) {
+    	feedMapper.modifyFeedComment(feedCommentCode, feedCommentContent);
+    }
+    
+    // 피드 댓글 삭제
+    @Override
+    public void deleteFeedComment(String feedCommentCode) {
+    	feedMapper.deleteFeedComment(feedCommentCode);
+    }
+    
+    // 하루 먹은 영양 정보 조회
+    @Override
+    public DailyNutritionalIntakeInfo getNutritionalInfoByDate(String mbrId, String date) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("mbrId", mbrId);
+        params.put("date", date);
+
+        return (DailyNutritionalIntakeInfo) feedMapper.getNutritionalInfoByDate(params);
     }
 }
 	

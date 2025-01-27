@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.user.feed.domain.DailyNutritionalIntakeInfo;
 import doself.user.feed.domain.Feed;
 
 public interface FeedService {
@@ -36,5 +37,14 @@ public interface FeedService {
 	List<Feed> getFeedCommentList(String feedCode);
 	
 	// 피드 댓글 추가
-	void addComment(String feedCode, String memberId, String commentContent);
+	void addFeedComment(Feed feed);
+	
+	// 피드 댓글 수정
+	void mofidyFeedComment(String feedCommentCode, String feedCommentContent);
+	
+	// 피드 댓글 삭제
+	void deleteFeedComment(String feedCommentCode);
+	
+	// 하루 먹은 영양 정보 조회
+	DailyNutritionalIntakeInfo getNutritionalInfoByDate(String mbrId, String date);
 }

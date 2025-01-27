@@ -4,13 +4,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +40,6 @@ public class FeedController {
 	private final FeedService feedService;
 	private final NutritionService nutritionService;
 	
-	// 메인 피드 조회
 	// 메인 피드 조회
 	@GetMapping("/list")
 	public String getFeedList(HttpSession session, Model model, Pageable pageable) {
@@ -156,28 +155,6 @@ public class FeedController {
         return feedCommentList;
     }
 	
-	// 피드 댓글 추가
-	@PostMapping("/{feedCode}/addComment")
-	@ResponseBody
-	public ResponseEntity<String> addComment(
-        @PathVariable String feedCode,
-        @RequestBody Map<String, String> payload,
-        HttpSession session) {
-    String memberId = (String) session.getAttribute("SID");
-    String commentContent = payload.get("commentContent");
-
-    if (commentContent == null || commentContent.trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("댓글 내용이 비어있습니다.");
-    }
-
-	    try {
-	        feedService.addComment(feedCode, memberId, commentContent);
-	        return ResponseEntity.ok("댓글이 추가되었습니다.");
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가 중 오류가 발생했습니다.");
-	    }
-	}
-	
 	// 피드 댓글 등록
 	@PostMapping("/createfeedcomment")
 	public String addFeedComment(@RequestParam("feedCode") String feedCode,
@@ -190,13 +167,30 @@ public class FeedController {
 		comment.setMemberId(memberId);
 		comment.setCommentContent(commentContent);
 		
-		feedService.addComment(feedCode, memberId, commentContent);
+		feedService.addFeedComment(feed);
 		
 		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
 	}
 	
 	// 피드 댓글 수정
+	@PostMapping("/modifyFeedComment")
+	public String modifyFeedComent(@RequestParam("feedCommentCode") String feedCommentCode,
+								   @RequestParam("feedCommentContent") String feedCommentContent,
+								   Feed feed) {
+		
+		feedService.mofidyFeedComment(feedCommentCode, feedCommentContent);
+		
+		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
+	}
 	
+	// 피드 댓글 삭제
+	@PostMapping("/deletefeedcomment")
+	public String deleteFeedComment(@RequestParam("feedCommentCode") String feedCommentCode, Feed feed) {
+		
+		feedService.deleteFeedComment(feedCommentCode);
+		
+		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
+	}
 	
 	// 피드 좋아요 증감
 	@PostMapping("/like")

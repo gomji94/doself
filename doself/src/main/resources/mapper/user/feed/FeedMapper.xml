@@ -299,21 +299,19 @@
     </update>
 	
 	<!-- 피드 댓글 추가 -->
-	<insert id="addComment" parameterType="Feed">
+	<insert id="addFeedComment" parameterType="Feed">
 	    INSERT INTO feed_comments (
 	    	fc_num,
 	    	feed_num,
 	    	mbr_id,
 	    	fc_content,
-	    	fc_date,
-	    	fc_like
+	    	fc_date
     	) VALUES (
     		#{commentCode},
     		#{feedCode},
     		#{memberId},
     		#{commentContent},
-    		NOW()),
-    		0;
+    		NOW()
 	</insert>
 	
 	<!-- 피드 댓글 리스트 조회 -->
@@ -331,6 +329,35 @@
 	    WHERE fc.feed_num = #{feedCode}
 	    ORDER BY fc.fc_date ASC;
 	</select>
+  	
+  	<!-- 피드 댓글 수정 -->
+	<update id="modifyFeedComment">
+		UPDATE feed_comments
+		SET
+			fc_content=#{feedCommentContent}
+		WHERE
+			fc_num=#{feedCommentCode}
+	</update>
 	
+	<!-- 피드 댓글 삭제 -->
+	<delete id="deleteFeedComment">
+		DELETE
+		FROM
+			feed_comments
+		WHERE
+			fc_num = #{feedCommentCode}
+	</delete>
+    <!--특정 회원의 하루 먹은 영양 정보 조회--> 
+    <select id="getNutritionalInfoByDate" resultType="DailyNutritionalIntakeInfo">
+        SELECT 
+            SUM(dnii_kcal) AS dniiKcal,
+            SUM(dnii_carbo) AS dniiCarbo,
+            SUM(dnii_protein) AS dniiProtein,
+            SUM(dnii_fat) AS dniiFat
+        FROM
+        	daily_nutritional_intake_info
+        WHERE
+        	mbr_id = #{mbrId} AND DATE(dnii_date) = #{date}
+    </select>
  </mapper>
   
