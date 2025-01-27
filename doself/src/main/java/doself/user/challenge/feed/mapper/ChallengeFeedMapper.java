@@ -10,6 +10,7 @@ import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeMemberWarning;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
@@ -95,6 +96,14 @@ public interface ChallengeFeedMapper {
 	
 	// 챌린지 피드 좋아요 감소
 	int toggleLike(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
+	
+	// 챌린지 경고 카테고리
+	List<ChallengeMemberWarning> getMemberWarningCategory(@Param("challengeCode") String challengeCode,
+            											  @Param("memberId") String memberId);
+	
+	// 챌린지 멤버 경고
+	int warningChallengeMember(String challengeCode, String memberId);
+	
 
 
 	
