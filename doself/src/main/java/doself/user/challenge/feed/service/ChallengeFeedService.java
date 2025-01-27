@@ -34,9 +34,6 @@ public interface ChallengeFeedService {
 	// 챌린지 진행 상태 조회
 	List<ChallengeProgress> getProcessChallengeStatus(String challengeCode);
 
-	// 챌린지 진행도 계산
-	//int calculateTotalProgress(String challengeCode);
-	
 	// 챌린지 참여율 상위 3명 조회
 	List<ChallengeTotalProgress> getTopParticipants(String challengeCode);
 	
@@ -68,23 +65,21 @@ public interface ChallengeFeedService {
 	public void deleteChallengeFeed(String challengeFeedCode, String memberId);
 	
 	// 챌린지 피드 댓글 등록
-	void addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
+	boolean addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
 
 	// 챌린지 피드 댓글 조회
 	List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode);
 	
 	// 챌린지 피드 댓글 수정
-	void modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent);
+	boolean modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent);
 	
 	// 챌린지 피드 댓글 삭제
-	void deleteFeedComment(String challengeFeedCommentCode);
+	boolean deleteFeedComment(String challengeFeedCommentCode);
 	
 	// 챌린지 정보 조회(그래프)
 	ChallengeTotalProgress getChallengeTotalProgressInfo(String challengeCode);
 	
-	// 챌린지 피드 좋아요 증가
-	void incrementLike(String challengeFeedCode, String memberId);
-	
-	// 챌린지 피드 좋아요 감소
-	void decrementLike(String challengeFeedCode, String memberId);
+	// 챌린지 피드 좋아요 증감
+	void challengeFeedToggleLike(String challengeFeedCode, String memberId);
+
 }

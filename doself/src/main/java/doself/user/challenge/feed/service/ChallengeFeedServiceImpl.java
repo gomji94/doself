@@ -94,14 +94,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public List<ChallengeFeed> getChallengeFeed(Map<String, Object> params) {
         return challengeFeedMapper.getChallengeFeed(params);
     }
-	
-	// 총 업로드 데이터 합계
-//	@Override
-//	@Transactional
-//	public int calculateTotalProgress(String challengeCode) {
-//		Integer progressSum = challengeFeedMapper.getTodayProgressSum(challengeCode);
-//	    return progressSum != null ? progressSum : 0; // null일 경우 기본값 0 반환
-//	}
 
 	// 참여 멤버 상위 3명 표시
 	@Override
@@ -129,11 +121,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	@Override
 	@Transactional
 	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode) {
-		// 캐시 내 데이터 여부 확인
-//		if (challengeProgressCache.containsKey(challengeCode)) {
-//	        return challengeProgressCache.get(challengeCode); // 캐시된 데이터 반환
-//	    }
-		
+
 		List<ChallengeProgress> challengeProgressList = challengeFeedMapper.getChallengeProgress(challengeCode);
 	    
 	    //log.info(">>> location/serviceImpl >>> challengeProgressList: {}", challengeProgressList);
@@ -157,14 +145,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    if (progress == null) {
 	        return Map.of("dPlus", "N/A", "dMinus", "N/A");
 	    }
-
-//	    LocalDate today = LocalDate.now();
-//	    LocalDate startDate = progress.getChallengeStartDate().toInstant()
-//	                                  .atZone(ZoneId.of("Asia/Seoul"))
-//	                                  .toLocalDate();
-//	    LocalDate endDate = progress.getChallengeEndDate().toInstant()
-//	                                .atZone(ZoneId.of("Asia/Seoul"))
-//	                                .toLocalDate();
 	    
 	    LocalDate today = LocalDate.now();
 	    LocalDate startDate = progress.getChallengeStartDate().toInstant()
@@ -177,10 +157,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    long dPlus = ChronoUnit.DAYS.between(startDate, today);
 	    long dMinus = ChronoUnit.DAYS.between(today, endDate);
 
-//	    return Map.of(
-//	        "dPlus", "D+" + Math.max(0, dPlus),
-//	        "dMinus", "D-" + Math.max(0, dMinus)
-//	    );
 	    Map<String, String> dateCalculations = Map.of(
             "dPlus", "D+" + Math.max(0, dPlus),
             "dMinus", "D-" + Math.max(0, dMinus)
@@ -467,14 +443,16 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	// 챌린지 피드 댓글 등록
 	@Override
-	public void addChallengeFeedComment(ChallengeFeedComment challengeFeedComment) {
+	public boolean addChallengeFeedComment(ChallengeFeedComment challengeFeedComment) {
 		String formattedKeyNum = commonMapper.getPrimaryKey("cfc_", "challenge_feed_comments", "cfc_num");
 		challengeFeedComment.setChallengeFeedCommentCode(formattedKeyNum);
 	    challengeFeedComment.setChallengeFeedCommentDate(new Date()); // 현재 날짜 설정
 	    challengeFeedComment.setChallengeFeedCommentLike(0); 		  // 좋아요 기본값 0
 	    challengeFeedComment.setChallengeFeedCommentCaution("N");	  // 경고 기본값 N
 
-	    challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
+	    int createCommentCnt = challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
+	    
+	    return createCommentCnt > 0 ? true : false;
 	}
 	
 	// 챌린지 피드별 댓글 리스트
@@ -486,14 +464,16 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	// 챌린지 피드 댓글 수정
 	@Override
-	public void modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent) {
-		challengeFeedMapper.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
+	public boolean modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent) {
+		int modifyCnt = challengeFeedMapper.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
+		return modifyCnt > 0 ? true : false;
 	}
 
 	// 챌린지 피드 댓글 삭제
 	@Override
-	public void deleteFeedComment(String challengeFeedCommentCode) {
-		challengeFeedMapper.deleteFeedComment(challengeFeedCommentCode);
+	public boolean deleteFeedComment(String challengeFeedCommentCode) {
+		int deleteCnt = challengeFeedMapper.deleteFeedComment(challengeFeedCommentCode);
+		return deleteCnt > 0 ? true : false;
 	}
 
 	// 챌린지 피드 수정
@@ -528,25 +508,14 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		return progressInfo;
 	}
 
-	// 챌린지 피드 좋아요 증가
-	public void incrementLike(String challengeFeedCode, String memberId) {
-        if (!challengeFeedMapper.hasLiked(challengeFeedCode, memberId)) {
-            //challengeFeedMapper.addLike(challengeFeedCode, memberId);
-            challengeFeedMapper.incrementLike(challengeFeedCode);
-        } else {
-            throw new RuntimeException("이미 좋아요를 누른 피드입니다.");
-        }
-    }
-
-	// 챌린지 피드 좋아요 감소
+	// 챌린지 피드 좋아요 증감
 	@Override
-	public void decrementLike(String challengeFeedCode, String memberId) {
-        if (challengeFeedMapper.hasLiked(challengeFeedCode, memberId)) {
-            //challengeFeedMapper.removeLike(challengeFeedCode, memberId);
-            challengeFeedMapper.decrementLike(challengeFeedCode);
-        } else {
-            throw new RuntimeException("좋아요를 누르지 않은 피드입니다.");
-        }
-    }
+	public void challengeFeedToggleLike(String challengeFeedCode, String memberId) {
+	    int rowsUpdated = challengeFeedMapper.toggleLike(challengeFeedCode, memberId);
+	    if (rowsUpdated == 0) {
+	        throw new RuntimeException("좋아요 상태 업데이트에 실패했습니다.");
+	    }
+	}
+
 
 }

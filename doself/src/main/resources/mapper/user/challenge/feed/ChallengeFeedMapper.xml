@@ -74,6 +74,7 @@
 	
 	<!-- 챌린지 댓글 리스트 조회 -->
 	<resultMap type="ChallengeFeedComment"  id="ChallengeFeedCommentMap">
+		<id 	column="cg_num" 				property="challengeCode" />
 		<id 	column="cfc_num" 				property="challengeFeedCommentCode" />
 		<id 	column="cmf_num"				property="challengeFeedCode" />
 		<result column="mbr_id" 				property="challengeFeedCommentAuthor" />
@@ -221,7 +222,7 @@
 	        INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 	        INNER JOIN challenge_group_member cgm ON cg.cg_num = cgm.cg_num
 	    WHERE
-	        cgm.mbr_id = #{memberId}
+	        cgm.mbr_id = #{memberId} AND cs.cs_num NOT IN ('cs_007', 'cs_008')
 	    ORDER BY 
 	        cg_start_date DESC
 	</select>
@@ -536,6 +537,7 @@
 	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
 		/* 댓글 리스트 조회 */
 	    SELECT 
+	        cmf.cg_num,
 	        cfc.cfc_num,
 	        cfc.mbr_id,
 	        cfc.cfc_content,
@@ -543,6 +545,7 @@
 	        m.mbr_file_idx,
 	        f.file_path AS mbr_profile_image
 	    FROM challenge_feed_comments cfc
+	    INNER JOIN challenge_member_feed cmf ON cmf.cmf_num = cfc.cmf_num
 	    INNER JOIN `member` m ON cfc.mbr_id = m.mbr_id
 	    LEFT JOIN files f ON m.mbr_file_idx = f.file_idx
 	    WHERE cfc.cmf_num = #{challengeFeedCode}
@@ -567,50 +570,19 @@
 		WHERE
 			cfc_num = #{challengeFeedCommentCode}
 	</delete>
-	
-	<!-- 챌린지 피드 좋아요 여부 확인 -->
-	<select id="hasLiked" parameterType="map" resultType="boolean">
-		/* 챌린지 피드 좋아요 여부 확인 */
-        SELECT COUNT(*) > 0
-        FROM
-			challenge_member_feed
-        WHERE
-        	cmf_num = #{challengeFeedCode}
-        	AND mbr_id = #{memberId}
-    </select>
     
-    <!-- 좋아요 추가 -->
-    <!-- <insert id="addLike" parameterType="map">
-        INSERT INTO challenge_member_feed (cmf_num, mbr_id)
-        VALUES (#{challengeFeedCode}, #{memberId})
-    </insert> -->
-
-    <!-- 좋아요 삭제 -->
-    <!-- <delete id="removeLike" parameterType="map">
-        DELETE FROM challenge_member_feed
-        WHERE cmf_num = #{challengeFeedCode} AND mbr_id = #{memberId}
-    </delete> -->
-	
-	<!-- 챌린지 피드 좋아요 증가 -->
-	<update id="incrementLike" parameterType="String">
-		/* 챌린지 피드 좋아요 증가 */
-		UPDATE
-		  	challenge_member_feed
-		SET
-		  	cmf_like = cmf_like + 1
-		WHERE
-			cmf_num = #{challengeFeedCode}
-	</update>
-	
-	<!-- 챌린지 피드 좋아요 감소 -->	
-	<update id="decrementLike" parameterType="String">
-		/* 챌린지 피드 좋아요 감소 */
-		UPDATE
-        	challenge_member_feed
-        SET
-       	    cmf_like = cmf_like - 1
-        WHERE
-       		cmf_num = #{challengeFeedCode}
+	<!-- 챌린지 피드 좋아요 증감 -->
+	<update id="toggleLike" parameterType="map">
+		/* 챌린지 피드 좋아요 증감 */
+	    UPDATE challenge_member_feed
+	    SET 
+	        cmf_like = CASE
+	            WHEN cmf_like > 0 THEN cmf_like - 1
+	            ELSE cmf_like + 1
+	        END
+	    WHERE 
+	        cmf_num = #{challengeFeedCode}
+	        AND mbr_id = #{memberId}
 	</update>
 </mapper>
   
