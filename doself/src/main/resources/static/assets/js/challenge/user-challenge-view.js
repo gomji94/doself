@@ -108,14 +108,63 @@ $('#cf_mbr_search-panel').on('click', '.open-memberlist-modal', function () {
     });
 });
 
-// 멤버 경고 클릭 이벤트
-$('.mbr-warning').on('click', function () {
-    // 열려 있는 모달 숨기기
-    $('#cf-mbr-modal-overlay').fadeOut();
 
-    // 경고 모달 표시
-    $('#cf-warning-modal-overlay').fadeIn();
+// --- challenge member warning ---
+// 멤버 경고 버튼 클릭 시 경고 카테고리 가져오기
+$('#cf-mbr-modal').on('click', '.mbr-warning', function () {
+    const memberId = $(this).siblings('.user-icon').text();
+    const challengeCode = $(this).closest('.modal-container').data('challengeCode');
+
+    $.ajax({
+        url: '/challenge/feed/warning',
+        type: 'GET',
+        data: { memberId, challengeCode },
+        success: function (response) {
+            const warningList = $('#warning-category-list');
+            warningList.empty(); // 기존 리스트 초기화
+
+            if (response && response.length > 0) {
+                response.forEach(category => {
+                    warningList.append(`
+                        <li class="pop" data-category-code="${category.challengeWarningCategoryCode}">
+                            ${category.challengeWarningCategory}
+                        </li>
+                    `);
+                });
+            } else {
+                warningList.html('<li>카테고리가 없습니다.</li>');
+            }
+
+            $('#cf-warning-modal-overlay').fadeIn();
+        },
+        error: function (error) {
+            console.error("경고 카테고리 로드 실패:", error);
+            alert("경고 카테고리를 가져오는 중 오류가 발생했습니다.");
+        }
+    });
 });
+
+// 경고 카테고리 클릭 이벤트
+$('#warning-category-list').on('click', '.pop', function () {
+    const categoryCode = $(this).data('categoryCode');
+    const memberId = $('.user-icon').text(); // 현재 멤버 ID
+    const challengeCode = $('#cf-mbr-modal').data('challengeCode');
+
+    $.ajax({
+        url: '/challenge/feed/warning',
+        type: 'POST',
+        data: { memberId, challengeCode, categoryCode },
+        success: function () {
+            alert('해당 멤버를 경고 처리했습니다.');
+            $('#cf-warning-modal-overlay').fadeOut();
+        },
+        error: function (error) {
+            console.error("경고 추가 실패:", error);
+            alert("멤버 경고 처리 중 오류가 발생했습니다.");
+        }
+    });
+});
+
 
 // 오버레이 바깥쪽 클릭 시 모달 닫기
 $(document).on('click', function (e) {

@@ -45,6 +45,7 @@
 	<resultMap type="ChallengeMemberList" id="ChallengeMemberListMap">
 		<id 	column="cgm_num"						property="challengeMemberCode" />
 		<id 	column="cg_num" 	 					property="challengeCode" />
+		<result column="cg_name" 	 					property="challengeName" />
 		<result column="mbr_id"		 					property="memberId" />
 		<result column="file_idx"		 				property="memberProfileIdx" />
 		<result column="file_path"		 				property="memberProfileImage" />
@@ -131,6 +132,18 @@
 		<id 	column="cg_num" 	   property="challengeCode"/>
 	    <result column="cg_start_date" property="challengeStartDate"/>
 	    <result column="cg_end_date"   property="challengeEndDate"/>
+	</resultMap>
+	
+	<!-- 챌린지 멤버 경고 조회 -->
+	<resultMap type="ChallengeMemberWarning" id="ChallengeMemberWarningMap">
+		<id 	column="lcmwl_num" 		property="memberWarningCode"/>
+		<id 	column="cg_num" 		property="challengeCode"/>
+		<id 	column="cgm_num" 		property="challengeMemberCode"/>
+		<id 	column="cmwc_num" 		property="challengeWarningCategoryCode"/>
+		<id 	column="olc_code" 		property="occuranceLocationCode"/>
+		<result column="cmwc_category"  property="challengeWarningCategory"/>
+		<result column="lcmwl_bc_num"   property="contentCode"/>
+		<result column="lcmwl_date"	    property="warningDate"/>
 	</resultMap>
 	
 	<!-- 로그인된 챌린지 멤버 아이디 -->
@@ -309,15 +322,6 @@
 		WHERE
 			cg_num = #{challengeCode}
 	</select>
-	
-  	<!-- <select id="getTodayProgressSum" resultType="int" parameterType="string">
-	    SELECT
-	        ROUND(SUM(cmss_today_participation_rate + cmss_today_achievement_rate)/2, 1) AS result
-	    FROM
-	        challenge_member_score_stats
-	    WHERE
-	        cg_num = #{challengeCode}
-	</select> -->
   	
   	<!-- 참여 멤버 점수 top3 -->
   	<select id="getTopParticipants" resultMap="ChallengeParticipantsListMap">
@@ -340,12 +344,13 @@
 		LIMIT 3
 	</select>
 	
-	<!-- 챌린지 멤버 리스트 조회(사이드바) -->
+	<!-- 챌린지 멤버 리스트 조회 -->
   	<select id="getMemberList" resultMap="ChallengeMemberListMap">		
 		/* 챌린지 멤버 리스트 조회(사이드바) */
 		SELECT
 	        MAX(cgm.cgm_num),
 	        MAX(cgm.cg_num),
+	        cg.cg_name,
 	        cgm.mbr_id,
 	        MAX(cgm.cs_num),
 	        MAX(cgm.cgm_date),
@@ -353,38 +358,16 @@
 	        f.file_path
 	    FROM
 	        challenge_group_member cgm
-	        LEFT JOIN `member` m USING(mbr_id)
+	        INNER JOIN challenge_group cg ON cg.cg_num = cgm.cg_num
+	        LEFT JOIN `member` m ON m.mbr_id = cgm.mbr_id
 	        INNER JOIN files f ON m.mbr_file_idx = f.file_idx
 	    WHERE
-	        cg_num = #{challengeCode}
+	        cg.cg_num = #{challengeCode}
 	    GROUP BY
-	        cgm.mbr_id, f.file_path
+	        cg.mbr_id, f.file_path
 	    ORDER BY
 	        cgm.cgm_date ASC
   	</select>
-  	
-  	<!-- 챌린지 댓글 리스트 조회 -->
-  	<!-- <select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
-  		SELECT
-			cfc.cfc_num,
-			cfc.cmf_num,
-			cfc.mbr_id,
-			cfc.cfc_content,
-			cfc.cfc_date,
-			cfc.cfc_caution_check,
-			m.mbr_file_idx,
-			cmf.cmf_file_idx,
-			f.file_path AS mbr_profile_image,
-			ff.file_path AS cmf_picture_image
-		FROM
-			challenge_feed_comments cfc
-			INNER JOIN `member` m USING(mbr_id)       
-			INNER JOIN challenge_member_feed cmf USING(cmf_num)
-			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
-			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
-		WHERE
-			cfc.cmf_num = #{challengeFeedCode}
-  	</select> -->
   	
   	<!-- 챌린지 피드 댓글 등록 -->
   	<insert id="addChallengeFeedComment" parameterType="ChallengeFeedComment">
@@ -584,5 +567,57 @@
 	        cmf_num = #{challengeFeedCode}
 	        AND mbr_id = #{memberId}
 	</update>
+	
+	<!-- 챌린지 멤버 경고 조회 -->
+	<!-- <select id="getMemberWarnigCategory" resultMap="ChallengeMemberWarningMap">
+		SELECT
+			lcmwl.lcmwl_num,
+			lcmwl.cg_num,
+			lcmwl.cgm_num,
+			lcmwl.cmwc_num,
+			cmwc.cmwc_category,
+			lcmwl.olc_code,
+			lcmwl.lcmwl_bc_num,
+			lcmwl.lcmwl_date
+		FROM
+			challenge_mbr_warning_category cmwc
+			INNER JOIN leader_challenge_mbr_warning_log lcmwl USING(cmwc_num)
+			INNER JOIN challenge_group_member cgm USING(cgm_num)
+		WHERE
+			lcmwl.cg_num = #{challengeCode}
+	</select> -->
+	
+	<!-- 챌린지 경고 카테고리 -->
+	<select id="getMemberWarningCategory" resultMap="ChallengeMemberWarningMap">
+		/* 챌린지 경고 카테고리 */
+		SELECT
+	        cmwc.cmwc_num,
+	        cmwc.cmwc_category
+    	FROM
+    		challenge_mbr_warning_category cmwc
+	</select>
+	
+	<!-- 챌린지 멤버 경고 폼 -->
+	<insert id="warningChallengeMember" parameterType="ChallengeMemberWarning">
+		/* 챌린지 멤버 경고 폼 */
+		INSERT INTO
+			leader_challenge_mbr_warning_log (
+				lcmwl_num,
+				cg_num,
+				cgm_num,
+				cmwc_num,
+				olc_code,
+				lcmwl_bc_num,
+				lcmwl_date
+			) VALUES (
+				#{memberWarningCode},
+				#{challengeCode},
+				#{challengeMemberCode},
+				#{challengeWarningCategoryCode},
+				#{occuranceLocationCode},
+				'0',
+				NOW()
+			)
+	</insert>
 </mapper>
   

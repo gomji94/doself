@@ -23,6 +23,7 @@ import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeMemberWarning;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
@@ -99,7 +100,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	@Override
 	@Transactional
 	public List<ChallengeTotalProgress> getTopParticipants(String challengeCode) {
-		// 초기값: 참여 일자 순으로 정렬된 멤버 리스트 조회
 		List<ChallengeTotalProgress> memberList = challengeFeedMapper.getTopParticipants(challengeCode);
 
 	    log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
@@ -116,6 +116,23 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    //log.info(">>> location/serviceImpl >>> memberList: {}", memberList);
 
 	    return memberList;
+	}
+	
+	// 챌린지 멤버 경고 카테고리
+	@Override
+	public List<ChallengeMemberWarning> getMemberWarningCategory(String challengeCode, String memberId) {
+		return challengeFeedMapper.getMemberWarningCategory(challengeCode, memberId);
+	}
+	
+	// 챌린지 멤버 경고
+	@Override
+	public boolean warningChallengeMember(String challengeCode, String memberId) {
+		int warningCnt = challengeFeedMapper.warningChallengeMember(challengeCode, memberId);
+		
+		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
+		String formattedKeyNum = commonMapper.getPrimaryKey("lcmwl_", "challenge_member_feed", "lcmwl_num");
+		
+		return warningCnt > 0 ? true : false;
 	}
 
 	@Override
@@ -516,6 +533,5 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	        throw new RuntimeException("좋아요 상태 업데이트에 실패했습니다.");
 	    }
 	}
-
 
 }
