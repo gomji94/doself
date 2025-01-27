@@ -365,7 +365,7 @@
 					               <img th:src="@{|${challengeFeedList[0].pictureFileImage}|}" alt="피드 이미지" id="image-preview">
 					           </div>
 				               <div class="cf-comment-feed-info">
-				                   <div class="cf-user-comment-container">
+				                   <div class="cf-user-comment-container overflow-auto">
 				                   		<!-- 댓글 내용 -->
 				                   </div>
 				                   <div class="cf-comment-feed-info-under">
@@ -390,7 +390,7 @@
 	            <div th:if="${challengeFeedList == null || challengeFeedList.isEmpty()}">
 				    <p>피드가 없습니다.</p>
 				</div>
-	            <section>
+	            <section th:if="${challengeFeedList != null and !challengeFeedList.isEmpty()}">
 	            	<input type="hidden" id="challengeCode" name="challengeCode" th:value="${challengeCode != null ? challengeCode : ''}" />
 	            	<div class="feed-container">
 		            	<div class="container" id="feedContainer">
@@ -415,7 +415,7 @@
 							    							    
 							    <div class="feed-action">
 							        <div class="action-icons">
-							            <button type="button" class="action-btn likeBtn" data-liked="false" th:data-feed-code="${cf.challengeFeedCode}">
+							            <button type="button" class="action-btn likeBtn" th:data-liked="${cf.hasLiked}" th:data-feed-code="${cf.challengeFeedCode}">
 							                <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
 							            </button>
 							            <button type="button" class="action-btn commentBtn" id="feedCommentBtn" 
@@ -432,14 +432,14 @@
 							        <p class="comments-link" th:text="${cf.challengeFeedCommentContent}"></p>
 							    </div>
 							    <hr>
-							    <form id="AddChallengeFeedCommentForm" th:action="@{/challenge/feed/createcommentrequest}" method="post" onsubmit="return validateCommentForm()">
+							    
 								    <input type="hidden" name="challengeFeedCode" th:value="${cf.challengeFeedCode}" />
 								    <div class="add-comment">
 								        <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
 								        <input id="addChallengeFeedCommentContent" name="challengeFeedCommentContent" type="text" placeholder="댓글 달기..." required>
-								        <button type="submit" class="comment-submit" id="addChallengeFeedCommentButton">게시</button>
+								        <button type="button" class="comment-submit comment-btn" th:data-challenge-code="${cf.challengeFeedCode}">게시</button>
 								    </div>
-							    </form>
+							    
 							</div>
 		            	</div>
 	            	</div>

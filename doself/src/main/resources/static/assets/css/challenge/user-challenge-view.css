@@ -751,17 +751,24 @@ a#feedCommentAuthorId {
 }
 
 input.comment-edit-input {
-    position: absolute;
-    left: 71.8%;
-    top: 16%;
-    width: 137px;
-    border-style: none;
-    background-color: #f1f1f1;
+    margin-left: -1.2px;
+    font-size: 14px;
+    color: #515151;
+    border-radius: 6px;
+    height: 26px;
+    border: 0.7px solid #c5c5c5;
+    padding: 0px 6px;
+}
+
+.cf-user-comment-container {
+    max-height: 350px;
 }
 
 input.comment-edit-input {
     font-size: 14px;
+    width: 158px;
     color: #515151;
+    margin-left: 2px;
 }
 
 .cf-mofify-comment-feed-comment {

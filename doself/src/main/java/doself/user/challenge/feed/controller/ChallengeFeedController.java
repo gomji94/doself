@@ -192,8 +192,6 @@ public class ChallengeFeedController {
 
 	    challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
 	    
-	    //log.info(">>> location/controller >>> addChallengeFeed: {}", addChallengeFeed);
-	    
 	    return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
 	}
 	
@@ -209,7 +207,8 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 댓글 등록
 	@PostMapping("/createcommentrequest")
-	public String addChallengeFeedComment(@RequestParam("challengeFeedCode") String challengeFeedCode,
+	@ResponseBody
+	public boolean addChallengeFeedComment(@RequestParam("challengeFeedCode") String challengeFeedCode,
             							  @RequestParam("challengeFeedCommentContent") String commentContent,
 										  AddChallengeFeed addChallengeFeed,
 										  HttpSession session) {
@@ -219,14 +218,16 @@ public class ChallengeFeedController {
 	    comment.setChallengeFeedCode(challengeFeedCode);
 	    comment.setChallengeFeedCommentAuthor(memberId);
 	    comment.setChallengeFeedCommentContent(commentContent);
+	    
+	    log.info(">>> Controller >>> challengeFeedCode: {}", challengeFeedCode);
 
-	    challengeFeedService.addChallengeFeedComment(comment);
+	    boolean isCreate = challengeFeedService.addChallengeFeedComment(comment);
 
-		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+		return isCreate;
 	}
 	
 	// 챌린지 피드 댓글 조회
-	@GetMapping("/feedcomment")
+	@GetMapping("/comment")
 	@ResponseBody
 	public List<ChallengeFeedComment> getFeedComment(@RequestParam(value = "challengeFeedCode") String challengeFeedCode,
 													 HttpSession session) {
@@ -240,43 +241,43 @@ public class ChallengeFeedController {
 	
 	// 챌린지 피드 댓글 수정
 	@PostMapping("/modifycommentrequest")
-	public String modifyCommentRequest(@RequestParam("challengeFeedCommentCode") String challengeFeedCommentCode,
+	@ResponseBody
+	public boolean modifyCommentRequest(@RequestParam("challengeFeedCommentCode") String challengeFeedCommentCode,
 									   @RequestParam("challengeFeedCommentContent") String challengeFeedCommentContent,
 									   AddChallengeFeed addChallengeFeed) {
 		
-		challengeFeedService.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
+		boolean isModify = challengeFeedService.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
 		
-		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+		return isModify;
 	}
 	
 	// 챌린지 피드 댓글 삭제
 	@PostMapping("/deletecommentrequest")
-	public String deleteCommentRequest(@RequestParam("challengeFeedCommentCode") String challengeFeedCommentCode,
+	@ResponseBody
+	public boolean deleteCommentRequest(@RequestParam("challengeFeedCommentCode") String challengeFeedCommentCode,
 									   AddChallengeFeed addChallengeFeed) {
 		
-		challengeFeedService.deleteFeedComment(challengeFeedCommentCode);
+		boolean isDelete = challengeFeedService.deleteFeedComment(challengeFeedCommentCode);
 		
-		return "redirect:/challenge/feed/view/" + addChallengeFeed.getChallengeCode();
+		return isDelete;
 	}
 	
 	// 챌린지 피드 좋아요 증감
 	@PostMapping("/like")
-    public ResponseEntity<String> toggleLike(@RequestBody Map<String, Object> payload, HttpSession session) {
-        String challengeFeedCode = (String) payload.get("challengeFeedCode");
-        Boolean liked = (Boolean) payload.get("liked");
-        String memberId = (String) session.getAttribute("memberId");
+	public ResponseEntity<String> challengeFeedToggleLike(@RequestBody Map<String, Object> feedLike, HttpSession session) {
+	    String challengeFeedCode = (String) feedLike.get("challengeFeedCode");
+	    String loggedInMemberId = (String) session.getAttribute("SID");
 
-        try {
-            if (liked) {
-                challengeFeedService.incrementLike(challengeFeedCode, memberId);
-            } else {
-                challengeFeedService.decrementLike(challengeFeedCode, memberId);
-            }
-            return ResponseEntity.ok("좋아요 상태가 업데이트되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("좋아요 상태 업데이트 중 오류 발생: " + e.getMessage());
-        }
-    }
-	
+	    //log.info(">>> Controller >>> challengeFeedCode: {}", challengeFeedCode);
+
+	    try {
+	        challengeFeedService.challengeFeedToggleLike(challengeFeedCode, loggedInMemberId);
+	        return ResponseEntity.ok("좋아요 상태가 업데이트되었습니다.");
+	    } catch (Exception e) {
+	        log.error("좋아요 상태 업데이트 중 오류 발생", e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("좋아요 상태 업데이트 중 오류 발생: " + e.getMessage());
+	    }
+	}
+
 }
