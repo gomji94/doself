@@ -15,8 +15,8 @@
 	                <div class="popup-body">
 	                    <div class="body-content">
 	                        <div class="body-titlebox">
-	                            <ul>
-	                                <li class="pop feed-modify-modal" id="feed-modify-modal" data-feed-code="${feedCode}">피드 수정</li>
+	                            <ul th:if="${FeedList != null || FeedList.isEmpty()}">
+	                                <li class="pop feed-modify-modal" id="feed-modify-modal" data-feed-code="">피드 수정</li>
 	                                <li class="pop" id="feed-delete-modal" data-feed-code="${feedCode}">피드 삭제</li>
 	                                <li class="pop" id="my-feed-link-copy"> 피드 링크 복사</li>
 	                                <li class="pop close">취소</li>
@@ -101,7 +101,6 @@
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
                 <input type="hidden" id="feedCode" th:value="${f.feedCode}" />
-				<button class="feed-modify-btn" th:data-feed-code="${f.feedCode}">수정</button>
                     <a href="#">
                        <img class="profile-img" th:src="@{|${f.memberFilePath}|}" alt="프로필 이미지">
                     </a>
@@ -109,7 +108,7 @@
                         <a href="#"><p th:text="${f.memberId}"></p></a>
                     </div>
                     <div class="feed-option">
-                        <button class="option-button">
+                        <button class="option-button" th:data-feed-code="${f.feedCode}">
                             <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
                         </button>
                     </div>

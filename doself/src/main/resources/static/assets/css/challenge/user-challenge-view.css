@@ -264,6 +264,7 @@ select#meal-type {
     position: relative;
     width: 100%;
     height: auto;
+    bottom: -55px;
     /* overflow: hidden; */
 }
 
@@ -284,24 +285,31 @@ select#meal-type {
 }
 
 .progress-background #green-img {
-    width: 100%; /* 전체 이미지를 기준으로 자름 */
+    width: 0;
     height: auto;
     position: absolute;
-    top: 105px;
-    opacity: 0.8;
+    z-index: 2;
+    top: 14px;
+    left: 0;
+    z-index: 100; /* background-img보다 앞에 오도록 설정 */
+    opacity: 1; /* 완전 보이게 설정 */
+    transition: width 0.5s ease-in-out;
 }
 
 .progress-background #background-img {
-    width: 100%; /* 배경 이미지는 항상 보이도록 설정 */
+    width: 87%; /* 배경 이미지는 항상 보이도록 설정 */
     height: auto;
     margin-top: -8.7px;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
 .img-progress-container img#flag {
     width: 20px;
     position: absolute;
-    top: 141px;
-    right: -20px;
+    top: 314px;
+    right: 430px;
 }
 
 .img-progress-container #progress-percent-txt {
@@ -312,12 +320,12 @@ select#meal-type {
     position: absolute;
     width: 29px;
     opacity: 0.3;
-    top: 139px;
+    top: 309px;
 }
 
 .progress-text {
     position: absolute;
-    top: 50%;
+    top: 65.5%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 16px;
@@ -648,7 +656,7 @@ button#loadMore {
     margin-top: -11.5px;
 }
 
-img#createChallengeModifyFeedPreviewImage {
+img#challengeModifyFeedPreviewImage {
     opacity: 1;
     margin: 0px;
     padding: 0px;
@@ -743,17 +751,24 @@ a#feedCommentAuthorId {
 }
 
 input.comment-edit-input {
-    position: absolute;
-    left: 71.8%;
-    top: 16%;
-    width: 137px;
-    border-style: none;
-    background-color: #f1f1f1;
+    margin-left: -1.2px;
+    font-size: 14px;
+    color: #515151;
+    border-radius: 6px;
+    height: 26px;
+    border: 0.7px solid #c5c5c5;
+    padding: 0px 6px;
+}
+
+.cf-user-comment-container {
+    max-height: 350px;
 }
 
 input.comment-edit-input {
     font-size: 14px;
+    width: 158px;
     color: #515151;
+    margin-left: 2px;
 }
 
 .cf-mofify-comment-feed-comment {
@@ -2104,9 +2119,14 @@ select #meal-type option:checked {
     width: 100%;
 }
 
-.progress-container .challenge h3 {
+div#challengeNameProgress {
+    display: flex;
+    width: 235px;
+    justify-content: center;
+}
+
+#challengeNameProgress h3 {
     position: absolute;
-    margin-left: 86px;
     margin-top: 11.5px;
     color: #515151;
     font-size: 16px;
@@ -2127,6 +2147,8 @@ select #meal-type option:checked {
     background: #F6F6F6;
     border-radius: 10px;
     padding-bottom: 19px;
+    display: flex;
+    flex-direction: column;
 }
 
 .challenge-info .talk {
@@ -2147,7 +2169,9 @@ select #meal-type option:checked {
     position: relative;
     float: right;
     margin-right: 22px;
-    margin-top: 20px;
+    margin-top: 6px;
+    right: -219px;
+    top: 12px;
     width: 80px;
     height: 80px;
     /* margin: 0 auto 20px; */
@@ -2157,7 +2181,7 @@ select #meal-type option:checked {
     transform: rotate(-90deg);
     position: absolute;
     top: 0;
-    left: 0;
+/*     right: -217px; */
     width: 80px;
     height: 80px;
 }
@@ -2185,7 +2209,7 @@ select #meal-type option:checked {
 
 .progress-text {
     position: absolute;
-    top: 50%;
+    top: 76.5%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 13px;
@@ -2199,7 +2223,7 @@ select #meal-type option:checked {
 .participants .participants-box {
     position: relative;
     margin-left: 12.5px;
-    bottom: 350.5px;
+    bottom: -14.5px;
 }
 
 .participants .participants-box h3 {

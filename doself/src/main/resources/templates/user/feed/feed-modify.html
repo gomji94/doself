@@ -13,11 +13,11 @@
                     <!-- 이미지 업로드 영역 -->
                     <div class="feed-modify-image-upload">
 					    <div class="feed-modify-preview-box">
-					        <input type="file" class="feed-modify-upload-btn" name="files" id="feed-modify-file-input" accept="image/*">
+					        <!-- <input type="file" class="feed-modify-upload-btn" name="files" id="feed-modify-file-input" accept="image/*"> -->
 							<img th:src="'https://velog.velcdn.com/images/mekite/post/a7d15153-7ad6-4c26-b1c0-20c711e47f07/image.png'" alt="업로드된 이미지 미리보기" id="image-preview">
 						</div>
 						<div class="feed-modify-upload-box">
-	                       <img th:src="@{|${feed.feedFilePath}|}" alt="피드 이미지">
+	                       <img id="createModifyFeedPreviewImage" th:src="@{|${feed.feedFilePath}|}" alt="피드 이미지">
 					       <button type="button" id="feed-modify-upload-btn">
 					       	  <img id="modifyFeedImage" src="https://velog.velcdn.com/images/mekite/post/75193fd9-682c-40ce-a215-911b778e3d70/image.png" alt="이미지 변경" />
 					       </button>

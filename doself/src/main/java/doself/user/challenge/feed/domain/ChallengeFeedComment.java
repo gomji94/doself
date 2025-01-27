@@ -8,6 +8,7 @@ import lombok.Data;
 
 @Data
 public class ChallengeFeedComment {
+	private String  challengeCode;					// 챌린지 코드
 	private String  challengeFeedCommentCode;		// 챌린지 피드 댓글 코드
 	private String  challengeFeedCode;				// 챌린지 피드 코드
 	private String  challengeFeedCommentAuthor;		// 챌린지 피드 댓글 작성자

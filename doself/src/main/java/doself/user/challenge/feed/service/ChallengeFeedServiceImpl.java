@@ -24,7 +24,9 @@ import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
 import doself.user.challenge.feed.domain.ChallengeProgress;
+import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
+import doself.user.challenge.feed.mapper.AdminChallengeFeedMapper;
 import doself.user.challenge.feed.mapper.ChallengeFeedMapper;
 import doself.util.PageInfo;
 import doself.util.Pageable;
@@ -45,6 +47,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	private final CommonMapper commonMapper;
 	private final FilesUtils filesUtils;
 	private final FilesMapper filesMapper;
+	private final AdminChallengeFeedMapper adminChallengeFeedMapper;
 	
 	// 로그인된 챌린지 멤버 아이디
 	@Override
@@ -80,7 +83,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		params.put("pageable", pageable);
 		
 		//List<ChallengeFeed> feeds = challengeFeedMapper.getChallengeFeed(params);
-		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeList();
+		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeListByChallengeCode(params);
 		
 		return new PageInfo<>(challengeFeedList, pageable, rowCnt);
 	}
@@ -91,44 +94,15 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public List<ChallengeFeed> getChallengeFeed(Map<String, Object> params) {
         return challengeFeedMapper.getChallengeFeed(params);
     }
-	
-	// 총 업로드 데이터 합계
-	@Override
-	@Transactional
-	public int calculateTotalProgress(String challengeCode) {
-		Integer progressSum = challengeFeedMapper.getTodayProgressSum(challengeCode);
-	    return progressSum != null ? progressSum : 0; // null일 경우 기본값 0 반환
-	}
 
 	// 참여 멤버 상위 3명 표시
 	@Override
 	@Transactional
-	public List<ChallengeMemberList> getTopParticipants(String challengeCode) {
+	public List<ChallengeTotalProgress> getTopParticipants(String challengeCode) {
 		// 초기값: 참여 일자 순으로 정렬된 멤버 리스트 조회
-	    List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
+		List<ChallengeTotalProgress> memberList = challengeFeedMapper.getTopParticipants(challengeCode);
 
-	    // 참여율 및 점수 초기화
-	    memberList.forEach(member -> {
-	        if (member.getChallengeTodayParticipationRate() == null) {
-	            member.setChallengeTodayParticipationRate(0.0); // 기본 참여율
-	        }
-	        if (member.getChallengeTodayAchievementRate() == null) {
-	            member.setChallengeTodayAchievementRate(0.0); // 기본 달성률
-	        }
-	        if (member.getScore() == null) {
-	            member.setScore(
-	                (member.getChallengeTodayParticipationRate() + member.getChallengeTodayAchievementRate()) / 2
-	            ); // 점수 계산
-	        }
-	    });
-
-	    // 점수가 있는 경우만 정렬: 점수가 없는 경우는 기본 순서(참여 일자) 유지
-	    memberList.sort((m1, m2) -> Double.compare(
-	            (m2.getScore() != null ? m2.getScore() : 0.0),
-	            (m1.getScore() != null ? m1.getScore() : 0.0)
-	    ));
-
-	    //log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
+	    log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
 
 	    return memberList;
 	}
@@ -139,19 +113,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
 		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
 		
-		// 초기값 설정: 참여율과 달성률, 점수를 0으로 설정
-		memberList.forEach(member -> {
-	        if (member.getChallengeTodayParticipationRate() == null) {
-	            member.setChallengeTodayParticipationRate(0.0);
-	        }
-	        if (member.getChallengeTodayAchievementRate() == null) {
-	            member.setChallengeTodayAchievementRate(0.0);
-	        }
-	        if (member.getScore() == null) {
-	            member.setScore(0.0);
-	        }
-	    });
-	    
 	    //log.info(">>> location/serviceImpl >>> memberList: {}", memberList);
 
 	    return memberList;
@@ -160,22 +121,8 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	@Override
 	@Transactional
 	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode) {
-		// 캐시 내 데이터 여부 확인
-//		if (challengeProgressCache.containsKey(challengeCode)) {
-//	        return challengeProgressCache.get(challengeCode); // 캐시된 데이터 반환
-//	    }
-		
-		List<ChallengeProgress> challengeProgressList = challengeFeedMapper.getChallengeProgress(challengeCode);
 
-	    // 상태 코드 변환 로직
-	    challengeProgressList.forEach(progress -> {
-	        String statusCode = progress.getChallengeStatusCode();
-	        if ("cs_002".equals(statusCode) || "cs_003".equals(statusCode)) {
-	            progress.setChallengeStatusCode("진행중");
-	        } else if ("cs_004".equals(statusCode)) {
-	            progress.setChallengeStatusCode("대기중");
-	        }
-	    });
+		List<ChallengeProgress> challengeProgressList = challengeFeedMapper.getChallengeProgress(challengeCode);
 	    
 	    //log.info(">>> location/serviceImpl >>> challengeProgressList: {}", challengeProgressList);
 
@@ -193,27 +140,31 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public Map<String, String> calculateDPlusAndDMinus(String challengeCode) {
 		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
 		
-		//log.info(">>> location/serviceImpl >>> progress: {}", progress);
+		log.info(">>> location/serviceImpl >>> progress: {}", progress);
 		
 	    if (progress == null) {
 	        return Map.of("dPlus", "N/A", "dMinus", "N/A");
 	    }
-
+	    
 	    LocalDate today = LocalDate.now();
 	    LocalDate startDate = progress.getChallengeStartDate().toInstant()
 	                                  .atZone(ZoneId.of("Asia/Seoul"))
 	                                  .toLocalDate();
-	    LocalDate endDate = progress.getChallengeEndDate().toInstant()
-	                                .atZone(ZoneId.of("Asia/Seoul"))
-	                                .toLocalDate();
+
+	    // 종료일 계산: 시작일 + 14일
+	    LocalDate endDate = startDate.plusDays(14);
 
 	    long dPlus = ChronoUnit.DAYS.between(startDate, today);
 	    long dMinus = ChronoUnit.DAYS.between(today, endDate);
 
-	    return Map.of(
-	        "dPlus", "D+" + Math.max(0, dPlus),
-	        "dMinus", "D-" + Math.max(0, dMinus)
-	    );
+	    Map<String, String> dateCalculations = Map.of(
+            "dPlus", "D+" + Math.max(0, dPlus),
+            "dMinus", "D-" + Math.max(0, dMinus)
+        );
+	    
+	    log.info(">>> Service >>> calculateDPlusAndDMinus >>> dateCalculations: {}", dateCalculations);
+	    
+	    return dateCalculations;
 	}
 
 	// 챌린지 참여 멤버수 조회
@@ -267,16 +218,16 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		// 챌린지 피드생성시 실행
 		// 해당아이디의 해당챌린지의 해당날짜에 데이터의 수(챌린지피드 수) 조회
 		
-		 int challengeFeedCount = challengeFeedMapper.getChallengeFeedCountByChallengeFeed(addChallengeFeed);
+		 int challengeFeedCount = adminChallengeFeedMapper.getChallengeFeedCountByChallengeFeed(addChallengeFeed);
 		 log.info("challengeFeedCount = {}",challengeFeedCount);
 		  // 챌린지내 개인기록 해당아이디, 해당챌린지, 해당날짜에 데이터가 있는지 조회 
-		 int isDataMemberStat = challengeFeedMapper.isDataMemberStat(addChallengeFeed);
+		 int isDataMemberStat = adminChallengeFeedMapper.isDataMemberStat(addChallengeFeed);
 		  log.info("isDataMemberStat = {}",isDataMemberStat);
 		  // 챌린지 번호 
 		 String cgNum = addChallengeFeed.getChallengeCode();
 		 
 		  // 해당 챌린지의 난이도 별 개수 확인 
-		 int topicLevel = challengeFeedMapper.getTopicLevel(cgNum); // 개인기록 키생성 
+		 int topicLevel = adminChallengeFeedMapper.getTopicLevel(cgNum); // 개인기록 키생성 
 		  String memberStatKey = commonMapper.getPrimaryKey("cmss_", "challenge_member_score_stats", "cmss_num");
 		  
 		  Map<String, Object> memberStatMap = new HashMap<String, Object>();
@@ -288,12 +239,12 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		  // 챌린지내 개인기록 한개도 존재하지 않을시 insert 
 		  if(isDataMemberStat == 0) {
 		  
-			  challengeFeedMapper.createPersonalStat(memberStatMap); 
+			  adminChallengeFeedMapper.createPersonalStat(memberStatMap); 
 		  } 
 		  //한개이상 존재할때 update
 		  else {			
 			  
-			  challengeFeedMapper.updatePersonalStat(memberStatMap); 
+			  adminChallengeFeedMapper.updatePersonalStat(memberStatMap); 
 		  }	  
 				  
 				  
@@ -306,17 +257,14 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 			  Calendar calendar = Calendar.getInstance(); calendar.setTime(date); 
 			  // 년도와 월 추출 
 			  int year = calendar.get(Calendar.YEAR); 
-			  int month = calendar.get(Calendar.MONTH) + 1; 
+			  int month = calendar.get(Calendar.MONTH)+1; 
 			  // 해당멤버의 누적달성률 추출 
-			  double achievementRate = challengeFeedMapper.getAchievementRate(addChallengeFeed); // 해당멤버의 누적참여율 추출
-			  double participationRate =
-			  challengeFeedMapper.getParticipationRate(addChallengeFeed); 
+			  double achievementRate = adminChallengeFeedMapper.getAchievementRate(addChallengeFeed); // 해당멤버의 누적참여율 추출
+			  double participationRate = adminChallengeFeedMapper.getParticipationRate(addChallengeFeed); 
 			  // 챌린지 보상기준에 따른 달성률 점수 추출 
-			  int achievementScore =
-			  challengeFeedMapper.getAchievementScore(achievementRate); 
+			  int achievementScore = adminChallengeFeedMapper.getAchievementScore(achievementRate); 
 			  // 챌린지 보상기준에 따른 참여율 점수 추출 
-			  int participationScore =
-			  challengeFeedMapper.getParticipationScore(participationRate);
+			  int participationScore = adminChallengeFeedMapper.getParticipationScore(participationRate);
 			  
 			  
 			  Map<String, Object> memberScoreMap = new HashMap<String, Object>();
@@ -331,32 +279,36 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 			  log.info("memberScoreMap@#@#{}",memberScoreMap);
 			  
 			  // 해당아이디의 해당챌린지의 챌린지개인점수 데이터가 있는지 조회 
-			  int isDataMemberScore = challengeFeedMapper.isDataMemberScore(memberScoreMap);
+			  int isDataMemberScore = adminChallengeFeedMapper.isDataMemberScore(memberScoreMap);
 			  
 			  // 챌린지 개인점수 키 생성 
 			  String memberScoreKey = commonMapper.getPrimaryKey("cpsl_", "challenge_personal_score_list", "cpsl_num");
 			  memberScoreMap.put("memberScoreKey", memberScoreKey);
-			  
+			  log.info("isDataMemberScore {}",isDataMemberScore);
 			  // 데이터가 없으면 insert 
 			  if(isDataMemberScore == 0) {
 			  
-			  challengeFeedMapper.createPersonalScore(memberScoreMap); } // 데이터가 있으면 update
+				  adminChallengeFeedMapper.createPersonalScore(memberScoreMap); 
+			  } 
+			  // 데이터가 있으면 update
 			  else {
 			  
-			  challengeFeedMapper.updatePersonalScore(memberScoreMap); } // 랭킹 update
-			  challengeFeedMapper.updateMemberScoreRank();
+				  adminChallengeFeedMapper.updatePersonalScore(memberScoreMap); 
+			  } 
+			  // 랭킹 update
+			  adminChallengeFeedMapper.updateMemberScoreRank();
 			  
 			  
 			  
 			  // ...(*￣０￣)ノ챌린지 별 기록 ...(*￣０￣)ノ
 			  
 			  // 해당날짜 해당챌린지의 데이터가 있는지 조회 
-			  int isDataChallengeStat = challengeFeedMapper.isDataChallengeStat(addChallengeFeed);
+			  int isDataChallengeStat = adminChallengeFeedMapper.isDataChallengeStat(addChallengeFeed);
 			  
 			  // 해당날짜 해당챌린지의 일일참여율 조회 
-			  double challengeParticipationRate = challengeFeedMapper.getChallengeParticipationRate(addChallengeFeed); 
+			  double challengeParticipationRate = adminChallengeFeedMapper.getChallengeParticipationRate(addChallengeFeed); 
 			  // 해당날짜 해당챌린지의 일일당설률 조회 
-			  double challengeAchievementRate = challengeFeedMapper.getChallengeAchievementRate(addChallengeFeed);
+			  double challengeAchievementRate = adminChallengeFeedMapper.getChallengeAchievementRate(addChallengeFeed);
 			  
 			  Map<String, Object> challengeStatMap = new HashMap<String, Object>();
 			  
@@ -372,12 +324,12 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 				  String challengeStatKey = commonMapper.getPrimaryKey("ctps_","challenge_today_participation_stats", "ctps_num");
 				  challengeStatMap.put("challengeStatKey", challengeStatKey);
 			  
-				  challengeFeedMapper.createChallengeStat(challengeStatMap); 
+				  adminChallengeFeedMapper.createChallengeStat(challengeStatMap); 
 			  } 
 			  // 있으면 update
 			  else {
 			  
-			  challengeFeedMapper.updateChallengeStat(challengeStatMap); 
+				  adminChallengeFeedMapper.updateChallengeStat(challengeStatMap); 
 			  }
 			  
 			  
@@ -388,20 +340,20 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 			  Map<String, Object> challengeScore = new HashMap<String, Object>();
 			  
 			  // 해당챌린지의 데이터가 있는지 조회 
-			  int isDataChallengeScore = challengeFeedMapper.isDataChallengeScore(addChallengeFeed);
+			  int isDataChallengeScore = adminChallengeFeedMapper.isDataChallengeScore(addChallengeFeed);
 			  
 			  // 챌린지 난이도 가져오기 
-			  String challengeLevel = challengeFeedMapper.getChallengeLevel(addChallengeFeed); 
+			  String challengeLevel = adminChallengeFeedMapper.getChallengeLevel(addChallengeFeed); 
 			  // 챌린지보상기준에 따른 난이도 점수 
-			  int challengeLevelScore = challengeFeedMapper.getChallengeLevelScore(challengeLevel); 
+			  int challengeLevelScore = adminChallengeFeedMapper.getChallengeLevelScore(challengeLevel); 
 			  // 해당챌린지의 누적달성률 추출 
-			  double challengeCumulativeAchievementRate = challengeFeedMapper.getChallengeCumulativeAchievementRate(addChallengeFeed);
+			  double challengeCumulativeAchievementRate = adminChallengeFeedMapper.getChallengeCumulativeAchievementRate(addChallengeFeed);
 			  // 해당챌린지의 누적참여율 추출 
-			  double challengeCumulativeParticipationRate = challengeFeedMapper.getChallengeCumulativeParticipationRate(addChallengeFeed); 
+			  double challengeCumulativeParticipationRate = adminChallengeFeedMapper.getChallengeCumulativeParticipationRate(addChallengeFeed); 
 			  // 챌린지보상기준에 따른 누적달성률 점수 
-			  int challengeAchievementScore = challengeFeedMapper.getChallengeAchievementScore(challengeCumulativeAchievementRate); 
+			  int challengeAchievementScore = adminChallengeFeedMapper.getChallengeAchievementScore(challengeCumulativeAchievementRate); 
 			  // 챌린지보상기준에 따른 누적참여율 점수 
-			  int challengeParticipationScore = challengeFeedMapper.getChallengeParticipationScore(challengeCumulativeParticipationRate);
+			  int challengeParticipationScore = adminChallengeFeedMapper.getChallengeParticipationScore(challengeCumulativeParticipationRate);
 			  
 			  challengeScore.put("challengeFeed", addChallengeFeed);
 			  challengeScore.put("year", year); 
@@ -420,16 +372,16 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 				  //챌린지점수 기본키 생성 
 				  String challengeScoreKey = commonMapper.getPrimaryKey("mcsl_", "monthly_challenge_score_list", "mcsl_num"); challengeScore.put("memberScoreKey", challengeScoreKey);
 			  
-				  challengeFeedMapper.createChallengeScore(challengeScore); 
+				  adminChallengeFeedMapper.createChallengeScore(challengeScore); 
 			  } 
 			  // 데이터가 존재하면 update 
 			  else {
 			  
-				  challengeFeedMapper.updateChallengeScore(challengeScore); 
+				  adminChallengeFeedMapper.updateChallengeScore(challengeScore); 
 			  }
 			  
 			  // 랭킹 update 
-			  challengeFeedMapper.updateChallengeScoreRank();
+			  adminChallengeFeedMapper.updateChallengeScoreRank();
 			  
 			  
 			  // ...(*￣０￣)ノ리더가 경고한 내역...(*￣０￣)ノ (리더가 경고누를 때 판별)
@@ -437,14 +389,14 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 			  // 해당챌린지 해당멤버 경고 3번받으면 해당챌린지 퇴장
 			  
 			  // 퇴장당하지 않은 멤버중 경고 3번받은 멤버 조회 
-			  List<Map<String, Object>> accumulatedWarningMember = challengeFeedMapper.getAccumulatedWarningMember();
+			  List<Map<String, Object>> accumulatedWarningMember = adminChallengeFeedMapper.getAccumulatedWarningMember();
 			  
 			  // 챌린지 퇴장 처리 (insert) 
 			  for(Map<String, Object> e : accumulatedWarningMember) {
 				  String cgmNumKey = commonMapper.getPrimaryKey("cgm_",
 				  "challenge_group_member", "cgm_num"); e.put("cgmNumKey", cgmNumKey);
 				  
-				  challengeFeedMapper.createChallengeMemberCsNum(e); 
+				  adminChallengeFeedMapper.createChallengeMemberCsNum(e); 
 			  }
 					 
 				 
@@ -456,46 +408,24 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    if (files != null && !files.isEmpty()) {
 	        Files uploadedFile = filesUtils.uploadFile(files);
 	        if (uploadedFile != null) {
-	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx());
+	        	String challengeFeedFileIdx = addChallengeFeed.getChallengeFeedFileIdx();
+	        	Files challengeFeedFile = filesMapper.getFileInfoByIdx(challengeFeedFileIdx);
+	        	boolean isFileDelete = filesUtils.deleteFileByPath(challengeFeedFile.getFilePath());
+	            
+	        	if(isFileDelete) {
+	        		uploadedFile.setFileIdx(challengeFeedFileIdx);
+	        		filesMapper.updateFileByIdx(uploadedFile);
+	        	}
 	        }
 	    }
 	    
 	    String challengeFeedCode = addChallengeFeed.getChallengeFeedCode();
 	    addChallengeFeed.setChallengeFeedCode(challengeFeedCode);
-	    
-	    // 파일의 idx 경로를 가져와서 delete가 이뤄지면(리턴 값이 true이면) 업로드
-	    // 업로드가 되면 fileinfo → 다시 올린 경로/오리지널네임 → 기존의 idx만 세팅(파일인포)
-	    // 파일 매퍼에
 		
-		log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
+		//log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
 		
 		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
 	}
-	
-	// 챌린지 피드 수정(해결X)
-//	@Override
-//	public void modifyChallengeFeed(MultipartFile files, AddChallengeFeed addChallengeFeed) {
-//		if (files != null && !files.isEmpty()) {
-//	        // 기존 파일 경로 제거
-//	        Files existingFile = filesMapper.getFileInfoByIdx(addChallengeFeed.getChallengeFeedFileIdx());
-//	        if (existingFile != null) {
-//	            filesUtils.deleteFileByPath(existingFile.getFilePath());
-//	        }
-//
-//	        // 새로운 파일 업로드
-//	        Files uploadedFile = filesUtils.uploadFile(files);
-//	        if (uploadedFile != null) {
-//	            addChallengeFeed.setChallengeFeedFileIdx(uploadedFile.getFileIdx());
-//	        }
-//	    }
-//	    
-//	    String challengeFeedCode = addChallengeFeed.getChallengeFeedCode();
-//	    addChallengeFeed.setChallengeFeedCode(challengeFeedCode);
-//	    
-//		log.info(">>> location/serviceImpl >>> addChallengeFeed: {}", addChallengeFeed);
-//		
-//		challengeFeedMapper.modifyChallengeFeed(addChallengeFeed);
-//	}
 
 	// 챌린지 피드 코드
 	@Override
@@ -513,14 +443,16 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	// 챌린지 피드 댓글 등록
 	@Override
-	public void addChallengeFeedComment(ChallengeFeedComment challengeFeedComment) {
+	public boolean addChallengeFeedComment(ChallengeFeedComment challengeFeedComment) {
 		String formattedKeyNum = commonMapper.getPrimaryKey("cfc_", "challenge_feed_comments", "cfc_num");
 		challengeFeedComment.setChallengeFeedCommentCode(formattedKeyNum);
 	    challengeFeedComment.setChallengeFeedCommentDate(new Date()); // 현재 날짜 설정
 	    challengeFeedComment.setChallengeFeedCommentLike(0); 		  // 좋아요 기본값 0
 	    challengeFeedComment.setChallengeFeedCommentCaution("N");	  // 경고 기본값 N
 
-	    challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
+	    int createCommentCnt = challengeFeedMapper.addChallengeFeedComment(challengeFeedComment);
+	    
+	    return createCommentCnt > 0 ? true : false;
 	}
 	
 	// 챌린지 피드별 댓글 리스트
@@ -532,20 +464,58 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	// 챌린지 피드 댓글 수정
 	@Override
-	public void modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent) {
-		challengeFeedMapper.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
+	public boolean modifyFeedComment(String challengeFeedCommentCode, String challengeFeedCommentContent) {
+		int modifyCnt = challengeFeedMapper.modifyFeedComment(challengeFeedCommentCode, challengeFeedCommentContent);
+		return modifyCnt > 0 ? true : false;
 	}
 
 	// 챌린지 피드 댓글 삭제
 	@Override
-	public void deleteFeedComment(String challengeFeedCommentCode) {
-		challengeFeedMapper.deleteFeedComment(challengeFeedCommentCode);
+	public boolean deleteFeedComment(String challengeFeedCommentCode) {
+		int deleteCnt = challengeFeedMapper.deleteFeedComment(challengeFeedCommentCode);
+		return deleteCnt > 0 ? true : false;
 	}
 
+	// 챌린지 피드 수정
 	@Override
 	public ChallengeFeed getModifyChallengeFeed(String challengeFeedCode) {
 		
 		return challengeFeedMapper.getModifyChallengeFeed(challengeFeedCode);
 	}
+
+	// 챌린지 정보 조회(그래프)
+	@Override
+	@Transactional
+	public ChallengeTotalProgress getChallengeTotalProgressInfo(String challengeCode) {
+		// 챌린지 진행 상태 정보 조회
+	    ChallengeTotalProgress progressInfo = challengeFeedMapper.getChallengeTotalProgressInfo(challengeCode);
+
+	    // 현재 멤버 수 설정
+	    int currentMemberCount = challengeFeedMapper.getCurrentMemberCount(challengeCode);
+	    if (progressInfo != null) {
+	        progressInfo.setChallengeCurrentMember(currentMemberCount);
+
+	        // 상태 코드 변환
+	        String statusCode = progressInfo.getChallengeStatusCode();
+	        if ("cs_002".equals(statusCode) || "cs_003".equals(statusCode)) {
+	            progressInfo.setChallengeStatusCode("진행중");
+	        } else if ("cs_004".equals(statusCode)) {
+	            progressInfo.setChallengeStatusCode("대기중");
+	        }
+	    }
+
+	    log.info(">>> location/serviceImpl >>> progressInfo: {}", progressInfo);
+		return progressInfo;
+	}
+
+	// 챌린지 피드 좋아요 증감
+	@Override
+	public void challengeFeedToggleLike(String challengeFeedCode, String memberId) {
+	    int rowsUpdated = challengeFeedMapper.toggleLike(challengeFeedCode, memberId);
+	    if (rowsUpdated == 0) {
+	        throw new RuntimeException("좋아요 상태 업데이트에 실패했습니다.");
+	    }
+	}
+
 
 }

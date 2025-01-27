@@ -17,14 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CommonInterceptor implements HandlerInterceptor {
 	
 	private final static List<String> excludeUri = List.of("/market/purchaseitem", "/ticket/payment", "/challenge/list/view"
-															, "/challenge/feed/memberlist", "/challenge/feed/feedcomment"
+															, "/challenge/feed/memberlist", "/challenge/feed/comment"
+															, "/challenge/feed/deletecommentrequest", "/challenge/feed/modifycommentrequest"
+															, "/challenge/feed/createcommentrequest"
 															, "/ticket/payment/result", "/challenge/checkDuplicateName", "/feed/list"
 															, "/ticket/purchasedetail/refund", "/register/idCheck", "/feed/createFeed"
 															, "/challenge/list/view/participation", "/ticket/purchasedetail/refund"
 															, "/ticket/purchasedetail/isCheck", "/feed/{feedCode})"
 															, "/challenge/list/view/participation", "/ticket/purchasedetail/refund"
 															, "/ticket/purchasedetail/isCheck", "/challenge/feed/modifychallengefeed"
-															, "/ticket/purchasedetail/isCheck", "/challenge/feed/view/**");
+															, "/ticket/purchasedetail/isCheck", "/challenge/feed/view/**", "/feed/modifyfeed");
 
 	
 	

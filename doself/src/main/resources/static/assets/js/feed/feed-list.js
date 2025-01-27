@@ -255,64 +255,139 @@ $('#feed-create-submit-btn').on('click', function (e) {
 // --- 피드 수정 모달 ---
 $(document).ready(function () {
     // 수정 버튼 클릭 시
-    $('.feed-modify-btn').on('click', function () {
-        const feedElement = $(this).closest('.feed'); // 클릭된 피드 요소 가져오기
-        const feedCode = feedElement.data('feed-code'); // 피드 코드 가져오기
-
-        // 모달에 데이터 바인딩
-        $('#modify-feedCode').val(feedElement.data('feed-code'));
-        $('#modify-feedContent').val(feedElement.data('feed-content'));
-        $('#modify-feedIntakeDate').val(feedElement.data('feed-intakedate'));
-        $('#modify-feedFoodIntake').val(feedElement.data('meal-weight'));
-        $('#modify-mealCategoryCode').val(feedElement.data('meal-category'));
-        const feedVisibility = feedElement.data('feed-visibility');
-        $(`input[name="feedOpenStatus"][value="${feedVisibility}"]`).prop('checked', true);
-
-        // 모달 표시
-        $('#feed-modify-modal-overlay').fadeIn();
-    });
-
-    // 모달 닫기 버튼
-    $('.modal-close-btn').on('click', function () {
-        $('#feed-modify-modal-overlay').fadeOut();
-    });
-
-    // 피드 수정 요청
-    $('#feed-modify-form').on('submit', function (e) {
-        e.preventDefault();
-
-        const formData = $(this).serialize(); // 폼 데이터 직렬화
-        $.ajax({
-            url: '/feed/modifyfeed',
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                alert('피드 수정 완료');
-                location.reload(); // 페이지 새로고침
-            },
-            error: function () {
-                alert('피드 수정 중 오류 발생');
-            },
-        });
-    });
-});
-
-    /*// 글자수 카운터
-    const content = $('#feed-modify-content');
-    const textCount = $('#feed-modify-text-count');
-    const maxLength = 2000;
-
-    content.on('input', function () {
-        const currentLength = content.val().length;
-        textCount.text(currentLength);
-
-        // 글자수 초과 시 스타일 변경
-        if (currentLength > maxLength) {
-            textCount.css('color', 'red');
-        } else {
-            textCount.css('color', '');
+	$('.option-button').click(function () {
+		const feedCode = $(this).data('feed-code');
+		
+		if (!feedCode) {
+					
+            alert('피드 코드를 찾을 수 없습니다.');
+            return;
         }
-    });*/
+		
+		$('#feed-modify-modal').attr('data-feed-code', feedCode);
+		$('#feed-delete-modal').attr('data-feed-code', feedCode);
+		
+		$('#feed-option-modal-wrap').fadeIn();
+	});
+	
+	$('#feed-modify-modal').click(function() {
+		const feedCode = $(this).attr('data-feed-code');
+		
+		if (!feedCode) {
+							
+	        alert('피드 코드를 찾을 수 없습니다.');
+	        return;
+	    }
+				
+        $.ajax({
+            url: '/feed/modifyfeed', // 서버에서 데이터를 가져올 엔드포인트
+            method: 'GET',
+            data: { feedCode: feedCode },
+            success: function (data) {
+	            // 데이터 바인딩
+	            $('#modify-feedContent').val(data.feedContent);
+	            $('#modify-intakeDateTime').val(data.feedIntakeDate);
+	            $('#modify-mealCategoryCode').val(data.mealCategoryCode);
+	            $('#modify-feedFoodIntake').val(data.feedFoodIntake);
+	            $(`input[name="feedOpenStatus"][value="${data.feedOpenStatus}"]`).prop('checked', true);
+	
+				if(data.feedFileIdx) {
+					$('#createModifyFeedPreviewImage').attr(
+						'src',
+						`/upload/feed/$(data.feedFileIdx)`
+					);
+				}
+				
+	            // 모달 열기
+	            $('#feed-modify-modal-overlay').fadeIn();
+	        },
+	        error: function (error) {
+	            console.error('피드 데이터를 가져오는 중 오류가 발생했습니다:', error);
+	            alert('피드 데이터를 가져오는 데 실패했습니다.');
+	        }
+	    });
+		
+		$('#feed-modify-upload-btn').click(function () {
+			$('#feedFiles').click();
+		});
+		
+		$('#feedFiles').change(function (e) {
+			const file = e.target.files[0];
+			if(file) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					$('#createModifyFeedPreviewImage').attr('src', e.target.result);
+				};
+				reader.readAsArDataURL(file);
+			}
+		});
+		
+		const content = $('#feed-modify-content');
+	    const textCount = $('#feed-modify-text-count');
+	    const maxLength = 2000;
+	
+	    content.on('input', function () {
+	        const currentLength = content.val().length;
+	        textCount.text(currentLength);
+	
+	        // 글자수 초과 시 스타일 변경
+	        if (currentLength > maxLength) {
+	            textCount.css('color', 'red');
+	        } else {
+	            textCount.css('color', '');
+	        }
+	    });
+		
+	    $('#feed-modify-form').on('submit', function (e) {
+	        e.preventDefault();
+			$(this).unbind('submit').submit();
+		});
+		
+		// 삭제 버튼 클릭 이벤트
+			$(document).on("click", "#feed-delete-modal", function () {
+			    const feedCode = $(this).data("feed-code");
+	
+			    if (!feedCode) {
+			        alert("피드 코드를 찾을 수 없습니다.");
+			        return;
+			    }
+	
+			    if (confirm("정말 삭제하시겠습니까?")) {
+			        $.ajax({
+			            url: "/feed/delete",
+			            type: "POST",
+			            data: { feedCode: feedCode },
+			            success: function () {
+			                alert("삭제되었습니다.");
+			                window.location.reload();
+			            },
+			            error: function () {
+			                alert("삭제 중 문제가 발생했습니다.");
+			            }
+			        });
+			    }
+			});
+		
+		// 모달 닫기
+		$(document).on('click', function (e) {
+	        if ($(e.target).is('.feed-option-modal-wrap, #optionCencleButton, #feed-modify-modal-overlay')) {
+	            $('.feed-option-modal-wrap').fadeOut(); // 클릭된 오버레이 닫기
+	        }
+	    });
+	
+		// ESC 키로 모달 닫기
+	    $(document).on('keydown', function (e) {
+	        if (e.key === 'Escape') {
+	            $('.feed-option-modal-wrap, #feed-modify-modal-overlay').fadeOut();
+	        }
+	    });	
+		
+	    // 모달 닫기 버튼
+	    $('.modal-close-btn').on('click', function () {
+	        $('#feed-modify-modal-overlay').fadeOut();
+	    });
+	});
+});
 	
 // --- 피드 삭제 ---
 $('#feed-delete-modal').on('click', function () {
