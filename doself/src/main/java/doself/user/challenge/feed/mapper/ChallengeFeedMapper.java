@@ -10,6 +10,7 @@ import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeMemberWarning;
 import doself.user.challenge.feed.domain.ChallengeProgress;
 import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
@@ -44,9 +45,6 @@ public interface ChallengeFeedMapper {
 	// 투데이 디데이 계산
 	ChallengeProgress getChallengeProgressByCode(@Param("challengeCode") String challengeCode);
 	
-    // 참여 멤버 점수
-    //List<ChallengeMemberList> getParticipantsWithScore(@Param("challengeCode")String challengeCode);
-
     // 챌린지 멤버 리스트 조회
     List<ChallengeMemberList> getMemberList(@Param("challengeCode") String challengeCode);
     
@@ -67,12 +65,6 @@ public interface ChallengeFeedMapper {
 	
 	// 챌린지 피드 삭제
 	void deleteChallengeFeed(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
-
-	// 챌린지 피드 댓글 등록
-	int addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
-	
-	// 챌린지 피드 이미지 조회
-	String getFeedImage(String challengeFeedCode);
 	
 	// 챌린지 피드 댓글 리스트 조회
 	List<ChallengeFeedComment> getFeedCommentList(@Param("challengeFeedCode") String challengeFeedCode);
@@ -80,24 +72,40 @@ public interface ChallengeFeedMapper {
 	// 챌린지 피드 댓글 1개 조회
 	String ChallengeFeedCommentView(@Param("challengeFeedCommentCode") String challengeFeedCommentCode);
 	
+	// 챌린지 피드 댓글 등록
+	int addChallengeFeedComment(ChallengeFeedComment challengeFeedComment);
+	
+	// 챌린지 피드 이미지 조회
+	String getFeedImage(String challengeFeedCode);
+	
 	// 챌린지 피드 댓글 수정
-	void modifyFeedComment(@Param("challengeFeedCommentCode") String challengeFeedCommentCode,
+	int modifyFeedComment(@Param("challengeFeedCommentCode") String challengeFeedCommentCode,
 						   @Param("challengeFeedCommentContent") String challengeFeedCommentContent);
 	
 	// 챌린지 피드 댓글 삭제
-	void deleteFeedComment(@Param("challengeFeedCommentCode") String challengeFeedCommentCode);
+	int deleteFeedComment(@Param("challengeFeedCommentCode") String challengeFeedCommentCode);
 	
 	// 챌린지 수정
 	ChallengeFeed getModifyChallengeFeed(String challengeFeedCode);
 
-	// 챌린지 정보 조회(그래프)
-	List<ChallengeTotalProgress> getChallengeTotalProgressInfo(@Param("challengeCode") String challengeCode);
+	// 챌린지 정보 조회(그래프/챌린지 정보)
+	ChallengeTotalProgress getChallengeTotalProgressInfo(@Param("challengeCode") String challengeCode);
 	
 	// 참여 멤버 상위 3명 표시
 	List<ChallengeTotalProgress> getTopParticipants(@Param("challengeCode") String challengeCode);
-	//List<ChallengeMemberList> getTopParticipants(@Param("challengeCode") String challengeCode);
 	
+	// 챌린지 피드 좋아요 감소
+	int toggleLike(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
 	
+	// 챌린지 경고 카테고리
+	List<ChallengeMemberWarning> getMemberWarningCategory(@Param("challengeCode") String challengeCode,
+            											  @Param("memberId") String memberId);
+	
+	// 챌린지 멤버 경고
+	int warningChallengeMember(String challengeCode, String memberId);
+	
+
+
 	
 	// 관리자
 	// 멤버기록

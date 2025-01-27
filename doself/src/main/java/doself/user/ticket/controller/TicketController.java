@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import doself.common.mapper.CommonMapper;
 import doself.user.ticket.domain.Order;
@@ -139,11 +140,10 @@ public class TicketController {
 	
 	@PostMapping("/purchasedetail/isCheck")
 	@ResponseBody
-	public boolean isCheckDuplicate(String ticketNum) {
+	public boolean isCheckDuplicate(String ticketNum, RedirectAttributes reAttr) {
 		boolean isCheck = false;
 		int result = ticketMapper.cntDuplicate(ticketNum);
 		if(result> 0) isCheck = true;
-		
 		return isCheck;
 	}
 	

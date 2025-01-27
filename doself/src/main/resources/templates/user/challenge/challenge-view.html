@@ -45,12 +45,66 @@
 		            <div class="cf-mbr-modal-body">
 		                <div class="challenge-mbr-list">
 		                	<section th:if="${memberList != null and !memberList.isEmpty()}">
-						        <div class="mbr-id" th:each="cml : ${memberList}">
-			                        <img th:src="${cml.memberProfileImage}" alt="프로필" onerror="this.src='/images/default-profile.png'">
-			                        <p class="user-icon" th:text="${cml.memberId}"></p>
-			                        <button type="button" class="mbr-warning">경고</button>
-			                        <button type="button">강퇴</button>
-			                    </div>
+		                		<div >
+		                			<label for="challengeName">챌린지이름</label>
+		                			<label for="challengeName" th:text="${memberList.challengeName}"></label>
+		                			<input type="hidden" name="challengeCode" th:value="${challengeCode}" />
+		                		</div>
+		                		<div >
+		                			<label for="">참여자</label>
+		                			<select name="" id="">
+		                				<option value="">참여자를 선택해주세요</option>
+		                				<option th:if="${memberList}" 
+		                						th:each="cml : ${memberList}" 
+		                						th:value="${cml.memberId}" 
+		                						th:text="${cml.memberId}">
+		                				</option>
+		                			</select>
+		                		</div>
+		                		<div >
+		                			<label for="">신고유형</label>
+		                			<select name="" id="">
+		                				<option value="">신고유형을 선택해주세요</option>
+		                				<option value="cmwc_001">참여율 저조</option>
+		                				<option value="cmwc_002">친목(파벌 형성)</option>
+		                				<option value="cmwc_003">비매너</option>
+		                				<option value="cmwc_004">멤버간 분쟁</option>
+		                				<option value="cmwc_005">정치/종교적 발언</option>
+		                				<option value="cmwc_006">개인 멤버 접근 시도</option>
+		                				<option value="cmwc_007">타 챌린지 언급 금지</option>
+		                			</select>
+		                		</div>
+		                		<div >
+		                			<label for="">발생위치</label>
+		                			<select name="" id="">
+		                				<option value="">피드/댓글 선택해주세요</option>
+		                				<option value="olc_005">챌린지내 피드</option>
+		                				<option value="olc_006">챌린지내 댓글</option>
+		                			</select>
+		                		</div>
+		                		<div >
+		                			<label for="">신고글</label>
+		                			<select name="" id="">
+		                				<!--/* 참여자 선택시 change 이벤트에 따라 댓글과 피드 목록 렌더링(ajax) */-->
+		                				<!--/* 예시: [피드]  */-->
+		                				<!--/* 예시: [댓글]  */-->
+		                				<!--/* 
+		                					width 값에 따라 ... 말줄임
+		                					<div class="txt_line">통영의 신흥보물 강구안의 동쪽벼랑인 동피랑의 벽화마을을 다녀왔다</div>
+		                					.txt_line {
+											      width:70px;
+											      padding:0 5px;
+											      overflow:hidden;
+											      text-overflow:ellipsis;
+											      white-space:nowrap;
+											  }
+		                				 */-->
+		                				<option value="">참여자의 피드/댓글 선택해주세요</option>
+		                				<option value="olc_005">챌린지내 피드</option>
+		                				<option value="olc_006">챌린지내 댓글</option>
+		                			</select>
+		                		</div>
+						        
 						    </section>
 			                <!-- <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="구분" id="section-bar"> -->
 				            <div th:if="${memberList == null or memberList.isEmpty()}">
@@ -66,14 +120,14 @@
 	        <div class="popup-wrap" id="cf-warning-modal-overlay" style="display: none;">
 		       <div class="popup" id="cf-warning-modal">
 		           <div class="popup-body" id="memberWarnigButton">
-		               <ul>
-		                   <li class="pop">참여율 저조</li>
+		               <ul id="warning-category-list">
+		                   <!-- <li class="pop">참여율 저조</li>
 		                   <li class="pop">친목(파벌 형성)</li>
 		                   <li class="pop">비매너</li>
 		                   <li class="pop">멤버간 분쟁</li>
 		                   <li class="pop">정치/종교적 발언</li>
 		                   <li class="pop">개인 멤버 접근 시도</li>
-		                   <li class="pop close" id="cf-warning-modal-overlay">취소</li>
+		                   <li class="pop close" id="cf-warning-modal-overlay">취소</li> -->
 		               </ul>
 		           </div>
 		       </div>
@@ -93,7 +147,7 @@
 	                                    <ul th:if="${challengeFeedList != null and !challengeFeedList.isEmpty()}">
 	                                        <li class="pop" id="cl-modify-modal" data-challenge-feed-code="">챌린지 피드 수정</li>
 	                                        <li class="pop" id="cl-delete-modal" data-challenge-feed-code="">챌린지 피드 삭제</li>
-	                                        <li class="pop" id="cl-link-copy">챌린지 피드 링크 복사</li>
+	                                        <!-- <li class="pop" id="cl-link-copy">챌린지 피드 링크 복사</li> -->
 	                                        <!-- 위 내용 그냥 복붙하면 자동으로 증가 -->
 	                                        <li class="pop close" id="optionCencleButton">취소</li>
 	                                    </ul>
@@ -275,7 +329,7 @@
 				    </div>
 				    <!-- create challenge feed modal end -->
 	
-	                <!-- challenge feed modify modal 챌린지 피드 수정 모달(이전코드) -->
+	                <!-- challenge feed modify modal 챌린지 피드 수정 모달 -->
 	                <div class="modal-overlay" id="cf-modify-modal-overlay" style="display: none;">
 	                   <form id="ModifyChallengeFeedForm" th:action="@{/challenge/feed/modifychallengefeedrequest}"
 	                   		 method="post" enctype="multipart/form-data">
@@ -365,7 +419,7 @@
 					               <img th:src="@{|${challengeFeedList[0].pictureFileImage}|}" alt="피드 이미지" id="image-preview">
 					           </div>
 				               <div class="cf-comment-feed-info">
-				                   <div class="cf-user-comment-container">
+				                   <div class="cf-user-comment-container overflow-auto">
 				                   		<!-- 댓글 내용 -->
 				                   </div>
 				                   <div class="cf-comment-feed-info-under">
@@ -390,7 +444,7 @@
 	            <div th:if="${challengeFeedList == null || challengeFeedList.isEmpty()}">
 				    <p>피드가 없습니다.</p>
 				</div>
-	            <section>
+	            <section th:if="${challengeFeedList != null and !challengeFeedList.isEmpty()}">
 	            	<input type="hidden" id="challengeCode" name="challengeCode" th:value="${challengeCode != null ? challengeCode : ''}" />
 	            	<div class="feed-container">
 		            	<div class="container" id="feedContainer">
@@ -415,7 +469,7 @@
 							    							    
 							    <div class="feed-action">
 							        <div class="action-icons">
-							            <button type="button" class="action-btn likeBtn" data-liked="false">
+							            <button type="button" class="action-btn likeBtn" th:data-liked="${cf.hasLiked}" th:data-feed-code="${cf.challengeFeedCode}">
 							                <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png" alt="좋아요">
 							            </button>
 							            <button type="button" class="action-btn commentBtn" id="feedCommentBtn" 
@@ -432,14 +486,14 @@
 							        <p class="comments-link" th:text="${cf.challengeFeedCommentContent}"></p>
 							    </div>
 							    <hr>
-							    <form id="AddChallengeFeedCommentForm" th:action="@{/challenge/feed/createcommentrequest}" method="post" onsubmit="return validateCommentForm()">
+							    
 								    <input type="hidden" name="challengeFeedCode" th:value="${cf.challengeFeedCode}" />
 								    <div class="add-comment">
 								        <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
 								        <input id="addChallengeFeedCommentContent" name="challengeFeedCommentContent" type="text" placeholder="댓글 달기..." required>
-								        <button type="submit" class="comment-submit" id="addChallengeFeedCommentButton">게시</button>
+								        <button type="button" class="comment-submit comment-btn" th:data-challenge-code="${cf.challengeFeedCode}">게시</button>
 								    </div>
-							    </form>
+							    
 							</div>
 		            	</div>
 	            	</div>
@@ -451,14 +505,13 @@
 	        </main>
 	        
 	        <!-- challenge progress(right aside) -->
-	        <div class="progress-container" th:if="${challengeTotalProgressInfo != null || challengeTotalProgressInfo.isEmpty()}" th:each="${ctpi : challengeTotalProgressInfo}">
-	        	<!-- th:object="${challengeProgress[0]}" -->
+	        <div class="progress-container" th:if="${challengeTotalProgressInfo != null}">
 	            <div class="challenge">
-	                <a href="#">
-	                    <h3 th:text="|${cp.challengeName}|"></h3>
-	                    <h5 th:text="${cp.challengeStatusCode}"></h5>
-	                    <img src="https://velog.velcdn.com/images/mekite/post/dabb0bea-be57-4f91-93ff-265cf61836f0/image.png" alt="챌린지명/진행도">
-	                </a>
+	            	<div id="challengeNameProgress">
+	                    <h3 th:text="${challengeTotalProgressInfo.challengeName}"></h3>
+	            	</div>
+                    <h5 th:text="${challengeTotalProgressInfo.challengeStatusCode}"></h5>
+                    <img src="https://velog.velcdn.com/images/mekite/post/dabb0bea-be57-4f91-93ff-265cf61836f0/image.png" alt="챌린지명/진행도">
 	            </div>
 	            <div class="challenge-info">
 	                <div class="talk">
@@ -471,41 +524,45 @@
 	                        <circle cx="40" cy="40" r="35" class="foreground-circle"></circle>
 	                    </svg>
 	                    <div class="progress-text">
-	                        <span id="progress-percent-txt" th:text="${totalProgress != null ? totalProgress + '%' : '0%'}"></span>
+	                        <span id="progress-percent-txt"
+	                        	  th:text="${challengeTotalProgressInfo.monthlyCumulativePerformanceRate + '%'}"
+	                        	  th:data-progress="${challengeTotalProgressInfo.monthlyCumulativePerformanceRate ?: 0}"></span>
 	                    </div>
 	                </div>
 	                <div class="img-progress-container">
 	                    <div class="progress-background">
-	                        <div class="front-progress-bar">
-	                            <img src="https://velog.velcdn.com/images/mekite/post/bb8be481-75fa-400d-9c60-18a53829fee5/image.png" id="green-img" alt="초록 그래프">
-	                        </div>
 	                        <img src="https://velog.velcdn.com/images/mekite/post/fd80f53c-75c3-4c01-b18f-e18962603130/image.png" id="background-img" alt="배경 그래프">
+                            <img src="https://velog.velcdn.com/images/mekite/post/bb8be481-75fa-400d-9c60-18a53829fee5/image.png"
+                            	 th:data-progress="${challengeTotalProgressInfo.monthlyCumulativePerformanceRate ?: 0}"
+                            	 id="green-img" alt="초록 그래프">
+	                       <!--  <div class="front-progress-bar" style="width: 100%; /* 임시로 100%로 설정 */">
+	                        </div> -->
 	                    </div>
 	                    <img src="https://velog.velcdn.com/images/mekite/post/75389a0f-6009-44ab-b2c0-74bc95a9c658/image.png" id="flag" alt="깃발">
 	                    <img src="https://velog.velcdn.com/images/mekite/post/20788b98-49ca-4994-a3e2-d5d1c292b6af/image.png" id="hiker" alt="챌린지 아이콘">
-	                    <span id="progress-percent-txt" th:text="${totalProgress != null ? totalProgress + '%' : '0%'}"></span>
+	                    <span id="progress-percent-txt" th:text="${challengeTotalProgressInfo.monthlyCumulativePerformanceRate}"></span>
 	                </div>
 	                <div class="participants">
 	                    <div class="participants-box">
 	                        <a href="#">
-	                            <h3>참여율</h3>
-	                            <img src="https://velog.velcdn.com/images/mekite/post/651e5110-48f2-4d5a-a740-7439393c2877/image.png" alt="참여율 더보기">
+	                            <h3>달성률</h3>
+	                            <img src="https://velog.velcdn.com/images/mekite/post/651e5110-48f2-4d5a-a740-7439393c2877/image.png" alt="달성률 더보기">
 	                        </a>
 	                    </div>
 	                    <div class="participants-list">
 	                        <ul>
 							    <li th:each="member : ${topParticipants}">
-							        <img th:src="${member.memberProfileImage}" alt="멤버 프로필" />
+							        <img th:src="${member.challengeMemberProfilePath}" alt="멤버 프로필" />
         							<p th:text="${member.memberId}"></p>
 							        <div class="progress-bar">
-							            <div class="progress-fill" th:style="'width: ' + ${member.score} + '%'"></div>
+							            <div class="progress-fill" th:style="'width: ' + ${member.personalCumulativePerformanceRate} + '%'"></div>
 							        </div>
-							        <span th:text="${member.score + '%'}"></span>
+							        <span th:text="${member.personalCumulativePerformanceRate + '%'}"></span>
 							    </li>
 							</ul>
 	                    </div>
 	                </div>
-	                <div class="info-box">
+	                <div class="info-box" >
 	                    <div class="info-item">
 	                        <img src="https://velog.velcdn.com/images/mekite/post/9fc6ee2f-f3f5-4938-9ece-c4bad184eb3f/image.png" alt="캘린더 아이콘">
 	                        <p class="info-text">투데이</p>
@@ -515,7 +572,7 @@
 	                    <div class="info-item">
 	                        <img src="https://velog.velcdn.com/images/mekite/post/dea50ae1-2c1a-4822-9ed3-4ae8554a54f4/image.png" alt="사용자 아이콘">
 	                        <p class="info-text">멤버수</p>
-	                        <p th:text="|${cp.challengeCurrentMember}/${cp.challengeMaxMember}|"></p>
+	                        <p th:text="${challengeTotalProgressInfo.challengeCurrentMember} + '/' + ${challengeTotalProgressInfo.challengeMaxMember}"></p>
 	                    </div>
 	                    <div class="separator"></div>
 	                    <div class="info-item">
