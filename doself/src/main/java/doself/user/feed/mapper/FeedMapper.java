@@ -6,8 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import doself.user.challenge.feed.domain.ChallengeFeedComment;
-import doself.user.feed.domain.DailyNutritionalIntakeInfo;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.domain.MealNutritionInfo;
 
@@ -60,5 +58,8 @@ public interface FeedMapper {
 	void deleteFeedComment(@Param("feedCommentCode") String feedCommentCode);
 	
 	// 하루 먹은 영양 정보 조회
-	List<DailyNutritionalIntakeInfo> getNutritionalInfoByDate(Map<String, Object> params);
+	/*
+	 * List<DailyNutritionalIntakeInfo> getNutritionalInfoByDate(Map<String, Object>
+	 * params);
+	 */
 }

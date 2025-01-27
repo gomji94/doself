@@ -4,7 +4,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -158,16 +157,19 @@ public class FeedController {
 	// 피드 댓글 등록
 	@PostMapping("/createfeedcomment")
 	public String addFeedComment(@RequestParam("feedCode") String feedCode,
-								 @RequestParam("feedCommentContent") String commentContent,
+								 @RequestParam("feedCommentContent") String feedCommentContent,
 								 Feed feed, HttpSession session) {
+	    
 		String memberId = (String) session.getAttribute("SID");
 		
 		Feed comment = new Feed();
 		comment.setFeedCode(feedCode);
 		comment.setMemberId(memberId);
-		comment.setCommentContent(commentContent);
+		comment.setFeedCommentContent(feedCommentContent);
 		
-		feedService.addFeedComment(feed);
+		System.out.println("commentContent in Feed: " + comment.getFeedCommentContent());
+		
+		feedService.addFeedComment(comment);
 		
 		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
 	}
@@ -211,10 +213,10 @@ public class FeedController {
     }
 	
 	// 음식 영양 정보 조회
-	@GetMapping("/nutritioninfo")
-    public String getNutritionInfo(Model model) {
-		model.addAttribute("title", "영양 정보 조회");
-		
-		return "user/feed/nutritioninfo-view";
-	}
+	/*
+	 * @GetMapping("/nutritioninfo") public String getNutritionInfo(Model model) {
+	 * model.addAttribute("title", "영양 정보 조회");
+	 * 
+	 * return "user/feed/nutritioninfo-view"; }
+	 */
 }

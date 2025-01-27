@@ -432,14 +432,31 @@ $(document).ready(function () {
         $('#feed-modify-modal-overlay').fadeOut();
     });
 });
+
+// --- 피드 댓글 게시 버튼 이벤트 ---
+$(document).ready(function () {
+    // 댓글 작성 버튼 클릭 시 폼 검증
+    $("#addfeedCommentButton").on("click", function (e) {
+        const commentContent = $("#addFeedCommentContent").val().trim();
+        
+        if (!commentContent) {
+            alert("댓글을 입력해주세요.");
+            e.preventDefault(); // 폼 전송 방지
+            return false;
+        }
+        
+        $("#AddFeedCommentForm").submit();
+    });
+});
+
 	
 // --- 피드 댓글 모달 ---
 $(document).on('click', '.commentBtn', function () {
 	const feedCode = $(this).data('feed-code');
 	const memberProfilePath = $(this).data('picture-file-image');
 	
-	console.log("feedCode:", feedCode);
-	console.log("memberProfilePath:", memberProfilePath);
+	/*console.log("feedCode:", feedCode);
+	console.log("memberProfilePath:", memberProfilePath);*/
 	
 	if (!feedCode) {
         alert("피드 코드가 없습니다.");
@@ -472,9 +489,12 @@ $(document).on('click', '.commentBtn', function () {
                         <div class="feed-comment-user-block">
                             <div class="feed-comment-content-block">
                                 <img class="comment-profile" src="${profileImage}" alt="프로필">
-                                <a href="#" class="feed-comment-user-link">${comment.feedCommentAuthor}</a>
+                                <a href="#" class="feed-comment-user-link">${comment.memberId}</a>
                                 <div class="feed-comment-feed-comment">
                                     <span>${content}</span>
+									<div class="feed-mofify-comment-feed-comment" style="display: none;">
+					                    <input type="text" class="comment-edit-input" value="test">
+					                </div>
                                 </div>
                             </div>
                             <div class="comment-actions" style="display: ${isAuthor ? 'block' : 'none'};">
@@ -504,15 +524,12 @@ $(document).on('click', '.commentBtn', function () {
 	    const commentText = parentSection.find('.comment-text');
 	    const originalContent = $(this).data('content');
 
+		// 수정 input에 기존 텍스트 값 설정
+	    commentEditContainer.find('.comment-edit-input').val(originalContent);
+		
 	    // 텍스트 숨기고, 수정 input 표시
-		commentEditContainer.css('display', 'block');
 		commentText.hide();
 	    commentEditContainer.show();
-		//$('.cf-mofify-comment-feed-comment').css('display', 'block');
-		//$('.comment-edit-input').css('display', 'block');
-		
-	    //commentEditContainer.find('.comment-text').hide();
-	    //commentEditContainer.find('.comment-edit-input').val(originalContent).show();
 
 		// 다른 댓글의 수정 상태 초기화
 	    $('.feed-mofify-comment-feed-comment').not(commentEditContainer).hide();
@@ -528,6 +545,7 @@ $(document).on('click', '.commentBtn', function () {
 	// 댓글 저장 버튼 클릭 이벤트
     $(document).on('click', '.save-btn', function () {
 		const parentDiv = $(this).closest('.feed-comment-user-block');
+		const parentSection = $(this).closest('section');
 	    const commentEditContainer = parentDiv.find('.feed-mofify-comment-feed-comment');
 	    const commentText = parentDiv.find('.comment-text');
 	    const commentId = $(this).data('comment-id');
@@ -539,7 +557,7 @@ $(document).on('click', '.commentBtn', function () {
         }
 		
 		$.ajax({
-	        url: '/feed/modifycomment',
+	        url: '/feed/modifyFeedcomment',
 	        type: 'POST',
 	        data: { feedCommentCode: commentId, feedCommentContent: newContent },
 	        success: function () {
@@ -583,7 +601,7 @@ $(document).on('click', '.commentBtn', function () {
         const feedCommentCode = $(this).data('comment-id');
         if (confirm('댓글을 삭제하시겠습니까?')) {
             $.ajax({
-                url: '/feed/deletecomment',
+                url: '/feed/deleteFeedcomment',
                 type: 'POST',
                 data: { feedCommentCode: feedCommentCode },
                 success: function () {
@@ -706,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 영양 정보 페이지
-document.addEventListener("DOMContentLoaded", () => {
+/*document.addEventListener("DOMContentLoaded", () => {
     const calendarBody = document.getElementById("calendar-body");
     const currentMonthElement = document.querySelector(".current-month");
     const prevMonthButton = document.querySelector(".prev-month");
@@ -807,4 +825,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     renderCalendar(currentDate);
-});
+});*/

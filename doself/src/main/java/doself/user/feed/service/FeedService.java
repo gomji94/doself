@@ -1,11 +1,9 @@
 package doself.user.feed.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import doself.user.feed.domain.DailyNutritionalIntakeInfo;
 import doself.user.feed.domain.Feed;
 
 public interface FeedService {
@@ -46,5 +44,8 @@ public interface FeedService {
 	void deleteFeedComment(String feedCommentCode);
 	
 	// 하루 먹은 영양 정보 조회
-	DailyNutritionalIntakeInfo getNutritionalInfoByDate(String mbrId, String date);
+	/*
+	 * DailyNutritionalIntakeInfo getNutritionalInfoByDate(String mbrId, String
+	 * date);
+	 */
 }

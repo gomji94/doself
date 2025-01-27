@@ -307,11 +307,12 @@
 	    	fc_content,
 	    	fc_date
     	) VALUES (
-    		#{commentCode},
+    		#{feedCommentCode},
     		#{feedCode},
     		#{memberId},
-    		#{commentContent},
+    		#{feedCommentContent},
     		NOW()
+		)
 	</insert>
 	
 	<!-- 피드 댓글 리스트 조회 -->
@@ -348,7 +349,7 @@
 			fc_num = #{feedCommentCode}
 	</delete>
     <!--특정 회원의 하루 먹은 영양 정보 조회--> 
-    <select id="getNutritionalInfoByDate" resultType="DailyNutritionalIntakeInfo">
+    <!--<select id="getNutritionalInfoByDate" resultType="DailyNutritionalIntakeInfo">
         SELECT 
             SUM(dnii_kcal) AS dniiKcal,
             SUM(dnii_carbo) AS dniiCarbo,
@@ -358,6 +359,6 @@
         	daily_nutritional_intake_info
         WHERE
         	mbr_id = #{mbrId} AND DATE(dnii_date) = #{date}
-    </select>
+    </select>-->
  </mapper>
   

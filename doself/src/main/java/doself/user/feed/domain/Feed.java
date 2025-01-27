@@ -91,14 +91,6 @@ public class Feed {
         this.formattedDate = formattedDate;
     }
     
-    public String getCommentContent() {
-        return feedCommentContent;
-    }
-
-    public void setCommentContent(String commentContent) {
-		
-	}
-    
 	public void setCommentDate(LocalDateTime now) {
 		
 	}
