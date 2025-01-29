@@ -7,8 +7,8 @@ $(document).ready(function () {
 		const feedCode = $(this).data('feed-code'); // 현재 피드 코드 가져오기
 	    const feedUrl = `/feed/view?feedCode=${feedCode}`; // 링크 생성
 
-		console.log('Feed Code:', feedCode); // 디버깅용
-	    console.log('Feed URL:', feedUrl);  // 디버깅용
+		/*console.log('Feed Code:', feedCode); //
+	    console.log('Feed URL:', feedUrl);  // */
 		
 		if (feedCode) {
 	        $('#my-feed-link-copy a').attr('data-feed-url', feedUrl); // 동적으로 URL 설정
@@ -30,7 +30,7 @@ $(document).ready(function () {
         e.preventDefault();
         const feedUrl = $(this).attr('data-feed-url'); // URL 읽기
 
-        console.log('Copied URL:', feedUrl); // 디버깅용
+        /*console.log('Copied URL:', feedUrl);*/
 
         if (!feedUrl) {
             alert('복사할 링크가 없습니다.');
@@ -398,7 +398,7 @@ $(document).ready(function () {
 
 	    if (confirm("정말 삭제하시겠습니까?")) {
 	        $.ajax({
-	            url: "/feed/deleteFeed",
+	            url: "/feed/deletefeed",
 	            type: "POST",
 	            data: { feedCode: feedCode },
 	            success: function () {
@@ -556,11 +556,14 @@ $(document).on('click', '.commentBtn', function () {
         }
 		
 		$.ajax({
-	        url: '/feed/modifyFeedcomment',
+	        url: '/feed/modifyfeedcomment',
 	        type: 'POST',
 	        data: { feedCommentCode: commentId, feedCommentContent: newContent },
 	        success: function () {
-	            alert("댓글이 수정되었습니다.");
+	           alert("댓글이 수정되었습니다.");
+	           	commentText.text(newContent).show();
+	           	commentEditContainer.hide();
+		       
 	            commentText.text(newContent).show(); // 수정된 텍스트를 표시
 	            commentEditContainer.hide(); // 수정 input 숨기기
 
@@ -600,7 +603,7 @@ $(document).on('click', '.commentBtn', function () {
         const feedCommentCode = $(this).data('comment-id');
         if (confirm('댓글을 삭제하시겠습니까?')) {
             $.ajax({
-                url: '/feed/deleteFeedcomment',
+                url: '/feed/deletefeedcomment',
                 type: 'POST',
                 data: { feedCommentCode: feedCommentCode },
                 success: function () {
@@ -626,7 +629,7 @@ $(document).on('click', '.commentBtn', function () {
         }
 
         $.ajax({
-            url: '/feed/createcomment',
+            url: '/feed/createfeedcomment',
             type: 'POST',
             data: {
                 feedCode: feedCode,

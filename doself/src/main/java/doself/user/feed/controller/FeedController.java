@@ -52,7 +52,7 @@ public class FeedController {
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
 	    feedList.forEach(feed -> {
-	        log.info("FeedCode: {}", feed.getFeedCode());
+			/* log.info("FeedCode: {}", feed.getFeedCode()); */
 	        if (feed.getFeedDate() != null) {
 	            feed.setFormattedDate(feed.getFeedDate().format(formatter));
 	        }
@@ -124,7 +124,7 @@ public class FeedController {
         feed.setFeedCode(feedCode);
         feedService.modifyFeed(feed, files);
 
-        return "redirect:/feed/list" + feed.getFeedCode();
+        return "redirect:/feed/list?feedCode=" + feedCode;
     }
 	
     // 피드 삭제
@@ -135,7 +135,7 @@ public class FeedController {
     	String memberId = (String) session.getAttribute("SID");
     	feedService.deleteFeed(feedCode, memberId);
     	
-    	return "redirect:/feed/list" + feed.getFeedCode();
+    	return "redirect:/feed/list?feedCode=" + feedCode;
     }
     
 	// 피드 댓글 조회
@@ -171,27 +171,29 @@ public class FeedController {
 		
 		feedService.addFeedComment(comment);
 		
-		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
+		return "redirect:/feed/list?feedCode=" + feedCode;
 	}
 	
 	// 피드 댓글 수정
-	@PostMapping("/modifyFeedComment")
-	public String modifyFeedComent(@RequestParam("feedCommentCode") String feedCommentCode,
+	@PostMapping("/modifyfeedcomment")
+	@ResponseBody
+	public boolean modifyFeedComent(@RequestParam("feedCommentCode") String feedCommentCode,
 								   @RequestParam("feedCommentContent") String feedCommentContent,
 								   Feed feed) {
 		
-		feedService.mofidyFeedComment(feedCommentCode, feedCommentContent);
+		boolean isModify = feedService.mofidyFeedComment(feedCommentCode, feedCommentContent);
 		
-		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
+		return isModify;
 	}
 	
 	// 피드 댓글 삭제
 	@PostMapping("/deletefeedcomment")
-	public String deleteFeedComment(@RequestParam("feedCommentCode") String feedCommentCode, Feed feed) {
+	@ResponseBody
+	public boolean deleteFeedComment(@RequestParam("feedCommentCode") String feedCommentCode, Feed feed) {
 		
-		feedService.deleteFeedComment(feedCommentCode);
+		boolean isDelete = feedService.deleteFeedComment(feedCommentCode);
 		
-		return "redirect:/feed/feed-comment/" + feed.getFeedCode();
+		return isDelete;
 	}
 	
 	// 피드 좋아요 증감

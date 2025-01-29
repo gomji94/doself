@@ -113,7 +113,10 @@ public class FeedServiceImpl implements FeedService {
     @Override
     @Transactional
     public void deleteFeed(String feedCode, String memberId) {
-        feedMapper.deleteFeed(feedCode, memberId);
+    	feedMapper.deleteFeedComments(feedCode);
+    	feedMapper.deleteDailyNutritionalIntakeComparison(feedCode);
+    	feedMapper.deletedDilyNutritionalIntakeInfo(feedCode);
+    	feedMapper.deleteFeed(feedCode, memberId);
     }
     
     // 피드 댓글 조회
@@ -135,14 +138,16 @@ public class FeedServiceImpl implements FeedService {
     
     // 피드 댓글 수정
     @Override
-    public void mofidyFeedComment(String feedCommentCode, String feedCommentContent) {
-    	feedMapper.modifyFeedComment(feedCommentCode, feedCommentContent);
+    public boolean mofidyFeedComment(String feedCommentCode, String feedCommentContent) {
+    	int modifyCnt = feedMapper.modifyFeedComment(feedCommentCode, feedCommentContent);
+    	return modifyCnt > 0 ? true : false;
     }
     
     // 피드 댓글 삭제
     @Override
-    public void deleteFeedComment(String feedCommentCode) {
-    	feedMapper.deleteFeedComment(feedCommentCode);
+    public boolean deleteFeedComment(String feedCommentCode) {
+    	int deleteCnt = feedMapper.deleteFeedComment(feedCommentCode);
+		return deleteCnt > 0 ? true : false;
     }
     
     // 하루 먹은 영양 정보 조회

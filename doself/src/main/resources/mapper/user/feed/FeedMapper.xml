@@ -246,37 +246,61 @@
     </select>
 
 	<!-- 피드 댓글 삭제 -->
-		<delete id="deleteFeedComments" parameterType="String">
-		    DELETE
-		    FROM
-		    	feed_comments
-		    WHERE
-		    	feed_num = #{feedCode}
-	    	AND mbr_id = #{memberId}
-		</delete>
+	<delete id="deleteFeedComments" parameterType="String">
+	    DELETE
+	    FROM
+	    	feed_comments
+	    WHERE
+	    	feed_num = #{feedCode}
+	</delete>
 		
 	<!--피드 이미지 파일 삭제 -->
-		<delete id="deleteFeedFiles" parameterType="String">
-		    DELETE
-		    FROM
-		    	files
-		    WHERE
-		    	file_idx = (
-				SELECT feed_file_index
-				FROM feed
-				WHERE feed_num = #{feedCode}
-			);	
-		</delete>
+	<delete id="deleteFeedFiles" parameterType="String">
+	    DELETE
+	    FROM
+	    	files
+	    WHERE
+	    	file_idx = (
+			SELECT feed_file_index
+			FROM feed
+			WHERE feed_num = #{feedCode}
+		);	
+	</delete>
+	
+	<!-- 하루 영양정보 비교 테이블 외래키 삭제 -->
+	<delete id="deleteDailyNutritionalIntakeComparison">
+	    DELETE
+	    FROM
+	    	daily_nutritional_intake_comparison
+	    WHERE
+	    	dnii_num IN (
+	        SELECT
+	        	dnii_num
+	        FROM
+	        	daily_nutritional_intake_info
+        	WHERE
+        		feed_num = #{feedCode}
+	    )
+	</delete>
+	
+	<!-- 하루 영양정보 테이블 외래키 삭제 -->
+	<delete id="deletedDilyNutritionalIntakeInfo">
+		DELETE
+		FROM
+			daily_nutritional_intake_info
+		WHERE
+			feed_num = #{feedCode}
+	</delete>
 	
 	<!--피드 삭제 -->
-		<delete id="deleteFeed" parameterType="String">
-		    DELETE
-	    	FROM
-	    		feed
-		    WHERE
-		    	feed_num = #{feedCode}
-	    	AND mbr_id = #{memberId}
-		</delete>
+	<delete id="deleteFeed" parameterType="String">
+	    DELETE
+    	FROM
+    		feed
+	    WHERE
+	    	feed_num = #{feedCode}
+    	AND mbr_id = #{memberId}
+	</delete>
 	
 	<!-- 좋아요 수 증가 -->
 	<update id="incrementLike" parameterType="String">
@@ -335,9 +359,9 @@
 	<update id="modifyFeedComment">
 		UPDATE feed_comments
 		SET
-			fc_content=#{feedCommentContent}
+			fc_content = #{feedCommentContent}
 		WHERE
-			fc_num=#{feedCommentCode}
+			fc_num = #{feedCommentCode}
 	</update>
 	
 	<!-- 피드 댓글 삭제 -->
@@ -348,6 +372,7 @@
 		WHERE
 			fc_num = #{feedCommentCode}
 	</delete>
+	
     <!--특정 회원의 하루 먹은 영양 정보 조회--> 
     <!--<select id="getNutritionalInfoByDate" resultType="DailyNutritionalIntakeInfo">
         SELECT 
