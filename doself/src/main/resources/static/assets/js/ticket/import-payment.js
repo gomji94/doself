@@ -11,21 +11,18 @@ function formatDate(unixTimestamp) {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-//문서가 준비되면 제일 먼저 실행
-$(document).ready(function(){ 
-	$("#payment").click(function(){ 
-		let isValid = true;
-		const ticketKey = $('#ticketKey').val().trim();
-		if(!ticketKey) {
-			alert('결제하실 티켓을 선택해주세요');
-			isValid = false;
-			return;
-		}
-		
-		if(isValid) proceedPay();
-		
-    }); 
-})
+$("#payment").click(function(){ 
+	let isValid = true;
+	const ticketKey = $('#ticketKey').val().trim();
+	if(!ticketKey) {
+		alert('결제하실 티켓을 선택해주세요');
+		isValid = false;
+		return;
+	}
+	
+	if(isValid) proceedPay();
+	
+}); 
 
 function proceedPay() {
 	
@@ -94,5 +91,3 @@ function requestPay(data) {
       }
  	});
 }
-
-
