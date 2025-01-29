@@ -93,13 +93,14 @@
 	</th:block> 
 
 	<!--/* 사용자 추가 js file */-->
-    <th:block layout:fragment="customJsResource"></th:block>
+    <th:block layout:fragment="customJsResource">
+	    <script th:src="@{/assets/js/layout.js}"></script>
+	    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	    <script th:src="@{/assets/js/food/modal.js}"></script>
+	    <script th:src="@{/assets/js/medicine/list.js}"></script>
+    </th:block>
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    <script th:src="@{/assets/js/layout.js}"></script>
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script th:src="@{/assets/js/food/modal.js}"></script>
-    <script th:src="@{/assets/js/medicine/list.js}"></script>
     </th:block> 
 </html>
