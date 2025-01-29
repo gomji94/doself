@@ -38,10 +38,10 @@ public interface FeedService {
 	void addFeedComment(Feed feed);
 	
 	// 피드 댓글 수정
-	void mofidyFeedComment(String feedCommentCode, String feedCommentContent);
+	boolean mofidyFeedComment(String feedCommentCode, String feedCommentContent);
 	
 	// 피드 댓글 삭제
-	void deleteFeedComment(String feedCommentCode);
+	boolean deleteFeedComment(String feedCommentCode);
 	
 	// 하루 먹은 영양 정보 조회
 	/*
