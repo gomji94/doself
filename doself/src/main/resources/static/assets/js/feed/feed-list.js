@@ -11,7 +11,7 @@ $(document).ready(function () {
 	    console.log('Feed URL:', feedUrl);  // 디버깅용
 		
 		if (feedCode) {
-	        $('#modal-feed-link').attr('data-feed-url', feedUrl); // 동적으로 URL 설정
+	        $('#my-feed-link-copy a').attr('data-feed-url', feedUrl); // 동적으로 URL 설정
 	    } else {
 	        alert('피드 코드를 찾을 수 없습니다.');
 	    }
@@ -28,7 +28,7 @@ $(document).ready(function () {
 	// 피드 링크 복사
     $('#my-feed-link-copy a').on('click', function (e) {
         e.preventDefault();
-        const feedUrl = $('#modal-feed-link').attr('data-feed-url'); // URL 읽기
+        const feedUrl = $(this).attr('data-feed-url'); // URL 읽기
 
         console.log('Copied URL:', feedUrl); // 디버깅용
 
@@ -38,7 +38,6 @@ $(document).ready(function () {
         }
 
         const fullUrl = window.location.origin + feedUrl;
-
         console.log('Copied Full URL:', fullUrl); // 디버깅용
 
         const textarea = document.createElement('textarea');
