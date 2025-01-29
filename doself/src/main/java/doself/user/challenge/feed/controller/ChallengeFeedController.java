@@ -22,6 +22,7 @@ import doself.user.challenge.feed.domain.AddChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeed;
 import doself.user.challenge.feed.domain.ChallengeFeedComment;
 import doself.user.challenge.feed.domain.ChallengeMemberList;
+import doself.user.challenge.feed.domain.ChallengeMemberWarning;
 import doself.user.challenge.feed.domain.ChallengeTotalProgress;
 import doself.user.challenge.feed.domain.ParticipateChallengeList;
 import doself.user.challenge.feed.service.ChallengeFeedService;
@@ -65,9 +66,8 @@ public class ChallengeFeedController {
 		
 	// 챌린지 피드 조회
 	@GetMapping("/view/{challengeCode}")
-	public String viewChallengeFeed(@PathVariable("challengeCode") String challengeCode,
-	        						Pageable pageable, String challengeFeedCode,
-	        						ChallengeTotalProgress challengeTotalProgress,
+	public String viewChallengeFeed(@PathVariable("challengeCode") String challengeCode, Pageable pageable,
+								    String challengeFeedCode, ChallengeTotalProgress challengeTotalProgress,
 	        						HttpSession session, Model model) {
 		
 		String loggedInMemberId = (String) session.getAttribute("SID");
@@ -124,12 +124,23 @@ public class ChallengeFeedController {
 	
 	// 챌린지 멤버 경고 사유 선택 조회
 	@GetMapping("/warning")
-	public String getMemberWarnig(HttpServletRequest request, Model model) {
+	public List<ChallengeMemberWarning> getMemberWarnig(@RequestParam("memberId") String memberId,
+								  @RequestParam("challengeCode") String challengeCode,
+								  HttpServletRequest request, Model model) {
 		
-		model.addAttribute("currentURI", request.getRequestURI());
-		model.addAttribute("title", "멤버 경고");
+		return challengeFeedService.getMemberWarningCategory(challengeCode, memberId);
+	}
+	
+	// 챌린지 멤버 경고 사유 선택 폼
+	@PostMapping("/memberlist/warningrequest")
+	public boolean challengeMamberWarning(@RequestParam("memberId") String memberId,
+										  @RequestParam("challengeCode") String challengeCode,
+										  ChallengeMemberWarning challengeMemberWarning, HttpSession session) {
+		String loggedInMemberId = (String) session.getAttribute("SID");
 		
-		return "user/challenge/challenge-member-warning";
+		boolean isWarning = challengeFeedService.warningChallengeMember(challengeCode, memberId);
+		
+		return isWarning;
 	}
 	
 	// 챌린지 생성 화면 조회
@@ -279,5 +290,6 @@ public class ChallengeFeedController {
 	                .body("좋아요 상태 업데이트 중 오류 발생: " + e.getMessage());
 	    }
 	}
+	
 
 }

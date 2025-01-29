@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FeedController {
 	
+	@org.springframework.beans.factory.annotation.Value("${file.path}")
+	private String fileRealPath;
+	
 	private final FeedService feedService;
 	private final NutritionService nutritionService;
 	
@@ -41,31 +43,37 @@ public class FeedController {
 	@GetMapping("/list")
 	public String getFeedList(HttpSession session, Model model, Pageable pageable) {
 	    String loggedInMemberId = (String) session.getAttribute("SID");
-	    
-		List<Feed> feedList = feedService.getFeedList();
-		pageable.setRowPerPage(100);
-		var foodNutrition = nutritionService.getFoodNutritionList("mniName", "", pageable);
-		var foodNutritionList = foodNutrition.getContents();
-		
+
+	    List<Feed> feedList = feedService.getFeedList();
+	    pageable.setRowPerPage(100);
+	    var foodNutrition = nutritionService.getFoodNutritionList("mniName", "", pageable);
+	    var foodNutritionList = foodNutrition.getContents();
+
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		
-		    feedList.forEach(feed -> {
-		    	log.info("FeedCode: {}", feed.getFeedCode());
-		        if (feed.getFeedDate() != null) {
-		            feed.setFormattedDate(feed.getFeedDate().format(formatter));
-		        }
-		    });
-	    
+
+	    feedList.forEach(feed -> {
+			/* log.info("FeedCode: {}", feed.getFeedCode()); */
+	        if (feed.getFeedDate() != null) {
+	            feed.setFormattedDate(feed.getFeedDate().format(formatter));
+	        }
+
+	        // 각 피드의 링크 생성
+	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
+	        feed.setFeedUrl("/feed/view?feedCode=" + feed.getFeedCode()); // 고유 URL 생성
+	    });
+
 	    for (Feed feed : feedList) {
+	    	System.out.println("FeedCode: " + feed.getFeedCode());
 	        feed.setOwner(loggedInMemberId.equals(feed.getMemberId()));
 	    }
-		model.addAttribute("FeedList", feedList);
-		model.addAttribute("foodNutritionList", foodNutritionList);
-		
-		Feed feed = new Feed(); // 예: 빈 객체 생성 또는 기본 값 설정
+
+	    model.addAttribute("FeedList", feedList);
+	    model.addAttribute("foodNutritionList", foodNutritionList);
+
+	    Feed feed = new Feed(); // 예: 빈 객체 생성 또는 기본 값 설정
 	    model.addAttribute("feed", feed);
-	    
-		return "user/feed/feed-list";
+
+	    return "user/feed/feed-list";
 	}
 	
 	// 특정 피드 상세 조회
@@ -107,59 +115,85 @@ public class FeedController {
         @ModelAttribute Feed feed,
         @RequestParam("feedCode") String feedCode,
         HttpSession session
+        
     ) {
+    	log.info("fileYN:{}, files: {}", files.isEmpty(), files);
+    	log.info("fileYN:{}, files: {}", files.isEmpty(), files);
         String memberId = (String) session.getAttribute("SID");
         feed.setMemberId(memberId);
         feed.setFeedCode(feedCode);
         feedService.modifyFeed(feed, files);
 
-        return "redirect:/feed/" + feed.getFeedCode();
+        return "redirect:/feed/list?feedCode=" + feedCode;
     }
 	
     // 피드 삭제
     @PostMapping("/deletefeed")
-    @ResponseBody
-    public ResponseEntity<String> deleteFeed(@RequestParam(required = true) String feedCode) {
-    	if (feedCode == null || feedCode.isEmpty()) {
-            return ResponseEntity.badRequest().body("feedCode가 누락되었습니다.");
-        }
-    	try {
-            feedService.deleteFeed(feedCode);
-            return ResponseEntity.ok("피드가 성공적으로 삭제되었습니다.");
-        } catch (Exception e) {
-            log.error("피드 삭제 중 오류 발생: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("피드 삭제 중 오류가 발생했습니다.");
-        }
+    public String deleteFeed(@RequestParam("feedCode") String feedCode,
+				    		 @ModelAttribute Feed feed,
+				    		 HttpSession session) {
+    	String memberId = (String) session.getAttribute("SID");
+    	feedService.deleteFeed(feedCode, memberId);
+    	
+    	return "redirect:/feed/list?feedCode=" + feedCode;
     }
     
 	// 피드 댓글 조회
-	@GetMapping("/{feedCode}/comments")
-    public String getFeedComments(Model model) {
-        model.addAttribute("title", "피드 댓글");
-        
-        return "user/feed/feed-comment";
+	@GetMapping("/feedcomment")
+	@ResponseBody
+    public List<Feed> getFeedComment (
+    		@RequestParam(value = "feedCode") String feedCode,
+    		HttpSession session) {
+    	
+    	@SuppressWarnings("unused")
+		String loggedInMemberId = (String) session.getAttribute("SID");
+    	
+    	List<Feed> feedCommentList = feedService.getFeedCommentList(feedCode);
+    	log.info("Feed Comment List: {}", feedCommentList);
+    	
+        return feedCommentList;
     }
 	
-	// 피드 댓글 추가
-	@PostMapping("/{feedCode}/addComment")
+	// 피드 댓글 등록
+	@PostMapping("/createfeedcomment")
+	public String addFeedComment(@RequestParam("feedCode") String feedCode,
+								 @RequestParam("feedCommentContent") String feedCommentContent,
+								 Feed feed, HttpSession session) {
+	    
+		String memberId = (String) session.getAttribute("SID");
+		
+		Feed comment = new Feed();
+		comment.setFeedCode(feedCode);
+		comment.setMemberId(memberId);
+		comment.setFeedCommentContent(feedCommentContent);
+		
+		System.out.println("commentContent in Feed: " + comment.getFeedCommentContent());
+		
+		feedService.addFeedComment(comment);
+		
+		return "redirect:/feed/list?feedCode=" + feedCode;
+	}
+	
+	// 피드 댓글 수정
+	@PostMapping("/modifyfeedcomment")
 	@ResponseBody
-	public ResponseEntity<String> addComment(
-        @PathVariable String feedCode,
-        @RequestBody Map<String, String> payload,
-        HttpSession session) {
-    String memberId = (String) session.getAttribute("SID");
-    String commentContent = payload.get("commentContent");
-
-    if (commentContent == null || commentContent.trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("댓글 내용이 비어있습니다.");
-    }
-
-	    try {
-	        feedService.addComment(feedCode, memberId, commentContent);
-	        return ResponseEntity.ok("댓글이 추가되었습니다.");
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가 중 오류가 발생했습니다.");
-	    }
+	public boolean modifyFeedComent(@RequestParam("feedCommentCode") String feedCommentCode,
+								   @RequestParam("feedCommentContent") String feedCommentContent,
+								   Feed feed) {
+		
+		boolean isModify = feedService.mofidyFeedComment(feedCommentCode, feedCommentContent);
+		
+		return isModify;
+	}
+	
+	// 피드 댓글 삭제
+	@PostMapping("/deletefeedcomment")
+	@ResponseBody
+	public boolean deleteFeedComment(@RequestParam("feedCommentCode") String feedCommentCode, Feed feed) {
+		
+		boolean isDelete = feedService.deleteFeedComment(feedCommentCode);
+		
+		return isDelete;
 	}
 	
 	// 피드 좋아요 증감
@@ -181,10 +215,10 @@ public class FeedController {
     }
 	
 	// 음식 영양 정보 조회
-	@GetMapping("/nutritioninfo")
-    public String getNutritionInfo(Model model) {
-		model.addAttribute("title", "영양 정보 조회");
-		
-		return "user/feed/nutritioninfo-view";
-	}
+	/*
+	 * @GetMapping("/nutritioninfo") public String getNutritionInfo(Model model) {
+	 * model.addAttribute("title", "영양 정보 조회");
+	 * 
+	 * return "user/feed/nutritioninfo-view"; }
+	 */
 }

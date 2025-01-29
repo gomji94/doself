@@ -64,7 +64,7 @@ public class FeedServiceImpl implements FeedService {
 			filesMapper.addfile(fileInfo);
 			String feedCode = commonMapper.getPrimaryKey("feed_", "feed", "feed_num");
 			feed.setFeedCode(feedCode);
-			feed.setFeedFileIdx(fileIdx);
+			feed.setFeedFileIndex(fileIdx);
 			feedMapper.addFeed(feed);
 		}
 
@@ -84,7 +84,7 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public void modifyFeed(Feed feed, MultipartFile feedPicture) {
     	if (feedPicture != null && !feedPicture.isEmpty()) {
-            String oldFileIdx = feed.getFeedFileIdx();
+            String oldFileIdx = feed.getFeedFileIndex();
             if (oldFileIdx != null) {
                 filesMapper.deleteFileByIdx(oldFileIdx);
             }
@@ -94,7 +94,7 @@ public class FeedServiceImpl implements FeedService {
                 String newFileIdx = commonMapper.getPrimaryKey("file_", "files", "file_idx");
                 newFile.setFileIdx(newFileIdx);
                 filesMapper.addfile(newFile);
-                feed.setFeedFileIdx(newFileIdx);
+                feed.setFeedFileIndex(newFileIdx);
             }
         }
 
@@ -112,35 +112,52 @@ public class FeedServiceImpl implements FeedService {
     // 피드 삭제
     @Override
     @Transactional
-    public void deleteFeed(String feedCode) {
-        // 피드 댓글 삭제
-        feedMapper.deleteFeedComments(feedCode);
-        
-        // 피드에 연결된 파일 삭제
-        feedMapper.deleteFeedFileIdx(feedCode);
-        
-        // 피드 삭제
-        feedMapper.deleteFeed(feedCode);
-        
-        log.info("Feed and related data deleted for feedCode: {}", feedCode);
+    public void deleteFeed(String feedCode, String memberId) {
+    	feedMapper.deleteFeedComments(feedCode);
+    	feedMapper.deleteDailyNutritionalIntakeComparison(feedCode);
+    	feedMapper.deletedDilyNutritionalIntakeInfo(feedCode);
+    	feedMapper.deleteFeed(feedCode, memberId);
     }
+    
+    // 피드 댓글 조회
+ 	@Override
+ 	public List<Feed> getFeedCommentList(String feedCode) {
+ 		List<Feed> feedCommentList = feedMapper.getFeedCommentList(feedCode);
+ 		return feedCommentList;
+ 	}
     
     // 피드 댓글 추가
     @Override
-    public void addComment(String feedCode, String memberId, String commentContent) {
-        Feed comment = new Feed();
-        comment.setFeedCode(feedCode);
-        comment.setMemberId(memberId);
-        comment.setCommentContent(commentContent);
-        comment.setCommentDate(LocalDateTime.now());
+    public void addFeedComment(Feed feed) {
+    	String formattedKeyNum = commonMapper.getPrimaryKey("fc_", "feed_comments", "fc_num");
+    	feed.setFeedCommentCode(formattedKeyNum);
+    	feed.setCommentDate(LocalDateTime.now());
 
-        feedMapper.addComment(comment);
+    	feedMapper.addFeedComment(feed);
     }
-
-    // 피드 댓글 조회
+    
+    // 피드 댓글 수정
     @Override
-    public List<Feed> getCommentsByFeedCode(String feedCode) {
-        return feedMapper.getCommentsByFeedCode(feedCode);
+    public boolean mofidyFeedComment(String feedCommentCode, String feedCommentContent) {
+    	int modifyCnt = feedMapper.modifyFeedComment(feedCommentCode, feedCommentContent);
+    	return modifyCnt > 0 ? true : false;
     }
+    
+    // 피드 댓글 삭제
+    @Override
+    public boolean deleteFeedComment(String feedCommentCode) {
+    	int deleteCnt = feedMapper.deleteFeedComment(feedCommentCode);
+		return deleteCnt > 0 ? true : false;
+    }
+    
+    // 하루 먹은 영양 정보 조회
+	/*
+	 * @Override public DailyNutritionalIntakeInfo getNutritionalInfoByDate(String
+	 * mbrId, String date) { Map<String, Object> params = new HashMap<>();
+	 * params.put("mbrId", mbrId); params.put("date", date);
+	 * 
+	 * return (DailyNutritionalIntakeInfo)
+	 * feedMapper.getNutritionalInfoByDate(params); }
+	 */
 }
 	
