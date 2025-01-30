@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.admin.declare.domain.Declare;
+import doself.admin.declare.mapper.DeclareMapper;
 import doself.common.mapper.CommonMapper;
 import doself.file.domain.Files;
 import doself.file.mapper.FilesMapper;
@@ -31,6 +33,7 @@ public class FeedServiceImpl implements FeedService {
 	private final FilesUtils filesUtils;
 	private final FilesMapper filesMapper;
 	private final CommonMapper commonMapper;
+	private final DeclareMapper declareMapper;
 	
 	// 피드 조회
 	@Override
@@ -148,6 +151,27 @@ public class FeedServiceImpl implements FeedService {
     public boolean deleteFeedComment(String feedCommentCode) {
     	int deleteCnt = feedMapper.deleteFeedComment(feedCommentCode);
 		return deleteCnt > 0 ? true : false;
+    }
+    
+    // 피드 신고
+    @Override
+    public void reportFeed(Declare declare) {
+    	String formattedKeyNum = commonMapper.getPrimaryKey("rr_", "report_request", "rr_num");
+    	declare.setRrNum(formattedKeyNum);
+    	
+        // 신고 유형 코드 가져오기
+        int sanctionPeriod = declareMapper.getDeclarePeriod(declare.getRcCode());
+        declare.setRrDate(LocalDateTime.now().toString());
+        declare.setScCode("sc_001"); // 초기 상태 설정
+        
+        // 🚀 발생 위치 코드 설정 (olc_code)
+        declare.setOlcCode("olc_feed");
+        
+        // 🚀 디버깅용 로그 추가
+        System.out.println("✅ 신고 데이터 확인: " + declare);
+
+        // 신고 요청 저장
+        feedMapper.insertReportRequest(declare);
     }
     
     // 하루 먹은 영양 정보 조회

@@ -39,7 +39,7 @@
 	                                <li class="pop" id="feed-share">피드 공유</li>
                                 	<li class="pop" id="feed-link-copy">
 										<a href="#" data-feed-url=""> 피드 링크 복사</a></li>
-	                                <li class="pop" id="feed-declaration-modal">신고</li>
+	                                <li class="pop" id="feed-declaration-modal" data-feed-num="" data-feed-id="">신고</li>
 	                                <li class="pop close">취소</li>
 	                            </ul>
 	                        </div>
@@ -81,6 +81,7 @@
             <div class="feed" th:each="f, iterStat : ${FeedList}" 
 						      th:data-is-owner="${f.owner}" 
 						      th:data-feed-code="${f.feedCode}"
+							  th:data-mbr-id="${f.memberId}"
 						      th:data-feed-content="${f.feedContent}" 
 						      th:data-feed-comment="${f.feedCommentContent}" 
 						      th:data-meal-date="${f.feedDate}"

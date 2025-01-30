@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.admin.declare.domain.Declare;
 import doself.user.feed.domain.Feed;
 
 public interface FeedService {
@@ -42,6 +43,9 @@ public interface FeedService {
 	
 	// 피드 댓글 삭제
 	boolean deleteFeedComment(String feedCommentCode);
+	
+	// 피드 신고
+	void reportFeed(Declare declare);
 	
 	// 하루 먹은 영양 정보 조회
 	/*

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.admin.declare.domain.Declare;
 import doself.admin.nutrition.service.NutritionService;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.service.FeedService;
@@ -213,6 +214,14 @@ public class FeedController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("좋아요 상태 업데이트 중 오류 발생.");
         }
     }
+	
+	// 피드 신고
+	@PostMapping("/report")
+	public ResponseEntity<String> reportFeed(@RequestBody Declare declare) {
+	    feedService.reportFeed(declare);
+	    return ResponseEntity.ok("신고가 접수되었습니다.");
+	}
+	
 	
 	// 음식 영양 정보 조회
 	/*

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import doself.admin.declare.domain.Declare;
 import doself.user.feed.domain.Feed;
 import doself.user.feed.domain.MealNutritionInfo;
 
@@ -62,6 +63,9 @@ public interface FeedMapper {
 		
 	// 피드 댓글 삭제
 	int deleteFeedComment(@Param("feedCommentCode") String feedCommentCode);
+	
+	// 피드 신고
+	void insertReportRequest(Declare declare);
 	
 	// 하루 먹은 영양 정보 조회
 	/*
