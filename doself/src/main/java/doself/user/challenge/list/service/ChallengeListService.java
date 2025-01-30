@@ -23,6 +23,12 @@ public interface ChallengeListService {
 	// 챌린지 생성
 	void addChallenge(MultipartFile files, AddChallenge addChallenge);
 	
+	// 챌린지 생성 티켓 개수 조회
+	int getOpeningTicketCount(String memberId);
+
+	// 챌린지 생성 후 티켓 차감
+	void decrementOpeningTicket(String memberId);
+	
 	// 챌린지 페이지
 	CardPageInfo<ChallengeList> getChallengeList(CardPageable cardPageable);
 	
@@ -38,6 +44,12 @@ public interface ChallengeListService {
 	// 챌린지 상태 리스트
 	List<Map<String, Object>> getChallengeStatusList();
 	
+	// 챌린지 참여 티켓 개수 조회
+	int getParticipationTicketCount(String memberId);
+
+	// 챌린지 참여 후 티켓 차감
+	void decrementParticipationTicket(String memberId);
+	
 	// 챌린지 멤버 추가
 	boolean addChallengeMember(AddChallengeMember addChallengeMember);
 	
@@ -52,7 +64,4 @@ public interface ChallengeListService {
 	
 	// 챌린지 참여 멤버수 조회
 	int getCurrentMemberCount(String challengeCode);
-	
-	// 파일 삭제
-	//void deleteFile(Files fileDto);
 }

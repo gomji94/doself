@@ -23,4 +23,5 @@ public class ChallengeDetailView {
 	private int challengeCurrentMember;      // 챌린지 현재 멤버수
 	private int challengeMaxMember;		     // 챌린지 최대 멤버수(생성 시, 설정한 값)
 	private String challengeContent;	     // 챌린지 내용
+	private String challengeImageIdx;	     // 챌린지 리더 프로필 idx
 }

@@ -1,12 +1,7 @@
-// --- open participate challenge feed ---
-$(".card").on("click", function () {
-    const url = $(this).attr("href"); // Thymeleaf에서 생성된 href 읽기
-    if (url) {
-        window.location.href = url; // 페이지 이동
-    } else {
-        console.error("카드에 href 속성이 없습니다.");
-    }
-});
+function navigateToChallenge(challengeCode) {
+    const url = `/challenge/feed/view/${challengeCode}`;
+    window.location.href = url;
+}
 
 
 // --- feed more load scroll(10 limit) ---
@@ -68,131 +63,19 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
 // --- aside member list modal(+warning madal) ---
-$('#cf_mbr_search-panel').on('click', '.open-memberlist-modal', function () {
-    const challengeCode = $(this).data('challengeCode'); // 챌린지 코드 가져오기
-    console.log("Challenge Code:", challengeCode); // 디버깅용 로그
-
-    if (!challengeCode) {
-        console.error("챌린지 코드가 비어있습니다.");
-        return;
-    }
-
-    // Ajax 요청으로 데이터 가져오기
-	$.ajax({
-	    url: '/challenge/feed/memberlist',
-	    type: 'GET',
-	    data: { challengeCode: challengeCode },
-	    success: function (response) {
-	        console.log("Response received:", response); // JSON 데이터 확인
-	        const memberListContainer = $('#cf-mbr-modal .challenge-mbr-list');
-	        memberListContainer.empty(); // 기존 내용을 제거
-
-	        if (response && response.length > 0) {
-	            response.forEach(member => {
-	                const memberHtml = `
-	                    <div class="mbr-id">
-	                        <img src="${member.memberProfileImage || '/images/default-profile.png'}" alt="프로필">
-	                        <p class="user-icon">${member.memberId}</p>
-	                        <span class="mbr-warning">경고</span>
-	                        <button type="button">강퇴</button>
-	                    </div>
-	                `;
-	                memberListContainer.append(memberHtml);
-	            });
-	        } else {
-	            memberListContainer.html('<p>참여중인 멤버가 없습니다.</p>');
-	        }
-			// 오버레이와 모달 표시
-	        $('#cf-mbr-modal-overlay').fadeIn();
-	    },
-    });
-});
-
-
-// --- challenge member warning ---
-// 멤버 경고 버튼 클릭 시 경고 카테고리 가져오기
-$('#cf-mbr-modal').on('click', '.mbr-warning', function () {
-    const memberId = $(this).siblings('.user-icon').text();
-    const challengeCode = $(this).closest('.modal-container').data('challengeCode');
-
-    $.ajax({
-        url: '/challenge/feed/warning',
-        type: 'GET',
-        data: { memberId, challengeCode },
-        success: function (response) {
-            const warningList = $('#warning-category-list');
-            warningList.empty(); // 기존 리스트 초기화
-
-            if (response && response.length > 0) {
-                response.forEach(category => {
-                    warningList.append(`
-                        <li class="pop" data-category-code="${category.challengeWarningCategoryCode}">
-                            ${category.challengeWarningCategory}
-                        </li>
-                    `);
-                });
-            } else {
-                warningList.html('<li>카테고리가 없습니다.</li>');
-            }
-
-            $('#cf-warning-modal-overlay').fadeIn();
-        },
-        error: function (error) {
-            console.error("경고 카테고리 로드 실패:", error);
-            alert("경고 카테고리를 가져오는 중 오류가 발생했습니다.");
+$(document).ready(function () {
+    $('#challengeMemberList').click(function () {
+        const challengeCode = $(this).data('challenge-code');
+        if (!challengeCode) {
+            alert('챌린지 코드가 존재하지 않습니다.');
+            return;
         }
+        window.location.href = `/challenge/feed/memberwarning?challengeCode=${challengeCode}`;
     });
-});
-
-// 경고 카테고리 클릭 이벤트
-$('#warning-category-list').on('click', '.pop', function () {
-    const categoryCode = $(this).data('categoryCode');
-    const memberId = $('.user-icon').text(); // 현재 멤버 ID
-    const challengeCode = $('#cf-mbr-modal').data('challengeCode');
-
-    $.ajax({
-        url: '/challenge/feed/warning',
-        type: 'POST',
-        data: { memberId, challengeCode, categoryCode },
-        success: function () {
-            alert('해당 멤버를 경고 처리했습니다.');
-            $('#cf-warning-modal-overlay').fadeOut();
-        },
-        error: function (error) {
-            console.error("경고 추가 실패:", error);
-            alert("멤버 경고 처리 중 오류가 발생했습니다.");
-        }
-    });
-});
-
-
-// 오버레이 바깥쪽 클릭 시 모달 닫기
-$(document).on('click', function (e) {
-    if ($(e.target).is('#cf-mbr-modal-overlay') || $(e.target).is('#cf-warning-modal-overlay')) {
-        $(e.target).fadeOut();
-    }
-});
-
-// 모달 닫기 버튼 클릭 시
-$('#cf-mbr-modal-overlay').on('click', '#cf-mbr-modal-close', function () {
-    $('#cf-mbr-modal-overlay').fadeOut();
-});
-
-$('#cf-warning-modal-overlay').on('click', '#cf-warning-modal-overlay', function () {
-    $('#cf-warning-modal-overlay').fadeOut();
-});
-
-// ESC 키를 눌렀을 때 모달 닫기
-$(document).on('keydown', function (e) {
-    if (e.key === "Escape") {
-        $('#cf-mbr-modal-overlay').fadeOut();
-        $('#cf-warning-modal-overlay').fadeOut();
-    }
 });
 
 
 // --- create challenge submit form ---
-// --- 모달 열기/닫기 ---
 const modalOverlay = $('#createChallengeModalOverlay');
 const modalContainer = $('#createChallengeModal');
 const modalClose = $('#modal-close');
@@ -598,7 +481,6 @@ $('.likeBtn').click(function (event) {
     const challengeFeedCode = likeBtn.data('feed-code');
     const isLiked = likeBtn.attr('data-liked') === 'true';
 
-    // AJAX 요청
     $.ajax({
         url: '/challenge/feed/like',
         type: 'POST',
@@ -627,105 +509,6 @@ $('.likeBtn').click(function (event) {
     });
 });
 
-
-/*$(document).on('click', '.likeBtn', function (event) {
-    event.preventDefault();
-
-    const likeBtn = $(this);
-    const likeImg = likeBtn.find('.likeImg');
-    const feedDescription = likeBtn.closest('.feed').find('#feed-likes');
-    const challengeFeedCode = likeBtn.data('feed-code');
-    const isLiked = likeBtn.attr('data-liked') === 'true';
-
-    // AJAX 요청
-    $.ajax({
-        url: '/challenge/feed/like',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            challengeFeedCode: challengeFeedCode,
-        }),
-        success: () => {
-            let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10);
-
-            // UI 업데이트
-            if (isLiked) {
-                likeImg.attr('src', 'https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png');
-                currentLikes--;
-            } else {
-                likeImg.attr('src', 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png')
-					   .css({ 'width': '24.7px', 'height': 'auto' });
-                currentLikes++;
-            }
-
-            feedDescription.text(`좋아요 ${currentLikes}개`);
-            likeBtn.attr('data-liked', (!isLiked).toString());
-        },
-        error: (error) => {
-            console.error('좋아요 상태 업데이트 실패:', error);
-            alert('좋아요 상태 업데이트에 실패했습니다. 다시 시도해주세요.');
-        },
-    });
-});*/
-
-
-/*$(document).ready(function () {
-	// 초기 렌더링 시 좋아요 상태 반영
-    if (isLiked) {
-        likeImg.attr('src', 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png')
-               .css({ 'width': '24.7px', 'height': 'auto' });
-    }
-	
-    $(document).on('click', '.likeBtn', function (event) {
-        event.preventDefault();
-
-        const likeBtn = $(this); // 현재 버튼
-        const likeImg = likeBtn.find('.likeImg'); // 버튼 내부의 likeImg 요소
-        const feedElement = likeBtn.closest('.feed'); // 현재 피드 요소
-        const feedDescription = feedElement.find('#feed-likes'); // 좋아요 수 표시
-        const challengeFeedCode = likeBtn.attr('data-feed-code'); // 피드 코드
-        const isLiked = likeBtn.attr('data-liked') === 'true'; // 현재 좋아요 상태
-        const newLikedStatus = !isLiked; // 새 좋아요 상태
-		
-
-        console.log('좋아요 버튼 클릭:', { challengeFeedCode, isLiked, newLikedStatus }); // 디버깅용 로그
-
-        // AJAX 요청으로 서버에 좋아요 상태 전달
-        $.ajax({
-            url: '/challenge/feed/like',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                'challengeFeedCode': challengeFeedCode,
-                liked: newLikedStatus,
-            }),
-            success: () => {
-                let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10); // 좋아요 수 파싱
-
-                // UI 업데이트
-                if (newLikedStatus) {
-                    likeImg.attr('src', 'https://velog.velcdn.com/images/mekite/post/e8818752-b4ba-4e58-bdfb-e8c352cad8ea/image.png') // 좋아요 이미지
-						   .css({ 'width': '24.7px', 'height': 'auto' });
-                    currentLikes++;
-                } else {
-                    likeImg.attr('src', 'https://velog.velcdn.com/images/mekite/post/5d41002f-857b-4c4e-9d7c-80fe9fb35e59/image.png'); // 기본 이미지
-                    currentLikes--;
-                }
-
-                feedDescription.text(`좋아요 ${currentLikes}개`); // 좋아요 수 갱신
-                likeBtn.attr('data-liked', newLikedStatus.toString()); // 상태 업데이트
-
-                console.log('좋아요 상태 업데이트 완료:', { currentLikes, newLikedStatus });
-            },
-            error: (error) => {
-                console.error('좋아요 상태 업데이트 실패:', error);
-                alert('좋아요 상태 업데이트에 실패했습니다. 다시 시도해주세요.');
-            },
-        });
-    });
-});*/
-
-
 /*.css({ 'width': '24.7px', 'height': 'auto' });*/
 
 
@@ -751,8 +534,6 @@ $(document).on('click', '.commentBtn', function () {
 	const challengeCode = $('#challengeCode').val();
     const challengeFeedCode = $(this).data('challenge-code');
 	const pictureFileImage = $(this).data('picture-file-image');
-    //console.log("challengeFeedCode:", challengeFeedCode); // 디버깅용 로그
-	//console.log("pictureFileImage:", pictureFileImage);
 	
 	console.log("challengeCode:", challengeCode);
 
@@ -1089,3 +870,260 @@ function updateDates(challengeCode) {
         }
     });
 }
+
+// --- emoji drop down ---
+// 챌린지 생성
+$(document).ready(function () {
+    const emojiButton = $('#CreateChallengeEmojiButton'); // 버튼
+    const emojiDropdown = $('<div class="emoji-dropdown"></div>'); // 이모지 드롭다운 생성
+
+    // 평균적으로 많이 사용되는 50개 이모지 리스트
+    const emojis = [
+        '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+        '😍', '😘', '🥰', '😗', '😙', '😚', '🤩', '🤗', '😜', '😝',
+        '😛', '🤑', '🤪', '😎', '🤓', '😏', '😒', '🙄', '😞', '😔',
+        '😟', '😕', '☹️', '🙁', '😣', '😖', '😫', '😩', '🥺', '😢',
+        '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱'
+    ];
+
+    // 이모지 리스트 생성
+    emojis.forEach((emoji) => {
+        const emojiElement = $('<span class="emoji"></span>').text(emoji);
+        emojiElement.on('click', function () {
+            $('#content').val($('#content').val() + emoji); // 이모지 추가
+            emojiDropdown.hide(); // 드롭다운 닫기
+        });
+        emojiDropdown.append(emojiElement);
+    });
+
+    // 드롭다운 스타일 적용 (기본 숨김 상태)
+    emojiDropdown.css({
+        'position': 'absolute',
+        'background': 'white',
+        'border': '1px solid #ccc',
+        'padding': '10px',
+        'box-shadow': '2px 2px 10px rgba(0,0,0,0.6)',
+        'display': 'none', // 기본적으로 숨김
+        'grid-template-columns': 'repeat(10, 1fr)', // 10개씩 가로 정렬
+        'gap': '5px',
+        'border-radius': '5px',
+        'z-index': '1000',
+        'width': '287px',
+        'max-height': '200px',
+        'overflow-y': 'auto',
+    });
+
+    $('body').append(emojiDropdown); // body에 추가
+    emojiDropdown.hide(); // 초기 숨김
+
+    // 버튼 클릭 시 드롭다운 위치 설정 및 표시
+    emojiButton.on('click', function (e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+
+        const buttonOffset = emojiButton.offset(); // 버튼 위치 가져오기
+        emojiDropdown.css({
+            'top': buttonOffset.top + emojiButton.outerHeight() + 672 + 'px', // 버튼 아래 배치
+            'left': buttonOffset.left + 1053 + 'px',
+            'display': 'grid', // 드롭다운 표시
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest(emojiDropdown).length && !$(e.target).is(emojiButton)) {
+            emojiDropdown.hide();
+        }
+    });
+});
+
+// 챌린지 피드 생성
+$(document).ready(function () {
+    const emojiButton = $('#feedEmojiButton'); // 버튼
+    const emojiDropdown = $('<div class="emoji-dropdown"></div>'); // 이모지 드롭다운 생성
+
+    // 평균적으로 많이 사용되는 50개 이모지 리스트
+    const emojis = [
+        '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+        '😍', '😘', '🥰', '😗', '😙', '😚', '🤩', '🤗', '😜', '😝',
+        '😛', '🤑', '🤪', '😎', '🤓', '😏', '😒', '🙄', '😞', '😔',
+        '😟', '😕', '☹️', '🙁', '😣', '😖', '😫', '😩', '🥺', '😢',
+        '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱'
+    ];
+
+    // 이모지 리스트 생성
+    emojis.forEach((emoji) => {
+        const emojiElement = $('<span class="emoji"></span>').text(emoji);
+        emojiElement.on('click', function () {
+            $('#cf-content').val($('#cf-content').val() + emoji); // 이모지 추가
+            emojiDropdown.hide(); // 드롭다운 닫기
+        });
+        emojiDropdown.append(emojiElement);
+    });
+
+    // 드롭다운 스타일 적용 (기본 숨김 상태)
+    emojiDropdown.css({
+        'position': 'absolute',
+        'background': 'white',
+        'border': '1px solid #ccc',
+        'padding': '10px',
+        'box-shadow': '2px 2px 10px rgba(0,0,0,0.6)',
+        'display': 'none', // 기본적으로 숨김
+        'grid-template-columns': 'repeat(10, 1fr)', // 10개씩 가로 정렬
+        'gap': '5px',
+        'border-radius': '5px',
+        'z-index': '1000',
+        'width': '287px',
+        'max-height': '200px',
+        'overflow-y': 'auto',
+    });
+
+    $('body').append(emojiDropdown); // body에 추가
+    emojiDropdown.hide(); // 초기 숨김
+
+    // 버튼 클릭 시 드롭다운 위치 설정 및 표시
+    emojiButton.on('click', function (e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+
+        const buttonOffset = emojiButton.offset(); // 버튼 위치 가져오기
+        emojiDropdown.css({
+            'top': buttonOffset.top + emojiButton.outerHeight() + 599 + 'px', // 버튼 아래 배치
+            'left': buttonOffset.left + 1078 + 'px',
+            'display': 'grid', // 드롭다운 표시
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest(emojiDropdown).length && !$(e.target).is(emojiButton)) {
+            emojiDropdown.hide();
+        }
+    });
+});
+
+// 챌린지 피드 수정
+$(document).ready(function () {
+    const emojiButton = $('#feedModifyEmojiButton'); // 버튼
+    const emojiDropdown = $('<div class="emoji-dropdown"></div>'); // 이모지 드롭다운 생성
+
+    // 평균적으로 많이 사용되는 50개 이모지 리스트
+    const emojis = [
+        '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+        '😍', '😘', '🥰', '😗', '😙', '😚', '🤩', '🤗', '😜', '😝',
+        '😛', '🤑', '🤪', '😎', '🤓', '😏', '😒', '🙄', '😞', '😔',
+        '😟', '😕', '☹️', '🙁', '😣', '😖', '😫', '😩', '🥺', '😢',
+        '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱'
+    ];
+
+    // 이모지 리스트 생성
+    emojis.forEach((emoji) => {
+        const emojiElement = $('<span class="emoji"></span>').text(emoji);
+        emojiElement.on('click', function () {
+            $('#cf-modify-content').val($('#cf-modify-content').val() + emoji); // 이모지 추가
+            emojiDropdown.hide(); // 드롭다운 닫기
+        });
+        emojiDropdown.append(emojiElement);
+    });
+
+    // 드롭다운 스타일 적용 (기본 숨김 상태)
+    emojiDropdown.css({
+        'position': 'absolute',
+        'background': 'white',
+        'border': '1px solid #ccc',
+        'padding': '10px',
+        'box-shadow': '2px 2px 10px rgba(0,0,0,0.6)',
+        'display': 'none', // 기본적으로 숨김
+        'grid-template-columns': 'repeat(10, 1fr)', // 10개씩 가로 정렬
+        'gap': '5px',
+        'border-radius': '5px',
+        'z-index': '1000',
+        'width': '287px',
+        'max-height': '200px',
+        'overflow-y': 'auto',
+    });
+
+    $('body').append(emojiDropdown); // body에 추가
+    emojiDropdown.hide(); // 초기 숨김
+
+    // 버튼 클릭 시 드롭다운 위치 설정 및 표시
+    emojiButton.on('click', function (e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+
+        const buttonOffset = emojiButton.offset(); // 버튼 위치 가져오기
+        emojiDropdown.css({
+            'top': buttonOffset.top + emojiButton.outerHeight() + 599 + 'px', // 버튼 아래 배치
+            'left': buttonOffset.left + 1078 + 'px',
+            'display': 'grid', // 드롭다운 표시
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest(emojiDropdown).length && !$(e.target).is(emojiButton)) {
+            emojiDropdown.hide();
+        }
+    });
+});
+
+// 챌린지 댓글
+$(document).ready(function () {
+    const emojiButton = $('#feedCommentEmojiButton'); // 버튼
+    const emojiDropdown = $('<div class="emoji-dropdown"></div>'); // 이모지 드롭다운 생성
+
+    // 평균적으로 많이 사용되는 50개 이모지 리스트
+    const emojis = [
+        '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+        '😍', '😘', '🥰', '😗', '😙', '😚', '🤩', '🤗', '😜', '😝',
+        '😛', '🤑', '🤪', '😎', '🤓', '😏', '😒', '🙄', '😞', '😔',
+        '😟', '😕', '☹️', '🙁', '😣', '😖', '😫', '😩', '🥺', '😢',
+        '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱'
+    ];
+
+    // 이모지 리스트 생성
+    emojis.forEach((emoji) => {
+        const emojiElement = $('<span class="emoji"></span>').text(emoji);
+        emojiElement.on('click', function () {
+            $('#commentContent').val($('#commentContent').val() + emoji); // 이모지 추가
+            emojiDropdown.hide(); // 드롭다운 닫기
+        });
+        emojiDropdown.append(emojiElement);
+    });
+
+    // 드롭다운 스타일 적용 (기본 숨김 상태)
+    emojiDropdown.css({
+        'position': 'absolute',
+        'background': 'white',
+        'border': '1px solid #ccc',
+        'padding': '10px',
+        'box-shadow': '2px 2px 10px rgba(0,0,0,0.6)',
+        'display': 'none', // 기본적으로 숨김
+        'grid-template-columns': 'repeat(10, 1fr)', // 10개씩 가로 정렬
+        'gap': '5px',
+        'border-radius': '5px',
+        'z-index': '1000',
+        'width': '287px',
+        'max-height': '200px',
+        'overflow-y': 'auto',
+    });
+
+    $('body').append(emojiDropdown); // body에 추가
+    emojiDropdown.hide(); // 초기 숨김
+
+    // 버튼 클릭 시 드롭다운 위치 설정 및 표시
+    emojiButton.on('click', function (e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+
+        const buttonOffset = emojiButton.offset(); // 버튼 위치 가져오기
+        emojiDropdown.css({
+            'top': buttonOffset.top + emojiButton.outerHeight() + 690 + 'px', // 버튼 아래 배치
+            'left': buttonOffset.left + 1056 + 'px',
+            'display': 'grid', // 드롭다운 표시
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest(emojiDropdown).length && !$(e.target).is(emojiButton)) {
+            emojiDropdown.hide();
+        }
+    });
+});

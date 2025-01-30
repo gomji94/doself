@@ -196,7 +196,7 @@ $(document).on('click', '.card', function () {
                 // 동적으로 HTML 요소 업데이트
                 $('#challenge-name').text(data.challengeName);
                 $('#image-preview').attr("src", data.challengeImage);
-                $('#profile').attr("src", data.challengeLeaderImage);
+                //$('#profile').attr("src", data.challengeLeaderImage);
                 $('#leader-link').text(data.challengeLeaderId);
 
                 $('#info-content-detail').html(`
@@ -301,13 +301,21 @@ $(document).on('click', '#participationChallenge', function () {
 });
 
 
-/*
+
 $(document).ready(function () {
     const emojiButton = $('#emojiButton');
     const emojiDropdown = $('<div class="emoji-dropdown"></div>'); // 이모지 드롭다운 생성
 
-    // 간단한 이모지 리스트
-    const emojis = ['😀', '😂', '🥰', '👍', '🎉'];
+    // 평균적으로 많이 사용되는 50개 이모지 리스트
+    const emojis = [
+        '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+        '😍', '😘', '🥰', '😗', '😙', '😚', '🤩', '🤗', '😜', '😝',
+        '😛', '🤑', '🤪', '😎', '🤓', '😏', '😒', '🙄', '😞', '😔',
+        '😟', '😕', '☹️', '🙁', '😣', '😖', '😫', '😩', '🥺', '😢',
+        '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱'
+    ];
+
+    // 이모지 리스트 생성
     emojis.forEach((emoji) => {
         const emojiElement = $('<span class="emoji"></span>').text(emoji);
         emojiElement.on('click', function () {
@@ -317,13 +325,40 @@ $(document).ready(function () {
         emojiDropdown.append(emojiElement);
     });
 
-    // 이모지 드롭다운 표시
-    emojiButton.on('click', function () {
-        emojiDropdown.toggle();
+    // 드롭다운 스타일 적용 (버튼 아래 표시)
+    emojiDropdown.css({
+        'position': 'absolute',
+        'background': 'white',
+        'border': '1px solid #ccc',
+        'padding': '10px',
+        'box-shadow': '2px 2px 10px rgba(0,0,0,0.6)',
+        'display': 'grid',
+        'grid-template-columns': 'repeat(10, 1fr)', // 10개씩 가로 정렬
+        'gap': '5px',
+        'border-radius': '5px',
+        'z-index': '1000',
+        'width': '287px',
+        'max-height': '200px',
+        'overflow-y': 'auto'
     });
 
-    $('body').append(emojiDropdown); // 드롭다운을 body에 추가
+    $('body').append(emojiDropdown); // body에 추가
     emojiDropdown.hide(); // 초기 숨김
-});
 
-*/
+    // 버튼 클릭 시 드롭다운 위치 설정 및 표시
+    emojiButton.on('click', function () {
+        let offset = emojiButton.offset();
+        emojiDropdown.css({
+            'top': offset.top + emojiButton.outerHeight() + 5 + 'px', // 버튼 아래 배치
+            'left': offset.left + 'px'
+        });
+        emojiDropdown.toggle(); // 표시/숨김 토글
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    $(document).on('click', function (e) {
+        if (!emojiButton.is(e.target) && !emojiDropdown.is(e.target) && emojiDropdown.has(e.target).length === 0) {
+            emojiDropdown.hide();
+        }
+    });
+});

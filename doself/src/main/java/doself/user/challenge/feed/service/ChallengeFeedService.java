@@ -83,9 +83,18 @@ public interface ChallengeFeedService {
 	// 챌린지 피드 좋아요 증감
 	void challengeFeedToggleLike(String challengeFeedCode, String memberId);
 	
-	// 챌린지 멤버 경고 카테고리
-	List<ChallengeMemberWarning> getMemberWarningCategory(String challengeCode, String memberId);
-
+	// 챌린지 경고 리스트
+	ChallengeMemberList getWarningList(String challengeCode);
+	
+	// 챌린지 경고 멤버 리스트
+	List<ChallengeMemberList> getWarningMemberList(String challengeCode);
+	
+	// 챌린지 피드, 댓글
+	List<ChallengeMemberList> getFeedAndCommentContentById(String memberId);
+	
+	// 챌린지 멤버 경고 리스트
+	Map<String, Object> getChallengeMemberDetails(String challengeCode);
+	
 	// 챌린지 멤버 경고
-	boolean warningChallengeMember(String challengeCode, String memberId);
+	boolean warningChallengeMember(ChallengeMemberWarning warning, String loggedInMemberId);
 }
