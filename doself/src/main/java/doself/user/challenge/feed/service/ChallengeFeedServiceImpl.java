@@ -102,39 +102,64 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	public List<ChallengeTotalProgress> getTopParticipants(String challengeCode) {
 		List<ChallengeTotalProgress> memberList = challengeFeedMapper.getTopParticipants(challengeCode);
 
-	    log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
+//	    log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
 
 	    return memberList;
 	}
+	
+	// 챌린지 경고 리스트
+	@Override
+	public ChallengeMemberList getWarningList(String challengeCode) {
+		return challengeFeedMapper.getWarningList(challengeCode);
+	}
 
-	// 챌린지 멤버 조회(참여자 번호, 챌린지 번호, 챌린지 참여 및 퇴장 일시 기록 → 추후, 유효성 검사 로직 추가)
+	// 챌린지 멤버 조회
 	@Override
 	@Transactional
 	public List<ChallengeMemberList> getMemberList(String challengeCode) {
-		List<ChallengeMemberList> memberList = challengeFeedMapper.getMemberList(challengeCode);
-		
-	    //log.info(">>> location/serviceImpl >>> memberList: {}", memberList);
-
-	    return memberList;
+		return challengeFeedMapper.getMemberList(challengeCode);
 	}
 	
-	// 챌린지 멤버 경고 카테고리
+	// 챌린지 경고 멤버 리스트 조회
 	@Override
-	public List<ChallengeMemberWarning> getMemberWarningCategory(String challengeCode, String memberId) {
-		return challengeFeedMapper.getMemberWarningCategory(challengeCode, memberId);
+	public List<ChallengeMemberList> getWarningMemberList(String challengeCode) {
+		return challengeFeedMapper.getWarningMemberList(challengeCode);
 	}
 	
+	// 챌린지 멤버 경고 리스트 조회
+	@Override
+	public Map<String, Object> getChallengeMemberDetails(String challengeCode) {
+	    Map<String, Object> response = new HashMap<>();
+
+	    // 멤버 리스트 조회
+	    List<ChallengeMemberList> memberList = challengeFeedMapper.getWarningMemberList(challengeCode);
+	    response.put("memberList", memberList);
+	    
+	    log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
+
+	    return response;
+	}
+	
+	// 챌린지 피드, 댓글 조회
+	@Override
+	public List<ChallengeMemberList> getFeedAndCommentContentById(String memberId) {
+	    return challengeFeedMapper.getFeedAndCommentContentById(memberId);
+	}
+
 	// 챌린지 멤버 경고
 	@Override
-	public boolean warningChallengeMember(String challengeCode, String memberId) {
-		int warningCnt = challengeFeedMapper.warningChallengeMember(challengeCode, memberId);
-		
-		// 코드 번호 생성 앞자리, 테이블명, 컬럼명
+	@Transactional
+    public boolean warningChallengeMember(ChallengeMemberWarning warning, String loggedInMemberId) {
 		String formattedKeyNum = commonMapper.getPrimaryKey("lcmwl_", "challenge_member_feed", "lcmwl_num");
-		
-		return warningCnt > 0 ? true : false;
-	}
+	    warning.setMemberWarningCode(formattedKeyNum);
+	    warning.setWarningDate(new Date());
 
+	    int result = challengeFeedMapper.warningChallengeMember(warning);
+        return result > 0;
+    }
+//	warningCnt > 0 ? true : false;
+	
+	
 	@Override
 	@Transactional
 	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode) {
@@ -455,7 +480,14 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	// 챌린지 피드 삭제
 	@Override
 	public void deleteChallengeFeed(String challengeFeedCode, String memberId) {
-		challengeFeedMapper.deleteChallengeFeed(challengeFeedCode, memberId);
+		// 댓글 삭제
+	    challengeFeedMapper.deleteCommentsByFeedCode(challengeFeedCode);
+
+	    // 피드 삭제
+	    int rowsDeleted = challengeFeedMapper.deleteChallengeFeed(challengeFeedCode, memberId);
+	    if (rowsDeleted == 0) {
+	        throw new RuntimeException("피드 삭제에 실패했습니다.");
+	    }
 	}
 
 	// 챌린지 피드 댓글 등록

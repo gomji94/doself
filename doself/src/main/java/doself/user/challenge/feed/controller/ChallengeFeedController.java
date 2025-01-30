@@ -1,5 +1,7 @@
 package doself.user.challenge.feed.controller;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +85,10 @@ public class ChallengeFeedController {
 	    int endPageNum = pageInfo.getEndPageNum();
 	    int lastPage = pageInfo.getLastPage();
 	    
+	    if (challengeFeedList == null || challengeFeedList.isEmpty()) {
+	        challengeFeedList = Collections.emptyList();
+	    }
+	    
 	    List<ChallengeFeedComment> feedCommentList = challengeFeedService.getFeedCommentList(challengeFeedCode);
 	    
 	    var challengeFeedPageInfo = challengeFeedService.getChallengeFeedPage(challengeCode, pageable);
@@ -107,40 +113,56 @@ public class ChallengeFeedController {
 	    model.addAttribute("loggedInMemberId", loggedInMemberId);
 	    model.addAttribute("challengeTotalProgressInfo", challengeTotalProgressInfo);
 	    
-	    //log.info(">>> location/controller >>> challengeTotalProgressInfo: {}", challengeTotalProgressInfo);
 	    //log.info(">>> Controller >>> dateCalculations: {}", dateCalculations);
 	    
 	    return "user/challenge/challenge-view";
 	}
 	
-	// 챌린지 멤버 리스트 조회
-	@GetMapping("/memberlist")
-	@ResponseBody
-	public List<ChallengeMemberList> getMemberList(@RequestParam(value = "challengeCode") String challengeCode, Model model) {
-		List<ChallengeMemberList> memberList = challengeFeedService.getMemberList(challengeCode);
-		
-	    return memberList;
-	}
-	
-	// 챌린지 멤버 경고 사유 선택 조회
-	@GetMapping("/warning")
-	public List<ChallengeMemberWarning> getMemberWarnig(@RequestParam("memberId") String memberId,
-								  @RequestParam("challengeCode") String challengeCode,
-								  HttpServletRequest request, Model model) {
-		
-		return challengeFeedService.getMemberWarningCategory(challengeCode, memberId);
-	}
-	
-	// 챌린지 멤버 경고 사유 선택 폼
-	@PostMapping("/memberlist/warningrequest")
-	public boolean challengeMamberWarning(@RequestParam("memberId") String memberId,
-										  @RequestParam("challengeCode") String challengeCode,
-										  ChallengeMemberWarning challengeMemberWarning, HttpSession session) {
+	// 챌린지 멤버 경고
+	@GetMapping("/memberwarning")
+	public String getChallengeMemberDetails(@RequestParam("challengeCode") String challengeCode,
+											ChallengeMemberList challengeMemberList, HttpSession session, Model model) {
 		String loggedInMemberId = (String) session.getAttribute("SID");
-		
-		boolean isWarning = challengeFeedService.warningChallengeMember(challengeCode, memberId);
-		
-		return isWarning;
+		ChallengeMemberList warningList = challengeFeedService.getWarningList(challengeCode);
+		List<ChallengeMemberList> warningMemberList = challengeFeedService.getWarningMemberList(challengeCode);
+				
+	    log.info(">>> Controller >>> challengeMemberList: {}", challengeMemberList);
+
+	    // 서비스 호출하여 데이터를 가져옴
+	    Map<String, Object> response = challengeFeedService.getChallengeMemberDetails(challengeCode);
+
+	    model.addAttribute("challengeCode", challengeCode);
+	    model.addAttribute("memberList", response.get("memberList"));
+	    model.addAttribute("warningCategoryList", response.get("warningCategoryList"));
+	    model.addAttribute("challengeMemberList", challengeMemberList);
+	    model.addAttribute("warningList", warningList);
+	    model.addAttribute("warningMemberList", warningMemberList);
+
+	    return "user/challenge/challenge-member-warning";
+	}
+//	public ResponseEntity<Map<String, Object>> getChallengeMemberDetails(@RequestParam("challengeCode") String challengeCode,
+//	        															 @RequestParam(value = "memberId", required = false) String selectedMemberId,
+//	        															 HttpSession session) {
+//	    String loggedInMemberId = (String) session.getAttribute("SID");
+//	    Map<String, Object> response = challengeFeedService.getChallengeMemberDetails(challengeCode);
+//
+//	    // 선택된 멤버의 피드 및 댓글 정보 추가
+//	    if (selectedMemberId != null && !selectedMemberId.isEmpty()) {
+//	        List<ChallengeMemberList> feedAndCommentList = challengeFeedService.getFeedAndCommentContentById(selectedMemberId);
+//	        response.put("feedAndCommentList", feedAndCommentList);
+//	        log.info(">>> 선택된 멤버의 피드 및 댓글 데이터: {}", feedAndCommentList);
+//	    }
+//
+//	    log.info(">>> 전체 응답 데이터: {}", response);
+//	    return "user/challenge/challenge-member-warning";
+//	}
+	
+	// 챌린지 멤버 경고 폼
+	@PostMapping("/memberlist/warningrequest")
+	public ResponseEntity<Boolean> challengeMemberWarning(@RequestBody ChallengeMemberWarning warning, HttpSession session) {
+		String loggedInMemberId = (String) session.getAttribute("SID");
+	    boolean isWarning = challengeFeedService.warningChallengeMember(warning, loggedInMemberId);
+	    return ResponseEntity.ok(isWarning);
 	}
 	
 	// 챌린지 생성 화면 조회

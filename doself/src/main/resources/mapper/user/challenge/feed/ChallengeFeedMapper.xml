@@ -146,6 +146,15 @@
 		<result column="lcmwl_date"	    property="warningDate"/>
 	</resultMap>
 	
+	<resultMap type="ChallengeMemberWarning" id="ChallengeContentMap">
+		<id 	column="cmf_num" property="challengeFeedCode"/>
+		<id 	column="cg_num" property="challengeCode"/>
+		<id 	column="cfc_num" property="challengeCommentCode"/>
+		<result column="mbr_id" property="memberId"/>
+		<result column="cmf_content" property="challengeFeedContent"/>
+		<result column="cfc_content" property="challengeCommentContent"/>
+	</resultMap>
+	
 	<!-- 로그인된 챌린지 멤버 아이디 -->
 	<select id="getChallengeCodeByMemberId" parameterType="string" resultType="string">
 		/* 로그인된 챌린지 멤버 아이디 */
@@ -516,6 +525,12 @@
 	      AND mbr_id = #{memberId}
 	</delete>
 	
+	<!-- 피드에 달린 댓글 삭제 -->
+	<delete id="deleteCommentsByFeedCode">
+	    DELETE FROM challenge_feed_comments
+	    WHERE cmf_num = #{challengeFeedCode}
+	</delete>
+	
 	<!-- 댓글 리스트 조회 -->
 	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
 		/* 댓글 리스트 조회 */
@@ -569,32 +584,41 @@
 	</update>
 	
 	<!-- 챌린지 멤버 경고 조회 -->
-	<!-- <select id="getMemberWarnigCategory" resultMap="ChallengeMemberWarningMap">
+	<select id="getWarningMemberList" resultMap="ChallengeMemberListMap">
+		/* 챌린지 멤버 경고 조회 */
 		SELECT
-			lcmwl.lcmwl_num,
-			lcmwl.cg_num,
-			lcmwl.cgm_num,
-			lcmwl.cmwc_num,
-			cmwc.cmwc_category,
-			lcmwl.olc_code,
-			lcmwl.lcmwl_bc_num,
-			lcmwl.lcmwl_date
-		FROM
-			challenge_mbr_warning_category cmwc
-			INNER JOIN leader_challenge_mbr_warning_log lcmwl USING(cmwc_num)
-			INNER JOIN challenge_group_member cgm USING(cgm_num)
-		WHERE
-			lcmwl.cg_num = #{challengeCode}
-	</select> -->
+	        cgm.cgm_num,
+	        cgm.cg_num,
+	        cg.cg_name,
+	        cgm.mbr_id
+	    FROM
+	        challenge_group_member cgm
+	    INNER JOIN challenge_group cg ON cg.cg_num = cgm.cg_num
+	    LEFT JOIN member m ON m.mbr_id = cgm.mbr_id
+	    WHERE
+	        cg.cg_num = #{challengeCode}
+	    ORDER BY cgm.cgm_date ASC
+	</select>
 	
-	<!-- 챌린지 경고 카테고리 -->
-	<select id="getMemberWarningCategory" resultMap="ChallengeMemberWarningMap">
-		/* 챌린지 경고 카테고리 */
+	<!-- 챌린지 경고 리스트 -->
+	<select id="getWarningList" resultMap="ChallengeMemberListMap">
+		/* 챌린지 경고 리스트 */
 		SELECT
-	        cmwc.cmwc_num,
-	        cmwc.cmwc_category
-    	FROM
-    		challenge_mbr_warning_category cmwc
+	        cgm.cgm_num,
+	        cgm.cg_num,
+	        cg.cg_name,
+	        cgm.mbr_id,
+	        cgm.cs_num,
+	        cgm.cgm_date
+	    FROM
+	        challenge_group_member cgm
+	        INNER JOIN challenge_group cg ON cg.cg_num = cgm.cg_num
+	        LEFT JOIN `member` m ON m.mbr_id = cgm.mbr_id
+	    WHERE
+	        cg.cg_num = #{challengeCode}
+	    ORDER BY
+	        cgm.cgm_date ASC
+	    LIMIT 1
 	</select>
 	
 	<!-- 챌린지 멤버 경고 폼 -->
@@ -619,5 +643,22 @@
 				NOW()
 			)
 	</insert>
+	
+	<!-- 챌린지 피드/댓글 조회 -->
+	<select id="getFeedAndCommentContentById" resultMap="ChallengeContentMap">
+		SELECT
+			cmf.cmf_num,
+			cmf.cg_num,
+			cmf.mbr_id,
+			cmf.cmf_content,
+			cfc.cfc_num,
+			cfc.cfc_content
+		FROM
+			challenge_member_feed cmf
+			INNER JOIN challenge_feed_comments cfc
+			ON cmf.cmf_num = cfc.cmf_num
+		WHERE
+			cmf.mbr_id = #{memberId}
+	</select>
 </mapper>
   

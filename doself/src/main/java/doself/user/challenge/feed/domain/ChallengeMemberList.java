@@ -22,4 +22,16 @@ public class ChallengeMemberList {
 	//private Double challengeTodayParticipationRate;	// 멤버 일일 참여율
 	//private Double challengeTodayAchievementRate;	// 멤버 일일 달성률
 	//private Double score;							// 참여 멤버 점수 계산
+	
+	private String memberWarningCode;				// 챌린지 경고 코드
+	private String challengeWarningCategoryCode;	// 챌린지 경고 카테고리 코드
+	private String challengeWarningCategory;		// 챌린지 경고 카테고리
+	private String occuranceLocationCode;			// 발생 위치 코드
+	private String contentCode;						// 해당 글/댓글 번호(기본값 0)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date warningDate;						// 경고일
+	private String challengeFeedCode;				// 챌린지 피드 코드
+	private String challengeFeedContent;			// 챌린지 피드 내용
+	private String challengeCommentCode;			// 챌린지 댓글 코드
+	private String challengeCommentContent;			// 챌린지 댓글 내용
 }
