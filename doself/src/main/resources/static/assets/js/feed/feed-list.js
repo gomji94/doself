@@ -2,40 +2,57 @@
 $(document).ready(function () {
     // 옵션 버튼 클릭 시 모달창 표시
     $('.option-button').on('click', function () {
-		const feedElement = $(this).closest('.feed'); // 현재 피드 요소
+        const feedElement = $(this).closest('.feed'); // 현재 피드 요소
         const isOwner = feedElement.data('is-owner'); // 본인 피드 여부
-		const feedCode = $(this).data('feed-code'); // 현재 피드 코드 가져오기
-	    const feedUrl = `/feed/view?feedCode=${feedCode}`; // 링크 생성
+        const feedCode = $(this).data('feed-code'); // 현재 피드 코드 가져오기
+		const mbrId = feedElement.attr('data-mbr-id');
+        const feedUrl = `/feed/view?feedCode=${feedCode}`; // 링크 생성
+		
+		if (!feedCode || !mbrId) {
+            alert('피드 정보를 가져오지 못했습니다.');
+            return;
+        }
 
-		/*console.log('Feed Code:', feedCode); //
-	    console.log('Feed URL:', feedUrl);  // */
+        // 신고 버튼에 피드 정보 설정
+        $("#feed-declaration-modal").attr("data-feed-num", feedCode);
+        $("#feed-declaration-modal").attr("data-feed-id", mbrId);
 		
-		if (feedCode) {
-	        $('#my-feed-link-copy a').attr('data-feed-url', feedUrl); // 동적으로 URL 설정
-	    } else {
-	        alert('피드 코드를 찾을 수 없습니다.');
-	    }
-		
+        if (feedCode) {
+            $('#my-feed-link-copy a').attr('data-feed-url', feedUrl); // 동적으로 URL 설정
+        } else {
+            alert('피드 코드를 찾을 수 없습니다.');
+        }
+
         if (isOwner) {
-            // 본인 피드 옵션 모달 표시
             $('.feed-option-modal-wrap').fadeIn();
         } else {
-            // 다른 멤버 피드 옵션 모달 표시
             $('.other-members-option-modal-wrap').fadeIn();
         }
     });
-	
-	// 피드 링크 복사
+
+    // 타멤버 피드 옵션에서 "신고" 클릭 시 신고 모달 열기
+    $(document).on("click", "#feed-declaration-modal", function () {
+        let feedNum = $("#feed-declaration-modal").attr("data-feed-num"); // 피드 번호 가져오기
+        let mbrId = $("#feed-declaration-modal").attr("data-feed-id"); // 신고 대상 회원 ID
+
+        if (!feedNum || !mbrId) {
+            alert("신고할 피드 정보가 없습니다.");
+            return;
+        }
+
+        // 신고 모달에 데이터 설정
+        $("#feed-declaration-modal-overlay").fadeIn(); // 신고 모달 띄우기
+    });
+
+    // 피드 링크 복사
     $('#my-feed-link-copy a').on('click', function (e) {
         e.preventDefault();
         const feedUrl = $(this).attr('data-feed-url'); // URL 읽기
 
-        /*console.log('Copied URL:', feedUrl);*/
-
-        if (!feedUrl) {
-            alert('복사할 링크가 없습니다.');
-            return;
-        }
+		if (!feedUrl || feedUrl.trim() === '') {
+	        alert('복사할 링크가 없습니다.');
+	        return;
+	    }
 
         const fullUrl = window.location.origin + feedUrl;
         console.log('Copied Full URL:', fullUrl); // 디버깅용
@@ -60,8 +77,8 @@ $(document).ready(function () {
     $('.feed-option-modal-wrap .close').on('click', function () {
         $('.feed-option-modal-wrap').fadeOut(); // 모달창 비활성화
     });
-	
-	$('.other-members-option-modal-wrap .close').on('click', function () {
+
+    $('.other-members-option-modal-wrap .close').on('click', function () {
         $('.other-members-option-modal-wrap').fadeOut(); // 다른 멤버 피드 모달창 닫기
     });
 
@@ -71,17 +88,11 @@ $(document).ready(function () {
             $(this).fadeOut();
         }
     });
-	
-	$('.other-members-option-modal-wrap').on('click', function (e) {
-	    if ($(e.target).is('.other-members-option-modal-wrap')) {
-	        $(this).fadeOut();
-	    }
-	});
-	
-	// 타멤버 피드 옵션에서 "신고" 클릭 시 신고 모달 열기
-    $('#feed-declaration-modal').on('click', function () {
-        $('.other-members-option-modal-wrap').fadeOut(); // 기존 모달 닫기
-        $('#feed-declaration-modal-overlay').fadeIn(); // 신고 모달 열기
+
+    $('.other-members-option-modal-wrap').on('click', function (e) {
+        if ($(e.target).is('.other-members-option-modal-wrap')) {
+            $(this).fadeOut();
+        }
     });
 
     // 신고 모달 닫기 버튼 클릭
@@ -95,6 +106,58 @@ $(document).ready(function () {
             $(this).fadeOut();
         }
     });
+
+    // 신고 유형 선택 시 AJAX로 서버에 신고 요청 보내기
+	$(document).on("click", "#feed-declaration-modal-overlay ul li.pop", function () {
+        let reportType = $(this).text().trim(); // 신고 유형 텍스트 가져오기
+        if (reportType === "취소") {
+            $("#feed-declaration-modal-overlay").fadeOut(); // 취소 시 모달 닫기
+            return;
+        }
+
+        let feedNum = $("#feed-declaration-modal").attr("data-feed-num"); // 피드 코드 가져오기
+        let mbrId = $("#feed-declaration-modal").attr("data-feed-id"); // 신고 대상 회원 ID 가져오기
+
+
+        if (!feedNum || !mbrId) {
+            alert("신고할 피드 정보가 없습니다.");
+            return;
+        }
+
+        let reportData = {
+            rrBcNum: feedNum, // 신고 당한 피드 코드
+            mbrId: mbrId, // 신고 대상 회원 ID
+            rcCode: getReportCategoryCode(reportType), // 신고 유형 코드 매핑
+            rrContent: reportType // 신고 내용 (유형명 저장)
+        };
+
+        $.ajax({
+            url: "/feed/report",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(reportData),
+            success: function (response) {
+                alert("신고가 접수되었습니다.");
+                $("#feed-declaration-modal-overlay").hide(); // 모달 닫기
+            },
+            error: function (xhr, status, error) {
+                console.error("🚨 신고 실패:", xhr.responseText);
+                alert("신고 접수에 실패했습니다.");
+            }
+        });
+    });
+
+    // 신고 유형을 신고 코드(rc_code)로 변환하는 함수
+    function getReportCategoryCode(reportType) {
+        const reportCategories = {
+            "불법 컨텐츠": "rc_001",
+            "폭력적 및 유해 콘텐츠": "rc_002",
+            "욕설 및 비방": "rc_003",
+            "스팸 및 광고": "rc_004",
+            "허위 사실 유포": "rc_005"
+        };
+        return reportCategories[reportType] || "rc_999"; // 기본 코드 설정
+    }
 });
 
 // --- 상세 피드 옵션 모달 ---
@@ -724,6 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 각 피드 요소에 Observer 연결
     feeds.forEach(feed => observer.observe(feed));
 });
+
 
 // 영양 정보 페이지
 /*document.addEventListener("DOMContentLoaded", () => {

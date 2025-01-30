@@ -373,6 +373,29 @@
 			fc_num = #{feedCommentCode}
 	</delete>
 	
+	<!-- 피드 신고 -->
+	<insert id="insertReportRequest" parameterType="Declare">
+	    INSERT INTO report_request (
+	        rr_num,
+	        mbr_id,
+	        olc_code,
+	        rr_bc_num,
+	        rc_code,
+	        rr_content,
+	        rr_date,
+	        sc_code
+	    ) VALUES (
+	        #{rrNum},
+	        #{mbrId},
+	        #{olcCode},
+	        #{rrBcNum},
+	        #{rcCode},
+	        #{rrContent},
+	        NOW(),
+	        #{scCode}
+	    )
+	</insert>
+	
     <!--특정 회원의 하루 먹은 영양 정보 조회--> 
     <!--<select id="getNutritionalInfoByDate" resultType="DailyNutritionalIntakeInfo">
         SELECT 
