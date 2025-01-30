@@ -1532,7 +1532,7 @@ select option:checked {
     cursor: pointer;
     align-content: center;
     width: 480px;
-    height: 465px;
+    height: 431px;
 }
 
 .cf-upload-box img {
@@ -1575,6 +1575,7 @@ select option:checked {
     flex-direction: column;
     width: 84%;
     gap: 15px;
+    margin-top: 7px;
 }
 
 .form-control {
@@ -1615,7 +1616,7 @@ select option:checked {
 textarea#cf-content {
     max-width: 260px;
     min-width: 260px;
-    min-height: 210px;
+    min-height: 214px;
     border-radius: 5px;
     padding: 10px;
     font-size: 13px;
@@ -1888,6 +1889,13 @@ div#modifyFeedButtonBlock {
     margin-top: 5px;
 }
 
+.emoji-btn {
+	background: none;
+    border: none;
+    cursor: pointer;
+    display: contents;
+}
+
 .cf-modify-feed-info #emoji-btn {
     background: none;
     border: none;
@@ -2130,6 +2138,7 @@ div#challengeNameProgress {
     margin-top: 11.5px;
     color: #515151;
     font-size: 16px;
+    font-weight: bold;
 }
 
 .progress-container .challenge h5 {

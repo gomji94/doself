@@ -63,8 +63,11 @@ public interface ChallengeFeedMapper {
 	// 챌린지 피드 코드
 	AddChallengeFeed getChallengeFeedByCode(Map<String, Object> params);
 	
-	// 챌린지 피드 삭제
-	void deleteChallengeFeed(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
+	// 피드에 달린 댓글 삭제
+	void deleteCommentsByFeedCode(@Param("challengeFeedCode") String challengeFeedCode);
+
+	// 피드 삭제
+	int deleteChallengeFeed(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
 	
 	// 챌린지 피드 댓글 리스트 조회
 	List<ChallengeFeedComment> getFeedCommentList(@Param("challengeFeedCode") String challengeFeedCode);
@@ -94,15 +97,20 @@ public interface ChallengeFeedMapper {
 	// 참여 멤버 상위 3명 표시
 	List<ChallengeTotalProgress> getTopParticipants(@Param("challengeCode") String challengeCode);
 	
-	// 챌린지 피드 좋아요 감소
+	// 챌린지 피드 좋아요 증감
 	int toggleLike(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
 	
-	// 챌린지 경고 카테고리
-	List<ChallengeMemberWarning> getMemberWarningCategory(@Param("challengeCode") String challengeCode,
-            											  @Param("memberId") String memberId);
+	// 챌린지 경고 리스트
+	ChallengeMemberList getWarningList(String challengeCode);
+	
+	// 챌린지 멤버 경고 리스트 조회
+	List<ChallengeMemberList> getWarningMemberList(@Param("challengeCode") String challengeCode);
 	
 	// 챌린지 멤버 경고
-	int warningChallengeMember(String challengeCode, String memberId);
+	int warningChallengeMember(ChallengeMemberWarning warning);
+	
+	// 챌린지 피드, 댓글 내용
+	List<ChallengeMemberList> getFeedAndCommentContentById(@Param("memberId") String memberId);
 	
 
 
