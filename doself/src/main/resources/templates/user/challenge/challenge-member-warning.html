@@ -24,7 +24,7 @@
 	               		</div>
 	               		<div >
 	               			<label class="input-list" for="challengeMember">참여자</label>
-	               			<select id="challengeMember">
+	               			<select class="input-block" id="challengeMember">
 	               				<option value="">참여자를 선택해주세요</option>
 	               				<option	th:each="cml : ${warningMemberList}" 
 	               						th:value="${cml.memberId}" 
@@ -34,7 +34,7 @@
 	               		</div>
 	               		<div >
 	               			<label class="input-list" for="warningCategorySelect">신고유형</label>
-	               			<select id="warningCategorySelect">
+	               			<select class="input-block" id="warningCategorySelect">
 	               				<option value="">신고유형을 선택해주세요</option>
 	               				<option value="cmwc_001">참여율 저조</option>
 	               				<option value="cmwc_002">친목(파벌 형성)</option>
@@ -47,15 +47,15 @@
 	               		</div>
 	               		<div >
 	               			<label class="input-list" for="locationSelect">발생위치</label>
-	               			<select id="locationSelect">
+	               			<select class="input-block" id="locationSelect">
 	               				<option value="">피드/댓글 선택해주세요</option>
-	               				<option value="olc_005">챌린지내 피드</option>
-	               				<option value="olc_006">챌린지내 댓글</option>
+	               				<option value="olc_005" id="challengeFeedWarning">챌린지내 피드</option>
+	               				<option value="olc_006" id="challengeFeedCommentWarning">챌린지내 댓글</option>
 	               			</select>
 	               		</div>
 	               		<div >
 	               			<label class="input-list" for="contentSelect">신고글</label>
-	               			<select id="contentSelect">
+	               			<select class="input-block" id="contentSelect" style="text-overflow:ellipsis; white-space:nowrap;">
 	               				<!--/* 참여자 선택시 change 이벤트에 따라 댓글과 피드 목록 렌더링(ajax) */-->
 	               				<!--/* 예시: [피드]  */-->
 	               				<!--/* 예시: [댓글]  */-->
@@ -71,8 +71,6 @@
 									  }
 	               				 */-->
 	               				<option value="">참여자의 피드/댓글 선택해주세요</option>
-	               				<option value=""></option>
-	               				<option value=""></option>
 	               			</select>
 	               		</div>
 				        <button id="submitWarning">경고</button>

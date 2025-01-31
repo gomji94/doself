@@ -569,18 +569,18 @@
 			cfc_num = #{challengeFeedCommentCode}
 	</delete>
     
-	<!-- 챌린지 피드 좋아요 증감 -->
-	<update id="toggleLike" parameterType="map">
-		/* 챌린지 피드 좋아요 증감 */
+	<!-- 좋아요 수 증가 -->
+	<update id="incrementLike" parameterType="String">
 	    UPDATE challenge_member_feed
-	    SET 
-	        cmf_like = CASE
-	            WHEN cmf_like > 0 THEN cmf_like - 1
-	            ELSE cmf_like + 1
-	        END
-	    WHERE 
-	        cmf_num = #{challengeFeedCode}
-	        AND mbr_id = #{memberId}
+	    SET cmf_like = cmf_like + 1
+	    WHERE cmf_num = #{challengeFeedCode}
+	</update>
+	
+	<!-- 좋아요 수 감소 -->
+	<update id="decrementLike" parameterType="String">
+	    UPDATE challenge_member_feed
+	    SET cmf_like = cmf_like - 1
+	    WHERE cmf_num = #{challengeFeedCode}
 	</update>
 	
 	<!-- 챌린지 멤버 경고 조회 -->
@@ -639,26 +639,53 @@
 				#{challengeMemberCode},
 				#{challengeWarningCategoryCode},
 				#{occuranceLocationCode},
-				'0',
+				#{contentCode},
 				NOW()
 			)
 	</insert>
 	
-	<!-- 챌린지 피드/댓글 조회 -->
-	<select id="getFeedAndCommentContentById" resultMap="ChallengeContentMap">
+	<!-- 챌린지 피드 조회 -->
+	<select id="getFeedContentByChallengeAndMember" resultType="map">
+		/* 챌린지 피드 조회 */
 		SELECT
-			cmf.cmf_num,
-			cmf.cg_num,
-			cmf.mbr_id,
-			cmf.cmf_content,
-			cfc.cfc_num,
-			cfc.cfc_content
+			cmf.cmf_num 	 AS challengeFeedCode,
+			cmf.cg_num 		 AS challengeCode,
+			cmf.mbr_id 		 AS memberId,
+			cmf.cmf_content  AS challengeFeedContent
+		FROM
+			challenge_member_feed cmf
+		WHERE
+			cmf.cg_num = #{challengeCode}
+      		AND cmf.mbr_id = #{memberId}
+	</select>
+
+	<!-- 챌린지 댓글 조회 -->
+	<select id="getCommentContentByChallengeAndMember" resultType="map">
+		/* 챌린지 댓글 조회 */
+		SELECT
+			cmf.cg_num 		 AS challengeCode,
+			cfc.mbr_id 		 AS memberId,
+			cfc.cfc_num 	 AS challengeCommentCode,
+			cfc.cfc_content  AS challengeCommentContent
 		FROM
 			challenge_member_feed cmf
 			INNER JOIN challenge_feed_comments cfc
 			ON cmf.cmf_num = cfc.cmf_num
 		WHERE
-			cmf.mbr_id = #{memberId}
+			cmf.cg_num = #{challengeCode}
+        	AND cfc.mbr_id = #{memberId}
+	</select>
+	
+	<!-- 챌린지 멤버 코드 -->
+	<select id="getCgmNumByMemberId" resultType="String">
+	    SELECT
+	    	cgm.cgm_num,
+	    	cgm.cg_num
+	    FROM
+	    	challenge_group_member cgm
+	    WHERE
+	    	cgm.cg_num = #{challengeCode}
+	      	AND cgm.mbr_id = #{memberId}
 	</select>
 </mapper>
   
