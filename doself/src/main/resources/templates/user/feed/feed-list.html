@@ -37,7 +37,7 @@
 	                            <ul>
 	                                <li class="pop" id="feed-move-modal">피드로 이동</li>
 	                                <li class="pop" id="feed-share">피드 공유</li>
-                                	<li class="pop" id="feed-link-copy">
+                                	<li class="pop" id="other-feed-link-copy">
 										<a href="#" data-feed-url=""> 피드 링크 복사</a></li>
 	                                <li class="pop" id="feed-declaration-modal" data-feed-num="" data-feed-id="">신고</li>
 	                                <li class="pop close">취소</li>
@@ -128,7 +128,7 @@
                             <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요">
                         </button>
                         <button type="button" class="action-btn commentBtn" id="feedCommentBtn"
-								th:data-feed-code="${f.feedCode}" th:data-picture-file-image="${f.feedFilePath}">
+								th:data-feed-code="${f.feedCode}" th:data-meal-picture="${f.feedFilePath}" th:data-mbr_file_idx="${f.memberFilePath}">
                             <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
                         </button>
                     </div>
