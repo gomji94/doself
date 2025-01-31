@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -181,34 +179,6 @@ public class ChallengeListController {
 	        response.put("message", "참여 처리 중 오류가 발생했습니다.");
 	    }
 		
-//	    try {
-//	        // 이미 참여 중인지 확인
-//	        boolean isAlreadyParticipated = challengeListService.isAlreadyParticipated(addChallengeMember);
-//
-//	        if (isAlreadyParticipated) {
-//	            response.put("success", false);
-//	            response.put("message", "이미 참여중인 챌린지입니다.");
-//	            return response;
-//	        }
-//
-//	        boolean isParticipated = challengeListService.addChallengeMember(addChallengeMember);
-//	        response.put("success", isParticipated);
-//	        response.put("message", isParticipated ? "참여가 완료되었습니다." : "참여 처리 중 오류가 발생했습니다.");
-//	    } catch (IllegalArgumentException e) {
-//	        response.put("success", false);
-//	        response.put("message", e.getMessage());
-//	    } catch (Exception e) {
-//	        response.put("success", false);
-//	        response.put("message", "참여 처리 중 오류가 발생했습니다.");
-//	    }
-//	    
-//	    List<ChallengeList> challengeList = challengeListService.getChallengeList();
-//	    for(ChallengeList challengeIdx : challengeList) {
-//	    	String statusCode = challengeIdx.getChallengeStatusCode();
-//	    	challengeListService.updateChallengeStatuses();
-//	    	return response;
-//	    }
-	    
 	    log.info(">>> location/controller >>> : response {}", response);
 	    
 	    return response;
