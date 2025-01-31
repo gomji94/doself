@@ -165,7 +165,7 @@ public class FeedServiceImpl implements FeedService {
         declare.setScCode("sc_001"); // 초기 상태 설정
         
         // 🚀 발생 위치 코드 설정 (olc_code)
-        declare.setOlcCode("olc_feed");
+        declare.setOlcCode("olc_003");
         
         // 🚀 디버깅용 로그 추가
         System.out.println("✅ 신고 데이터 확인: " + declare);
