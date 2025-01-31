@@ -575,17 +575,33 @@ $(document).ready(function () {
 // --- 피드 댓글 모달 ---
 $(document).on('click', '.commentBtn', function () {
 	const feedCode = $(this).data('feed-code');
-	const memberProfilePath = $(this).data('member-profile');
-	const feedFilePath = $(this).data('picture-file-image');
+	let memberProfilePath = $(this).data('mbr_file_idx');
+	let feedFilePath = $(this).data('meal-picture');
 	
-	/*console.log("feedCode:", feedCode);
-	console.log("memberProfilePath:", memberProfilePath);*/
+	console.log("feedCode:", feedCode);
+    console.log("memberProfilePath:", memberProfilePath);
+    console.log("feedFilePath:", feedFilePath);
 	
 	if (!feedCode) {
         alert("피드 코드가 없습니다.");
         return;
     }
 	
+	// 기본 URL 설정
+    const baseUrl = window.location.origin; // 현재 사이트의 도메인 가져오기 (예: https://yourdomain.com)
+
+    // 이미지 URL이 상대경로라면 절대경로로 변환
+    if (memberProfilePath && !memberProfilePath.startsWith("http")) {
+        memberProfilePath = baseUrl + memberProfilePath;
+    }
+    if (feedFilePath && !feedFilePath.startsWith("http")) {
+        feedFilePath = baseUrl + feedFilePath;
+    }
+
+    console.log("Updated memberProfilePath:", memberProfilePath);
+    console.log("Updated feedFilePath:", feedFilePath);
+	
+	$('#image-preview').attr('src', memberProfilePath);
 	$('#image-preview').attr('src', feedFilePath);
 	
 	$.ajax({
