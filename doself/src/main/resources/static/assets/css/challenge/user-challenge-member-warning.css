@@ -54,9 +54,9 @@ img#warningSection {
 
 .challenge-mbr-waring-list {
     margin-top: 10px;
-    width: 1260px;
+    display: inline-block;
     position: relative;
-    left: 431px;
+    align-self: center;
 }
 
 button#submitWarning {
@@ -71,5 +71,10 @@ button#submitWarning {
     margin-right: -4px;
     font-weight: bold;
     position: relative;
-    left: 350px;
+    right: 6px;
+    align-self: self-end;
+}
+
+.input-block {
+    width: 340px;
 }

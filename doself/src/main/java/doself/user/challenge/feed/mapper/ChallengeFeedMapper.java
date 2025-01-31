@@ -97,8 +97,11 @@ public interface ChallengeFeedMapper {
 	// 참여 멤버 상위 3명 표시
 	List<ChallengeTotalProgress> getTopParticipants(@Param("challengeCode") String challengeCode);
 	
-	// 챌린지 피드 좋아요 증감
-	int toggleLike(@Param("challengeFeedCode") String challengeFeedCode, @Param("memberId") String memberId);
+	// 좋아요 추가
+	int incrementLike(@Param("challengeFeedCode") String challengeFeedCode);
+
+    // 좋아요 제거
+	int decrementLike(@Param("challengeFeedCode") String challengeFeedCode);
 	
 	// 챌린지 경고 리스트
 	ChallengeMemberList getWarningList(String challengeCode);
@@ -109,8 +112,17 @@ public interface ChallengeFeedMapper {
 	// 챌린지 멤버 경고
 	int warningChallengeMember(ChallengeMemberWarning warning);
 	
-	// 챌린지 피드, 댓글 내용
-	List<ChallengeMemberList> getFeedAndCommentContentById(@Param("memberId") String memberId);
+	// 챌린지 경고 피드
+	List<Map<String, String>> getFeedContentByChallengeAndMember(@Param("challengeCode") String challengeCode,
+																 @Param("memberId") String memberId);
+
+	// 챌린지 경고 댓글
+	List<Map<String, String>> getCommentContentByChallengeAndMember(@Param("challengeCode") String challengeCode,
+               														@Param("memberId") String memberId);
+	
+	// 챌린지 멤버 코드
+	String getCgmNumByMemberId(@Param("challengeCode") String challengeCode, @Param("memberId") String memberId);
+
 	
 
 

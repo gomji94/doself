@@ -81,7 +81,13 @@ public interface ChallengeFeedService {
 	ChallengeTotalProgress getChallengeTotalProgressInfo(String challengeCode);
 	
 	// 챌린지 피드 좋아요 증감
-	void challengeFeedToggleLike(String challengeFeedCode, String memberId);
+	//void challengeFeedToggleLike(String challengeFeedCode);
+	
+	// 피드 좋아요 증가
+	void incrementLike(String challengeFeedCode);
+	
+	// 피드 좋아요 감소
+	void decrementLike(String challengeFeedCode);
 	
 	// 챌린지 경고 리스트
 	ChallengeMemberList getWarningList(String challengeCode);
@@ -89,12 +95,16 @@ public interface ChallengeFeedService {
 	// 챌린지 경고 멤버 리스트
 	List<ChallengeMemberList> getWarningMemberList(String challengeCode);
 	
-	// 챌린지 피드, 댓글
-	List<ChallengeMemberList> getFeedAndCommentContentById(String memberId);
-	
 	// 챌린지 멤버 경고 리스트
 	Map<String, Object> getChallengeMemberDetails(String challengeCode);
 	
 	// 챌린지 멤버 경고
 	boolean warningChallengeMember(ChallengeMemberWarning warning, String loggedInMemberId);
+	
+	// 챌린지 경고 피드
+	List<Map<String, String>> getFeedContentByChallengeAndMember(String challengeCode, String memberId);
+	
+	// 챌린지 경고 피드 댓글
+	List<Map<String, String>> getCommentContentByChallengeAndMember(String challengeCode, String memberId);
+
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +84,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 		params.put("challengeCode", challengeCode);
 		params.put("pageable", pageable);
 		
-		//List<ChallengeFeed> feeds = challengeFeedMapper.getChallengeFeed(params);
 		List<ChallengeFeed> challengeFeedList = challengeFeedMapper.getChallengeListByChallengeCode(params);
 		
 		return new PageInfo<>(challengeFeedList, pageable, rowCnt);
@@ -135,31 +135,49 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    List<ChallengeMemberList> memberList = challengeFeedMapper.getWarningMemberList(challengeCode);
 	    response.put("memberList", memberList);
 	    
-	    log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
+	    //log.info(">>> location/serviceImpl >>> getTopParticipants >>> memberList: {}", memberList);
 
 	    return response;
 	}
 	
-	// 챌린지 피드, 댓글 조회
+	// 챌린지 경고 피드
 	@Override
-	public List<ChallengeMemberList> getFeedAndCommentContentById(String memberId) {
-	    return challengeFeedMapper.getFeedAndCommentContentById(memberId);
+	public List<Map<String, String>> getFeedContentByChallengeAndMember(String challengeCode, String memberId) {
+	    return challengeFeedMapper.getFeedContentByChallengeAndMember(challengeCode, memberId).stream()
+	            .map(item -> Map.of(
+	                "id", item.get("challengeFeedCode"), // 피드 코드
+	                "content", item.get("challengeFeedContent") // 피드 내용
+	            ))
+	            .collect(Collectors.toList());
 	}
+	
+	// 챌린지 경고 댓글
+	@Override
+	public List<Map<String, String>> getCommentContentByChallengeAndMember(String challengeCode, String memberId) {
+	    return challengeFeedMapper.getCommentContentByChallengeAndMember(challengeCode, memberId).stream()
+	            .map(item -> Map.of(
+	                "id", item.get("challengeCommentCode"), // 댓글 코드
+	                "content", item.get("challengeCommentContent") // 댓글 내용
+	            ))
+	            .collect(Collectors.toList());
+	}
+
 
 	// 챌린지 멤버 경고
 	@Override
 	@Transactional
     public boolean warningChallengeMember(ChallengeMemberWarning warning, String loggedInMemberId) {
-		String formattedKeyNum = commonMapper.getPrimaryKey("lcmwl_", "challenge_member_feed", "lcmwl_num");
-	    warning.setMemberWarningCode(formattedKeyNum);
+		String formattedKeyNum = commonMapper.getPrimaryKey("lcmwl_", "leader_challenge_mbr_warning_log", "lcmwl_num");
+		String cgmNum = challengeFeedMapper.getCgmNumByMemberId(warning.getChallengeCode(), warning.getChallengeMemberCode());
+		warning.setMemberWarningCode(formattedKeyNum);
+		warning.setChallengeMemberCode(cgmNum);
 	    warning.setWarningDate(new Date());
 
 	    int result = challengeFeedMapper.warningChallengeMember(warning);
         return result > 0;
     }
-//	warningCnt > 0 ? true : false;
-	
-	
+
+	// 챌린지 달성률 상태
 	@Override
 	@Transactional
 	public List<ChallengeProgress> getProcessChallengeStatus(String challengeCode) {
@@ -177,12 +195,13 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    challengeProgressCache.remove(challengeCode);
 	}
 
+	// 챌린지 생성 시, D+ D- 계산
 	@Override
 	@Transactional
 	public Map<String, String> calculateDPlusAndDMinus(String challengeCode) {
 		ChallengeProgress progress = challengeFeedMapper.getChallengeProgressByCode(challengeCode);
 		
-		log.info(">>> location/serviceImpl >>> progress: {}", progress);
+		//log.info(">>> location/serviceImpl >>> progress: {}", progress);
 		
 	    if (progress == null) {
 	        return Map.of("dPlus", "N/A", "dMinus", "N/A");
@@ -204,7 +223,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
             "dMinus", "D-" + Math.max(0, dMinus)
         );
 	    
-	    log.info(">>> Service >>> calculateDPlusAndDMinus >>> dateCalculations: {}", dateCalculations);
+	    //log.info(">>> Service >>> calculateDPlusAndDMinus >>> dateCalculations: {}", dateCalculations);
 	    
 	    return dateCalculations;
 	}
@@ -485,8 +504,9 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 
 	    // 피드 삭제
 	    int rowsDeleted = challengeFeedMapper.deleteChallengeFeed(challengeFeedCode, memberId);
+	    // 권한 확인 및 예외 처리
 	    if (rowsDeleted == 0) {
-	        throw new RuntimeException("피드 삭제에 실패했습니다.");
+	        throw new RuntimeException("피드 삭제 권한이 없거나 이미 삭제된 피드입니다.");
 	    }
 	}
 
@@ -553,17 +573,28 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	        }
 	    }
 
-	    log.info(">>> location/serviceImpl >>> progressInfo: {}", progressInfo);
+	    //log.info(">>> location/serviceImpl >>> progressInfo: {}", progressInfo);
 		return progressInfo;
 	}
 
-	// 챌린지 피드 좋아요 증감
+	// 좋아요 수 증가
 	@Override
-	public void challengeFeedToggleLike(String challengeFeedCode, String memberId) {
-	    int rowsUpdated = challengeFeedMapper.toggleLike(challengeFeedCode, memberId);
-	    if (rowsUpdated == 0) {
-	        throw new RuntimeException("좋아요 상태 업데이트에 실패했습니다.");
+	public void incrementLike(String challengeFeedCode) {
+	    int updatedRows = challengeFeedMapper.incrementLike(challengeFeedCode);
+	    if (updatedRows == 0) {
+	        throw new RuntimeException("좋아요 증가 실패");
 	    }
+	    log.info("좋아요가 증가되었습니다. challengeFeedCode: {}", challengeFeedCode);
+	}
+
+    // 좋아요 수 감소
+	@Override
+	public void decrementLike(String challengeFeedCode) {
+	    int updatedRows = challengeFeedMapper.decrementLike(challengeFeedCode);
+	    if (updatedRows == 0) {
+	        throw new RuntimeException("좋아요 감소 실패");
+	    }
+	    log.info("좋아요가 감소되었습니다. challengeFeedCode: {}", challengeFeedCode);
 	}
 
 }
