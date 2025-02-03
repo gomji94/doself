@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
 
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.AddChallengeMember;

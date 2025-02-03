@@ -1,7 +1,7 @@
 package doself.user.challenge.feed.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -126,7 +126,7 @@ public class ChallengeFeedController {
 		ChallengeMemberList warningList = challengeFeedService.getWarningList(challengeCode);
 		List<ChallengeMemberList> warningMemberList = challengeFeedService.getWarningMemberList(challengeCode);
 				
-	    log.info(">>> Controller >>> challengeMemberList: {}", challengeMemberList);
+	    //log.info(">>> Controller >>> challengeMemberList: {}", challengeMemberList);
 
 	    // 서비스 호출하여 데이터를 가져옴
 	    Map<String, Object> response = challengeFeedService.getChallengeMemberDetails(challengeCode);
@@ -140,22 +140,27 @@ public class ChallengeFeedController {
 
 	    return "user/challenge/challenge-member-warning";
 	}
-//	public ResponseEntity<Map<String, Object>> getChallengeMemberDetails(@RequestParam("challengeCode") String challengeCode,
-//	        															 @RequestParam(value = "memberId", required = false) String selectedMemberId,
-//	        															 HttpSession session) {
-//	    String loggedInMemberId = (String) session.getAttribute("SID");
-//	    Map<String, Object> response = challengeFeedService.getChallengeMemberDetails(challengeCode);
-//
-//	    // 선택된 멤버의 피드 및 댓글 정보 추가
-//	    if (selectedMemberId != null && !selectedMemberId.isEmpty()) {
-//	        List<ChallengeMemberList> feedAndCommentList = challengeFeedService.getFeedAndCommentContentById(selectedMemberId);
-//	        response.put("feedAndCommentList", feedAndCommentList);
-//	        log.info(">>> 선택된 멤버의 피드 및 댓글 데이터: {}", feedAndCommentList);
-//	    }
-//
-//	    log.info(">>> 전체 응답 데이터: {}", response);
-//	    return "user/challenge/challenge-member-warning";
-//	}
+	
+	// 챌린지 경고 피드/댓글 리스트 조회
+	@PostMapping("/fetchContent")
+	@ResponseBody
+	public List<Map<String, String>> fetchContent(@RequestBody Map<String, String> requestData) {
+	    String challengeCode = requestData.get("challengeCode");
+	    String memberId = requestData.get("memberId");
+	    String type = requestData.get("type");
+	    
+	    List<Map<String, String>> contentList = new ArrayList<>();
+	    if ("olc_005".equals(type)) { // 피드 조회
+	        contentList = challengeFeedService.getFeedContentByChallengeAndMember(challengeCode, memberId);
+	    } else if ("olc_006".equals(type)) { // 댓글 조회
+	        contentList = challengeFeedService.getCommentContentByChallengeAndMember(challengeCode, memberId);
+	    }
+
+	    //log.info(">>> Controller >>> fetchContent requestData: {}", requestData);
+	    //log.info(">>> Controller >>> fetchContent contentList: {}", contentList);
+	    
+	    return contentList;
+	}
 	
 	// 챌린지 멤버 경고 폼
 	@PostMapping("/memberlist/warningrequest")
@@ -208,7 +213,8 @@ public class ChallengeFeedController {
 	// 챌린지 피드 수정 화면 조회
 	@GetMapping("/modifychallengefeed")
 	@ResponseBody
-	public AddChallengeFeed getModifyChallengeFeed(@RequestParam("challengeFeedCode") String challengeFeedCode) {
+	public AddChallengeFeed getModifyChallengeFeed(@RequestParam("challengeFeedCode") String challengeFeedCode,
+												   HttpSession session, Model model) {
 		return challengeFeedService.getChallengeFeedByCode(challengeFeedCode);
 	}
 	
@@ -222,6 +228,12 @@ public class ChallengeFeedController {
 		
 		String memberId = (String) session.getAttribute("SID");
 	    addChallengeFeed.setChallengeMemberId(memberId);
+	    
+	    // 작성자 확인
+	    AddChallengeFeed existingFeed = challengeFeedService.getChallengeFeedByCode(addChallengeFeed.getChallengeFeedCode());
+	    if (!existingFeed.getChallengeMemberId().equals(memberId)) {
+	        throw new IllegalArgumentException("수정 권한이 없습니다.");
+	    }
 
 	    challengeFeedService.modifyChallengeFeed(files, addChallengeFeed);
 	    
@@ -252,7 +264,7 @@ public class ChallengeFeedController {
 	    comment.setChallengeFeedCommentAuthor(memberId);
 	    comment.setChallengeFeedCommentContent(commentContent);
 	    
-	    log.info(">>> Controller >>> challengeFeedCode: {}", challengeFeedCode);
+	    //log.info(">>> Controller >>> challengeFeedCode: {}", challengeFeedCode);
 
 	    boolean isCreate = challengeFeedService.addChallengeFeedComment(comment);
 
@@ -300,18 +312,22 @@ public class ChallengeFeedController {
 	public ResponseEntity<String> challengeFeedToggleLike(@RequestBody Map<String, Object> feedLike, HttpSession session) {
 	    String challengeFeedCode = (String) feedLike.get("challengeFeedCode");
 	    String loggedInMemberId = (String) session.getAttribute("SID");
+	    Boolean liked = (Boolean) feedLike.get("liked");
 
-	    //log.info(">>> Controller >>> challengeFeedCode: {}", challengeFeedCode);
+	    log.info(">>> Controller >>> challengeFeedCode: {}, liked: {}", challengeFeedCode, liked);
 
 	    try {
-	        challengeFeedService.challengeFeedToggleLike(challengeFeedCode, loggedInMemberId);
+	        if (liked) {
+	            challengeFeedService.incrementLike(challengeFeedCode);
+	        } else {
+	            challengeFeedService.decrementLike(challengeFeedCode);
+	        }
 	        return ResponseEntity.ok("좋아요 상태가 업데이트되었습니다.");
 	    } catch (Exception e) {
-	        log.error("좋아요 상태 업데이트 중 오류 발생", e);
+	        log.error("좋아요 상태 업데이트 중 오류 발생: {}", e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body("좋아요 상태 업데이트 중 오류 발생: " + e.getMessage());
+	                .body("좋아요 상태 업데이트 중 오류 발생.");
 	    }
 	}
 	
-
 }

@@ -15,10 +15,6 @@
 	    	<img id="cardSection" src="https://velog.velcdn.com/images/mekite/post/0d398abc-c843-4140-9019-d8b89546c8a6/image.png" alt="카드 구분선" />
 	        <!-- 카드 목록 -->
 	        <section id="participateCardList" class="card-grid" th:if="${participateChallengeList != null and !participateChallengeList.isEmpty()}">
-<!--/* 			    <div class="card" th:each="pcl : ${participateChallengeList}" 
-				     th:data-code="${pcl.challengeCode}" 
-				     th:href="@{/challenge/feed/view/{challengeCode}(challengeCode=${pcl.challengeCode}, challengeStatusCode=${pcl.challengeStatusCode != null ? pcl.challengeStatusCode : 'default'})}"
-				     style="border: none;"> */-->
 			    <div class="card" th:each="pcl : ${participateChallengeList}" 
 				     th:data-code="${pcl.challengeCode}"
 				     onclick="navigateToChallenge(this.getAttribute('data-code'))"

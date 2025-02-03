@@ -10,6 +10,9 @@ import lombok.Data;
 public class ChallengeMemberWarning {
 	private String memberWarningCode;				// 챌린지 경고 코드
 	private String challengeCode;					// 챌린지 코드
+	private String memberId;						// 챌린지 멤버 아이디
+	private String challengeFeedCode;				// 챌린지 피드 코드
+	private String challengeFeedContent;			// 챌린지 피드 내용
 	private String challengeMemberCode;				// 챌린지 멤버 코드
 	private String challengeWarningCategoryCode;	// 챌린지 경고 카테고리 코드
 	private String challengeWarningCategory;		// 챌린지 경고 카테고리
@@ -17,4 +20,6 @@ public class ChallengeMemberWarning {
 	private String contentCode;						// 해당 글/댓글 번호(기본값 0)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date warningDate;						// 경고일
+	private String challengeCommentCode;
+	private String challengeCommentContent;
 }

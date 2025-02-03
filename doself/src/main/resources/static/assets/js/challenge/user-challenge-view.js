@@ -320,7 +320,7 @@ $(document).ready(function () {
 });
 
 
-// --- feed option button ---
+// --- feed option button/modify feed/delete feed ---
 $(document).ready(function () {
     // 옵션 버튼 클릭 이벤트 (수정/삭제 모달 열기)
     $('.option-button').click(function () {
@@ -359,6 +359,12 @@ $(document).ready(function () {
             data: { challengeFeedCode: challengeFeedCode },
             success: function (data) {
 				$('.popup-wrap').css('display', 'none');
+				const loggedInMemberId = $('#loggedInMemberId').val(); // 현재 로그인한 세션 ID
+                if (data.challengeMemberId !== loggedInMemberId) {
+                    alert('수정 권한이 없습니다.');
+                    $('.popup-wrap').fadeOut();
+                    return;
+                }
 				
 				//console.log(data);
 				
@@ -440,11 +446,19 @@ $(document).ready(function () {
 	            type: "POST",
 	            data: { challengeFeedCode: challengeFeedCode },
 	            success: function () {
+					const loggedInMemberId = $('#loggedInMemberId').val(); // 현재 로그인한 세션 ID
+	                if (data.challengeMemberId !== loggedInMemberId) {
+	                    alert('삭제 권한이 없습니다.');
+	                    $('.popup-wrap').fadeOut();
+						window.location.reload();
+	                    return;
+	                }
 	                alert("삭제되었습니다.");
 	                window.location.reload();
 	            },
 	            error: function () {
-	                alert("삭제 중 문제가 발생했습니다.");
+	                alert('삭제 권한이 없습니다.');
+					window.location.reload();
 	            }
 	        });
 	    }
@@ -479,13 +493,16 @@ $('.likeBtn').click(function (event) {
     const likeImg = likeBtn.find('.likeImg');
     const feedDescription = likeBtn.closest('.feed').find('#feed-likes');
     const challengeFeedCode = likeBtn.data('feed-code');
-    const isLiked = likeBtn.attr('data-liked') === 'true';
+    const isLiked = likeBtn.attr('data-liked') === 'true'; // 현재 좋아요 상태 확인
 
     $.ajax({
         url: '/challenge/feed/like',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ challengeFeedCode: challengeFeedCode }),
+        data: JSON.stringify({ 
+            challengeFeedCode: challengeFeedCode,
+            liked: !isLiked // 좋아요 상태 토글
+        }),
         success: () => {
             let currentLikes = parseInt(feedDescription.text().match(/\d+/)[0], 10);
 
@@ -509,6 +526,7 @@ $('.likeBtn').click(function (event) {
     });
 });
 
+
 /*.css({ 'width': '24.7px', 'height': 'auto' });*/
 
 
@@ -529,7 +547,7 @@ $(document).ready(function () {
 });
 
 
-// --- feed comment modal --- TODO 작업중
+// --- feed comment modal ---
 $(document).on('click', '.commentBtn', function () {
 	const challengeCode = $('#challengeCode').val();
     const challengeFeedCode = $(this).data('challenge-code');

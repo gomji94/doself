@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-//jdbc가 추가된 상태에서만 트랜잭셔널 어노테이션 실행됨
 //전체 적용하려면 여기에 작성 || 특정 메소드에만 설정하고 싶으면 메소드 상단에 배치
 @Transactional
 //log.이 가능한 이유는 아래의 어노테이션 때문
