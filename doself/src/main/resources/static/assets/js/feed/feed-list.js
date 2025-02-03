@@ -178,10 +178,11 @@ $(document).ready(function () {
     function getReportCategoryCode(reportType) {
         const reportCategories = {
             "불법 컨텐츠": "rc_001",
-            "폭력적 및 유해 콘텐츠": "rc_002",
-            "욕설 및 비방": "rc_003",
-            "스팸 및 광고": "rc_004",
-            "허위 사실 유포": "rc_005"
+            "사기 및 사칭": "rc_002",
+            "폭력적 및 유해 콘텐츠": "rc_003",
+            "욕설 및 비방": "rc_004",
+            "스팸 및 광고": "rc_005",
+            "허위 사실 유포": "rc_006"
         };
         return reportCategories[reportType] || "rc_999"; // 기본 코드 설정
     }
@@ -575,33 +576,26 @@ $(document).ready(function () {
 // --- 피드 댓글 모달 ---
 $(document).on('click', '.commentBtn', function () {
 	const feedCode = $(this).data('feed-code');
-	let memberProfilePath = $(this).data('mbr_file_idx');
+	let memberProfilePath = $(this).data('fi.file_path');
 	let feedFilePath = $(this).data('meal-picture');
 	
-	console.log("feedCode:", feedCode);
+	/*console.log("feedCode:", feedCode);
     console.log("memberProfilePath:", memberProfilePath);
-    console.log("feedFilePath:", feedFilePath);
+	console.log("feedFilePath BEFORE:", feedFilePath);*/
 	
 	if (!feedCode) {
         alert("피드 코드가 없습니다.");
         return;
     }
 	
-	// 기본 URL 설정
-    const baseUrl = window.location.origin; // 현재 사이트의 도메인 가져오기 (예: https://yourdomain.com)
-
-    // 이미지 URL이 상대경로라면 절대경로로 변환
-    if (memberProfilePath && !memberProfilePath.startsWith("http")) {
-        memberProfilePath = baseUrl + memberProfilePath;
-    }
-    if (feedFilePath && !feedFilePath.startsWith("http")) {
+	const baseUrl = window.location.origin;
+	
+	if (!feedFilePath.startsWith("http")) {
         feedFilePath = baseUrl + feedFilePath;
     }
-
-    console.log("Updated memberProfilePath:", memberProfilePath);
-    console.log("Updated feedFilePath:", feedFilePath);
+		
+	/*console.log("feedFilePath AFTER:", feedFilePath);*/
 	
-	$('#image-preview').attr('src', memberProfilePath);
 	$('#image-preview').attr('src', feedFilePath);
 	
 	$.ajax({
@@ -812,7 +806,7 @@ $(document).on('click', '.commentBtn', function () {
 // 오른쪽 사이드바 업데이트
 function updateRightSidebar(feed) {
 	if (!feed) {
-	    console.error('feed is not defined');
+	    /*console.error('feed is not defined');*/
 	    return;
 	}
 		

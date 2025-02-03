@@ -160,15 +160,11 @@ public class FeedServiceImpl implements FeedService {
     	declare.setRrNum(formattedKeyNum);
     	
         // 신고 유형 코드 가져오기
-        int sanctionPeriod = declareMapper.getDeclarePeriod(declare.getRcCode());
         declare.setRrDate(LocalDateTime.now().toString());
         declare.setScCode("sc_001"); // 초기 상태 설정
         
-        // 🚀 발생 위치 코드 설정 (olc_code)
+        // 발생 위치 코드 설정 (olc_code)
         declare.setOlcCode("olc_003");
-        
-        // 🚀 디버깅용 로그 추가
-        System.out.println("✅ 신고 데이터 확인: " + declare);
 
         // 신고 요청 저장
         feedMapper.insertReportRequest(declare);
