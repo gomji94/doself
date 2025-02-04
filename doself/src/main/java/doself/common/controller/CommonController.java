@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class CommonController {
 	
 	@GetMapping("/")
-	public String getMethodName() {
+	public String getMainPage() {
 		return "project-info";
 	}	
 	
