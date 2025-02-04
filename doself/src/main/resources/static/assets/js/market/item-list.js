@@ -1,5 +1,5 @@
 // 버튼 클릭 이벤트 핸들러
-$(".info-item-details-link").on("click", function (event) {
+$(".info-link").on("click", function (event) {
     event.preventDefault();
 
     // href 속성에서 링크 경로 가져오기

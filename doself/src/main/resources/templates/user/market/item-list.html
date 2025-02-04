@@ -4,6 +4,7 @@
       layout:decorate="~{user/layout/default}">
 <head>
 	<link th:href="@{/assets/css/market/item-list.css}" rel="stylesheet" type="text/css" />
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<title>market</title>
 </head>
 	
@@ -58,8 +59,7 @@
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
 	    <script th:src="@{/assets/js/layout.js}"></script>
-	    <script th:src="@{/assets/js/medicine/list.js}"></script>
-	    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	    <script th:src="@{/assets/js/market/item-list.js}"></script>
     </th:block>
     
     <!--/* 사용자 추가 js script */-->
