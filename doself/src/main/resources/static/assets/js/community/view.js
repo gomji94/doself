@@ -18,6 +18,7 @@ $('#article-like__button').click(event => {
 	});
 	request.done(response => {
 		console.log(response);
+		location.reload();
 	});
 	request.fail(function(jQXHR, textStatus, error){
 		console.log(error);
