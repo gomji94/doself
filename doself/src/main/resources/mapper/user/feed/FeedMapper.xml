@@ -233,7 +233,7 @@
 	        f.feed_intake_date,
 	        f.feed_open_status,
 	        f.feed_file_index,
-	        ff.file_path AS feedFilePath
+	        ff.file_path
 	    FROM
 	        feed f INNER JOIN member m
 	        ON f.mbr_id = m.mbr_id
@@ -347,7 +347,8 @@
 			fc.mbr_id,
 			fc.fc_content,
 			fc.fc_date,
-			fi.file_path AS memberProfilePath
+			m.mbr_file_idx,
+			fi.file_path
 		FROM feed_comments fc
 		INNER JOIN `member` m ON fc.mbr_id = m.mbr_id
 		LEFT JOIN files fi ON m.mbr_file_idx = fi.file_idx

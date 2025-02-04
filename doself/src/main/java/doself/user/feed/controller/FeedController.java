@@ -40,7 +40,7 @@ public class FeedController {
 	private final FeedService feedService;
 	private final NutritionService nutritionService;
 	
-	// 메인 피드 조회
+	// 피드 목록 조회
 	@GetMapping("/list")
 	public String getFeedList(HttpSession session, Model model, Pageable pageable) {
 	    String loggedInMemberId = (String) session.getAttribute("SID");
