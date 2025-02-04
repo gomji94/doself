@@ -637,7 +637,7 @@
 			FROM
 				challenge_group cg
 			WHERE
-				cs_num = cs_001
+				cs_num = 'cs_001'
 				AND
 				cs_reward_check = ''
 				OR
