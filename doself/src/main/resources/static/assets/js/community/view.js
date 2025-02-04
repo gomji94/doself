@@ -18,9 +18,7 @@ $('#article-like__button').click(event => {
 	});
 	request.done(response => {
 		console.log(response);
-	}
-		
-	);
+	});
 	request.fail(function(jQXHR, textStatus, error){
 		console.log(error);
 	});	
