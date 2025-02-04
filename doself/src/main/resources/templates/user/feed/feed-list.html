@@ -15,10 +15,11 @@
 	                <div class="popup-body">
 	                    <div class="body-content">
 	                        <div class="body-titlebox">
-	                            <ul>
-	                                <li class="pop feed-modify-modal" id="feed-modify-modal" data-feed-code="${feedCode}">피드 수정</li>
-	                                <li class="pop" id="feed-delete-modal" data-feed-code="${feedCode}">피드 삭제</li>
-	                                <li class="pop" id="my-feed-link-copy"> 피드 링크 복사</li>
+	                            <ul th:if="${FeedList != null && !FeedList.isEmpty()}">
+	                                <li class="pop" id="feed-modify-modal" data-feed-code="">피드 수정</li>
+	                                <li class="pop" id="feed-delete-modal" data-feed-code="">피드 삭제</li>
+	                                <li class="pop" id="my-feed-link-copy">
+										<a href="#" data-feed-url=""> 피드 링크 복사</a></li>
 	                                <li class="pop close">취소</li>
 	                            </ul>
 	                        </div>
@@ -36,8 +37,9 @@
 	                            <ul>
 	                                <li class="pop" id="feed-move-modal">피드로 이동</li>
 	                                <li class="pop" id="feed-share">피드 공유</li>
-	                                <li class="pop" id="other-members-feed-link-copy">피드 링크 복사</li>
-	                                <li class="pop" id="feed-declaration-modal">신고</li>
+                                	<li class="pop" id="other-feed-link-copy">
+										<a href="#" data-feed-url=""> 피드 링크 복사</a></li>
+	                                <li class="pop" id="feed-declaration-modal" data-feed-num="" data-feed-id="">신고</li>
 	                                <li class="pop close">취소</li>
 	                            </ul>
 	                        </div>
@@ -79,6 +81,7 @@
             <div class="feed" th:each="f, iterStat : ${FeedList}" 
 						      th:data-is-owner="${f.owner}" 
 						      th:data-feed-code="${f.feedCode}"
+							  th:data-mbr-id="${f.memberId}"
 						      th:data-feed-content="${f.feedContent}" 
 						      th:data-feed-comment="${f.feedCommentContent}" 
 						      th:data-meal-date="${f.feedDate}"
@@ -97,11 +100,10 @@
 						      th:data-meal-calcium="${f.mealCalcium}" 
 						      th:data-meal-iron="${f.mealIron}" 
 						      th:data-mbr_file_idx="${f.memberFilePath}" 
-						      th:data-feed_file_idx="${f.feedFileIdx}" 
+						      th:data-feed_file_index="${f.feedFileIndex}" 
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
                 <input type="hidden" id="feedCode" th:value="${f.feedCode}" />
-				<button class="feed-modify-btn" th:data-feed-code="${f.feedCode}">수정</button>
                     <a href="#">
                        <img class="profile-img" th:src="@{|${f.memberFilePath}|}" alt="프로필 이미지">
                     </a>
@@ -109,7 +111,8 @@
                         <a href="#"><p th:text="${f.memberId}"></p></a>
                     </div>
                     <div class="feed-option">
-                        <button class="option-button">
+                        <button class="option-button" th:data-feed-code="${f.feedCode}"
+								th:data-feed-url="@{'/feed/view(feedCode=' + ${f.feedCode} + ')'}">
                             <img src="https://velog.velcdn.com/images/mekite/post/e1e30329-6765-425a-ad54-42e8df8a27aa/image.png" alt="옵션">
                         </button>
                     </div>
@@ -124,7 +127,8 @@
                         <button type="button" class="action-btn likeBtn" data-liked="false">
                             <img class="likeImg" src="https://velog.velcdn.com/images/mekite/post/893c3ae8-05a0-4506-a889-15b8af37a33d/image.png" alt="좋아요">
                         </button>
-                        <button type="button" class="action-btn commentBtn">
+                        <button type="button" class="action-btn commentBtn" id="feedCommentBtn"
+								th:data-feed-code="${f.feedCode}" th:data-meal-picture="${f.feedFilePath}" th:data-mbr_file_idx="${f.memberFilePath}">
                             <img src="https://velog.velcdn.com/images/mekite/post/3ca79f86-baf3-4d32-9f07-008c4ff960d2/image.png" alt="댓글">
                         </button>
                     </div>
@@ -136,11 +140,14 @@
                     <p class="comments-link" th:text="${f.feedCommentContent}"></p>
                 </div>
                 <hr>
-                <div class="add-comment">
-                    <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
-                    <input type="text" id="newComment" placeholder="댓글 달기...">
-                    <button class="comment-submit" data-feed-code="${f.feedCode}">게시</button>
-                </div>
+				<form id="AddFeedCommentForm" th:action="@{/feed/createfeedcomment}" method="post" onsubmit="return validateCommentForm()">
+					<input type="hidden" name="feedCode" th:value="${f.feedCode}" />
+		            <div class="add-comment">
+		                <img src="https://velog.velcdn.com/images/mekite/post/87802bec-0c39-4cf8-aa23-80ae579a0b37/image.png" alt="댓글 아이콘">
+		                <input type="text" id="addFeedCommentContent" name="feedCommentContent" placeholder="댓글 달기..." required>
+		                <button class="comment-submit"  id="addfeedCommentButton">게시</button>
+		            </div>
+				</form>
             </div>
 		</section>
     </main>

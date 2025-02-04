@@ -66,6 +66,8 @@ section.content-main {
 .tag-buttons {
     display: flex;
     gap: 10px; /* 버튼 간격 */
+    /* 버튼 비활성화 */
+    pointer-events : none;
 }
 
 .tag-buttons button {
@@ -82,9 +84,9 @@ section.content-main {
     margin-bottom: -1px;
 }
 
-.tag-buttons button:hover {
+/* .tag-buttons button:hover {
     background-color: #D1E480;
-}
+} */
 
 .create-button button {
     background-color: #618141;

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/layout/default}">
+<head>
+	<link th:href="@{/assets/css/challenge/user-challenge-list.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/css/challenge/user-challenge-view.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/css/challenge/user-challenge-member-warning.css}" rel="stylesheet" type="text/css" />
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body style="font-family: 'Pretendard-Light';">
+	<th:block layout:fragment="content-body" class="main-container">
+		<div class="challenge-member-warning-main-container" id="mainContainer">
+			<h5>챌린지 멤버 관리</h5>
+	           <img id="warningSection" src="https://velog.velcdn.com/images/mekite/post/0d398abc-c843-4140-9019-d8b89546c8a6/image.png" alt="구분선" />
+	           <div class="cf-mbr-warning-body">
+	               <div class="challenge-mbr-waring-list">
+	               	<section id="inputSection" th:if="${warningList != null}">
+	               		<div>
+	               			<label class="input-list" for="challengeName">챌린지이름</label>
+	               			<label for="challengeName" th:text="${warningList.challengeName}"></label>
+	               			<input type="hidden" id="challengeCode" name="challengeCode" th:value="${warningList.challengeCode}" readonly/>
+	               		</div>
+	               		<div >
+	               			<label class="input-list" for="challengeMember">참여자</label>
+	               			<select class="input-block" id="challengeMember">
+	               				<option value="">참여자를 선택해주세요</option>
+	               				<option	th:each="cml : ${warningMemberList}" 
+	               						th:value="${cml.memberId}" 
+	               						th:text="${cml.memberId}">
+	               				</option>
+	               			</select>
+	               		</div>
+	               		<div >
+	               			<label class="input-list" for="warningCategorySelect">신고유형</label>
+	               			<select class="input-block" id="warningCategorySelect">
+	               				<option value="">신고유형을 선택해주세요</option>
+	               				<option value="cmwc_001">참여율 저조</option>
+	               				<option value="cmwc_002">친목(파벌 형성)</option>
+	               				<option value="cmwc_003">비매너</option>
+	               				<option value="cmwc_004">멤버간 분쟁</option>
+	               				<option value="cmwc_005">정치/종교적 발언</option>
+	               				<option value="cmwc_006">개인 멤버 접근 시도</option>
+	               				<option value="cmwc_007">타 챌린지 언급 금지</option>
+	               			</select>
+	               		</div>
+	               		<div >
+	               			<label class="input-list" for="locationSelect">발생위치</label>
+	               			<select class="input-block" id="locationSelect">
+	               				<option value="">피드/댓글 선택해주세요</option>
+	               				<option value="olc_005" id="challengeFeedWarning">챌린지내 피드</option>
+	               				<option value="olc_006" id="challengeFeedCommentWarning">챌린지내 댓글</option>
+	               			</select>
+	               		</div>
+	               		<div >
+	               			<label class="input-list" for="contentSelect">신고글</label>
+	               			<select class="input-block" id="contentSelect" style="text-overflow:ellipsis; white-space:nowrap;">
+	               				<!--/* 참여자 선택시 change 이벤트에 따라 댓글과 피드 목록 렌더링(ajax) */-->
+	               				<!--/* 예시: [피드]  */-->
+	               				<!--/* 예시: [댓글]  */-->
+	               				<!--/* 
+	               					width 값에 따라 ... 말줄임
+	               					<div class="txt_line">통영의 신흥보물 강구안의 동쪽벼랑인 동피랑의 벽화마을을 다녀왔다</div>
+	               					.txt_line {
+									      width:70px;
+									      padding:0 5px;
+									      overflow:hidden;
+									      text-overflow:ellipsis;
+									      white-space:nowrap;
+									  }
+	               				 */-->
+	               				<option value="">참여자의 피드/댓글 선택해주세요</option>
+	               			</select>
+	               		</div>
+				        <button id="submitWarning">경고</button>
+				    </section>
+	                <!-- <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="구분" id="section-bar"> -->
+		            <div th:if="${memberList == null or memberList.size() == 0}">
+					    <p>참여중인 멤버가 없습니다.</p>
+					</div>
+	            </div>
+	         </div>
+		</div>
+	</th:block> 
+</body>
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+	    <!-- 반드시 jquery 기능이 있는 라이브러리 파일을 연결해야 함 -->
+		<!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+		<!-- Popper JS -->
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+		<!-- Latest compiled JavaScript -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	    <script th:src="@{/assets/js/layout.js}"></script>
+	    <script th:src="@{/assets/js/challenge/user-challenge-member-warning.js}"></script>
+	    <script th:src="@{/assets/js/challenge/user-challenge-view.js}"></script>
+	    
+	    <script>
+		    
+	    </script>
+    </th:block> 
+</html>

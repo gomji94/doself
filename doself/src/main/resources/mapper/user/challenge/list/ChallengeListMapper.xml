@@ -58,6 +58,7 @@
 
   	<!-- 특정 챌린지 리스트 조회 -->
   	<select id="getChallengeList"  parameterType="CardPageable" resultType="ChallengeList" resultMap="ChallengeListResultMap">
+  		/* 특정 챌린지 리스트 조회 */
 	  	SELECT
 			cg.cg_num,
 			cg.mbr_id,
@@ -155,8 +156,40 @@
 		)
   	</insert>
   	
+  	<!-- 챌린지 생성 티켓 개수 조회 -->
+  	<select id="getOpeningTicketCount" parameterType="String" resultType="int">
+  		/* 챌린지 생성 티켓 개수 조회 */
+	    SELECT opening_ticket_count
+	    FROM member
+	    WHERE mbr_id = #{memberId}
+	</select>
+	
+	<!-- 챌린지 생성 후 티켓 차감 -->
+	<update id="decrementOpeningTicket" parameterType="String">
+		/* 챌린지 생성 후 티켓 차감 */
+	    UPDATE member
+	    SET opening_ticket_count = opening_ticket_count - 1
+	    WHERE mbr_id = #{memberId} AND opening_ticket_count > 0
+	</update>
+  	
+  	<!-- 챌린지 참여 티켓 개수 조회 -->
+	<select id="getParticipationTicketCount" parameterType="String" resultType="int">
+	    SELECT participation_ticket_count
+	    FROM member
+	    WHERE mbr_id = #{memberId}
+	</select>
+	
+	<!-- 챌린지 참여 후 티켓 차감 -->
+	<update id="decrementParticipationTicket" parameterType="map">
+	    UPDATE member
+	    SET participation_ticket_count = participation_ticket_count - 1
+	    WHERE mbr_id = #{memberId}
+	    AND participation_ticket_count > 0
+	</update>
+  	
   	<!-- 챌린지 멤버 추가 -->
   	<insert id="addChallengeMember" parameterType="AddChallengeMember">
+  		/* 챌린지 멤버 추가 */
   		INSERT INTO challenge_group_member (
 			cgm_num,
 			cg_num,
@@ -252,6 +285,7 @@
   	
   	<!-- 챌린지 상세 정보 모달 -->
   	<select id="selectChallengeDetail" parameterType="String" resultMap="challengeListDetailMap">
+  		/* 챌린지 상세 정보 모달 */
 		SELECT
 			cg.cg_num,
 			cg.cg_name,

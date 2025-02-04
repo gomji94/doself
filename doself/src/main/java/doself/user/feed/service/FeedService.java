@@ -1,10 +1,10 @@
 package doself.user.feed.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import doself.admin.declare.domain.Declare;
 import doself.user.feed.domain.Feed;
 
 public interface FeedService {
@@ -30,11 +30,26 @@ public interface FeedService {
 	Feed getFeedByCode(String feedCode);
 	
 	// 피드 삭제
-	void deleteFeed(String feedCode);
-	
-	// 피드 댓글 추가
-	void addComment(String feedCode, String memberId, String commentContent);
+	void deleteFeed(String feedCode, String memberId);
 	
 	// 피드 댓글 조회
-	List<Feed> getCommentsByFeedCode(String feedCode);
+	List<Feed> getFeedCommentList(String feedCode);
+	
+	// 피드 댓글 추가
+	void addFeedComment(Feed feed);
+	
+	// 피드 댓글 수정
+	boolean mofidyFeedComment(String feedCommentCode, String feedCommentContent);
+	
+	// 피드 댓글 삭제
+	boolean deleteFeedComment(String feedCommentCode);
+	
+	// 피드 신고
+	void reportFeed(Declare declare);
+	
+	// 하루 먹은 영양 정보 조회
+	/*
+	 * DailyNutritionalIntakeInfo getNutritionalInfoByDate(String mbrId, String
+	 * date);
+	 */
 }

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
 
 import doself.user.challenge.list.domain.AddChallenge;
 import doself.user.challenge.list.domain.AddChallengeMember;
@@ -23,6 +22,18 @@ public interface ChallengeListMapper {
 
 	// 챌린지 추가
 	void addChallenge(AddChallenge addChallenge);
+	
+	// 챌린지 생성 티켓 개수 조회
+	int getOpeningTicketCount(String memberId);
+
+	// 챌린지 생성 후 티켓 차감
+	void decrementOpeningTicket(String memberId);
+	
+	// 챌린지 참여 티켓 개수 조회
+	int getParticipationTicketCount(String memberId);
+
+	// 챌린지 참여 후 티켓 차감
+	int decrementParticipationTicket(@Param("memberId") String memberId);
 	
 	// 멤버 추가
 	void addChallengeMember(AddChallengeMember addChallengeMember);

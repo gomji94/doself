@@ -2,24 +2,110 @@
 $(document).ready(function () {
     // 옵션 버튼 클릭 시 모달창 표시
     $('.option-button').on('click', function () {
-		const feedElement = $(this).closest('.feed'); // 현재 피드 요소
+        const feedElement = $(this).closest('.feed'); // 현재 피드 요소
         const isOwner = feedElement.data('is-owner'); // 본인 피드 여부
+        const feedCode = $(this).data('feed-code'); // 현재 피드 코드 가져오기
+		const mbrId = feedElement.attr('data-mbr-id');
+        const feedUrl = `/feed/view?feedCode=${feedCode}`; // 링크 생성
+		
+		if (!feedCode || !mbrId) {
+            alert('피드 정보를 가져오지 못했습니다.');
+            return;
+        }
 
-        if (isOwner) {
-            // 본인 피드 옵션 모달 표시
+        // 신고 버튼에 피드 정보 설정
+        $("#feed-declaration-modal").attr("data-feed-num", feedCode);
+        $("#feed-declaration-modal").attr("data-feed-id", mbrId);
+		
+		// 피드 URL을 버튼에 설정
+		if (isOwner) {
+            $('#my-feed-link-copy a').attr('data-feed-url', feedUrl);
             $('.feed-option-modal-wrap').fadeIn();
-        } else {
-            // 다른 멤버 피드 옵션 모달 표시
+        } 
+        // 타멤버 피드 옵션 모달
+        else {
+            $('#other-feed-link-copy a').attr('data-feed-url', feedUrl);
             $('.other-members-option-modal-wrap').fadeIn();
         }
+		
+        if (isOwner) {
+            $('.feed-option-modal-wrap').fadeIn();
+        } else {
+            $('.other-members-option-modal-wrap').fadeIn();
+        }
+		
+		// 디버깅: 요소 존재 확인
+        setTimeout(() => {
+            console.log("🛠 타멤버 피드 복사 버튼 존재 여부:", $('#other-feed-link-copy a').length);
+        }, 500);
+    });
+
+    // 타멤버 피드 옵션에서 "신고" 클릭 시 신고 모달 열기
+    $(document).on("click", "#feed-declaration-modal", function () {
+        let feedNum = $("#feed-declaration-modal").attr("data-feed-num"); // 피드 번호 가져오기
+        let mbrId = $("#feed-declaration-modal").attr("data-feed-id"); // 신고 대상 회원 ID
+
+        if (!feedNum || !mbrId) {
+            alert("신고할 피드 정보가 없습니다.");
+            return;
+        }
+
+        // 신고 모달에 데이터 설정
+        $("#feed-declaration-modal-overlay").fadeIn(); // 신고 모달 띄우기
+    });
+
+    // 본인 피드 링크 복사
+	$(document).on('click', '#my-feed-link-copy a', function (e) {
+        e.preventDefault();
+        const feedUrl = $(this).attr('data-feed-url'); // URL 읽기
+
+		if (!feedUrl || feedUrl.trim() === '') {
+	        alert('복사할 링크가 없습니다.');
+	        return;
+	    }
+
+        const fullUrl = window.location.origin + feedUrl;
+
+		// 최신 클립보드 API 사용
+        navigator.clipboard.writeText(fullUrl)
+            .then(() => {
+                alert(`피드 링크가 복사되었습니다: ${fullUrl}`);
+            })
+            .catch(err => {
+                alert('링크 복사 중 오류가 발생했습니다.');
+                console.error('Copy error:', err);
+            });
+    });
+	
+	// 타멤버 피드 링크 복사 (별도 이벤트 적용)
+	$(document).on('click', '#other-feed-link-copy a', function (e) {
+        e.preventDefault();
+        const feedUrl = $(this).attr('data-feed-url');
+
+        if (!feedUrl || feedUrl.trim() === '') {
+            alert('복사할 링크가 없습니다.');
+            return;
+        }
+
+        const fullUrl = window.location.origin + feedUrl;
+
+        // 최신 클립보드 API 사용
+        navigator.clipboard.writeText(fullUrl)
+            .then(() => {
+                alert(`피드 링크가 복사되었습니다: ${fullUrl}`);
+            })
+            .catch(err => {
+                alert('링크 복사 중 오류가 발생했습니다.');
+                console.error('Copy error:', err);
+            });
     });
 
     // 닫기 버튼 클릭 시 모달창 닫기
     $('.feed-option-modal-wrap .close').on('click', function () {
         $('.feed-option-modal-wrap').fadeOut(); // 모달창 비활성화
     });
-	
-	$('.other-members-option-modal-wrap .close').on('click', function () {
+
+    $('.other-members-option-modal-wrap .close').on('click', function () {
         $('.other-members-option-modal-wrap').fadeOut(); // 다른 멤버 피드 모달창 닫기
     });
 
@@ -29,17 +115,11 @@ $(document).ready(function () {
             $(this).fadeOut();
         }
     });
-	
-	$('.other-members-option-modal-wrap').on('click', function (e) {
-	    if ($(e.target).is('.other-members-option-modal-wrap')) {
-	        $(this).fadeOut();
-	    }
-	});
-	
-	// 타멤버 피드 옵션에서 "신고" 클릭 시 신고 모달 열기
-    $('#feed-declaration-modal').on('click', function () {
-        $('.other-members-option-modal-wrap').fadeOut(); // 기존 모달 닫기
-        $('#feed-declaration-modal-overlay').fadeIn(); // 신고 모달 열기
+
+    $('.other-members-option-modal-wrap').on('click', function (e) {
+        if ($(e.target).is('.other-members-option-modal-wrap')) {
+            $(this).fadeOut();
+        }
     });
 
     // 신고 모달 닫기 버튼 클릭
@@ -53,6 +133,59 @@ $(document).ready(function () {
             $(this).fadeOut();
         }
     });
+
+    // 신고 유형 선택 시 AJAX로 서버에 신고 요청 보내기
+	$(document).on("click", "#feed-declaration-modal-overlay ul li.pop", function () {
+        let reportType = $(this).text().trim(); // 신고 유형 텍스트 가져오기
+        if (reportType === "취소") {
+            $("#feed-declaration-modal-overlay").fadeOut(); // 취소 시 모달 닫기
+            return;
+        }
+
+        let feedNum = $("#feed-declaration-modal").attr("data-feed-num"); // 피드 코드 가져오기
+        let mbrId = $("#feed-declaration-modal").attr("data-feed-id"); // 신고 대상 회원 ID 가져오기
+
+
+        if (!feedNum || !mbrId) {
+            alert("신고할 피드 정보가 없습니다.");
+            return;
+        }
+
+        let reportData = {
+            rrBcNum: feedNum, // 신고 당한 피드 코드
+            mbrId: mbrId, // 신고 대상 회원 ID
+            rcCode: getReportCategoryCode(reportType), // 신고 유형 코드 매핑
+            rrContent: reportType // 신고 내용 (유형명 저장)
+        };
+
+        $.ajax({
+            url: "/feed/report",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(reportData),
+            success: function (response) {
+                alert("신고가 접수되었습니다.");
+                $("#feed-declaration-modal-overlay").hide(); // 모달 닫기
+            },
+            error: function (xhr, status, error) {
+                console.error("🚨 신고 실패:", xhr.responseText);
+                alert("신고 접수에 실패했습니다.");
+            }
+        });
+    });
+
+    // 신고 유형을 신고 코드(rc_code)로 변환하는 함수
+    function getReportCategoryCode(reportType) {
+        const reportCategories = {
+            "불법 컨텐츠": "rc_001",
+            "사기 및 사칭": "rc_002",
+            "폭력적 및 유해 콘텐츠": "rc_003",
+            "욕설 및 비방": "rc_004",
+            "스팸 및 광고": "rc_005",
+            "허위 사실 유포": "rc_006"
+        };
+        return reportCategories[reportType] || "rc_999"; // 기본 코드 설정
+    }
 });
 
 // --- 상세 피드 옵션 모달 ---
@@ -254,51 +387,110 @@ $('#feed-create-submit-btn').on('click', function (e) {
 
 // --- 피드 수정 모달 ---
 $(document).ready(function () {
-    // 수정 버튼 클릭 시
-    $('.feed-modify-btn').on('click', function () {
-        const feedElement = $(this).closest('.feed'); // 클릭된 피드 요소 가져오기
-        const feedCode = feedElement.data('feed-code'); // 피드 코드 가져오기
+    // 옵션 버튼 클릭 시
+	$('.option-button').click(function () {
+		const feedCode = $(this).data('feed-code');
+		
+		if (!feedCode) {
+					
+            alert('피드 코드를 찾을 수 없습니다.');
+            return;
+        }
+		
+		$('#feed-modify-modal').attr('data-feed-code', feedCode);
+		$('#feed-delete-modal').attr('data-feed-code', feedCode);
+		
+		$('#feed-option-modal-wrap').fadeIn();
+	});
+	
+	// 글자수 카운트 업데이트 함수
+    function updateTextCount() {
+        const content = $('#modify-feedContent');
+        const textCount = $('#feed-modify-text-count');
+        const maxLength = 2000;
 
-        // 모달에 데이터 바인딩
-        $('#modify-feedCode').val(feedElement.data('feed-code'));
-        $('#modify-feedContent').val(feedElement.data('feed-content'));
-        $('#modify-feedIntakeDate').val(feedElement.data('feed-intakedate'));
-        $('#modify-feedFoodIntake').val(feedElement.data('meal-weight'));
-        $('#modify-mealCategoryCode').val(feedElement.data('meal-category'));
-        const feedVisibility = feedElement.data('feed-visibility');
-        $(`input[name="feedOpenStatus"][value="${feedVisibility}"]`).prop('checked', true);
+        const currentLength = content.val().length;
+        textCount.text(currentLength);
 
-        // 모달 표시
-        $('#feed-modify-modal-overlay').fadeIn();
+        if (currentLength > maxLength) {
+            textCount.css('color', 'red');
+        } else {
+            textCount.css('color', '');
+        }
+    }
+	
+	// 글자 입력 시 글자수 카운트 업데이트
+    $('#modify-feedContent').on('input', updateTextCount);
+	
+	// 수정 버튼 클릭 이벤트
+	$('#feed-modify-modal').click(function() {
+		const feedCode = $(this).attr('data-feed-code');
+		
+		if (!feedCode) {
+							
+	        alert('피드 코드를 찾을 수 없습니다.');
+	        return;
+	    }
+				
+        $.ajax({
+            url: '/feed/modifyfeed', // 서버에서 데이터를 가져올 엔드포인트
+            method: 'GET',
+            data: { feedCode: feedCode },
+            success: function (data) {
+				$('.popup-wrap').css('display', 'none');
+	            // 데이터 바인딩
+	            $('#feedCode').val(data.feedCode);
+	            $('#feedFileIdx').val(data.feedFileIdx);
+	            $('#modify-feedContent').val(data.feedContent);
+	            $('#modify-intakeDateTime').val(data.feedIntakeDate);
+	            $('#modify-mealCategoryCode').val(data.mealCategoryCode);
+	            $('#modify-feedFoodIntake').val(data.feedFoodIntake);
+	            $(`input[name="feedOpenStatus"][value="${data.feedOpenStatus}"]`).prop('checked', true);
+				
+				// **이미지 미리보기 업데이트**
+	            if (data.feedFilePath) {
+	                $('#modifyFeedPreviewImage').attr('src', data.feedFilePath); // 이미지 경로 설정
+	                $('#createFeedPreviewContainer').show(); // 컨테이너 표시
+	            } else {
+	                $('#modifyFeedPreviewImage').attr('src', ''); // 이미지 초기화
+	                $('#createFeedPreviewContainer').hide(); // 컨테이너 숨김
+	            }
+				
+	            // 모달 열기
+	            $('#feed-modify-modal-overlay').fadeIn();
+	        },
+	        error: function (error) {
+	            console.error('피드 데이터를 가져오는 중 오류가 발생했습니다:', error);
+	            alert('피드 데이터를 가져오는 데 실패했습니다.');
+	        }
+	    });
+		
+	});
+	
+	// "이미지 변경" 버튼 클릭 시 파일 업로드 창 열기
+    $('#feed-modify-upload-btn').click(function () {
+        $('#feedModifyFiles').click(); // ✅ ID 수정됨
     });
 
-    // 모달 닫기 버튼
-    $('.modal-close-btn').on('click', function () {
-        $('#feed-modify-modal-overlay').fadeOut();
+    // 파일 선택 시 이미지 미리보기 업데이트
+    $('#feedModifyFiles').change(function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#modifyFeedPreviewImage').attr('src', e.target.result);
+                $('#createFeedPreviewContainer').show();
+            };
+            reader.readAsDataURL(file);
+        }
     });
 
-    // 피드 수정 요청
     $('#feed-modify-form').on('submit', function (e) {
         e.preventDefault();
-
-        const formData = $(this).serialize(); // 폼 데이터 직렬화
-        $.ajax({
-            url: '/feed/modifyfeed',
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                alert('피드 수정 완료');
-                location.reload(); // 페이지 새로고침
-            },
-            error: function () {
-                alert('피드 수정 중 오류 발생');
-            },
-        });
+        $(this).unbind('submit').submit();
     });
-});
-
-    /*// 글자수 카운터
-    const content = $('#feed-modify-content');
+		
+	const content = $('#modify-feedContent');
     const textCount = $('#feed-modify-text-count');
     const maxLength = 2000;
 
@@ -312,56 +504,309 @@ $(document).ready(function () {
         } else {
             textCount.css('color', '');
         }
-    });*/
-	
-// --- 피드 삭제 ---
-$('#feed-delete-modal').on('click', function () {
-    const feedElement = $(this).closest('.feed'); // 현재 피드 요소
-    const feedCode = feedElement.data('feed-code'); // 피드 코드 가져오기
+    });
+		
+    $('#feed-modify-form').on('submit', function (e) {
+        e.preventDefault();
+		$(this).unbind('submit').submit();
+	});
+		
+	// 삭제 버튼 클릭 이벤트
+	$(document).on("click", "#feed-delete-modal", function () {
+	    const feedCode = $(this).data("feed-code");
 
-    if (!confirm('정말로 이 피드를 삭제하시겠습니까?')) {
-        return;
-    }
+	    if (!feedCode) {
+	        alert("피드 코드를 찾을 수 없습니다.");
+	        return;
+	    }
 
-    $.ajax({
-        url: '/feed/delete',
-        type: 'POST',
-        data: { feedCode },
-        success: function (response) {
-            alert('피드가 성공적으로 삭제되었습니다.');
-            feedElement.remove(); // UI에서 피드 제거
-        },
-        error: function (error) {
-            console.error('피드 삭제 중 오류 발생:', error);
-            alert('피드 삭제 중 오류가 발생했습니다.');
+	    if (confirm("정말 삭제하시겠습니까?")) {
+	        $.ajax({
+	            url: "/feed/deletefeed",
+	            type: "POST",
+	            data: { feedCode: feedCode },
+	            success: function () {
+	                alert("삭제되었습니다.");
+	                window.location.reload();
+	            },
+	            error: function () {
+	                alert("삭제 중 문제가 발생했습니다.");
+	            }
+	        });
+	    }
+	});
+		
+	// 모달 닫기
+	$(document).on('click', function (e) {
+        if ($(e.target).is('.feed-option-modal-wrap, #optionCencleButton, .feed-modify-modal-overlay')) {
+            $('.feed-option-modal-wrap').fadeOut(); // 클릭된 오버레이 닫기
         }
+    });
+	
+	// ESC 키로 모달 닫기
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            $('.feed-option-modal-wrap, .feed-modify-modal-overlay').fadeOut();
+        }
+    });	
+		
+    // 모달 닫기 버튼
+    $('#feed-modify-modal-closeBtn').on('click', function () {
+        $('#feed-modify-modal-overlay').fadeOut();
     });
 });
+
+// --- 피드 댓글 게시 버튼 이벤트 ---
+$(document).ready(function () {
+    // 댓글 작성 버튼 클릭 시 폼 검증
+    $("#addfeedCommentButton").on("click", function (e) {
+        const commentContent = $("#addFeedCommentContent").val().trim();
+        
+        if (!commentContent) {
+            alert("댓글을 입력해주세요.");
+            e.preventDefault(); // 폼 전송 방지
+            return false;
+        }
+        
+        $("#AddFeedCommentForm").submit();
+    });
+});
+
 	
 // --- 피드 댓글 모달 ---
-$(document).ready(function () {
-    // 옵션 버튼 클릭 시 모달창 표시
-    $('.commentBtn').on('click', function () {
-        $('.feed-comment-modal-overlay').fadeIn(); // 모달창 활성화
-    });
+$(document).on('click', '.commentBtn', function () {
+	const feedCode = $(this).data('feed-code');
+	let memberProfilePath = $(this).data('fi.file_path');
+	let feedFilePath = $(this).data('meal-picture');
+	
+	/*console.log("feedCode:", feedCode);
+    console.log("memberProfilePath:", memberProfilePath);
+	console.log("feedFilePath BEFORE:", feedFilePath);*/
+	
+	if (!feedCode) {
+        alert("피드 코드가 없습니다.");
+        return;
+    }
+	
+	const baseUrl = window.location.origin;
+	
+	if (!feedFilePath.startsWith("http")) {
+        feedFilePath = baseUrl + feedFilePath;
+    }
+		
+	/*console.log("feedFilePath AFTER:", feedFilePath);*/
+	
+	$('#image-preview').attr('src', feedFilePath);
+	
+	$.ajax({
+        url: '/feed/feedcomment',
+        type: 'GET',
+        data: { feedCode: feedCode },
+        success: function (response) {
+            /*console.log("댓글 데이터 로드 성공:", response);*/
 
-    // 닫기 버튼 클릭 시 모달창 닫기
-    $('.feed-comment-modal-overlay .close').on('click', function () {
-        $('.feed-comment-modal-overlay').fadeOut(); // 모달창 비활성화
-    });
+            let imagePath = memberProfilePath;
+            $('#image-preview').attr('src', imagePath);
+            let comments = response;
 
-    // 모달창 바깥을 클릭하면 모달창 닫기
-    $('.feed-comment-modal-overlay').on('click', function (e) {
-        if ($(e.target).is('.feed-comment-modal-overlay')) {
-            $(this).fadeOut();
+            if (!response || response.length === 0) {
+                /*console.log("댓글이 없습니다. 빈 댓글 리스트를 표시합니다.");*/
+                $('.feed-user-comment-container').html('<p>댓글이 없습니다. 첫 댓글을 작성해보세요!</p>');
+            } else {
+                let commentHtml = '';
+                response.forEach(comment => {
+                    const isAuthor = comment.loggedInMemberId === comment.feedCommentAuthor; // 작성자 여부 확인
+                    const profileImage = comment.feedCommentAuthorImage || '/path/to/default/profile-image.png';
+                    const content = comment.feedCommentContent || '내용 없음';
+
+                    commentHtml += `
+                    <section data-comment-id="${comment.feedCommentCode}">
+                        <div class="feed-comment-user-block">
+                            <div class="feed-comment-content-block">
+                                <img class="comment-profile" src="${profileImage}" alt="프로필">
+                                <a href="#" class="feed-comment-user-link">${comment.memberId}</a>
+                                <div class="feed-comment-feed-comment">
+                                    <span>${content}</span>
+									<div class="feed-mofify-comment-feed-comment" style="display: none;">
+					                    <input type="text" class="comment-edit-input" value="test">
+					                </div>
+                                </div>
+                            </div>
+                            <div class="comment-actions" style="display: ${isAuthor ? 'block' : 'none'};">
+                                <button type="button" class="edit-btn" data-comment-id="${comment.feedCommentCode}" data-content="${content}">수정</button>
+                                <button type="button" class="delete-btn" data-comment-id="${comment.feedCommentCode}">삭제</button>
+                            </div>
+                        </div>
+                    </section>`;
+                });
+
+                $('.feed-user-comment-container').html(commentHtml);
+            }
+
+            // 댓글 모달 열기
+            $('#feedCommentModalOverlay').fadeIn(300);
+        },
+		error: function (error) {
+            console.error("댓글 데이터 로드 실패:", error);
+            alert("댓글 데이터를 가져오는 중 오류가 발생했습니다.");
         }
     });
+	
+	// 댓글 수정 버튼 클릭 이벤트
+	$(document).on('click', '.edit-btn', function () {
+		const parentSection = $(this).closest('section'); // 현재 댓글 섹션
+	    const commentEditContainer = parentSection.find('.feed-mofify-comment-feed-comment');
+	    const commentText = parentSection.find('.comment-text');
+	    const originalContent = $(this).data('content');
+
+		// 수정 input에 기존 텍스트 값 설정
+	    commentEditContainer.find('.comment-edit-input').val(originalContent);
+		
+	    // 텍스트 숨기고, 수정 input 표시
+		commentText.hide();
+	    commentEditContainer.show();
+
+		// 다른 댓글의 수정 상태 초기화
+	    $('.feed-mofify-comment-feed-comment').not(commentEditContainer).hide();
+	    $('.comment-text').not(commentText).show();
+	    $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	    $('.cancel-btn').text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+
+	    // 버튼 상태 변경 (수정 -> 저장, 삭제 -> 취소)
+	    $(this).text('저장').addClass('save-btn').removeClass('edit-btn');
+	    parentSection.find('.delete-btn').text('취소').addClass('cancel-btn').removeClass('delete-btn');
+	});
+	
+	// 댓글 저장 버튼 클릭 이벤트
+    $(document).on('click', '.save-btn', function () {
+		const parentSection = $(this).closest('section');
+	    const commentEditContainer = parentSection.find('.feed-mofify-comment-feed-comment');
+	    const commentTextSpan = parentSection.find('.feed-comment-feed-comment > span'); // 수정 대상
+	    const commentId = $(this).data('comment-id');
+	    const newContent = commentEditContainer.find('.comment-edit-input').val();
+		
+        if (!newContent.trim()) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+		
+		$.ajax({
+	        url: '/feed/modifyfeedcomment',
+	        type: 'POST',
+	        data: { feedCommentCode: commentId, feedCommentContent: newContent },
+	        success: function () {
+	           /*alert("댓글이 수정되었습니다.");*/
+		       
+	            commentTextSpan.text(newContent); // 수정된 텍스트를 표시
+	            commentEditContainer.hide(); // 수정 input 숨기기
+
+	            // 버튼 상태 복구
+	            $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	            $('.cancel-btn').text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+	        },
+	        error: function () {
+	            alert("댓글 수정 중 오류가 발생했습니다.");
+	        }
+	    });
+
+        $(this).text('수정').addClass('edit-btn').removeClass('save-btn');
+    });
+	
+	// 댓글 취소 버튼 클릭 이벤트
+	$(document).on('click', '.cancel-btn', function () {
+	    const parentDiv = $(this).closest('.feed-comment-user-block');
+	    const commentEditContainer = parentDiv.find('.feed-mofify-comment-feed-comment');
+	    const commentText = parentDiv.find('.comment-text');
+	    const originalContent = $(this).siblings('.save-btn').data('content'); // 원래 댓글 내용 가져오기
+
+	    // DB의 댓글 내용으로 초기화
+	    commentEditContainer.find('.comment-edit-input').val(originalContent);
+
+	    // 기존 텍스트 표시 및 수정 input 숨기기
+	    commentText.show();
+	    commentEditContainer.hide();
+
+	    // 버튼 상태 복구
+	    $('.save-btn').text('수정').addClass('edit-btn').removeClass('save-btn');
+	    $(this).text('삭제').addClass('delete-btn').removeClass('cancel-btn');
+	});
+	
+	// 댓글 삭제 버튼 클릭 이벤트
+    $(document).on('click', '.delete-btn', function () {
+        const feedCommentCode = $(this).data('comment-id');
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/feed/deletefeedcomment',
+                type: 'POST',
+                data: { feedCommentCode: feedCommentCode },
+                success: function () {
+                    alert("댓글이 삭제되었습니다.");
+                    $(`button[data-comment-id='${feedCommentCode}']`).closest('section').remove();
+                },
+                error: function (error) {
+                    console.error("댓글 삭제 실패:", error);
+                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    });
+	
+	// 댓글 등록 버튼 클릭 이벤트
+    $(document).on('click', '#feedCommentModalButton', function () {
+        const feedCode = $('.commentBtn').data('feed-code');
+        const commentContent = $('input[placeholder="댓글 달기..."]').val();
+
+        if (!commentContent.trim()) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: '/feed/createfeedcomment',
+            type: 'POST',
+            data: {
+                feedCode: feedCode,
+                feedCommentContent: commentContent
+            },
+            success: function () {
+                /*alert("댓글이 등록되었습니다.");*/
+                $('input[placeholder="댓글 달기..."]').val('');
+                $('#feedCommentModalOverlay').fadeOut(300);
+
+                // 댓글 목록 새로고침
+                location.reload();
+            },
+            error: function (error) {
+                console.error("댓글 등록 실패:", error);
+                alert("댓글 등록 중 오류가 발생했습니다.");
+            }
+        });
+    });
+	
+	// 모달 닫기 버튼 클릭 이벤트
+	$(document).on('click', '.feedCommentModalCloseBtn', function () {
+	    $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	});
+	
+	// 오버레이 클릭 이벤트
+	$(document).on('click', '#feedCommentModalOverlay', function (e) {
+	    if ($(e.target).is('#feedCommentModalOverlay')) {
+	        $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	    }
+	});
+
+	// ESC 키 누르기 이벤트
+	$(document).on('keydown', function (e) {
+	    if (e.key === 'Escape') {
+	        $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
+	    }
+	});
 });
 
 // 오른쪽 사이드바 업데이트
 function updateRightSidebar(feed) {
 	if (!feed) {
-	    console.error('feed is not defined');
+	    /*console.error('feed is not defined');*/
 	    return;
 	}
 		
@@ -414,164 +859,106 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-/*
-document.addEventListener("DOMContentLoaded", () => {
-	    const calendarBody = document.getElementById("calendar-body");
-	    const currentMonthElement = document.querySelector(".current-month");
-	    const prevMonthButton = document.querySelector(".prev-month");
-	    const nextMonthButton = document.querySelector(".next-month");
+// 영양 정보 페이지
+/*document.addEventListener("DOMContentLoaded", () => {
+    const calendarBody = document.getElementById("calendar-body");
+    const currentMonthElement = document.querySelector(".current-month");
+    const prevMonthButton = document.querySelector(".prev-month");
+    const nextMonthButton = document.querySelector(".next-month");
 
-	    let currentDate = new Date();
+    let currentDate = new Date();
 
-	    function renderCalendar(date) {
-	        const year = date.getFullYear();
-	        const month = date.getMonth();
-	        const today = new Date();
+    function renderCalendar(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const today = new Date();
 
-	        // 현재 월의 이름 설정
-	        currentMonthElement.textContent = date.toLocaleDateString("ko-KR", {
-	            month: "long",
-	            year: "numeric",
-	        });
+        currentMonthElement.textContent = date.toLocaleDateString("ko-KR", {
+            month: "long",
+            year: "numeric",
+        });
 
-	        // 이전 달력 지우기
-	        calendarBody.innerHTML = "";
+        calendarBody.innerHTML = "";
 
-	        // 현재 달의 첫째 날과 일수를 구하기
-	        const firstDay = new Date(year, month, 1).getDay();
-	        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-	        // 날짜 입력
-	        let row = document.createElement("tr");
-	        for (let i = 0; i < firstDay; i++) {
-	            row.appendChild(document.createElement("td"));
-	        }
+        let row = document.createElement("tr");
+        for (let i = 0; i < firstDay; i++) {
+            row.appendChild(document.createElement("td"));
+        }
 
-	        for (let day = 1; day <= daysInMonth; day++) {
-	            const cell = document.createElement("td");
-	            cell.textContent = day;
+        for (let day = 1; day <= daysInMonth; day++) {
+            const cell = document.createElement("td");
+            cell.textContent = day;
 
-	            // 오늘 날짜 표기
-	            if (
-	                day === today.getDate() &&
-	                month === today.getMonth() &&
-	                year === today.getFullYear()
-	            ) {
-	                cell.classList.add("today");
-	            }
+            if (
+                day === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear()
+            ) {
+                cell.classList.add("today");
+            }
 
-	            cell.addEventListener("click", () => {
-	                alert(`You selected: ${year}-${month + 1}-${day}`);
-	            });
+            cell.addEventListener("click", async () => {
+                const selectedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                await fetchNutritionalInfo("userId123", selectedDate); // Replace with actual member ID
+            });
 
-	            row.appendChild(cell);
+            row.appendChild(cell);
 
-	            // 토요일 이후에 새로운 행을 시작
-	            if ((firstDay + day) % 7 === 0) {
-	                calendarBody.appendChild(row);
-	                row = document.createElement("tr");
-	            }
-	        }
+            if ((firstDay + day) % 7 === 0) {
+                calendarBody.appendChild(row);
+                row = document.createElement("tr");
+            }
+        }
 
-	        if (row.children.length > 0) {
-	            calendarBody.appendChild(row);
-	        }
-	    }
+        if (row.children.length > 0) {
+            calendarBody.appendChild(row);
+        }
+    }
 
-	    // 순회하기 위한 이벤트 리스너
-	    prevMonthButton.addEventListener("click", () => {
-	        currentDate.setMonth(currentDate.getMonth() - 1);
-	        renderCalendar(currentDate);
-	    });
+    async function fetchNutritionalInfo(mbrId, date) {
+        const response = await fetch(`/nutrition/info?mbrId=${mbrId}&date=${date}`);
+        const data = await response.json();
 
-	    nextMonthButton.addEventListener("click", () => {
-	        currentDate.setMonth(currentDate.getMonth() + 1);
-	        renderCalendar(currentDate);
-	    });
+        document.getElementById("energy").textContent = data.dniiKcal || 0;
+        document.getElementById("carb").textContent = data.dniiCarbo || 0;
+        document.getElementById("protein").textContent = data.dniiProtein || 0;
+        document.getElementById("fat").textContent = data.dniiFat || 0;
 
-	    // 초기값
-	    renderCalendar(currentDate);
-	});
+        updateChart(data);
+    }
 
-	    // 영양 정보 업데이트 함수
-	    function updateNutritionInfo(date) {
-	        // 샘플 데이터: 실제 데이터는 서버에서 가져와야 함
-	        const nutritionData = {
-	            "2024-08-17": { energy: 2145.97, carb: 1220, protein: 89, fat: 547.85 },
-	            // 다른 날짜 데이터 추가
-	        };
+    function updateChart(data) {
+        const ctx = document.getElementById("pieChart").getContext("2d");
+        new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: ["Carb", "Protein", "Fat"],
+                datasets: [
+                    {
+                        data: [data.dniiCarbo, data.dniiProtein, data.dniiFat],
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            },
+        });
+    }
 
-	        const data = nutritionData[date] || { energy: 0, carb: 0, protein: 0, fat: 0 };
-	        document.getElementById("energy").textContent = data.energy;
-	        document.getElementById("carb").textContent = data.carb;
-	        document.getElementById("protein").textContent = data.protein;
-	        document.getElementById("fat").textContent = data.fat;
+    prevMonthButton.addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate);
+    });
 
-	        // 차트 업데이트
-	        updateChart(data);
-	    }
+    nextMonthButton.addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate);
+    });
 
-	    // 차트 업데이트 함수
-	    function updateChart(data) {
-	        const ctx = document.getElementById("progressChart").getContext("2d");
-	        new Chart(ctx, {
-	            type: "doughnut",
-	            data: {
-	                labels: ["Carb", "Protein", "Fat"],
-	                datasets: [
-	                    {
-	                        data: [data.carb, data.protein, data.fat],
-	                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-	                    },
-	                ],
-	            },
-	            options: {
-	                responsive: true,
-	                maintainAspectRatio: false,
-	            },
-	        });
-	    }
-	    // 원형 그래프 데이터와 설정
-	    const pieCtx = document.getElementById('pieChart').getContext('2d');
-	    const pieChart = new Chart(pieCtx, {
-	        type: 'doughnut',
-	        data: {
-	            // labels: ['칼로리', '탄수화물', '단백질', '지방'],
-	            datasets: [{
-	            data: [554.025, 0, 289.1, 262.125], // 각각의 비율
-	            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-	            borderWidth : 0
-	            }]
-	        },
-	        options: {
-	            responsive: true,
-	            cutout: '70%', // 도넛 가운데 비율 (70% 비워짐)
-	            plugins: {
-	                legend: {
-	                    display: false // 범례 숨기기
-	                },
-	                tooltip: {
-	                    enabled: false // 툴팁 비활성화
-	                }
-	            }
-	        },
-	    plugins: [
-	        {
-	            // 텍스트를 가운데에 표시하는 커스텀 플러그인
-	            id: 'centerText',
-	            beforeDraw: function(chart) {
-	                const ctx = chart.ctx;
-	                const width = chart.width;
-	                const height = chart.height;
-	                const text = '72%'; // 가운데 표시할 텍스트
-	                ctx.restore();
-	                ctx.font = 'bold 24px Arial';
-	                ctx.textBaseline = 'middle';
-	                ctx.textAlign = 'center';
-	                ctx.fillStyle = '#000'; // 텍스트 색상
-	                ctx.fillText(text, width / 2, height / 2);
-	                ctx.save();
-	            }
-	        }
-	    ]
-	});*/
+    renderCalendar(currentDate);
+});*/

@@ -309,7 +309,7 @@ html, body {
     width: 90%;
     margin-bottom: 20px;
 }
-	
+
 .feed .comments-link {
     color: #aaa; /* 댓글 링크 색상 */
     font-size: 14px;
@@ -317,9 +317,9 @@ html, body {
 }
 
 .feed .add-comment img {
-	width: 20px;
+    width: 20px;
+	height: auto;
     opacity: 0.7;
-    height: auto;
 }
 
 .feed .add-comment input {
@@ -338,10 +338,17 @@ html, body {
     cursor: pointer;
     font-weight: bold;
 }
-	
+
 .feed .input[type="text"] {
     border: none;
     width: 73%;
+}
+
+button#loadMore {
+    background-color: #ffffff !important;
+    color: #9cb331 !important;
+    border-color: #d2dba7 !important;
+    padding: 6px 15px 5px 18px !important;
 }
 
 .feed-comment-modal-overlay {
@@ -363,7 +370,7 @@ html, body {
     background: #fff;
     border-radius: 10px;
     padding: 20px;
-    width: 800px;
+    width: 845px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     z-index: 1001;
 }
@@ -382,7 +389,7 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 5px;
+    padding: 0px 5px 10px 5px;
 }
 
 .feed-comment-modal-header img {
@@ -397,7 +404,7 @@ html, body {
     color: #333;
 }
 
-.feed-comment-modal-header #feed-comment-modalCloseBtn {
+.feed-comment-modal-header #feedCommentModalCloseBtn {
     background: none;
     border: none;
     color: #666;
@@ -420,16 +427,46 @@ html, body {
     margin-top: -11.5px;
 }
 
+img#modifyFeedPreviewImage {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 57px;
+    position: absolute;
+    max-width: 480px;
+    min-width: 480px;
+    width: 100%;
+    left: 19px;
+    top: 0;
+    height: 230px;
+    max-height: 100%;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1;
+    display: block;
+}
+
 .feed-comment-modal-image-upload {
     flex: 1;
     text-align: center;
+    /* max-width: 480px;
+    max-height: 429px; */
+    min-width: 480px;
+    min-height: 429px;
 }
+
+.feed-comment-modal-image-upload img#image-preview {
+    width: 100%;
+    height: 100%;
+}
+
+
 
 /* 정보 입력 영역 */
 .feed-comment-feed-info {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 305px;
     width: 84%;
     justify-content: space-between;
     padding: 6px 0px;
@@ -482,6 +519,65 @@ html, body {
     margin-top: 5px;
 }
 
+a#feedCommentAuthorId {
+    margin-top: 3px;
+}
+
+input.comment-edit-input {
+    position: absolute;
+    left: 71.8%;
+    top: 16%;
+    width: 137px;
+    border-style: none;
+    background-color: #f1f1f1;
+}
+
+input.comment-edit-input {
+    font-size: 14px;
+    color: #515151;
+}
+
+.feed-mofify-comment-feed-comment {
+    width: 0px;
+    height: 0px;
+}
+
+button.edit-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #b9cd64;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.save-btn {
+	border: none;
+    outline: none;
+    background-color: inherit;
+    color: #657c00;
+    font-size: 14px;
+    padding: 0px 1px;
+}
+
+button.cancel-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #fe7322;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
+button.delete-btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: #d92d2d;
+    font-size: 14px;
+    padding: 0px 1px 0px 5px;
+}
+
 .feed-comment-feed-info .emoji-btn {
     background: none;
     border: none;
@@ -531,17 +627,46 @@ html, body {
     font-size: 14px;
     border-style: none;
     outline: none;
+    width: 204px;
 }
 
-button.feed-comment-comment-btn {
+button.cf-comment-comment-btn {
     background-color: #fff;
     color: #9EB92A;
     border: none;
     cursor: pointer;
     height: 25px;
     font-weight: 700;
-    margin-left: auto;
+    margin-left: 15px;
     white-space: nowrap;
+}
+
+img#createFeedPreviewImage {
+    opacity: 1;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 57px;
+    position: absolute;
+    max-width: 480px;
+    width: 100%;
+    left: 19px;
+    top: 0;
+    height: 100%;
+    max-height: 429px;
+    border-radius: 0px 0px 0px 10px;
+    z-index: 1100;
+    display: block;
+}
+
+input#files {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #CACACA;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
 }
 
 /* myfeed modal */
@@ -1472,6 +1597,8 @@ button.btn.btn-secondary {
     opacity: 0.7;
     margin-left: -2px;
     margin-bottom: 11px;
+    left: 11.5px;
+    bottom: 4px;
 }
 
 img#feed-modify-image-preview {
@@ -1488,11 +1615,7 @@ img#feed-modify-image-preview {
     height: auto;
     min-height: 0;
     border-radius: 0px 0px 0px 10px;
-    z-index: 1100;
-}
-
-img#feed-modify-image-preview {
-    height: 600px;
+    z-index: 1;
 }
 
 .feed-modify-upload-box p {
@@ -1522,6 +1645,22 @@ img#feed-modify-image-preview {
     width: 100%;
     border-radius: 10px;
     display: none;
+}
+
+#feed-modify-upload-btn {
+	position: relative;
+    display: flex;
+    background-color: #acacac;
+    color: #c7c7c7;
+    border: none;
+    border-radius: 5px 0px 0px 0px;
+    cursor: pointer;
+    width: 72.5px;
+    height: 63px;
+    mix-blend-mode: multiply;
+    z-index: 1010;
+    left: 406px;
+    top: 14px;
 }
 
 /* 정보 입력 영역 */
@@ -1898,7 +2037,7 @@ select #meal-type option:checked {
 }
 
 .df-feed-main-img {
-    width: 480px;
+    width: 360px;
     height: auto;
     margin-top: 20px;
 }
@@ -2222,6 +2361,148 @@ select #meal-type option:checked {
     font-size: 15px;
     cursor: pointer;
     font-weight: bold;
+}
+
+
+.nutrition-summary {
+    display: flex;
+    /* width: 100%; */
+    height: 520px;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(51, 24, 24, 0.1);
+    border-radius: 20px;
+    width: 280px;
+}
+
+/* 영양정보 캘린더 */
+.calendar-container {
+    width: 320px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.calendar-container .p {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10%;
+    margin-bottom: 10px;
+}
+
+.calendar {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 25px 20px;
+    background-color: #f9f9f9;
+}
+
+.calendar .cal-button {
+    margin-bottom: 30px;
+}
+
+.calendar .current-month {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-table th,
+.calendar-table td {
+    width: 14%;
+    height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #d7d7d7;
+}
+
+.calendar-table td {
+    cursor: pointer;
+}
+
+.calendar-table td:hover {
+    background-color: #d2d89c;
+}
+
+.calendar-table .today {
+    background-color: #fff;
+    font-weight: bold;
+}
+
+/* 영양 정보 그래프   */
+.nutrition-summary {
+    padding: 0;
+    margin: auto;
+}
+
+.nutrition-summary .nutrition-summary-p {
+    padding: 10px 30px;
+    border: 2px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+.feed .nutrition-info-chart {
+    display: grid;
+}
+
+.nutrition-info-chart .feed-img-chart {
+    display: flex;
+}
+
+.nutrition-info-chart .feed-img-chart .feed-chart {
+    display: grid;
+}
+
+.nutrition-details {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.nutrition-details .nutrition-details-p {
+    padding: 15px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.nutrition-details .nutrition-list-group {
+    background-color: #ddd;
+    list-style-type: none;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 30px;
+    padding-bottom: 25%;
+    /* margin: 0px 20px; */
+}
+
+.nutrition-list-group .list-group-item {
+    text-align: left;
+    padding: auto;
+}
+
+.nutrition-list-group .list-group-button {
+    position: relative;
+    float: left;
+    border-style: none;
+    background-color: unset;
+}
+
+.nutrition-details .nutrition-button {
+    padding: 5%;
+}
+
+.nutrition-details .prev-button,
+.nutrition-details .next-button {
+    border-style: none;
+    background-color: unset;
 }
 
 .footer {
