@@ -40,7 +40,20 @@
 	
 	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
-	    SELECT
+	    WITH feedcomment AS 
+		(
+			SELECT 
+				fc.fc_num,
+				fc.feed_num,
+				fc.mbr_id,
+				fc.fc_content,
+				fc.fc_like,
+				fc.fc_date,
+				MAX(fc.fc_date) OVER (PARTITION BY fc.feed_num) AS recently_date
+		 	FROM 
+		 		feed_comments fc
+		)
+		SELECT
 		    f.feed_num,
 		    f.mbr_id,
 		    f.mni_num,
@@ -68,7 +81,6 @@
 		    mll.mni_calcium,
 		    mll.mni_iron,
 		    fc.fc_content
-		
 		FROM
 		    feed f
 		INNER JOIN
@@ -80,8 +92,8 @@
 		LEFT JOIN
 		    files fi_member ON m.mbr_file_idx = fi_member.file_idx
 		LEFT JOIN
-		    feed_comments fc ON f.feed_num = fc.feed_num
-		
+		    feedcomment fc ON f.feed_num = fc.feed_num
+		    AND fc.fc_date = fc.recently_date
 		ORDER BY
 		    f.feed_date DESC;
 	</select>
