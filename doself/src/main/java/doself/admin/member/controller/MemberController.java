@@ -74,7 +74,7 @@ public class MemberController {
 	}
 	// 회원 정보 수정
 	@PostMapping("/modify")
-	public String modifyMember(Member member, RedirectAttributes reAttr) {
+	public String postModifyMember(Member member, RedirectAttributes reAttr) {
 
 		memberService.modifyMember(member);
 		
