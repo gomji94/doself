@@ -7,8 +7,9 @@ $(document).ready(function () {
         const feedCode = $(this).data('feed-code'); // 현재 피드 코드 가져오기
 		const mbrId = feedElement.attr('data-mbr-id');
         const feedUrl = `/feed/view?feedCode=${feedCode}`; // 링크 생성
+		const feedContent = feedElement.attr('data-feed-content');
 		
-		if (!feedCode || !mbrId) {
+		if (!feedCode || !mbrId || !feedContent) {
             alert('피드 정보를 가져오지 못했습니다.');
             return;
         }
@@ -16,6 +17,7 @@ $(document).ready(function () {
         // 신고 버튼에 피드 정보 설정
         $("#feed-declaration-modal").attr("data-feed-num", feedCode);
         $("#feed-declaration-modal").attr("data-feed-id", mbrId);
+        $("#feed-declaration-modal").attr("data-feed-content", feedContent);
 		
 		// 피드 URL을 버튼에 설정
 		if (isOwner) {
@@ -33,19 +35,15 @@ $(document).ready(function () {
         } else {
             $('.other-members-option-modal-wrap').fadeIn();
         }
-		
-		// 디버깅: 요소 존재 확인
-        setTimeout(() => {
-            console.log("🛠 타멤버 피드 복사 버튼 존재 여부:", $('#other-feed-link-copy a').length);
-        }, 500);
     });
 
     // 타멤버 피드 옵션에서 "신고" 클릭 시 신고 모달 열기
     $(document).on("click", "#feed-declaration-modal", function () {
         let feedNum = $("#feed-declaration-modal").attr("data-feed-num"); // 피드 번호 가져오기
         let mbrId = $("#feed-declaration-modal").attr("data-feed-id"); // 신고 대상 회원 ID
+		let feedContent = $("#feed-declaration-modal").attr("data-feed-content"); // 신고 대상 피드 내용 가져오기
 
-        if (!feedNum || !mbrId) {
+        if (!feedNum || !mbrId || !feedContent) {
             alert("신고할 피드 정보가 없습니다.");
             return;
         }
@@ -144,9 +142,10 @@ $(document).ready(function () {
 
         let feedNum = $("#feed-declaration-modal").attr("data-feed-num"); // 피드 코드 가져오기
         let mbrId = $("#feed-declaration-modal").attr("data-feed-id"); // 신고 대상 회원 ID 가져오기
+		let feedContent = $("#feed-declaration-modal").attr("data-feed-content"); // 신고 대상 피드 내용 가져오기
 
 
-        if (!feedNum || !mbrId) {
+        if (!feedNum || !mbrId || !feedContent) {
             alert("신고할 피드 정보가 없습니다.");
             return;
         }
@@ -155,7 +154,7 @@ $(document).ready(function () {
             rrBcNum: feedNum, // 신고 당한 피드 코드
             mbrId: mbrId, // 신고 대상 회원 ID
             rcCode: getReportCategoryCode(reportType), // 신고 유형 코드 매핑
-            rrContent: reportType // 신고 내용 (유형명 저장)
+            rrContent: feedContent // 신고 대상 피드 내용
         };
 
         $.ajax({
@@ -168,7 +167,7 @@ $(document).ready(function () {
                 $("#feed-declaration-modal-overlay").hide(); // 모달 닫기
             },
             error: function (xhr, status, error) {
-                console.error("🚨 신고 실패:", xhr.responseText);
+                console.error("신고 실패:", xhr.responseText);
                 alert("신고 접수에 실패했습니다.");
             }
         });
@@ -576,7 +575,7 @@ $(document).ready(function () {
 // --- 피드 댓글 모달 ---
 $(document).on('click', '.commentBtn', function () {
 	const feedCode = $(this).data('feed-code');
-	let memberProfilePath = $(this).data('fi.file_path');
+	let memberProfilePath = $(this).data('mbr_file_idx');
 	let feedFilePath = $(this).data('meal-picture');
 	
 	/*console.log("feedCode:", feedCode);
@@ -616,7 +615,7 @@ $(document).on('click', '.commentBtn', function () {
                 let commentHtml = '';
                 response.forEach(comment => {
                     const isAuthor = comment.loggedInMemberId === comment.feedCommentAuthor; // 작성자 여부 확인
-                    const profileImage = comment.feedCommentAuthorImage || '/path/to/default/profile-image.png';
+                    const profileImage = comment.memberFilePath || '/path/to/default/profile-image.png';
                     const content = comment.feedCommentContent || '내용 없음';
 
                     commentHtml += `
@@ -784,7 +783,7 @@ $(document).on('click', '.commentBtn', function () {
     });
 	
 	// 모달 닫기 버튼 클릭 이벤트
-	$(document).on('click', '.feedCommentModalCloseBtn', function () {
+	$(document).on('click', '.feed-comment-modalCloseBtn', function () {
 	    $('#feedCommentModalOverlay').fadeOut(300); // 모달 닫기
 	});
 	
