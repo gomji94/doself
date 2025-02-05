@@ -574,13 +574,14 @@ $(document).ready(function () {
 	
 // --- 피드 댓글 모달 ---
 $(document).on('click', '.commentBtn', function () {
+	console.log($('#image-preview')[0]);
 	const feedCode = $(this).data('feed-code');
-	let memberProfilePath = $(this).data('mbr_file_idx');
+	let memberProfilePath = $(this).data('mbr-file-idx');
 	let feedFilePath = $(this).data('meal-picture');
 	
-	/*console.log("feedCode:", feedCode);
+	/*console.log("feedCode:", feedCode);*/
     console.log("memberProfilePath:", memberProfilePath);
-	console.log("feedFilePath BEFORE:", feedFilePath);*/
+	console.log("feedFilePath BEFORE:", feedFilePath);
 	
 	if (!feedCode) {
         alert("피드 코드가 없습니다.");
@@ -593,9 +594,9 @@ $(document).on('click', '.commentBtn', function () {
         feedFilePath = baseUrl + feedFilePath;
     }
 		
-	/*console.log("feedFilePath AFTER:", feedFilePath);*/
+	//console.log("feedFilePath AFTER:", feedFilePath);
 	
-	$('#image-preview').attr('src', feedFilePath);
+	$('#comment-image-preview').attr('src', feedFilePath);
 	
 	$.ajax({
         url: '/feed/feedcomment',
@@ -604,8 +605,10 @@ $(document).on('click', '.commentBtn', function () {
         success: function (response) {
             /*console.log("댓글 데이터 로드 성공:", response);*/
 
+			console.log({response});
             let imagePath = memberProfilePath;
             $('#image-preview').attr('src', imagePath);
+			// console.log($('#image-preview').attr('src'));
             let comments = response;
 
             if (!response || response.length === 0) {
@@ -618,6 +621,9 @@ $(document).on('click', '.commentBtn', function () {
                     const profileImage = comment.memberFilePath || '/path/to/default/profile-image.png';
                     const content = comment.feedCommentContent || '내용 없음';
 
+					console.log("Profile Image URL:", comment.memberFilePath); // ✅ URL 출력
+				    console.log("Feed Image URL:", comment.feedFilePath); // ✅ URL 출력
+					
                     commentHtml += `
                     <section data-comment-id="${comment.feedCommentCode}">
                         <div class="feed-comment-user-block">
@@ -641,7 +647,6 @@ $(document).on('click', '.commentBtn', function () {
 
                 $('.feed-user-comment-container').html(commentHtml);
             }
-
             // 댓글 모달 열기
             $('#feedCommentModalOverlay').fadeIn(300);
         },
