@@ -150,14 +150,6 @@ public class FeedController {
 		String loggedInMemberId = (String) session.getAttribute("SID");
     	
     	List<Feed> feedCommentList = feedService.getFeedCommentList(feedCode);
-    	for (Feed comment : feedCommentList) {
-            System.out.println("====================================");
-            System.out.println("Comment ID: " + comment.getFeedCommentCode());
-            System.out.println("Member ID: " + comment.getMemberId());
-            System.out.println("Profile Image Path: " + comment.getMemberFilePath());
-            System.out.println("Feed Image Path: " + comment.getFeedFilePath());
-            System.out.println("====================================");
-        }
 		/* log.info("Feed Comment List: {}", feedCommentList); */
     	
         return feedCommentList;

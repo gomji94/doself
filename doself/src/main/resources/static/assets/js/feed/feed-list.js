@@ -580,8 +580,8 @@ $(document).on('click', '.commentBtn', function () {
 	let feedFilePath = $(this).data('meal-picture');
 	
 	/*console.log("feedCode:", feedCode);*/
-    console.log("memberProfilePath:", memberProfilePath);
-	console.log("feedFilePath BEFORE:", feedFilePath);
+    /*console.log("memberProfilePath:", memberProfilePath);
+	console.log("feedFilePath BEFORE:", feedFilePath);*/
 	
 	if (!feedCode) {
         alert("피드 코드가 없습니다.");
@@ -605,7 +605,7 @@ $(document).on('click', '.commentBtn', function () {
         success: function (response) {
             /*console.log("댓글 데이터 로드 성공:", response);*/
 
-			console.log({response});
+			/*console.log({response});*/
             let imagePath = memberProfilePath;
             $('#image-preview').attr('src', imagePath);
 			// console.log($('#image-preview').attr('src'));
@@ -620,9 +620,6 @@ $(document).on('click', '.commentBtn', function () {
                     const isAuthor = comment.loggedInMemberId === comment.feedCommentAuthor; // 작성자 여부 확인
                     const profileImage = comment.memberFilePath || '/path/to/default/profile-image.png';
                     const content = comment.feedCommentContent || '내용 없음';
-
-					console.log("Profile Image URL:", comment.memberFilePath); // ✅ URL 출력
-				    console.log("Feed Image URL:", comment.feedFilePath); // ✅ URL 출력
 					
                     commentHtml += `
                     <section data-comment-id="${comment.feedCommentCode}">
