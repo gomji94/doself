@@ -459,6 +459,19 @@ img#modifyFeedPreviewImage {
     height: 100%;
 }
 
+img#comment-image-preview {
+    height: 420px;
+}
+
+input#addFeedCommentContent {
+    padding: 11px 10px;
+    font-size: 14px;
+    border-style: solid;
+    border-width: 0.5px;
+    border-color: #dddbdb;
+    border-radius: 5px;
+    outline: none;
+}
 
 
 /* 정보 입력 영역 */
