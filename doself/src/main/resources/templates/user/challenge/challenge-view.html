@@ -325,15 +325,12 @@
 				           <div class="cf-comment-modal-body">
 				           	   <div th:if="${challengeFeedList == null or challengeFeedList.isEmpty()}">
 							   </div>
-				               <div class="cf-comment-modal-image-upload" th:if="${challengeFeedList != null and not #lists.isEmpty(challengeFeedList)}">
-					               <img th:src="@{|${challengeFeedList[0].pictureFileImage}|}" alt="피드 이미지" id="image-preview">
-					           </div>
 				               <div class="cf-comment-feed-info">
 				                   <div class="cf-user-comment-container overflow-auto">
 				                   		<!-- 댓글 내용 -->
 				                   </div>
 				                   <div class="cf-comment-feed-info-under">
-				                       <img src="https://velog.velcdn.com/images/mekite/post/21a70790-1027-41c2-a741-d0cf3859686e/image.png" alt="댓글구분" class="comment-section-under">
+				                       <img src="https://velog.velcdn.com/images/mekite/post/8db38f8f-e68d-4092-b610-6c2e0e6cd7c8/image.png" alt="댓글구분" class="comment-section-under">
 				                       <div class="cf-comment-under-input">
 				                           <button type="button" class="emoji-btn" id="feedCommentEmojiButton">
 				                               <img class="emoji-btn-img" src="https://velog.velcdn.com/images/mekite/post/a503da4f-4678-459d-a80f-2f630a15d3bb/image.png" alt="이모지">
