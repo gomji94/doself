@@ -108,7 +108,9 @@
                        <img class="profile-img" th:src="@{|${f.memberFilePath}|}" alt="프로필 이미지">
                     </a>
                     <div class="user-name">
-                        <a href="#"><p th:text="${f.memberId}"></p></a>
+                        <a th:href="@{/mypage/feedlist(memberId=${f.memberId})}">
+							<p th:text="${f.memberId}"></p>
+						</a>
                     </div>
                     <div class="feed-option">
                         <button class="option-button" th:data-feed-code="${f.feedCode}"
