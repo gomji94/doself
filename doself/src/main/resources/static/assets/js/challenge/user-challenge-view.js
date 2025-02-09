@@ -366,6 +366,17 @@ $(document).ready(function () {
                     return;
                 }
 				
+				// 글자수 카운터 업데이트
+			    const contentLength = data.challengeFeedContent.length;
+			    textCount.text(contentLength);
+
+			    // 스타일 적용
+			    if (contentLength > maxLength) {
+			        textCount.css('color', 'red');
+			    } else {
+			        textCount.css('color', '');
+			    }
+				
 				//console.log(data);
 				
                 // 수정 모달 열기
@@ -445,6 +456,47 @@ $(document).ready(function () {
 	            url: "/challenge/feed/deletechallengefeedrequest",
 	            type: "POST",
 	            data: { challengeFeedCode: challengeFeedCode },
+	            success: function (data) {
+					const loggedInMemberId = $('#loggedInMemberId').val(); // 현재 로그인한 세션 ID
+					if (data.challengeMemberId !== loggedInMemberId) {
+				        $('.popup-wrap').fadeOut();
+				        window.location.reload();
+				        return;
+				    }
+	                alert("삭제되었습니다.");
+	                window.location.reload();
+					
+	                // 삭제 성공 시 모달 닫기
+	                $('.feed-option-modal-wrap').fadeOut();
+
+	                // 성공 메시지 표시
+	                alert("삭제되었습니다.");
+
+	                // 페이지 새로고침
+	                window.location.reload();
+	            },
+	            error: function (err) {
+	                // 오류 메시지 표시
+	                alert('삭제 권한이 없습니다.');
+	                console.error('Error:', err);
+	            }
+	        });
+	    }
+	});
+
+	/*$(document).on("click", "#cl-delete-modal", function () {
+	    const challengeFeedCode = $(this).data("challenge-feed-code");
+
+	    if (!challengeFeedCode) {
+	        alert("챌린지 피드 코드를 찾을 수 없습니다.");
+	        return;
+	    }
+
+	    if (confirm("정말 삭제하시겠습니까?")) {
+	        $.ajax({
+	            url: "/challenge/feed/deletechallengefeedrequest",
+	            type: "POST",
+	            data: { challengeFeedCode: challengeFeedCode },
 	            success: function () {
 					const loggedInMemberId = $('#loggedInMemberId').val(); // 현재 로그인한 세션 ID
 	                if (data.challengeMemberId !== loggedInMemberId) {
@@ -462,7 +514,7 @@ $(document).ready(function () {
 	            }
 	        });
 	    }
-	});
+	});*/
 
     // 모달 닫기
 	$(document).on('click', function (e) {
@@ -567,8 +619,10 @@ $(document).on('click', '.commentBtn', function () {
         success: function (response) {
             console.log("댓글 데이터 로드 성공:", response);
 			
-			let imagePath = pictureFileImage;
-			$('#image-preview').attr('src', imagePath);
+			/*let feedImagePath = comments.length > 0 ? comments[0].feedImagePath : null;
+			if (feedImagePath) {
+		        $('#image-preview').attr('src', feedImagePath); // 이미지 미리보기 업데이트
+		    }*/
 			let comments = response;
             let commentHtml = '';
 			
@@ -794,10 +848,11 @@ $(document).ready(function () {
 
     function updateProgress(targetPercentage) {
         let currentPercentage = 0;
+		const circleCircumference = 2 * Math.PI * 35;
 
         function updateAnimation() {
             if (currentPercentage < targetPercentage) {
-                currentPercentage += 0.5; // 증가 폭 (더 빠르게 차오르도록 설정)
+                currentPercentage += 0.1; // 증가 폭
                 
                 // green-img가 왼쪽부터 차오르는 효과
                 greenImg.css({
@@ -807,11 +862,13 @@ $(document).ready(function () {
                 });
 
                 // 원형 그래프 진행률 계산
-                const circleOffset = 314 - (314 * currentPercentage) / 100;
+				const circleOffset = circleCircumference - (circleCircumference * currentPercentage) / 100;
                 progressCircle.css('stroke-dashoffset', circleOffset);
+				/*const circleOffset = 314 - (314 * currentPercentage) / 100;
+                progressCircle.css('stroke-dashoffset', circleOffset);*/
 
                 // 텍스트 업데이트
-                progressText.text(`${currentPercentage.toFixed(1)}%`);
+                progressText.text(`${currentPercentage.toFixed(2)}%`);
                 
                 requestAnimationFrame(updateAnimation); // 애니메이션 프레임 요청
             } else {
@@ -819,8 +876,11 @@ $(document).ready(function () {
                 greenImg.css({
                     'clip-path': `inset(0 ${100 - targetPercentage}% 0 0)`
                 });
-                progressCircle.css('stroke-dashoffset', 314 - (314 * targetPercentage) / 100);
-                progressText.text(`${targetPercentage}%`);
+				const finalOffset = circleCircumference - (circleCircumference * targetPercentage) / 100;
+                progressCircle.css('stroke-dashoffset', finalOffset);
+                progressText.text(`${targetPercentage.toFixed(2)}%`);
+                /*progressCircle.css('stroke-dashoffset', 314 - (314 * targetPercentage) / 100);
+                progressText.text(`${targetPercentage}%`);*/
             }
         }
 
@@ -1132,8 +1192,8 @@ $(document).ready(function () {
 
         const buttonOffset = emojiButton.offset(); // 버튼 위치 가져오기
         emojiDropdown.css({
-            'top': buttonOffset.top + emojiButton.outerHeight() + 690 + 'px', // 버튼 아래 배치
-            'left': buttonOffset.left + 1056 + 'px',
+            'top': buttonOffset.top + emojiButton.outerHeight() + 667 + 'px', // 버튼 아래 배치
+            'left': buttonOffset.left + 765 + 'px',
             'display': 'grid', // 드롭다운 표시
         });
     });
