@@ -192,9 +192,10 @@
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    	<script type="text/javascript">
-    	
+    	<script th:inline="javascript">
+    	    const errorMessage = /*[[${errorMessage}]]*/ "errorMessage";
 
+    	    if (errorMessage) alert(errorMessage);
 		</script>
     </th:block> 
 </html>
