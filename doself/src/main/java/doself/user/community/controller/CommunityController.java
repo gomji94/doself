@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +23,9 @@ import doself.user.community.mapper.CommunityMapper;
 import doself.user.community.service.CommunityService;
 import doself.util.Pageable;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/community")
@@ -184,15 +185,22 @@ public class CommunityController {
 	}
 	
 	@PostMapping("/createcomment")
-	public String createComment(Comment comment, @RequestParam(name = "articleNum") String articleNum, HttpSession session, RedirectAttributes reAttr) {
+	public String createComment(@Valid Comment comment, BindingResult bindingResult, @RequestParam(name = "articleNum") String articleNum, HttpSession session, RedirectAttributes reAttr) {
 		//TODO: process POST request
-		comment.setCommentAuthorId((String) session.getAttribute("SID"));
 		
-		communityService.createComment(comment);
+		String viewName = "redirect:/community/view";
+		
+	    if (bindingResult.hasErrors()) {
+	        // 유효성 검사 실패 처리
+	        reAttr.addFlashAttribute("errorMessage", bindingResult.getFieldError().getDefaultMessage());
+	    } else {
+	    	comment.setCommentAuthorId((String) session.getAttribute("SID"));
+	    	communityService.createComment(comment);
+		}
 		
 		reAttr.addAttribute("articleNum", articleNum);
 		
-		return "redirect:/community/view";
+		return viewName;
 	}
 	
 	@PostMapping("/deletecomment")
