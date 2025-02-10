@@ -173,6 +173,12 @@
     padding-bottom: 3px;
 }
 
+#requlation ul {
+    list-style-type: none; /* 리스트 앞 점 제거 */
+    padding: 5px; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+}
+
         /* 전체 페이지 스타일 */
         body {
             margin: 0;
