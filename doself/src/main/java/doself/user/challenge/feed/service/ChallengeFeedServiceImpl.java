@@ -528,6 +528,7 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	@Override
 	public List<ChallengeFeedComment> getFeedCommentList(String challengeFeedCode) {
 		List<ChallengeFeedComment> feedCommentList = challengeFeedMapper.getFeedCommentList(challengeFeedCode);
+		
 		return feedCommentList;
 	}
 
@@ -570,6 +571,8 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	            progressInfo.setChallengeStatusCode("진행중");
 	        } else if ("cs_004".equals(statusCode)) {
 	            progressInfo.setChallengeStatusCode("대기중");
+	        } else if ("cs_001".equals(statusCode)) {
+	        	progressInfo.setChallengeStatusCode("완 료");
 	        }
 	    }
 
@@ -596,5 +599,6 @@ public class ChallengeFeedServiceImpl implements ChallengeFeedService {
 	    }
 	    log.info("좋아요가 감소되었습니다. challengeFeedCode: {}", challengeFeedCode);
 	}
+
 
 }
