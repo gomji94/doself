@@ -150,7 +150,7 @@ public class FeedController {
 		String loggedInMemberId = (String) session.getAttribute("SID");
     	
     	List<Feed> feedCommentList = feedService.getFeedCommentList(feedCode);
-    	log.info("Feed Comment List: {}", feedCommentList);
+		/* log.info("Feed Comment List: {}", feedCommentList); */
     	
         return feedCommentList;
     }

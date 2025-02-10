@@ -184,6 +184,7 @@
 
 	<!--/* 사용자 추가 js file */-->
     <th:block layout:fragment="customJsResource">
+    	<script type="text/javascript" th:src="@{/assets/js/jquery-3.7.1.js}"></script>
     	<script th:src="@{/assets/js/layout.js}"></script>
     	<script th:src="@{/assets/js/community/view.js}"></script>
     	<script th:src="@{/assets/js/community/comment-modify.js}"></script>
@@ -191,9 +192,10 @@
     
     <!--/* 사용자 추가 js script */-->
     <th:block layout:fragment="customJs">
-    	<script type="text/javascript">
-    	
+    	<script th:inline="javascript">
+    	    const errorMessage = /*[[${errorMessage}]]*/ "errorMessage";
 
+    	    if (errorMessage) alert(errorMessage);
 		</script>
     </th:block> 
 </html>

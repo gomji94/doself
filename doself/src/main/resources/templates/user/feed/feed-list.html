@@ -99,8 +99,8 @@
 						      th:data-meal-sodium="${f.mealSodium}" 
 						      th:data-meal-calcium="${f.mealCalcium}" 
 						      th:data-meal-iron="${f.mealIron}" 
-						      th:data-mbr_file_idx="${f.memberFilePath}" 
-						      th:data-feed_file_index="${f.feedFileIndex}" 
+						      th:data-mbr-file-idx="${f.memberFilePath}" 
+						      th:data-feed-file-index="${f.feedFileIndex}" 
 						      th:data-index="${iterStat.index}">
                 <div class="feed-header">
                 <input type="hidden" id="feedCode" th:value="${f.feedCode}" />
@@ -108,7 +108,9 @@
                        <img class="profile-img" th:src="@{|${f.memberFilePath}|}" alt="프로필 이미지">
                     </a>
                     <div class="user-name">
-                        <a href="#"><p th:text="${f.memberId}"></p></a>
+                        <a th:href="@{/mypage/feedlist(memberId=${f.memberId})}">
+							<p th:text="${f.memberId}"></p>
+						</a>
                     </div>
                     <div class="feed-option">
                         <button class="option-button" th:data-feed-code="${f.feedCode}"

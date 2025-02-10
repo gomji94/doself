@@ -36,11 +36,26 @@
 	    <result column="mni_sodium" property="mealSodium" />
 	    <result column="mni_calcium" property="mealCalcium" />
 	    <result column="mni_iron" property="mealIron" />
+	    
+	    <result column="file_path" property="feedFilePath" />
 	</resultMap>
 	
 	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
-	    SELECT
+	    WITH feedcomment AS 
+		(
+			SELECT 
+				fc.fc_num,
+				fc.feed_num,
+				fc.mbr_id,
+				fc.fc_content,
+				fc.fc_like,
+				fc.fc_date,
+				MAX(fc.fc_date) OVER (PARTITION BY fc.feed_num) AS recently_date
+		 	FROM 
+		 		feed_comments fc
+		)
+		SELECT
 		    f.feed_num,
 		    f.mbr_id,
 		    f.mni_num,
@@ -68,7 +83,6 @@
 		    mll.mni_calcium,
 		    mll.mni_iron,
 		    fc.fc_content
-		
 		FROM
 		    feed f
 		INNER JOIN
@@ -80,8 +94,8 @@
 		LEFT JOIN
 		    files fi_member ON m.mbr_file_idx = fi_member.file_idx
 		LEFT JOIN
-		    feed_comments fc ON f.feed_num = fc.feed_num
-		
+		    feedcomment fc ON f.feed_num = fc.feed_num
+		    AND fc.fc_date = fc.recently_date
 		ORDER BY
 		    f.feed_date DESC;
 	</select>
@@ -153,7 +167,8 @@
 	    LEFT JOIN
 	        feed_comments fc ON f.feed_num = fc.feed_num
 	    WHERE
-	        f.feed_num = #{feedCode};
+	        f.feed_num = #{feedCode}
+        ORDER BY feed_date DESC LIMIT 1
 	</select>
 	
 	<!-- 음식 이름 검색 -->
@@ -226,7 +241,7 @@
 		SELECT
 	        f.feed_num,
 	        f.mbr_id,
-	        mf.file_path AS memberProfilePath,
+	        mf.file_path,
 	        f.feed_food_intake,
 	        f.feed_content,
 	        f.mc_num,
@@ -348,7 +363,7 @@
 			fc.fc_content,
 			fc.fc_date,
 			m.mbr_file_idx,
-			fi.file_path
+			fi.file_path AS member_file_path
 		FROM feed_comments fc
 		INNER JOIN `member` m ON fc.mbr_id = m.mbr_id
 		LEFT JOIN files fi ON m.mbr_file_idx = fi.file_idx

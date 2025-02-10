@@ -445,6 +445,9 @@ img#createChallengePreviewImage {
     border-radius: 0px 0px 0px 10px;
     z-index: 1100;
     display: block;
+    
+    object-fit: cover; /* 이미지를 크롭하여 컨테이너에 맞춤 */
+    object-position: center;
 }
 
 
