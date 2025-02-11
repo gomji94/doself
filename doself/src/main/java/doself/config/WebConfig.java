@@ -59,42 +59,4 @@ public class WebConfig implements WebMvcConfigurer {
 	  
 	  
 	  return rootPath; }
-	 
-	
-	/*
-	 * @Value("${file.path}") // application.properties에서 파일 저장 경로 설정 private String
-	 * fileRealPath;
-	 * 
-	 * private final CommonInterceptor commonInterceptor; private final
-	 * LoginInterceptor loginInterceptor;
-	 * 
-	 * @Override public void addInterceptors(InterceptorRegistry registry) {
-	 * registry.addInterceptor(commonInterceptor) .addPathPatterns("/**")
-	 * .excludePathPatterns("/assets/**", "/error/**", "/attachment/**",
-	 * "/images/**", "/manage/**");
-	 * 
-	 * registry.addInterceptor(loginInterceptor) .addPathPatterns("/**")
-	 * .excludePathPatterns("/manage/**", "/", "/assets/**", "/attachment/**",
-	 * "/mainpage", "/login", "/login/loginPro", "/logout", "/register",
-	 * "/register/idCheck");
-	 * 
-	 * WebMvcConfigurer.super.addInterceptors(registry); }
-	 * 
-	 * @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	 * // OS에 따른 파일 경로 설정 String os = System.getProperty("os.name").toLowerCase();
-	 * String fileStoragePath;
-	 * 
-	 * if (os.contains("win")) { // Windows 환경에서는 file: 접두사와 함께 경로 설정 (예:
-	 * C:/uploads/attachment/) fileStoragePath = "file:///" +
-	 * fileRealPath.replace("\\", "/") + "/attachment/"; } else { // Linux, Mac
-	 * 환경에서는 file: 접두사 추가 (예: /var/jenkins_home/uploaded_images/attachment/)
-	 * fileStoragePath = "file:" + fileRealPath + "/attachment/"; }
-	 * 
-	 * // 정적 리소스 핸들러 추가 registry.addResourceHandler("/attachment/**")
-	 * .addResourceLocations(fileStoragePath) // file: 접두사 추가된 경로 사용
-	 * .setCachePeriod(3600) .resourceChain(true) .addResolver(new
-	 * PathResourceResolver());
-	 * 
-	 * WebMvcConfigurer.super.addResourceHandlers(registry); }
-	 */
 }
