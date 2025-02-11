@@ -108,7 +108,8 @@
                        <img class="profile-img" th:src="@{|${f.memberFilePath}|}" alt="프로필 이미지">
                     </a>
                     <div class="user-name">
-                        <a th:href="@{/mypage/feedlist(memberId=${f.memberId})}">
+                        <!-- <a th:href="@{/mypage/feedlist(memberId=${f.memberId})}"> -->
+                        <a herf="">
 							<p th:text="${f.memberId}"></p>
 						</a>
                     </div>
