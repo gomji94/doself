@@ -7,7 +7,7 @@
 		<th:block layout:fragment="content-header">
           <div class="content-header">
               <div>
-              	<h2 class="content-title card-title">영양제 영양정보 관리</h2>
+              	<h2 class="content-title card-title">음식 영양정보 관리</h2>
               </div>             
           </div>          
 		</th:block>
@@ -36,18 +36,18 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>음식 영양 정보 번호</th>
-                                        <th>음식 이름</th>
+                                        <th>음식 관리 번호</th>
+                                        <th>음식명</th>
                                         <th>1인분 중량</th>
-                                        <th>에너지</th>                                                                                                                    
-                                        <th>탄수화물</th>                                                                                                                     
-                                        <th>단백질</th>                                                                                                                     
-                                        <th>지방</th>                                                                                                                     
-                                        <th>당류</th>                                                                                                                     
-                                        <th>콜레스테롤</th>                                                                                                                     
-                                        <th>나트륨</th>                                                                                                                     
-                                        <th>칼슘</th>                                                                                                                     
-                                        <th>철분</th>                                                                                                                     
+                                        <th>에너지</th>
+                                        <th>탄수화물</th>
+                                        <th>단백질</th>
+                                        <th>지방</th>
+                                        <th>당류</th>
+                                        <th>콜레스테롤</th>
+                                        <th>나트륨</th>
+                                        <th>칼슘</th>
+                                        <th>철분</th>                                                                                                                                                             
                                         <th>비고</th>                                                                                                                     
                                     </tr>
                                 </thead>
@@ -58,14 +58,14 @@
                                 			<td th:text="${l.mniName}"></td>
                                 			<td th:text="${l.mniWeight}"></td>
                                 			<td th:text="${l.mniKcal}"></td>
-                                			<td th:text="${l.mniCarbo}"></td>  
-                                			<td th:text="${l.mniProtein}"></td>  
-                                			<td th:text="${l.mniFat}"></td>  
-                                			<td th:text="${l.mniSugar}"></td>  
-                                			<td th:text="${l.mniCholesterol}"></td>  
-                                			<td th:text="${l.mniSodium}"></td>  
-                                			<td th:text="${l.mniCalcium}"></td>  
-                                			<td th:text="${l.mniIron}"></td>  
+                                			<td th:text="${l.mniCarbo}"></td>
+                                			<td th:text="${l.mniProtein}"></td>
+                                			<td th:text="${l.mniFat}"></td>
+                                			<td th:text="${l.mniSugar}"></td>
+                                			<td th:text="${l.mniCholesterol}"></td>
+                                			<td th:text="${l.mniSodium}"></td>
+                                			<td th:text="${l.mniCalcium}"></td>
+                                			<td th:text="${l.mniIron}"></td>                                			
                                 			<td>
 	                                			<a th:href="@{/admin/nutrition/foodmodify(mniNum=${l.mniNum})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>		                                    
                                 			</td>                                			                       		                                			                                	
