@@ -26,4 +26,5 @@ public class ChallengeFeed {
 	private String  pictureFileImage;
 	private String  challengeFeedCommentCode;	  // 챌린지 피드 댓글 번호
 	private String  challengeFeedCommentContent;  // 챌린지 피드 댓글 내용
+	boolean hasLiked;
 }

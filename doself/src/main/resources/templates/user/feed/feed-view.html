@@ -28,7 +28,7 @@
 				<div class="df-feed">
 					<div class="df-feed-header">
 						<a href="#">
-							<img class="df-profile-img" th:src="${feed.memberProfileImage}">
+							<img class="df-profile-img" th:src="${feed.memberFilePath}">
 						</a>
 						<div class="df-user-name">
 							<a href="#"><p th:text="${feed.memberId}"></p></a>
@@ -42,7 +42,7 @@
 					<hr>
 					<div class="df-feed-content">
 						<div class="df-feed-main-img">
-							<img class="df-meal-img" th:src="${feed.mealPicture}">
+							<img class="df-meal-img" th:src="@{|${feed.feedFilePath}|}">
 						</div>
 						<div class="df-progress-container">
 							<div class="df-analysis-table">

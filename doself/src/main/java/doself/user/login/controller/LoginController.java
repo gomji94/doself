@@ -88,7 +88,7 @@ public class LoginController {
 	}
 	
 	@GetMapping("/register")
-	public String postMethodName() {		
+	public String getRegister() {		
 		
 		return "register";
 	}
@@ -104,7 +104,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/register")
-	public String postMethodName(Member member) {
+	public String postRegister(Member member) {
 		member.setMbrEmail(removeCommas(member.getMbrEmail()));
 		member.setMbrPhoneNum(removeCommasPhone(member.getMbrPhoneNum()));
 		loginService.createMember(member);
@@ -112,19 +112,19 @@ public class LoginController {
 		return "redirect:/login";
 	}
 	
-	public static String removeCommas(String input) {
-        if (input == null) {
+	public static String removeCommas(String mbrEmail) {
+        if (mbrEmail == null) {
             return null; // Handle null input gracefully
         }
-        return input.replace(",", "");
+        return mbrEmail.replace(",", "");
     }
 	
 	
-	public static String removeCommasPhone(String input) {
-        if (input == null) {
+	public static String removeCommasPhone(String mbrPhoneNum) {
+        if (mbrPhoneNum == null) {
             return null; // Handle null input gracefully
         }
-        return input.replace(",", "-");
+        return mbrPhoneNum.replace(",", "-");
     }
 	
 }

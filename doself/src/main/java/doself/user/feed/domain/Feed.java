@@ -25,6 +25,8 @@ public class Feed {
 	private String memberProfileImage;  	// 작성자 프로필 이미지
 	private String feedCommentCode; 	 	// 피드 댓글 코드
 	private String feedCommentContent;  	// 피드 댓글 내용
+	private LocalDateTime feedCommentDate;  // 피드 댓글 작성 날짜
+	private Integer feedCommentLike;  		// 피드 댓글 좋아요
 	private String mealNum;  				// 음식 영양 정보 코드
 	private String mealName;       			// 음식 이름
     private String mealPicture;    			// 음식 사진
@@ -38,18 +40,37 @@ public class Feed {
     private Integer mealSodium;        		// 나트륨
     private Integer mealCalcium;       		// 칼슘
     private Integer mealIron;          		// 철분
-    private String feedFileIdx;				// 피드 파일 idx
+    private String feedFileIndex;			// 피드 파일 idx
     private String feedFilePath;    		// 피드 이미지 파일 경로
     private String feedFileName;    		// 피드 이미지 파일 이름
+    private String memberFileIdx;			// 멤버 파일 idx
     private String memberFilePath;  		// 멤버 프로필 이미지 파일 경로
     private String memberFileName;  		// 멤버 프로필 이미지 파일 이름
     private boolean owner;					// 작성자 여부
     private String formattedDate;			// 포맷된 날짜
+    private String feedUrl;
+    
 
     public boolean isOwner() {
         return owner;
     }
 
+    public String getFeedFilePath() {
+        return feedFilePath;
+    }
+
+    public String getFeedCode() {
+        return feedCode;
+    }
+
+    public void setFeedCode(String feedCode) {
+        this.feedCode = feedCode;
+    }
+    
+    public void setFeedFilePath(String feedFilePath) {
+        this.feedFilePath = feedFilePath;
+    }
+    
     public void setOwner(boolean owner) {
         this.owner = owner;
     }
@@ -69,4 +90,8 @@ public class Feed {
     public void setFormattedDate(String formattedDate) {
         this.formattedDate = formattedDate;
     }
+    
+	public void setCommentDate(LocalDateTime now) {
+		
+	}
 }

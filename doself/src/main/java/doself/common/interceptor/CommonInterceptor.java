@@ -16,12 +16,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommonInterceptor implements HandlerInterceptor {
 	
-	private final static List<String> excludeUri = List.of("/market/purchaseitem", "/ticket/payment", "/challenge/list/view"
-															, "/challenge/feed/memberlist", "/challenge/feed/feedcomment"
+	private final static List<String> excludeUri = List.of("/market/purchaseitem", "/ticket/payment", "/challenge/list/view", "/feed/deletefeedcomment"
+															, "/challenge/feed/memberlist", "/challenge/feed/comment", "/feed/modifyfeedcomment"
+															, "/challenge/feed/deletecommentrequest", "/challenge/feed/modifycommentrequest"
+															, "/challenge/feed/createcommentrequest", "/challenge/feed/memberlist/warningrequest"
+															, "/challenge/feed/like/status", "/challenge/feed/like", "/challenge/feed/fetchContent"
 															, "/ticket/payment/result", "/challenge/checkDuplicateName", "/feed/list"
 															, "/ticket/purchasedetail/refund", "/register/idCheck", "/feed/createFeed"
 															, "/challenge/list/view/participation", "/ticket/purchasedetail/refund"
-															, "/ticket/purchasedetail/isCheck");
+															, "/ticket/purchasedetail/isCheck", "/feed/view", "/feed/report"
+															, "/challenge/list/view/participation", "/ticket/purchasedetail/refund"
+															, "/ticket/purchasedetail/isCheck", "/challenge/feed/modifychallengefeed"
+															, "/ticket/purchasedetail/isCheck", "/challenge/feed/view/**", "/feed/modifyfeed"
+															, "/feed/feedcomment", "/feed/modifyFeedComment", "/feed/deletefeed"
+															,"/community/like", "/community/createreport");
 
 	
 	

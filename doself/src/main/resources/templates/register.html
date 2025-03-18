@@ -140,7 +140,7 @@
     		// 아이디 영어, 숫자만 입력가능
     		function onlyNumberAndEnglish(id) {
     			
-    			return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(id);
+    			return /^[A-Za-z0-9][A-Za-z0-9]{1,20}$/.test(id);
 			}
     		// 비밀번호 8~16자 입력가능
     		function strongPassword(pw) {
@@ -153,11 +153,11 @@
     		// 아이디 입력할시 실행
     		$('#mbrId').on('change',function(){
 	    		const checkMbrId = $('#mbrId').val();
-	    		
+	    		const isValid = onlyNumberAndEnglish(checkMbrId);
 	    		// 아이디 영어,숫자가 아닌 값이 들어갔을경우
-	    		if(onlyNumberAndEnglish(checkMbrId) == false){
+	    		if(isValid == false){
 	    			// 출력 텍스트변경
-    				$('#checkId').text('아이디는 영어와 숫자만 입력가능합니다.')
+    				$('#checkId').text('아이디는 총 20자 영어와 숫자만 입력가능합니다.')
 					 .css({'color': 'red'});
     				
 	    			// 활성화 됬던 인풋태그들 비활성화
@@ -219,8 +219,9 @@
     		
     		$('#mbrPw').on('change',function(){
     			const mbrPw = $('#mbrPw').val();
+    			const isValidPw = strongPassword(mbrPw);
     			//비밀번호 8자~16 판별 아닐경우
-    			if(strongPassword(mbrPw) == false){
+    			if(isValidPw == false){
     				//비밀번호 조건문구 보여주기
     				$('#checkPw').removeClass('hide');
     				$('#checkPw').text('비밀번호는 영문,숫자 포함 최소 8글자 ~최대 16글자를 입력해야합니다.')
@@ -254,8 +255,9 @@
     		$('#mbrCheckPw').on('change',function(){
     			const mbrPw = $('#mbrPw').val();
     			const mbrCheckPw = $(this).val();
+    			const isValidCheckPw = mbrPw != mbrCheckPw;
     			// 비밀번호와 비밀번호 확인이 같지 않으면
-    			if(mbrPw != mbrCheckPw){
+    			if(isValidCheckPw){
     				
     				// 다른인풋 비활성화
 	    			$('#registerForm').find('input, select')
@@ -298,7 +300,7 @@
                     let isSubmit = true;
        				// 입력값을 다 입력해놓고 다시 지우는 경우도 있어서 회원가입버튼 누를때 한번더 판별
                     // 인풋태그들을 조회
-                    $('#registerForm input[type="text"]').each(function () {
+                    $('#registerForm input').each(function () {
 						// 인풋태그들에 입력한값이 빈값이면
                     	if ($(this).val().trim() === '') {
                     		//조건값 false

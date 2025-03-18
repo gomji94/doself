@@ -45,38 +45,56 @@
 	<resultMap type="ChallengeMemberList" id="ChallengeMemberListMap">
 		<id 	column="cgm_num"						property="challengeMemberCode" />
 		<id 	column="cg_num" 	 					property="challengeCode" />
+		<result column="cg_name" 	 					property="challengeName" />
 		<result column="mbr_id"		 					property="memberId" />
+		<result column="file_idx"		 				property="memberProfileIdx" />
 		<result column="file_path"		 				property="memberProfileImage" />
 		<result column="cs_num" 						property="challengeStatus" />
 		<result column="cgm_date"	 					property="challengeMemberInOutDate" />
-		<result column="cmss_today_participation_rate"  property="todayParticipationRate" javaType="double" />
-	    <result column="cmss_today_achievement_rate" 	property="todayAchievementRate" javaType="double" />
-	    <result column="score" 							property="score" javaType="double" />
+	</resultMap>
+	
+	<!-- 챌린지 개인 기록 Top3 조회 -->
+	<resultMap type="ChallengeTotalProgress" id="ChallengeParticipantsListMap">
+		<id 	column="cpsl_num"						  property="challengePersonalScoreCode"/>
+		<id 	column="cg_num" 						  property="challengeCode"/>
+		<id 	column="mbr_id"							  property="memberId"/>
+		<result column="cpsl_cumulative_performance_rate" property="personalCumulativePerformanceRate"/>
+		<result column="mbr_file_idx" 					  property="challengeMemberProfileIdx"/>
+		<result column="file_path"						  property="challengeMemberProfilePath"/>
+	</resultMap>
+	
+	<!-- 챌린지 달성률 종합 조회 -->
+	<resultMap type="ChallengeTotalProgress" id="ChallengeTotalParticipantsListMap">
+		<id column="cg_num" 							  property="challengeCode"/>
+		<id column="mcsl_num"							  property="challengeMonthlyChallengeScoreCode"/>
+		<result column="mcsl_cumulative_performance_rate" property="monthlyCumulativePerformanceRate"/>
+		<result column="cg_name"						  property="challengeName"/>
+		<result column="cs_num" 						  property="challengeStatusCode"/>
+		<result column="cg_max_mbr_count" 				  property="challengeMaxMember"/>
 	</resultMap>
 	
 	<!-- 챌린지 댓글 리스트 조회 -->
 	<resultMap type="ChallengeFeedComment"  id="ChallengeFeedCommentMap">
-		<id 	column="cgm_num" 			property="challengeFeedCommentCode" />
-		<id 	column="cmf_num"			property="challengeFeedCode" />
-		<result column="mbr_id" 			property="challengeFeedCommentAuthor" />
-		<result column="cfc_content" 		property="challengeFeedCommentContent"/>
-		<result column="cfc_date" 			property="challengeFeedCommentDate"/>
-		<result column="cfc_like" 			property="challengeFeedCommentLike"/>
-		<result column="cfc_caution_check"  property="challengeFeedCommentCaution"/>
-		<result column="file_path" 			property="challengeFeedImage"/>
+		<id 	column="cg_num" 				property="challengeCode" />
+		<id 	column="cfc_num" 				property="challengeFeedCommentCode" />
+		<id 	column="cmf_num"				property="challengeFeedCode" />
+		<result column="mbr_id" 				property="challengeFeedCommentAuthor" />
+		<result column="cfc_content" 			property="challengeFeedCommentContent"/>
+		<result column="cfc_date" 				property="challengeFeedCommentDate"/>
+		<result column="cfc_caution_check"  	property="challengeFeedCommentCaution"/>
+		<result column="mbr_file_idx" 			property="challengeCommentAuthorImageIdx"/>
+		<result column="cmf_file_idx" 			property="challengeFeedImageIdx"/>
+		<result column="mbr_profile_image" 		property="challengeCommentAuthorImage"/>
+		<result column="cmf_picture_image" 		property="challengeFeedImage"/>
 	</resultMap>
 	
 	<!-- 챌린지 진행 상태 조회 -->
 	<resultMap type="ChallengeProgress" id="ChallengeProcessMap">
 		<id 	column="cg_num" 						property="challengeCode"/>
-		<result column="cg_name" 						property="challengeName"/>
 		<result column="cs_num"							property="challengeStatusCode"/>
-		<result column="mbr_id" 						property="challengeMemberId"/>
 		<result column="cg_start_date" 					property="challengeStartDate"/>
 		<result column="cg_end_date" 					property="challengeEndDate"/>
 		<result column="cg_max_mbr_count"			    property="challengeMaxMember"/>
-		<result column="cmss_today_participation_rate"  property="challengeTodayParticipationRate"/>
-		<result column="cmss_today_achievement_rate" 	property="challengeTodayAchievementRate"/>
 	</resultMap>
 	
 	<resultMap type="ChallengeUser" id="ChallengeResultMap">
@@ -92,8 +110,54 @@
 	    <result column="cg_content" 		property="challengeContent" />
 	    <result column="file_path" 			property="challengeImage" />
 	</resultMap> 
+	
+	<!-- 챌린지 피드 수정(피드코드) -->
+	<resultMap type="AddChallengeFeed" id="ModifyChallengeFeedResultMap">
+		<id 	column="cmf_num" 		  	property="challengeFeedCode" />
+		<result column="cg_num" 		  	property="challengeCode" />
+		<result column="mbr_id"  		  	property="challengeMemberId" />
+		<result column="memberProfilePath" 	property="challengeMemberProfilePath" />
+		<result column="cmf_content"  	  	property="challengeFeedContent" />
+		<result column="cmf_like"  		  	property="challengeFeedLike" />
+		<result column="cmf_date"  		  	property="challengeFeedDate" />
+		<result column="cmf_warning_check"  property="challengeFeedWarningCheck" />
+		<result column="cmf_file_idx"  		property="challengeFeedFileIdx" />
+		<result column="feedImagePath"  	property="challengeFeedFilePath" />
+		<result column="cmf_food_intake"    property="challengeFeedFoodIntake" />
+		<result column="mc_num"  			property="challengeMealCategory" />
+	</resultMap>
+	
+	<!-- 챌린지 상세 정보(오른쪽 사이드바) 챌린지 코드 -->
+	<resultMap type="ChallengeProgress" id="ChallengeProcessGetDateMap">
+		<id 	column="cg_num" 	   property="challengeCode"/>
+	    <result column="cg_start_date" property="challengeStartDate"/>
+	    <result column="cg_end_date"   property="challengeEndDate"/>
+	</resultMap>
+	
+	<!-- 챌린지 멤버 경고 조회 -->
+	<resultMap type="ChallengeMemberWarning" id="ChallengeMemberWarningMap">
+		<id 	column="lcmwl_num" 		property="memberWarningCode"/>
+		<id 	column="cg_num" 		property="challengeCode"/>
+		<id 	column="cgm_num" 		property="challengeMemberCode"/>
+		<id 	column="cmwc_num" 		property="challengeWarningCategoryCode"/>
+		<id 	column="olc_code" 		property="occuranceLocationCode"/>
+		<result column="cmwc_category"  property="challengeWarningCategory"/>
+		<result column="lcmwl_bc_num"   property="contentCode"/>
+		<result column="lcmwl_date"	    property="warningDate"/>
+	</resultMap>
+	
+	<resultMap type="ChallengeMemberWarning" id="ChallengeContentMap">
+		<id 	column="cmf_num" property="challengeFeedCode"/>
+		<id 	column="cg_num" property="challengeCode"/>
+		<id 	column="cfc_num" property="challengeCommentCode"/>
+		<result column="mbr_id" property="memberId"/>
+		<result column="cmf_content" property="challengeFeedContent"/>
+		<result column="cfc_content" property="challengeCommentContent"/>
+	</resultMap>
+	
 	<!-- 로그인된 챌린지 멤버 아이디 -->
 	<select id="getChallengeCodeByMemberId" parameterType="string" resultType="string">
+		/* 로그인된 챌린지 멤버 아이디 */
 	    SELECT
 	    	cg_num
         FROM
@@ -105,6 +169,7 @@
 	
 	<!-- 챌린지 피드 리스트 -->
 	<select id="getChallengeList" resultMap="ChallengeFeedResultMap">
+		/* 챌린지 피드 리스트 */
 		SELECT
 			cmf.cmf_num,
 			cmf.cg_num,
@@ -126,8 +191,37 @@
 			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
 	</select>
 	
+	<!-- 챌린지 피드 리스트(페이징 처리) -->
+	<select id="getChallengeListByChallengeCode" resultMap="ChallengeFeedResultMap">
+		/* 챌린지 피드 리스트(페이징 처리) */
+		SELECT
+			cmf.cmf_num,
+			cmf.cg_num,
+			cmf.mbr_id,
+			cmf.cmf_content,
+			cmf.cmf_date,
+			cmf.cmf_like,
+			cmf.cmf_warning_check,
+			cmf.cmf_file_idx,
+			cmf.cmf_food_intake,
+			cmf.mc_num,
+			m.mbr_file_idx,
+			f.file_path AS mbr_profile_img,
+			ff.file_path AS cmf_feed_img
+		FROM
+			challenge_member_feed cmf
+			INNER JOIN `member` m ON cmf.mbr_id = m.mbr_id
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+			INNER JOIN files ff ON cmf.cmf_file_idx = ff.file_idx
+		WHERE
+			cmf.cg_num = #{challengeCode}
+		ORDER BY cmf.cmf_date DESC
+		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
+	</select>
+	
 	<!-- 현재 참여중인 챌린지 리스트 조회 -->
   	<select id="getChallengeListByMemberId" parameterType="string" resultMap="ParticipateChallengeListMap">
+  		/* 현재 참여중인 챌린지 리스트 조회 */
 	    SELECT
 	        cg.cg_num,
 	        cg.mbr_id,
@@ -150,13 +244,14 @@
 	        INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 	        INNER JOIN challenge_group_member cgm ON cg.cg_num = cgm.cg_num
 	    WHERE
-	        cgm.mbr_id = #{memberId}
+	        cgm.mbr_id = #{memberId} AND cs.cs_num NOT IN ('cs_007', 'cs_008')
 	    ORDER BY 
 	        cg_start_date DESC
 	</select>
   	
 	<!-- 특정 챌린지 피드 조회 -->
 	<select id="getChallengeFeed" parameterType="map" resultMap="ChallengeResultMap">
+		/* 특정 챌린지 피드 조회 */
 		SELECT
 			cg.cg_num,
 			cg.cg_name,
@@ -181,8 +276,35 @@
 		LIMIT #{pageable.offset}, #{pageable.rowPerPage}
 	</select>
 	
+	<!-- 챌린지 피드 수정 화면 조회 -->
+	<select id="getModifyChallengeFeed" resultMap="ChallengeResultMap">
+		/* 챌린지 피드 수정 화면 조회 */
+		SELECT
+			cg.cg_num,
+			cg.cg_name,
+			cg.mbr_id,
+			ct.ct_name,
+			cg.cg_start_date,
+			cg.cg_end_date,
+			ctl.ctl_level,
+			ctl.ctl_content,
+			cg.cg_max_mbr_count,
+			cg.cg_content,
+			f.file_path
+		FROM
+			challenge_group cg
+			INNER JOIN challenge_topic_level ctl USING(ctl_num)
+			INNER JOIN challenge_topic ct USING(ct_num)
+			INNER JOIN challenge_member_feed cmf USING(cg_num)
+			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
+		WHERE
+			cg.cg_num = #{challengeCode}
+		AND cg.cg_num IS NOT NULL
+	</select>	
+	
 	<!-- 챌린지 피드 행 갯수 조회 -->
 	<select id="getChallengeFeedCount" resultType="int" parameterType="string">
+		/* 챌린지 피드 행 갯수 조회 */		
 		SELECT
 			COUNT(*)
 		FROM
@@ -193,109 +315,119 @@
 		ORDER BY cmf_date DESC
 	</select>
 	
-	<!-- 총 업로드 데이터 합계((총 참여율+총달성률)/2/14(기간)/멤버수/100) -->
-  	<select id="getTodayProgressSum" resultType="int" parameterType="string">
-	    SELECT
-	        ROUND(SUM(cmss_today_participation_rate + cmss_today_achievement_rate)/2, 1) AS result
-	    FROM
-	        challenge_member_score_stats
-	    WHERE
-	        cg_num = #{challengeCode}
+	<!-- 총 업로드 데이터 합계(그래프/챌린지 정보) -->
+	<select id="getChallengeTotalProgressInfo" resultMap="ChallengeTotalParticipantsListMap">
+		/* 총 업로드 데이터 합계(그래프/챌린지 정보) */
+		SELECT
+			cg.cg_num,
+			mcsl.mcsl_num,
+			mcsl.mcsl_cumulative_performance_rate,
+			cg.cg_name,
+			cg.cs_num,
+			cg.cg_max_mbr_count
+		FROM
+			monthly_challenge_score_list mcsl
+			INNER JOIN challenge_group cg USING(cg_num)
+		WHERE
+			cg_num = #{challengeCode}
 	</select>
   	
   	<!-- 참여 멤버 점수 top3 -->
-  	<select id="getTopParticipants" parameterType="string" resultMap="ChallengeMemberListMap">
-	    SELECT 
-	        m.mbr_id                              AS memberId,
-	        f.file_path                           AS memberProfileImage,
-	        cmss.cmss_today_participation_rate    AS todayParticipationRate,
-	        cmss.cmss_today_achievement_rate      AS todayAchievementRate,
-	        ROUND((cmss_today_participation_rate + cmss_today_achievement_rate) / 2, 1) AS score
-	    FROM 
-	        challenge_member_score_stats cmss
-	        INNER JOIN member m USING (mbr_id)
-	        INNER JOIN files f ON m.mbr_file_idx = f.file_idx
-	    WHERE 
-	        cmss.cg_num = #{challengeCode}
-	    ORDER BY 
-	        score DESC
-	    LIMIT 3
+  	<select id="getTopParticipants" resultMap="ChallengeParticipantsListMap">
+  		/* 참여 멤버 점수 top3 */
+	    SELECT
+			cpsl.cpsl_num,
+			cpsl.cg_num,
+			cpsl.mbr_id,
+			cpsl.cpsl_cumulative_performance_rate,
+			m.mbr_file_idx,
+			f.file_path
+		FROM
+			challenge_personal_score_list cpsl
+			INNER JOIN member m USING (mbr_id)
+			INNER JOIN files f ON m.mbr_file_idx = f.file_idx
+		WHERE 
+		   cpsl.cg_num = #{challengeCode}
+		ORDER BY 
+		   cpsl.cpsl_cumulative_performance_rate DESC
+		LIMIT 3
 	</select>
 	
 	<!-- 챌린지 멤버 리스트 조회 -->
   	<select id="getMemberList" resultMap="ChallengeMemberListMap">		
+		/* 챌린지 멤버 리스트 조회(사이드바) */
 		SELECT
 	        MAX(cgm.cgm_num),
 	        MAX(cgm.cg_num),
+	        cg.cg_name,
 	        cgm.mbr_id,
 	        MAX(cgm.cs_num),
 	        MAX(cgm.cgm_date),
+	        f.file_idx,
 	        f.file_path
 	    FROM
 	        challenge_group_member cgm
-	        LEFT JOIN `member` m USING(mbr_id)
+	        INNER JOIN challenge_group cg ON cg.cg_num = cgm.cg_num
+	        LEFT JOIN `member` m ON m.mbr_id = cgm.mbr_id
 	        INNER JOIN files f ON m.mbr_file_idx = f.file_idx
 	    WHERE
-	        cg_num = #{challengeCode}
+	        cg.cg_num = #{challengeCode}
 	    GROUP BY
-	        cgm.mbr_id, f.file_path
+	        cg.mbr_id, f.file_path
 	    ORDER BY
 	        cgm.cgm_date ASC
   	</select>
   	
-  	<!-- 챌린지 댓글 리스트 조회 -->
-  	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
-  		SELECT
-			cfc.cfc_num,
-			cfc.cmf_num,
-			cfc.mbr_id,
-			cfc.cfc_content,
-			cfc.cfc_date,
-			cfc.cfc_like,
-			cfc.cfc_caution_check,
-			f.file_path
-		FROM
-			challenge_feed_comments cfc
-			LEFT JOIN `member` m USING(mbr_id)
-			INNER JOIN challenge_member_feed cmf USING(cmf_num)
-			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
-		WHERE
-			cfc.cmf_num = #{challengeFeedCode}
-  	</select>
+  	<!-- 챌린지 피드 댓글 등록 -->
+  	<insert id="addChallengeFeedComment" parameterType="ChallengeFeedComment">
+  		/* 챌린지 피드 댓글 등록 */
+  		INSERT INTO challenge_feed_comments	(
+			cfc_num,
+			cmf_num,
+			mbr_id,
+			cfc_content,
+			cfc_date,
+			cfc_caution_check
+		) VALUES (
+			#{challengeFeedCommentCode},
+			#{challengeFeedCode},
+			#{challengeFeedCommentAuthor},
+			#{challengeFeedCommentContent},
+			NOW(),
+			#{challengeFeedCommentCaution}
+		)
+  	</insert>
   	
   	<!-- 챌린지 진행 상태 조회 -->
   	<select id="getChallengeProgress" resultMap="ChallengeProcessMap">
+  		/* 챌린지 진행 상태 조회 */
   		SELECT DISTINCT
 			cg.cg_num,
-			cg.cg_name,
 			cg.cs_num,
-			cg.mbr_id,
-			f.file_path,
 			cg.cg_start_date,
 			cg.cg_end_date,
-			cg.cg_max_mbr_count,
-			cmss.cmss_today_participation_rate,
-			cmss.cmss_today_achievement_rate
+			cg.cg_max_mbr_count
 		FROM
 			challenge_group cg
-			INNER JOIN `member` m USING(mbr_id)
 			INNER JOIN challenge_member_score_stats cmss USING(cg_num)
-			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
 		WHERE
 			cg_num = #{challengeCode}
   	</select>
   	
-  	<select id="getChallengeProgressByCode" parameterType="string" resultType="ChallengeProgress">
+  	<!-- 챌린지 상세 정보(오른쪽 사이드바) 챌린지 코드 -->
+  	<select id="getChallengeProgressByCode" resultMap="ChallengeProcessGetDateMap">
+  		/* 챌린지 상세 정보(오른쪽 사이드바) 챌린지 코드 */
 	    SELECT 
-	        cg.cg_num AS challengeCode,
-	        cg.cg_start_date AS challengeStartDate,
-	        cg.cg_end_date AS challengeEndDate
+	        cg.cg_num,
+	        cg.cg_start_date,
+	        cg.cg_end_date
 	    FROM challenge_group cg
 	    WHERE cg_num = #{challengeCode}
 	</select>
 	
 	<!-- 특정 챌린지의 현재 참여 멤버 수 조회 -->
 	<select id="getCurrentMemberCount" parameterType="string" resultType="int">
+		/* 특정 챌린지의 현재 참여 멤버 수 조회 */
 	    SELECT COUNT(*)
 	    FROM challenge_group_member
 	    WHERE cg_num = #{challengeCode}
@@ -303,6 +435,7 @@
 	
 	<!-- 챌린지 피드 생성 -->
 	<insert id="addChallengeFeed" parameterType="AddChallengeFeed">
+		/* 챌린지 피드 생성 */
 	    INSERT INTO challenge_member_feed (
 	        cmf_num,
 	        cg_num,
@@ -330,563 +463,229 @@
 	
 	<!-- 멤버 점수 업데이트 -->
 	<update id="updateMemberScore" parameterType="map">
+		/* 멤버 점수 업데이트 */
 	    UPDATE challenge_member_score_stats
 	    SET cmss_score = #{score}
 	    WHERE cg_num = #{challengeCode} AND mbr_id = #{memberId}
 	</update>
 	
+	<!-- 챌린지 피드 수정 -->
 	<update id="modifyChallengeFeed" parameterType="AddChallengeFeed">
-		UPDATE challenge_member_feed
-		<trim prefix="SET" suffixOverrides=",">
-			<if test="challengeFeedContent != null and challengeFeedContent != ''">
-				cmf_content=#{challengeFeedContent},
-			</if>
-			<if test="challengeFeedDate != null and challengeFeedDate != ''">
-				cmf_date=#{challengeFeedDate},
-			</if>
-			<if test="challengeFeedLike != null and challengeFeedLike != ''">
-				cmf_like=#{challengeFeedLike},
-			</if>
-			<if test="challengeFeedWarningCheck != null and challengeFeedWarningCheck != ''">
-				cmf_warning_check=#{challengeFeedWarningCheck},
-			</if>
-			<if test="memberProfileIdx != null and memberProfileIdx != ''">
-				cmf_file_idx=#{pictureFileIdx},
-			</if>
-			<if test="challengeFeedFoodIntake != null and challengeFeedFoodIntake != ''">
-				cmf_food_intake=#{challengeFeedFoodIntake},
-			</if>
-		</trim>
-		WHERE
-			cmf_num=#{challengeFeedCode}
-			AND cg_num=#{challengeCode}
-			AND mbr_id=#{challengeMemberId}
-			AND mc_num=#{challengeMealCategory}
+		/* 챌린지 피드 수정 */
+	    UPDATE challenge_member_feed
+	    <set>
+	        <if test="challengeFeedContent != null">
+	        	cmf_content = #{challengeFeedContent},
+	        </if>
+	        <if test="challengeFeedFileIdx != null">
+	        	cmf_file_idx = #{challengeFeedFileIdx},
+	        </if>
+	        <if test="challengeFeedFoodIntake != null">
+	        	cmf_food_intake = #{challengeFeedFoodIntake},
+	        </if>
+	        <if test="challengeMealCategory != null">
+	        	mc_num = #{challengeMealCategory}
+	        </if>
+	    </set>
+	    WHERE cmf_num = #{challengeFeedCode}
 	</update>
 	
+	<!-- 챌린지 피드 코드 -->
+	<select id="getChallengeFeedByCode" parameterType="map" resultMap="ModifyChallengeFeedResultMap">
+		/* 챌린지 피드 코드 */
+	    SELECT
+	        cmf.cmf_num,
+	        cmf.cg_num,
+	        cmf.mbr_id,
+	        mf.file_path AS memberProfilePath,
+	        cmf.cmf_content,
+	        cmf.cmf_like,
+	        cmf.cmf_date,
+	        cmf.cmf_warning_check,
+	        cmf.cmf_file_idx,
+	        cf.file_path  AS feedImagePath,
+	        cmf.cmf_food_intake,
+	        cmf.mc_num
+	    FROM
+	        challenge_member_feed cmf INNER JOIN member m
+	        ON cmf.mbr_id = m.mbr_id
+	        INNER JOIN files mf
+	        ON m.mbr_file_idx = mf.file_idx
+	        INNER JOIN files cf
+	        ON cmf.cmf_file_idx = cf.file_idx
+	   WHERE 
+	   cmf.cmf_num = #{challengeFeedCode}
+	</select>
 	
+	<!-- 챌린지 피드 삭제 -->
+	<delete id="deleteChallengeFeed">
+		/* 챌린지 피드 삭제 */
+	    DELETE FROM challenge_member_feed
+	    WHERE cmf_num = #{challengeFeedCode}
+	      AND mbr_id = #{memberId}
+	</delete>
 	
+	<!-- 피드에 달린 댓글 삭제 -->
+	<delete id="deleteCommentsByFeedCode">
+	    DELETE FROM challenge_feed_comments
+	    WHERE cmf_num = #{challengeFeedCode}
+	</delete>
 	
+	<!-- 댓글 리스트 조회 -->
+	<select id="getFeedCommentList" resultMap="ChallengeFeedCommentMap">
+		/* 댓글 리스트 조회 */
+	    SELECT 
+	        cmf.cg_num,
+	        cfc.cfc_num,
+	        cfc.mbr_id,
+	        cfc.cfc_content,
+	        cfc.cfc_date,
+	        m.mbr_file_idx,
+	        f.file_path AS mbr_profile_image
+	    FROM challenge_feed_comments cfc
+	    INNER JOIN challenge_member_feed cmf ON cmf.cmf_num = cfc.cmf_num
+	    INNER JOIN `member` m ON cfc.mbr_id = m.mbr_id
+	    LEFT JOIN files f ON m.mbr_file_idx = f.file_idx
+	    WHERE cfc.cmf_num = #{challengeFeedCode}
+	    ORDER BY cfc.cfc_date DESC
+	</select>
 	
+	<!-- 챌린지 피드 댓글 수정 -->
+	<update id="modifyFeedComment">
+		/* 챌린지 피드 댓글 수정 */
+		UPDATE challenge_feed_comments
+		SET
+			cfc_content=#{challengeFeedCommentContent}
+		WHERE cfc_num=#{challengeFeedCommentCode}
+	</update>
 	
+	<!-- 챌린지 피드 댓글 삭제 -->
+	<delete id="deleteFeedComment">
+		/* 챌린지 피드 댓글 삭제 */
+		DELETE
+		FROM
+			challenge_feed_comments
+		WHERE
+			cfc_num = #{challengeFeedCommentCode}
+	</delete>
+    
+	<!-- 좋아요 수 증가 -->
+	<update id="incrementLike" parameterType="String">
+	    UPDATE challenge_member_feed
+	    SET cmf_like = cmf_like + 1
+	    WHERE cmf_num = #{challengeFeedCode}
+	</update>
 	
+	<!-- 좋아요 수 감소 -->
+	<update id="decrementLike" parameterType="String">
+	    UPDATE challenge_member_feed
+	    SET cmf_like = cmf_like - 1
+	    WHERE cmf_num = #{challengeFeedCode}
+	</update>
 	
-	
-	
-	
-	
-	
-	
-	<!-- 관리자 -->
-	<!-- 해당챌린지, 해당아이디, 해당날짜의 챌린지 피드 개수 조회 -->
-	<select id="getChallengeFeedCountByChallengeFeed" parameterType="ChallengeFeed" resultMap="ChallengeFeedResultMap">
+	<!-- 챌린지 멤버 경고 조회 -->
+	<select id="getWarningMemberList" resultMap="ChallengeMemberListMap">
+		/* 챌린지 멤버 경고 조회 */
 		SELECT
-			COUNT(*)
+	        cgm.cgm_num,
+	        cgm.cg_num,
+	        cg.cg_name,
+	        cgm.mbr_id
+	    FROM
+	        challenge_group_member cgm
+	    INNER JOIN challenge_group cg ON cg.cg_num = cgm.cg_num
+	    LEFT JOIN member m ON m.mbr_id = cgm.mbr_id
+	    WHERE
+	        cg.cg_num = #{challengeCode}
+	    ORDER BY cgm.cgm_date ASC
+	</select>
+	
+	<!-- 챌린지 경고 리스트 -->
+	<select id="getWarningList" resultMap="ChallengeMemberListMap">
+		/* 챌린지 경고 리스트 */
+		SELECT
+	        cgm.cgm_num,
+	        cgm.cg_num,
+	        cg.cg_name,
+	        cgm.mbr_id,
+	        cgm.cs_num,
+	        cgm.cgm_date
+	    FROM
+	        challenge_group_member cgm
+	        INNER JOIN challenge_group cg ON cg.cg_num = cgm.cg_num
+	        LEFT JOIN `member` m ON m.mbr_id = cgm.mbr_id
+	    WHERE
+	        cg.cg_num = #{challengeCode}
+	    ORDER BY
+	        cgm.cgm_date ASC
+	    LIMIT 1
+	</select>
+	
+	<!-- 챌린지 멤버 경고 폼 -->
+	<insert id="warningChallengeMember" parameterType="ChallengeMemberWarning">
+		/* 챌린지 멤버 경고 폼 */
+		INSERT INTO
+			leader_challenge_mbr_warning_log (
+				lcmwl_num,
+				cg_num,
+				cgm_num,
+				cmwc_num,
+				olc_code,
+				lcmwl_bc_num,
+				lcmwl_date
+			) VALUES (
+				#{memberWarningCode},
+				#{challengeCode},
+				#{challengeMemberCode},
+				#{challengeWarningCategoryCode},
+				#{occuranceLocationCode},
+				#{contentCode},
+				NOW()
+			)
+	</insert>
+	
+	<!-- 챌린지 피드 조회 -->
+	<select id="getFeedContentByChallengeAndMember" resultType="map">
+		/* 챌린지 피드 조회 */
+		SELECT
+			cmf.cmf_num 	 AS challengeFeedCode,
+			cmf.cg_num 		 AS challengeCode,
+			cmf.mbr_id 		 AS memberId,
+			cmf.cmf_content  AS challengeFeedContent
 		FROM
 			challenge_member_feed cmf
 		WHERE
-			cg_num = #{challengeCode}
-			AND
-			mbr_id = #{challengeMemberId}
-			AND
-			cmf_date = #{challengeFeedDate}
+			cmf.cg_num = #{challengeCode}
+      		AND cmf.mbr_id = #{memberId}
 	</select>
-	
-	<resultMap type="PersonalStat" id="PersonalStatResultMap">
-		<id column="cmss_num" property="cmssNum" />
-		<result column="cg_num" property="cgNum" />  		
-		<result column="mbr_id" property="mbrId" />
-		<result column="cmss_date" property="cmssDate" />
-		<result column="cmss_upload_feed_count" property="cmssUploadFeedCount" />
-		<result column="cmss_today_participation_rate" property="cmssTodayParticipationRate" />
-		<result column="cmss_participation_check" property="cmssParticipationCheck" />
-		<result column="cmss_today_achievement_rate" property="cmssTodayAchievementRate" />  			  		 
-	</resultMap>
-	
-	
-	<!-- 해당아이디, 해당챌린지, 해당날짜에 챌린지 개인기록 개수 조회  -->
-	<select id="isDataMemberStat" parameterType="ChallengeFeed" resultMap="PersonalStatResultMap">
+
+	<!-- 챌린지 댓글 조회 -->
+	<select id="getCommentContentByChallengeAndMember" resultType="map">
+		/* 챌린지 댓글 조회 */
 		SELECT
-			COUNT(*)
+			cmf.cg_num 		 AS challengeCode,
+			cfc.mbr_id 		 AS memberId,
+			cfc.cfc_num 	 AS challengeCommentCode,
+			cfc.cfc_content  AS challengeCommentContent
 		FROM
-			challenge_member_score_stats
+			challenge_member_feed cmf
+			INNER JOIN challenge_feed_comments cfc
+			ON cmf.cmf_num = cfc.cmf_num
 		WHERE
-			cg_num = #{challengeFeed.challengeCode}
-			AND
-			mbr_id = #{challengeFeed.challengeMemberId}
-			AND
-			cmss_date = #{challengeFeed.challengeFeedDate}
+			cmf.cg_num = #{challengeCode}
+        	AND cfc.mbr_id = #{memberId}
 	</select>
 	
-	<!-- 챌린지 주제별 난이도 -->
-	<resultMap type="ChallengeTopicLevel" id="ChallengeTopicLevelMap">
-		<id 	column="cg_num" 						property="ctlNum"/>
-		<result column="cg_name" 						property="ctNum"/>
-		<result column="cs_num"							property="ctlLevel"/>
-		<result column="mbr_id" 						property="ctlContent"/>
-		<result column="file_idx" 						property="ctlcount"/>		
-	</resultMap>
-	
-	
-	<!-- 챌린지 난이도별 갯수 가져오기 -->
-	<select id="getTopicLevel" resultType="int" resultMap="ChallengeTopicLevelMap">
-		SELECT
-			ctl.ctl_count
-			f.file_idx
-		FROM 
-			challenge_topic_level ctl
-			INNER JOIN files f ON cg.cg_file_idx = f.file_idx
-		WHERE
-			ct_num = #{cgNum}
-			
+	<!-- 챌린지 멤버 코드 -->
+	<select id="getCgmNumByMemberId" resultType="String">
+	    SELECT
+	    	cgm.cgm_num,
+	    	cgm.cg_num
+	    FROM
+	    	challenge_group_member cgm
+	    WHERE
+	    	cgm.cg_num = #{challengeCode}
+	      	AND cgm.mbr_id = #{memberId}
 	</select>
-	<!-- 챌린지피드가 한개도 존재하지않을시 insert -->
-	<insert id="createPersonalStat" parameterType="map" >
-		INSERT INTO challenge_member_score_stats (
-		cmss_num, 
-		cg_num, 
-		mbr_id, 
-		cmss_date, 
-		cmss_upload_feed_count, 
-		cmss_today_participation_rate, 
-		cmss_participation_check, 
-		cmss_today_achievement_rate
-		) VALUES (
-		#{memberStatKey}, 
-		#{challengeFeed.challengeCode}, 
-		#{challengeFeed.challengeMemberId},
-		#{challengeFeed.challengeFeedDate}, 
-		1, 
-		100, 
-		CASE WHEN (1.0/#{topicLevel}) = 1 THEN 0 ELSE 1 END,
-		(1.0/#{topicLevel})*100
-		)
-	</insert>
-	
-	<!-- 챌린지 피드가 한개라도 존재할시 업데이트 -->
-	<update id ="updatePersonalStat" parameterType="map">
-		UPDATE challenge_member_score_stats
-		<set>
-		cmss_upload_feed_count = #{challengeFeedCount},
-		cmss_participation_check = CASE WHEN (#{challengeFeedCount}/#{topicLevel}) = 1 THEN 0 ELSE 1 END,
-		cmss_today_achievement_rate =  (#{challengeFeedCount}/#{topicLevel})*100
-		</set>
-		<where>
-			cg_num = #{challengeFeed.challengeCode}
-			AND
-			mbr_id = #{challengeFeed.challengeMemberId}
-			AND
-			cmss_date = #{challengeFeed.challengeFeedDate}
-		</where>
-	</update>
-	
-	<!-- 해당멤버의 누적 달성률 추출 -->
-	<select id="getAchievementRate" parameterType="ChallengeFeed">
-		SELECT 
-			SUM(cmss.cmss_today_achievement_rate)/COUNT(*)
-		FROM
-			challenge_member_score_stats cmss
-		WHERE
-			mbr_id = #{challengeMemberId}
-			and
-			cg_num = #{challengeCode}
-	</select>
-	
-	<!-- 해당멤버의 누적 참여율 추출 -->
-	<select id="getParticipationRate" parameterType="ChallengeFeed">
-		SELECT 
-			SUM(cmss.cmss_today_participation_rate)/COUNT(*)
-		FROM
-			challenge_member_score_stats cmss
-		WHERE
-			mbr_id = #{challengeMemberId}
-			and
-			cg_num = #{challengeCode}
-	</select>
-	
-	<!-- 챌린지 보상기준에 따른 달성률 점수 추출 -->
-	<select id="getAchievementScore" parameterType="double">
-		SELECT	
-			ccc_score
-		FROM
-			challenge_compensation_criteria ccc
-		WHERE
-			ccc_reward_type = '챌린지'
-			AND 
-			ccc_criteria_classification1 = '달성률'
-			AND
-			#{achievementRate} BETWEEN ccc_min_value AND ccc_max_value		
-	</select>
-	
-	<!-- 챌린지 보상기준에 따른 참여율 점수 추출 -->
-	<select id="getParticipationScore" parameterType="double">
-		SELECT	
-			ccc_score
-		FROM
-			challenge_compensation_criteria ccc
-		WHERE
-			ccc_reward_type = '챌린지'
-			AND 
-			ccc_criteria_classification1 = '참여율'
-			AND
-			#{participationRate} BETWEEN ccc_min_value AND ccc_max_value
-	</select>
-	
-	<!-- 해당아이디의 해당챌린지의 챌린지개인점수 데이터가 있는지 조회 -->
-	<select id="isDataMemberScore" parameterType="ChallengeFeed">
-		SELECT
-			COUNT(*)
-		FROM
-			challenge_personal_score_list
-		WHERE
-			cg_num = #{challengeCode}
-			AND
-			mbr_id = #{challengeMemberId}			
-	</select>
-	
-	<!-- 해당아이디의 해당챌린지의 챌린지 개인점수 데이터가 없으면 insert -->
-	<insert id="createPersonalScore" parameterType="map">
-		INSERT INTO challenge_personal_score_list (
-			cpsl_num, 
-			cpsl_year, 
-			cpsl_monthly, 
-			cg_num, 
-			mbr_id, 
-			cpsl_cumulative_performance_rate, 
-			cpsl_cumulative_participation_rate, 
-			cpsl_cumulative_performance_score, 
-			cpsl_cumulative_participation_score, 
-			cpsl_like_score, 
-			cpsl_comments_count, 
-			cpsl_total_score, 
-			cpsl_rank
-		) VALUES (
-			#{memberScoreKey}, 
-			#{year}, 
-			#{month}, 
-			#{challengeFeed.challengeCode}, 
-			#{challengeFeed.challengeMemberId}, 
-			#{achievementRate}, 
-			#{participationRate}, 
-			#{achievementScore}, 
-			#{participationScore}, 
-			0, 
-			0, 
-			SUM(#{achievementScore},#{participationScore}), 
-			0
-		)
-	</insert>
-	
-	
-	<!-- 해당아이디의 해당챌린지의 챌린지 개인점수 데이터가 있으면 update -->
-	<update id="updatePersonalScore" parameterType="map">
-	UPDATE challenge_personal_score_list
-	SET
-		cpsl_year = #{year}, 
-		cpsl_monthly = #{month}, 
-		cpsl_cumulative_performance_rate=#{achievementRate},
-		cpsl_cumulative_participation_rate=#{participationRate},
-		cpsl_cumulative_performance_score=#{achievementScore},
-		cpsl_cumulative_participation_score=#{participationScore},
-		cpsl_like_score=0,
-		cpsl_comments_count=0,
-		cpsl_total_score=SUM(#{achievementScore},#{participationScore}),		
-	WHERE 
-		cpsl_year = #{year}
-		AND
-		cpsl_monthly = #{month}
-		AND
-		cg_num = #{ChallengeFeed.challengeCode}
-		AND
-		mbr_id =#{ChallengeFeed.challengeMemberId}
-	</update>
-	
-	<!-- 챌린지 개인점수 랭킹 업데이트 -->
-	<update id="updateMemberScoreRank">
-		WITH ranked_data AS (
-		    SELECT 
-		        mbr_id,
-		        cpsl_year,
-		        cpsl_monthly,
-		        cg_num,
-		        RANK() OVER (PARTITION BY cpsl_year, cpsl_monthly, cg_num ORDER BY cpsl_total_score DESC, cpsl_num ASC) AS calculated_rank
-		    FROM challenge_personal_score_list
-		)
-		UPDATE challenge_personal_score_list
-		SET cpsl_rank = ranked_data.calculated_rank
-		FROM ranked_data
-		WHERE 
-		    challenge_personal_score_list.mbr_id = ranked_data.mbr_id
-		    AND challenge_personal_score_list.cpsl_year = ranked_data.cpsl_year
-		    AND challenge_personal_score_list.cpsl_monthly = ranked_data.cpsl_monthly
-		    AND challenge_personal_score_list.cg_num = ranked_data.cg_num;
-	</update>
-	
-	<!-- 해당날짜 해당챌린지의 데이터가 있는지 조회 -->
-	<select id="isDataChallengeStat" parameterType="ChallengeFeed">
-		SELECT 
-			COUNT(*)
-		FROM challenge_today_participation_stats
-		WHERE
-			cg_num = #{challengeCode}
-			AND
-			ctps_date = #{challengeFeedDate}
-			
-	</select>
-	
-	<!-- 해당날짜 해당챌린지의 일일참여율 조회 -->
-	<select id="getChallengeParticipationRate" parameterType="ChallengeFeed">
-		SELECT
-			COUNT(*)/(SELECT COUNT(*) FROM challenge_group cg
-			INNER JOIN challenge_group_member cgm WHERE cg_num = #{challengeCode})*100
-		FROM
-			challenge_member_score_stats cmss
-		WHERE
-			cmss.cg_num = #{challengeCode}
-			AND 
-			cmss.cmss_date = #{challengeFeedDate}
-	</select>
-	
-	<!-- 해당날짜 해당챌린지의 일일참여율 조회 -->
-	<select id="getChallengeAchievementRate" parameterType="ChallengeFeed">
-		SELECT
-			SUM(cmss.cmss_today_achievement_rate)/(SELECT COUNT(*) FROM challenge_group cg
-			INNER JOIN challenge_group_member cgm WHERE cg_num = #{challengeCode})
-		FROM
-			challenge_member_score_stats cmss
-		WHERE
-			cmss.cg_num = #{challengeCode}
-			AND 
-			cmss.cmss_date = #{challengeFeedDate}
-	</select>
-	
-	<!-- 데이터가 없으면 insert -->
-	<insert id="createChallengeStat" parameterType="ChallengeFeed">
-		INSERT INTO challenge_today_participation_stats (
-			ctps_num, 
-			cg_num, 
-			tps_date, 
-			ctps_participation, 
-			ctps_achievement_rate
-		) VALUES (
-			#{challengeStatKey},
-			#{challengeFeed.challengeCode},
-			#{challengeFeed.challengeFeedDate}, 
-			#{challengeParticipationRate},
-			#{challengeAchievementRate}
-		)
-	</insert>
-	<!-- 데이터가 있으면 update -->
-	<update id="updateChallengeStat" parameterType="map">
-		UPDATE challenge_today_participation_stats
-		<set>
-			ctps_participation = #{challengeParticipationRate},
-			ctps_achievement_rate = #{challengeAchievementRate}	
-		</set>
-		WHERE 
-			cg_num = #{challengeFeed.challengeCode}
-			AND
-			ctps_date = #{challengeFeed.challengeFeedDate}
-	</update>
-	
-	<!-- 해당챌린지의 데이터가 있는지 조회 -->
-	<select id="isDataChallengeScore" parameterType="ChallengeFeed">
-		SELECT 
-			COUNT(*)
-		FROM monthly_challenge_score_list
-		WHERE
-			cg_num = #{challengeCode}
-	</select>
-	
-	<!-- 챌린지 난이도 가져오기 -->
-	<select id="getChallengeLevel" parameterType="ChallengeFeed">
-		SELECT
-			ctl.ctl_level
-		FROM
-			challenge_group cg INNER JOIN challenge_topic_level ctl
-			USING(ctl_num)
-		WHERE
-			cg.cg_num= #{challengeCode}
-	</select>
-	
-	<!-- 챌린지 보상기준에 따른 챌린지 점수 -->
-	<select id="getChallengeLevelScore">
-		SELECT 
-			ccc.ccc_score
-		FROM 
-			challenge_compensation_criteria ccc
-		WHERE
-			ccc.ccc_reward_type = '월간'
-			AND
-			ccc.ccc_criteria_classification1 = '난이도'
-			AND
-			ccc.ccc_grade = #{challengeLevel}
-	</select>
-	
-	<!-- 해당챌린지의 누적달성률 출력 -->
-	<select id="getChallengeCumulativeAchievementRate" parameterType="ChallengeFeed">
-		SELECT 
-			SUM(ctps.ctps_achievement_rate)/COUNT(*)
-		FROM 
-			challenge_today_participation_stats ctps
-		WHERE
-			ctps.cg_num = #{challengeCode};
-	</select>
-	
-	<!-- 해당챌린지의 누적참여율 출력 -->
-	<select id="challengeCumulativeParticipationRate" parameterType="ChallengeFeed">
-		SELECT 
-			SUM(ctps.ctps_participation)/COUNT(*)
-		FROM 
-			challenge_today_participation_stats ctps
-		WHERE
-			ctps.cg_num = #{challengeCode};
-	</select>
-	
-	<!-- 챌린지보상기준에 따른 누적달성률 점수 -->
-	<select id="getChallengeAchievementScore" parameterType="double">
-		SELECT 
-			ccc.ccc_score
-		FROM 
-			challenge_compensation_criteria ccc
-		WHERE
-			ccc.ccc_reward_type = '월간'
-			AND
-			ccc.ccc_criteria_classification1 = '달성률'
-			AND
-			#{challengeCumulativeAchievementRate} BETWEEN ccc.ccc_min_value AND ccc.ccc_max_value
-	</select>
-	
-	<!-- 챌린지보상기준에 따른 누적참여율 점수 -->
-	<select id="getChallengeParticipationScore" parameterType="double">
-		SELECT 
-			ccc.ccc_score
-		FROM 
-			challenge_compensation_criteria ccc
-		WHERE
-			ccc.ccc_reward_type = '월간'
-			AND
-			ccc.ccc_criteria_classification1 = '참여율'
-			AND
-			#{challengeCumulativeParticipationRate} BETWEEN ccc.ccc_min_value AND ccc.ccc_max_value
-	</select>
-	
-	<!-- 데이터가 존재하지 않으면 insert -->
-	<insert id="createChallengeScore" parameterType="map">
-		INSERT INTO monthly_challenge_score_list (
-		mcsl_num, 
-		mcsl_year, 
-		mcsl_monthly, 
-		cg_num, 
-		mcsl_cumulative_performance_rate, 
-		mcsl_cumulative_participation_rate, 
-		mcsl_level_score, 
-		mcsl_cumulative_performance_score, 
-		mcsl_cumulative_participation_score, 
-		mcsl_like_score, 
-		mcsl_total_score, 
-		mcsl_rank
-		) VALUES (
-		#{memberScoreKey}, 
-		#{year}, 
-		#{month}, 
-		#{challengeFeed.challengeCode}, 
-		#{challengeCumulativeAchievementRate}, 
-		#{challengeCumulativeParticipationRate}, 
-		#{challengeLevelScore}, 
-		#{challengeAchievementScore}, 
-		#{challengeParticipationScore}, 
-		0, 
-		SUM(#{challengeLevelScore},#{challengeAchievementScore},#{challengeParticipationScore}), 
-		0
-		)
-	</insert>
-	
-	<!-- 데이터가 존재하면 update -->
-	<update id="updateChallengeScore" parameterType="map">
-		UPDATE monthly_challenge_score_list
-		SET
-			mcsl_year=#{year},
-			mcsl_monthly=#{month},			
-			mcsl_cumulative_performance_rate=#{challengeCumulativeAchievementRate},
-			mcsl_cumulative_participation_rate=#{challengeCumulativeParticipationRate},
-			mcsl_level_score=#{challengeLevelScore},
-			mcsl_cumulative_performance_score=#{challengeAchievementScore},
-			mcsl_cumulative_participation_score=#{challengeParticipationScore},
-			mcsl_like_score=0,
-			mcsl_total_score=SUM(#{challengeLevelScore},#{challengeAchievementScore},#{challengeParticipationScore})
-		WHERE cg_num=#{challengeFeed.challengeCode}
-	</update>
-	
-	<!-- 랭킹 update -->
-	<update id="updateChallengeScoreRank">
-		WITH ranked_data AS (
-		    SELECT
-		    	  mcsl_num,
-		        mcsl_year,
-		        mcsl_monthly,
-		        cg_num,
-		        RANK() OVER (PARTITION BY mcsl_year, mcsl_monthly ORDER BY mcsl_total_score DESC, mcsl_num ASC) AS calculated_rank
-		    FROM monthly_challenge_score_list
-		)
-		UPDATE monthly_challenge_score_list
-		SET cpsl_rank = ranked_data.calculated_rank
-		FROM ranked_data
-		WHERE 
-		    		monthly_challenge_score_list.mcsl_year = ranked_data.mcsl_year
-		    AND monthly_challenge_score_list.mcsl_monthly = ranked_data.mcsl_monthly
-		    AND monthly_challenge_score_list.cg_num = ranked_data.cg_num;	
-	</update>
-	
-	<!-- 퇴장당하지 않은 멤버중 경고 3번받은 멤버 조회 -->
-	<select id="getAccumulatedWarningMember" resultType="map">
-		WITH recentData AS (
-		    SELECT *,
-		           ROW_NUMBER() OVER (PARTITION BY cg_num, mbr_id ORDER BY cgm_date DESC) AS rn
-		    FROM challenge_group_member
-		)
-		SELECT
-		    lcmwl.cg_num AS cgNum,
-		    lcmwl.cgm_num AS cgmNum,
-		    MAX(m.mbr_id) AS mbrId
-		FROM
-		    (SELECT 
-			 	cgm_num,
-		      	cg_num,
-			    mbr_id,
-			    cs_num,
-			    cgm_date
-		    FROM 
-			 	recentData
-		    WHERE 
-			 	rn = 1
-		      	AND 
-				cs_num = 'cs_002'
-		    ORDER BY cgm_date DESC) m
-			JOIN leader_challenge_mbr_warning_log lcmwl
-			ON m.cg_num = lcmwl.cg_num
-		   	AND m.cgm_num = lcmwl.cgm_num
-		GROUP BY lcmwl.cg_num, lcmwl.cgm_num
-		HAVING
-			COUNT(lcmwl.cgm_num) >=3
-	</select>
-	
-	<!-- 챌린지 퇴장처리 -->
-	<insert id="createChallengeMemberCsNum" parameterType="map">
-		INSERT INTO challenge_group_member (
-			cgm_num, 
-			cg_num, 
-			mbr_id, 
-			cs_num, 
-			cgm_date
-			) VALUES (
-			#{cgmNumKey}, 
-			#{cgNum}, 
-			#{mbrId}, 
-			'cs_007', 
-			NOW()
-		)
-	</insert>
-	
-  </mapper>
+</mapper>
   

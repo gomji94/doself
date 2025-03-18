@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-//jdbc가 추가된 상태에서만 트랜잭셔널 어노테이션 실행됨
 //전체 적용하려면 여기에 작성 || 특정 메소드에만 설정하고 싶으면 메소드 상단에 배치
 @Transactional
 //log.이 가능한 이유는 아래의 어노테이션 때문
@@ -79,6 +78,13 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	@Override
 	public void addChallenge(MultipartFile files, AddChallenge addChallenge) {
 		
+		// 현재 세션 멤버의 티켓 개수 확인
+	    int openingTicketCount = challengeListMapper.getOpeningTicketCount(addChallenge.getMemberId());
+
+	    if (openingTicketCount <= 0) {
+	        throw new RuntimeException("챌린지 생성 티켓을 보유하고 있지 않습니다.");
+	    }
+		
 		Files fileInfo = filesUtils.uploadFile(files);
 		if(fileInfo != null) {
 			String formattedKeyNum = commonMapper.getPrimaryKey("file_", "files", "file_idx");
@@ -109,6 +115,18 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 		//log.info(">>> location/service >>> addChallenge : {}", addChallenge);
 		
 		challengeListMapper.addChallenge(addChallenge);
+		
+		// 티켓 차감
+	    challengeListMapper.decrementOpeningTicket(addChallenge.getMemberId());
+
+	    // 챌린지 생성 후 자동 참가 처리
+	    AddChallengeMember challengeMember = new AddChallengeMember();
+	    challengeMember.setChallengeMemberCode(commonMapper.getPrimaryKey("cgm_", "challenge_group_member", "cgm_num"));
+	    challengeMember.setChallengeCode(addChallenge.getChallengeCode());
+	    challengeMember.setChallengeMemberId(addChallenge.getMemberId());
+	    challengeMember.setChallengeStatusCode("cs_004");
+
+	    challengeListMapper.addChallengeMember(challengeMember);
 	}
 	
 	// 챌린지 멤버 추가
@@ -119,7 +137,7 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	        throw new IllegalArgumentException("유효하지 않은 챌린지 상태 코드입니다.");
 	    }
 	    addChallengeMember.setChallengeStatusCode(challengeStatusCode);
-	    log.info(">>> location/controller >>> challengeCode : {}", addChallengeMember);
+	    //log.info(">>> location/controller >>> challengeCode : {}", addChallengeMember);
 		
 		// 참여 중인 멤버인지 확인
 	    List<AddChallengeMember> existingMembers = challengeListMapper.getChallengeMembers(addChallengeMember.getChallengeCode());
@@ -184,23 +202,25 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	    for (ChallengeList challenge : challenges) {
 	        // 참여 멤버 수 조회
 	        int currentMemberCount = getCurrentMemberCount(challenge.getChallengeCode());
-	        log.info("챌린지 코드: {}, 현재 멤버 수: {}", challenge.getChallengeCode(), currentMemberCount);
 
 	        // 챌린지 시작일과 현재 날짜 비교
 	        LocalDate startDate = challenge.getChallengeStartDate().toInstant()
 	                                       .atZone(ZoneId.systemDefault())
 	                                       .toLocalDate();
 	        LocalDate currentDate = LocalDate.now();
-	        log.info("챌린지 코드: {}, 시작일: {}, 현재 날짜: {}", challenge.getChallengeCode(), startDate, currentDate);
+	        
+	        LocalDate endDate = startDate.plusDays(15);
+	        //log.info("챌린지 코드: {}, 시작일: {}, 현재 날짜: {}", challenge.getChallengeCode(), startDate, currentDate);
 
-	        // 조건: 멤버 수 >= 5 && 시작일 == 현재 날짜
-	        if (currentMemberCount >= 5 && startDate.equals(currentDate)) {
-	            // 챌린지 상태 업데이트
+	        // 챌린지 진행 (5명 이상 && 시작일 이후 가능)
+	        if (currentMemberCount >= 5 && !currentDate.isBefore(startDate)) {
 	            updateChallengeStatus(challenge.getChallengeCode(), "cs_002");
-	            log.info("챌린지 상태 업데이트 완료: 챌린지 코드 {}, 상태 코드 {}", challenge.getChallengeCode(), "cs_002");
-	        } else {
-	            log.info("업데이트 조건 불충족: 챌린지 코드 {}, 멤버 수: {}, 시작일 조건: {}", 
-	                challenge.getChallengeCode(), currentMemberCount, startDate.equals(currentDate));
+	        }
+	        
+	        // 챌린지 종료 (시작일 + 15일)
+	        if (currentDate.isAfter(endDate)) {
+	            updateChallengeStatus(challenge.getChallengeCode(), "cs_001");
+	            continue;
 	        }
 	    }
 	}
@@ -251,12 +271,25 @@ public class ChallengeListServiceImpl implements ChallengeListService {
 	    return challengeListMapper.getCurrentMemberCount(challengeCode);
 	}
 
+	@Override
+	public int getOpeningTicketCount(String memberId) {
+		return challengeListMapper.getOpeningTicketCount(memberId);
+	}
 
-//	// 파일 삭제
-//	@Override
-//	public void deleteFile(Files files) {
-//		String path = files.getFilePath();
-//		Boolean isDelete = filesUtils.deleteFileByPath(path);
-//		if(isDelete) filesMapper.deleteFileByIdx(files.getFileIdx());   // 값이 true로 넘어온다면 delete 쿼리문 실행
-//	}
+	@Override
+	@Transactional
+	public void decrementOpeningTicket(String memberId) {
+	}
+
+	@Override
+	public int getParticipationTicketCount(String memberId) {
+		return challengeListMapper.getParticipationTicketCount(memberId);
+	}
+
+	@Override
+	@Transactional
+	public void decrementParticipationTicket(String memberId) {
+	    int updatedRows = challengeListMapper.decrementParticipationTicket(memberId);
+	}
+
 }

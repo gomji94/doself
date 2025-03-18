@@ -8,18 +8,22 @@
 	    <id column="mbr_id" property="memberId" />
 	    <id column="mni_num" property="mealNutritionInfoCode" />
 	    <id column="mc_num" property="mealCategoryCode" />
+	    <id column="fc_num" property="feedCommentCode" />
 	    <result column="feed_food_intake" property="feedFoodIntake" />
 	    <result column="feed_content" property="feedContent" />
 	    <result column="feed_date" property="feedDate" />
 	    <result column="feed_intake_date" property="feedIntakeDate" />
 	    <result column="feed_like" property="feedLike" />
 	    <result column="feed_open_status" property="feedOpenStatus" />
+	    <result column="feed_file_Index" property="feedFileIndex" />
 	    <result column="feed_file_path" property="feedFilePath" />
 		<result column="feed_file_name" property="feedFileName" />
 		<result column="member_file_path" property="memberFilePath" />
 		<result column="member_file_name" property="memberFileName" />
 	    <result column="mbr_file_idx" property="memberProfileImage" />
 	    <result column="fc_content" property="feedCommentContent" />
+	    <result column="fc_date" property="feedCommentDate" />
+	    <result column="fc_like" property="feedCommentLike" />
 	    <result column="mni_name" property="mealName" />
 	    <result column="mni_picture" property="mealPicture" />
 	    <result column="mni_weight" property="mealWeight" />
@@ -32,11 +36,26 @@
 	    <result column="mni_sodium" property="mealSodium" />
 	    <result column="mni_calcium" property="mealCalcium" />
 	    <result column="mni_iron" property="mealIron" />
+	    
+	    <result column="file_path" property="feedFilePath" />
 	</resultMap>
 	
 	<!-- 피드 조회 -->
 	<select id="getFeedList" resultMap="FeedResultMap">
-	    SELECT
+	    WITH feedcomment AS 
+		(
+			SELECT 
+				fc.fc_num,
+				fc.feed_num,
+				fc.mbr_id,
+				fc.fc_content,
+				fc.fc_like,
+				fc.fc_date,
+				MAX(fc.fc_date) OVER (PARTITION BY fc.feed_num) AS recently_date
+		 	FROM 
+		 		feed_comments fc
+		)
+		SELECT
 		    f.feed_num,
 		    f.mbr_id,
 		    f.mni_num,
@@ -51,7 +70,6 @@
 		    fi_feed.file_new_name AS feed_file_name,
 		    fi_member.file_path AS member_file_path,
 		    fi_member.file_new_name AS member_file_name,
-		
 		    mll.mni_name,
 		    mll.mni_picture,
 		    mll.mni_weight,
@@ -65,7 +83,6 @@
 		    mll.mni_calcium,
 		    mll.mni_iron,
 		    fc.fc_content
-		
 		FROM
 		    feed f
 		INNER JOIN
@@ -77,8 +94,8 @@
 		LEFT JOIN
 		    files fi_member ON m.mbr_file_idx = fi_member.file_idx
 		LEFT JOIN
-		    feed_comments fc ON f.feed_num = fc.feed_num
-		
+		    feedcomment fc ON f.feed_num = fc.feed_num
+		    AND fc.fc_date = fc.recently_date
 		ORDER BY
 		    f.feed_date DESC;
 	</select>
@@ -113,14 +130,18 @@
 	        f.mni_num,
 	        f.feed_food_intake,
 	        f.feed_content,
-	        f.feed_picture,
 	        f.mc_num,
 	        f.feed_date,
 	        f.feed_intake_date,
 	        f.feed_like,
 	        f.feed_open_status,
-	        m.mbr_file_idx,
+	        fi_feed.file_path AS feed_file_path,
+	        fi_feed.file_new_name AS feed_file_name,
+	        fi_member.file_path AS member_file_path,
+		    fi_member.file_new_name AS member_file_name,
 	        fc.fc_content,
+	        f.feed_file_index,
+	        m.mbr_file_idx,
 	        mll.mni_name,
 	        mll.mni_picture,
 	        mll.mni_weight,
@@ -137,12 +158,17 @@
 	        feed f
 	    INNER JOIN
 	        meal_nutrition_info mll ON f.mni_num = mll.mni_num
+        LEFT JOIN
+	    	files fi_feed ON f.feed_file_index = fi_feed.file_idx
 	    INNER JOIN
 	        member m ON f.mbr_id = m.mbr_id
+        LEFT JOIN
+	    	files fi_member ON m.mbr_file_idx = fi_member.file_idx
 	    LEFT JOIN
 	        feed_comments fc ON f.feed_num = fc.feed_num
 	    WHERE
-	        f.feed_num = #{feedCode};
+	        f.feed_num = #{feedCode}
+        ORDER BY feed_date DESC LIMIT 1
 	</select>
 	
 	<!-- 음식 이름 검색 -->
@@ -180,10 +206,117 @@
 		    #{feedIntakeDate}, 
 		    0,
 		    #{feedOpenStatus},
-		    #{feedFileIdx}
+		    #{feedFileIndex}
 		)
 	</insert>
 
+	<!-- 특정 피드 수정 -->
+	<update id="modifyFeed" parameterType="Feed">
+	    UPDATE feed
+        <set>
+	        <if test="feedContent != null">
+	            feed_content = #{feedContent},
+	        </if>
+	        <if test="feedIntakeDate != null">
+	            feed_intake_date = #{feedIntakeDate},
+	        </if>
+	        <if test="feedFoodIntake != null">
+	            feed_food_intake = #{feedFoodIntake},
+	        </if>
+	        <if test="mealCategoryCode != null">
+	            mc_num = #{mealCategoryCode},
+	        </if>
+	        <if test="feedOpenStatus != null">
+	            feed_open_status = #{feedOpenStatus},
+	        </if>
+	        <if test="feedFileIndex != null">
+	        	feed_file_index = #{feedFileIndex},
+        	</if>
+	    </set>
+	    WHERE feed_num = #{feedCode};
+	</update>
+
+	<!-- 피드 코드 조회 -->
+	<select id="getFeedByCode" parameterType="map" resultMap="FeedResultMap">
+		SELECT
+	        f.feed_num,
+	        f.mbr_id,
+	        mf.file_path,
+	        f.feed_food_intake,
+	        f.feed_content,
+	        f.mc_num,
+	        f.feed_intake_date,
+	        f.feed_open_status,
+	        f.feed_file_index,
+	        ff.file_path
+	    FROM
+	        feed f INNER JOIN member m
+	        ON f.mbr_id = m.mbr_id
+	        INNER JOIN files mf
+	        ON m.mbr_file_idx = mf.file_idx
+	        INNER JOIN files ff
+	        ON f.feed_file_index = ff.file_idx
+	    WHERE
+	        f.feed_num = #{feedCode};
+    </select>
+
+	<!-- 피드 댓글 삭제 -->
+	<delete id="deleteFeedComments" parameterType="String">
+	    DELETE
+	    FROM
+	    	feed_comments
+	    WHERE
+	    	feed_num = #{feedCode}
+	</delete>
+		
+	<!--피드 이미지 파일 삭제 -->
+	<delete id="deleteFeedFiles" parameterType="String">
+	    DELETE
+	    FROM
+	    	files
+	    WHERE
+	    	file_idx = (
+			SELECT feed_file_index
+			FROM feed
+			WHERE feed_num = #{feedCode}
+		);	
+	</delete>
+	
+	<!-- 하루 영양정보 비교 테이블 외래키 삭제 -->
+	<delete id="deleteDailyNutritionalIntakeComparison">
+	    DELETE
+	    FROM
+	    	daily_nutritional_intake_comparison
+	    WHERE
+	    	dnii_num IN (
+	        SELECT
+	        	dnii_num
+	        FROM
+	        	daily_nutritional_intake_info
+        	WHERE
+        		feed_num = #{feedCode}
+	    )
+	</delete>
+	
+	<!-- 하루 영양정보 테이블 외래키 삭제 -->
+	<delete id="deletedDilyNutritionalIntakeInfo">
+		DELETE
+		FROM
+			daily_nutritional_intake_info
+		WHERE
+			feed_num = #{feedCode}
+	</delete>
+	
+	<!--피드 삭제 -->
+	<delete id="deleteFeed" parameterType="String">
+	    DELETE
+    	FROM
+    		feed
+	    WHERE
+	    	feed_num = #{feedCode}
+    	AND mbr_id = #{memberId}
+	</delete>
+	
 	<!-- 좋아요 수 증가 -->
 	<update id="incrementLike" parameterType="String">
         UPDATE
@@ -204,5 +337,92 @@
         feed_num = #{feedNum}
     </update>
 	
+	<!-- 피드 댓글 추가 -->
+	<insert id="addFeedComment" parameterType="Feed">
+	    INSERT INTO feed_comments (
+	    	fc_num,
+	    	feed_num,
+	    	mbr_id,
+	    	fc_content,
+	    	fc_date
+    	) VALUES (
+    		#{feedCommentCode},
+    		#{feedCode},
+    		#{memberId},
+    		#{feedCommentContent},
+    		NOW()
+		)
+	</insert>
+	
+	<!-- 피드 댓글 리스트 조회 -->
+	<select id="getFeedCommentList" resultMap="FeedResultMap">
+	    SELECT
+			fc.fc_num,
+			fc.feed_num,
+			fc.mbr_id,
+			fc.fc_content,
+			fc.fc_date,
+			m.mbr_file_idx,
+			fi.file_path AS member_file_path
+		FROM feed_comments fc
+		INNER JOIN `member` m ON fc.mbr_id = m.mbr_id
+		LEFT JOIN files fi ON m.mbr_file_idx = fi.file_idx
+	    WHERE fc.feed_num = #{feedCode}
+	    ORDER BY fc.fc_date ASC;
+	</select>
+  	
+  	<!-- 피드 댓글 수정 -->
+	<update id="modifyFeedComment">
+		UPDATE feed_comments
+		SET
+			fc_content = #{feedCommentContent}
+		WHERE
+			fc_num = #{feedCommentCode}
+	</update>
+	
+	<!-- 피드 댓글 삭제 -->
+	<delete id="deleteFeedComment">
+		DELETE
+		FROM
+			feed_comments
+		WHERE
+			fc_num = #{feedCommentCode}
+	</delete>
+	
+	<!-- 피드 신고 -->
+	<insert id="insertReportRequest" parameterType="Declare">
+	    INSERT INTO report_request (
+	        rr_num,
+	        mbr_id,
+	        olc_code,
+	        rr_bc_num,
+	        rc_code,
+	        rr_content,
+	        rr_date,
+	        sc_code
+	    ) VALUES (
+	        #{rrNum},
+	        #{mbrId},
+	        #{olcCode},
+	        #{rrBcNum},
+	        #{rcCode},
+	        #{rrContent},
+	        NOW(),
+	        #{scCode}
+	    )
+	</insert>
+	
+    <!--특정 회원의 하루 먹은 영양 정보 조회--> 
+    <!--<select id="getNutritionalInfoByDate" resultType="DailyNutritionalIntakeInfo">
+        SELECT 
+            SUM(dnii_kcal) AS dniiKcal,
+            SUM(dnii_carbo) AS dniiCarbo,
+            SUM(dnii_protein) AS dniiProtein,
+            SUM(dnii_fat) AS dniiFat
+        FROM
+        	daily_nutritional_intake_info
+        WHERE
+        	mbr_id = #{mbrId} AND DATE(dnii_date) = #{date}
+    </select>-->
  </mapper>
   

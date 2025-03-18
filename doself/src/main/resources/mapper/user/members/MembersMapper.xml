@@ -40,6 +40,7 @@
 	<!-- 포인트리스트 -->
 	<resultMap type="PointList" id="PointListResultMap">
 		<id 	column="mbr_id" 		    property="memberId"/>
+		<result column="point_date"         property="pointTotalDate" />		
 		<result column="point_detail" 	    property="pointDetail" />
 		<result column="point_amount" 	    property="pointAmount" />
 		<result column="point_usechk" 	    property="pointUseChk" />
